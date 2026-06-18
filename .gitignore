@@ -1,0 +1,18 @@
+# Cloudflare Pages / Wrangler
+.wrangler
+.dev.vars
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large temporary assets / drafts we don't need in production repo
+design_fetched.tar
+untitled/
+*.png
+*.pdf
+
+# Python virtual environment (if any)
+venv/
+.venv/
+__pycache__/

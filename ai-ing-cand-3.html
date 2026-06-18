@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>에이아잉 (AI-ing) — Beyond AI to AX</title>
+<meta name="description" content="에이아잉(AI-ing)은 기업의 일하는 방식을 개선하는 AX(AI Experience) 컨설팅, 업무 맞춤형 AI 에이전트 시스템 기획·개발, 임직원 전용 실무 맞춤형 교육까지 일원화된 자동화 구축 솔루션을 제공합니다." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #111111;
+    --ink: #1a1a1a;
+    --paper: #ffffff;
+    --paper-2: #f4f4f1;
+    --line: #111111;
+    --line-soft: rgba(17, 17, 17, 0.12);
+    --line-faint: rgba(17, 17, 17, 0.07);
+    --muted: #6b6b6b;
+    --muted-2: #8a8a8a;
+    --accent: #ff3b30;
+    --accent-ink: #c4271e;
+    --sans: 'Inter', 'IBM Plex Sans KR', system-ui, -apple-system, sans-serif;
+    --kr: 'IBM Plex Sans KR', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --gutter: clamp(20px, 5vw, 80px);
+    --maxw: 1280px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--kr);
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  a { color: inherit; text-decoration: none; }
+
+  .mono {
+    font-family: var(--mono);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .shell {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--black);
+    color: #fff;
+    padding: 12px 18px;
+    z-index: 1000;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .skip-link:focus { left: 8px; top: 8px; }
+
+  /* ============ HEADER / NAV ============ */
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .site-header.scrolled {
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.94);
+  }
+  .nav {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .brand-mark {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    color: var(--black);
+  }
+  .brand-mark .dot { color: var(--accent); }
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 2.4vw, 40px);
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    text-transform: uppercase;
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+  }
+  .nav-links a .idx { color: var(--muted-2); margin-right: 7px; font-weight: 400; }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1.5px;
+    background: var(--accent);
+    transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-links a:hover { color: var(--accent-ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: #fff;
+    padding: 11px 18px;
+    border: 1px solid var(--black);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--accent); border-color: var(--accent); }
+  .nav-cta .arrow { transition: transform 0.25s ease; }
+  .nav-cta:hover .arrow { transform: translateX(4px); }
+
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--line);
+    width: 44px; height: 40px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 20px; height: 2px;
+    background: var(--black);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding-top: 150px;
+    padding-bottom: 70px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 48px;
+  }
+  .hero-tagline {
+    font-family: var(--mono);
+    font-size: clamp(12px, 1.4vw, 14px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-tagline::before {
+    content: "";
+    width: 40px; height: 1.5px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .hero h1 {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(46px, 9vw, 132px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .hero h1 .light { font-weight: 300; font-style: italic; letter-spacing: -0.03em; }
+  .hero h1 .acc { color: var(--accent); }
+  .hero-kr {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(20px, 3.4vw, 40px);
+    letter-spacing: -0.02em;
+    color: var(--black);
+    margin-top: 18px;
+    margin-bottom: 40px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
+    padding-top: 8px;
+  }
+  .hero-lead {
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 52ch;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 34px;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 16px 26px;
+    border: 1px solid var(--black);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: none;
+    color: var(--black);
+    transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+  }
+  .btn .arrow { transition: transform 0.25s ease; }
+  .btn:hover .arrow { transform: translateX(5px); }
+  .btn-solid { background: var(--black); color: #fff; }
+  .btn-solid:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-ghost:hover { background: var(--black); color: #fff; }
+
+  .hero-side {
+    border-left: 1px solid var(--line);
+    padding-left: clamp(20px, 3vw, 40px);
+  }
+  .hero-side-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+  .hero-side-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-faint);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .hero-side-item:last-child { border-bottom: none; }
+  .hero-side-item .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent-ink);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .hero-side-item .txt { font-size: 14px; color: var(--ink); line-height: 1.5; }
+
+  /* ============ MARQUEE STRIP ============ */
+  .strip {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    background: var(--black);
+    color: #fff;
+  }
+  .strip-track {
+    display: flex;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marquee 30s linear infinite;
+  }
+  .strip-track span {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .strip-track span::after { content: "✳"; color: var(--accent); font-size: 11px; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============ SECTION SHELL ============ */
+  section { scroll-margin-top: 80px; }
+  .sec-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding-top: clamp(72px, 9vw, 120px);
+    padding-bottom: clamp(36px, 4vw, 56px);
+  }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--accent-ink);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .sec-num::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line-soft);
+  }
+  .sec-title {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(32px, 5.4vw, 76px);
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--black);
+  }
+  .sec-title .light { font-weight: 300; font-style: italic; }
+
+  /* ============ METRICS ============ */
+  #metrics { border-bottom: 1px solid var(--line); padding-bottom: clamp(60px, 8vw, 110px); }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+  }
+  .metric {
+    padding: clamp(34px, 4vw, 56px) clamp(20px, 2.4vw, 40px) clamp(34px, 4vw, 56px) 0;
+    border-right: 1px solid var(--line-soft);
+  }
+  .metric:last-child { border-right: none; padding-right: 0; }
+  .metric-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .metric-label .tag { color: var(--accent-ink); }
+  .metric-value {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(54px, 8.5vw, 116px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    color: var(--black);
+  }
+  .metric-value .unit { color: var(--accent); }
+  .metric-desc {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 22px;
+    line-height: 1.55;
+    max-width: 24ch;
+  }
+
+  /* ============ ABOUT / INTRO ============ */
+  #about { border-bottom: 1px solid var(--line); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(32px, 6vw, 100px);
+    padding-bottom: clamp(72px, 9vw, 120px);
+    align-items: start;
+  }
+  .about-aside {
+    position: sticky;
+    top: 110px;
+  }
+  .about-aside .mono-block {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 2;
+    color: var(--muted);
+  }
+  .about-aside .mono-block strong { color: var(--black); font-weight: 700; }
+  .about-aside .define {
+    margin-top: 28px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .about-aside .define .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 10px;
+  }
+  .about-aside .define .v {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .about-aside .define .v b { font-weight: 700; color: var(--black); }
+  .about-body p {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(20px, 2.6vw, 32px);
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    color: var(--black);
+  }
+  .about-body p .acc { color: var(--accent); }
+  .about-body .footnote {
+    font-family: var(--kr);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-top: 36px;
+    max-width: 56ch;
+  }
+
+  /* ============ SERVICES ============ */
+  #services { border-bottom: 1px solid var(--line); }
+  .svc-list {
+    border-top: 1px solid var(--line);
+    padding-bottom: clamp(40px, 6vw, 90px);
+  }
+  .svc-row {
+    display: grid;
+    grid-template-columns: 90px 0.9fr 1.5fr auto;
+    gap: clamp(16px, 3vw, 48px);
+    align-items: start;
+    padding: clamp(36px, 4.5vw, 64px) 0;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+    transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .svc-row::before {
+    content: "";
+    position: absolute;
+    left: -100%;
+    top: 0; bottom: 0;
+    width: 100%;
+    background: var(--paper-2);
+    z-index: -1;
+    transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .svc-row:hover { padding-left: 20px; }
+  .svc-row:hover::before { left: -20px; right: -20px; width: auto; }
+  .svc-idx {
+    font-family: var(--mono);
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 700;
+    color: var(--accent-ink);
+    padding-top: 6px;
+  }
+  .svc-name {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(22px, 2.6vw, 36px);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--black);
+  }
+  .svc-name .en {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  .svc-desc {
+    font-size: clamp(14px, 1.15vw, 16px);
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 50ch;
+  }
+  .svc-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .svc-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line-soft);
+    padding: 6px 11px;
+    white-space: nowrap;
+  }
+  .svc-row:hover .svc-tag { border-color: var(--line); color: var(--ink); }
+
+  /* ============ VISION ============ */
+  #vision {
+    background: var(--black);
+    color: #fff;
+    border-bottom: 1px solid var(--black);
+  }
+  #vision .sec-num { color: #ff6b62; }
+  #vision .sec-num::after { background: rgba(255,255,255,0.18); }
+  #vision .sec-title { color: #fff; }
+  .vision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 90px);
+    padding-bottom: clamp(72px, 9vw, 120px);
+    align-items: start;
+  }
+  .vision-statement {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(24px, 3.4vw, 46px);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: #fff;
+  }
+  .vision-statement .acc { color: var(--accent); }
+  .vision-body {
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.85;
+    color: rgba(255, 255, 255, 0.74);
+  }
+  .vision-body p + p { margin-top: 20px; }
+  .vision-body .lead {
+    color: #fff;
+    font-weight: 500;
+  }
+  .vision-rule {
+    height: 1px;
+    background: rgba(255,255,255,0.18);
+    margin: 32px 0;
+  }
+  .vision-keys {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(255,255,255,0.18);
+    margin-top: 8px;
+  }
+  .vision-key {
+    background: var(--black);
+    padding: 22px 4px 0 0;
+  }
+  .vision-key .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff6b62;
+    margin-bottom: 8px;
+  }
+  .vision-key .v {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 17px;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  /* ============ CONTACT ============ */
+  #contact { border-bottom: 1px solid var(--line); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 6vw, 90px);
+    padding-bottom: clamp(72px, 9vw, 120px);
+    align-items: start;
+  }
+  .contact-aside .note {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(19px, 2.2vw, 28px);
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    margin-bottom: 30px;
+  }
+  .contact-aside .note .acc { color: var(--accent); }
+  .contact-direct {
+    border-top: 1px solid var(--line);
+    margin-top: 8px;
+  }
+  .contact-direct .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .contact-direct .row .k { color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; }
+  .contact-direct .row .v { color: var(--ink); text-align: right; }
+
+  form { display: block; }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .field {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .field label .req { color: var(--accent); }
+  .field input,
+  .field select,
+  .field textarea {
+    font-family: var(--kr);
+    font-size: 16px;
+    color: var(--black);
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    padding: 4px 0;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--muted-2); }
+  .field textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+  .field select { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 24px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23111' stroke-width='1.4' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right center; }
+  .field:focus-within { background: var(--paper-2); }
+  .field:focus-within label { color: var(--accent-ink); }
+
+  .form-submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 28px;
+  }
+  .form-hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .submit-btn {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: #fff;
+    border: 1px solid var(--black);
+    padding: 18px 32px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.22s ease, border-color 0.22s ease;
+  }
+  .submit-btn:hover { background: var(--accent); border-color: var(--accent); }
+  .submit-btn .arrow { transition: transform 0.25s ease; }
+  .submit-btn:hover .arrow { transform: translateX(5px); }
+
+  .form-success {
+    display: none;
+    border: 1px solid var(--line);
+    padding: clamp(40px, 6vw, 72px);
+    background: var(--paper-2);
+    text-align: left;
+  }
+  .form-success.show { display: block; animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+  .form-success .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 22px;
+  }
+  .form-success h3 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(22px, 2.6vw, 34px);
+    letter-spacing: -0.02em;
+    color: var(--black);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .form-success p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 48ch; }
+
+  /* ============ FOOTER ============ */
+  .site-footer {
+    background: var(--black);
+    color: rgba(255,255,255,0.7);
+    padding-top: clamp(64px, 8vw, 110px);
+    padding-bottom: 40px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    padding-bottom: clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+    align-items: end;
+  }
+  .footer-logo {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(40px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    color: #fff;
+  }
+  .footer-logo .dot { color: var(--accent); }
+  .footer-logo .tag {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: clamp(11px, 1.2vw, 14px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-top: 22px;
+  }
+  .footer-cta {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 16px 26px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+  }
+  .footer-cta:hover { background: var(--accent); border-color: var(--accent); }
+  .footer-cta .arrow { transition: transform 0.25s ease; }
+  .footer-cta:hover .arrow { transform: translateX(5px); }
+
+  .footer-biz {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    padding: clamp(40px, 5vw, 64px) 0;
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+  }
+  .biz-block .biz-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff6b62;
+    margin-bottom: 14px;
+  }
+  .biz-block .biz-line {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.78);
+  }
+  .biz-block .biz-line + .biz-line { margin-top: 6px; }
+  .biz-block .biz-line b { color: #fff; font-weight: 500; }
+  .biz-block a.biz-line:hover { color: #fff; text-decoration: underline; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 32px;
+  }
+  .footer-bottom .copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+  .footer-bottom .legal {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-bottom .legal a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+  .footer-bottom .legal a:hover { color: var(--accent); }
+
+  /* ============ REVEAL ANIMATION ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: 0.08s; }
+  .reveal.d2 { transition-delay: 0.16s; }
+  .reveal.d3 { transition-delay: 0.24s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 980px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-side { border-left: none; border-top: 1px solid var(--line); padding-left: 0; padding-top: 32px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-aside { position: static; }
+    .vision-grid { grid-template-columns: 1fr; gap: 40px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-top { grid-template-columns: 1fr; gap: 36px; align-items: start; }
+    .footer-biz { grid-template-columns: 1fr 1fr; gap: 32px 24px; }
+    .svc-row { grid-template-columns: 60px 1fr; gap: 14px 20px; }
+    .svc-desc { grid-column: 1 / -1; }
+    .svc-tags { grid-column: 2 / -1; flex-direction: row; flex-wrap: wrap; align-items: flex-start; justify-content: flex-start; margin-top: 4px; }
+    .svc-row:hover { padding-left: 0; }
+    .svc-row:hover::before { left: -100%; right: auto; }
+  }
+
+  @media (max-width: 760px) {
+    .nav-links, .nav-cta { display: none; }
+    .nav-toggle { display: flex; }
+    .site-header.menu-open .nav-links {
+      display: flex;
+      position: fixed;
+      top: 72px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      padding: 8px var(--gutter) 20px;
+    }
+    .site-header.menu-open .nav-links li { width: 100%; }
+    .site-header.menu-open .nav-links a {
+      display: block;
+      width: 100%;
+      padding: 16px 0;
+      font-size: 15px;
+      border-bottom: 1px solid var(--line-faint);
+    }
+    .site-header.menu-open .nav-cta {
+      display: inline-flex;
+      position: fixed;
+      top: 18px; right: calc(var(--gutter) + 56px);
+    }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .metric { border-right: none; border-bottom: 1px solid var(--line-soft); padding-right: 0; }
+    .metric:last-child { border-bottom: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .field { border-right: none; }
+    .vision-keys { grid-template-columns: 1fr; }
+    .footer-biz { grid-template-columns: 1fr; }
+    .hero { padding-top: 124px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    .strip-track { animation: none; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="shell nav">
+    <a class="brand" href="#top" aria-label="에이아잉 홈">
+      <span class="brand-mark">AI<span class="dot">-</span>ing</span>
+      <span class="brand-sub">에이아잉</span>
+    </a>
+    <nav aria-label="주 메뉴">
+      <ul class="nav-links">
+        <li><a href="#about"><span class="idx">01</span>소개</a></li>
+        <li><a href="#services"><span class="idx">02</span>서비스</a></li>
+        <li><a href="#vision"><span class="idx">03</span>비전</a></li>
+        <li><a href="#contact"><span class="idx">04</span>문의</a></li>
+      </ul>
+    </nav>
+    <a class="nav-cta" href="#contact">무료 AX 상담 신청 <span class="arrow" aria-hidden="true">→</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="siteHeader">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="shell">
+      <div class="hero-meta">
+        <span>AX 컨설팅 / AI 에이전트 / 실무 교육</span>
+        <span>Seoul, KR — Est. 2026</span>
+        <span>Beyond AI to AX</span>
+      </div>
+      <p class="hero-tagline">Beyond AI to AX</p>
+      <h1 id="hero-title">
+        AI<span class="acc">-</span>ing<span class="light">,</span><br />
+        AI 실행을 넘어<br />
+        비즈니스 <span class="acc">경험</span>으로.
+      </h1>
+      <div class="hero-grid">
+        <div>
+          <p class="hero-lead">
+            에이아잉은 기업의 일하는 방식을 개선하는 AX(AI Experience) 컨설팅, 업무 맞춤형 AI 에이전트 시스템 기획·개발, 임직원 전용 실무 맞춤형 교육까지 — 일원화된 자동화 구축 솔루션을 제공합니다.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="#contact">무료 AX 상담 신청 <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#services">서비스 탐색 <span class="arrow" aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <aside class="hero-side" aria-label="핵심 영역 요약">
+          <p class="hero-side-label">Core Practice</p>
+          <div class="hero-side-item">
+            <span class="num">01</span>
+            <span class="txt">기업 데이터·업무 구조 기반 AX 로드맵 설계</span>
+          </div>
+          <div class="hero-side-item">
+            <span class="num">02</span>
+            <span class="txt">업무 맞춤형 AI 에이전트 기획 및 개발</span>
+          </div>
+          <div class="hero-side-item">
+            <span class="num">03</span>
+            <span class="txt">임직원 실무 맞춤형 AI 교육·멘토링</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <span>AX Consulting</span><span>AI Agent Systems</span><span>Workflow Automation</span><span>Practical Training</span><span>Beyond AI to AX</span>
+      <span>AX Consulting</span><span>AI Agent Systems</span><span>Workflow Automation</span><span>Practical Training</span><span>Beyond AI to AX</span>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <section id="metrics" aria-labelledby="metrics-title">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-num">[ Impact ] — 성과 지표</span>
+        <h2 class="sec-title" id="metrics-title">숫자로 증명하는 <span class="light">변화.</span></h2>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric reveal">
+          <p class="metric-label"><span class="tag">↑</span> 평균 업무 생산성 개선율</p>
+          <p class="metric-value">+300<span class="unit">%</span></p>
+          <p class="metric-desc">도입 전 대비 반복 업무 자동화로 달성한 평균 생산성 향상.</p>
+        </div>
+        <div class="metric reveal d1">
+          <p class="metric-label"><span class="tag">↓</span> AI 에이전트 도입 후 운영 비용</p>
+          <p class="metric-value">60<span class="unit">%</span></p>
+          <p class="metric-desc">에이전트 자동화 적용 이후 절감된 평균 운영 비용.</p>
+        </div>
+        <div class="metric reveal d2">
+          <p class="metric-label"><span class="tag">◆</span> 고객사 맞춤형 커스텀</p>
+          <p class="metric-value">100<span class="unit">%</span></p>
+          <p class="metric-desc">획일 솔루션이 아닌, 기업 고유 구조에 맞춘 100% 커스텀 설계.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" aria-labelledby="about-title">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-num">01 — 소개 / About</span>
+        <h2 class="sec-title" id="about-title">우리는 <span class="light">무엇을</span> 합니다.</h2>
+      </div>
+      <div class="about-grid">
+        <aside class="about-aside reveal">
+          <div class="mono-block">
+            <strong>에이아잉 (AI-ing)</strong><br />
+            AX Experience Studio<br />
+            Seoul, Republic of Korea<br />
+            Founded 2026
+          </div>
+          <div class="define">
+            <p class="k">Brand Meaning</p>
+            <p class="v">AI-ing = <b>'AI를 끊임없이 실행하며 나아가다'</b>. 우리는 멈춰 있는 도입이 아니라 계속 작동하는 변화를 만듭니다.</p>
+          </div>
+        </aside>
+        <div class="about-body reveal d1">
+          <p>
+            에이아잉은 기업의 일하는 방식을 개선하는 <span class="acc">AX(AI Experience) 컨설팅</span>, 업무 맞춤형 <span class="acc">AI 에이전트 시스템</span> 기획·개발, 임직원 전용 <span class="acc">실무 맞춤형 교육</span>까지 일원화된 자동화 구축 솔루션을 제공합니다.
+          </p>
+          <p class="footnote">
+            전략 수립부터 시스템 개발, 그리고 이를 실제로 운용할 사람의 역량까지 — 흩어져 있던 단계를 하나의 흐름으로 연결합니다. 기술의 단순 도입에서 멈추지 않고, 조직이 스스로 자동화를 지속할 수 있는 상태까지 안착시키는 것이 에이아잉의 일하는 방식입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" aria-labelledby="services-title">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-num">02 — 서비스 / Services</span>
+        <h2 class="sec-title" id="services-title">세 가지 <span class="light">실행 영역.</span></h2>
+      </div>
+      <div class="svc-list">
+        <article class="svc-row reveal">
+          <div class="svc-idx">(01)</div>
+          <h3 class="svc-name">B2B AX 컨설팅 &amp; 구축<span class="en">Consulting &amp; Build</span></h3>
+          <p class="svc-desc">기업 고유의 데이터와 업무 구조에 맞춘 최적의 AX(AI Experience) 로드맵을 제공하고, 독자적 AI 에이전트를 설계하여 자동화 시스템을 구축합니다.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">AX 로드맵</span>
+            <span class="svc-tag">에이전트 설계</span>
+            <span class="svc-tag">자동화 구축</span>
+          </div>
+        </article>
+        <article class="svc-row reveal">
+          <div class="svc-idx">(02)</div>
+          <h3 class="svc-name">AI 실무 교육 &amp; 멘토링<span class="en">Training &amp; Mentoring</span></h3>
+          <p class="svc-desc">실시간 Zoom 과외 및 맞춤 멘토링, 대학생·기업 임직원 대상 AI 기초·응용 실습 특강을 운영합니다. 실질적 활용력을 강화하는 커리큘럼입니다.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">실시간 과외</span>
+            <span class="svc-tag">1:1 멘토링</span>
+            <span class="svc-tag">실습 특강</span>
+          </div>
+        </article>
+        <article class="svc-row reveal">
+          <div class="svc-idx">(03)</div>
+          <h3 class="svc-name">이커머스 &amp; 지식 콘텐츠<span class="en">Commerce &amp; Knowledge</span></h3>
+          <p class="svc-desc">AX 가이드북(정기간행 전자책)을 발급·소매 판매하고, 비즈니스 효율 소프트웨어 템플릿과 선별된 IT 기자재를 공급합니다.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">AX 가이드북</span>
+            <span class="svc-tag">SW 템플릿</span>
+            <span class="svc-tag">IT 기자재</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISION -->
+  <section id="vision" aria-labelledby="vision-title">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-num">03 — 비전 / Vision</span>
+        <h2 class="sec-title" id="vision-title">모든 비즈니스의 <span class="light">AI 전환을 쉽게,</span></h2>
+      </div>
+      <div class="vision-grid">
+        <div class="vision-statement reveal">
+          최첨단 AI 기술은 넘쳐나지만, 현업에서 이를 활용해 실제 생산성을 끌어내는 일은 여전히 <span class="acc">대부분 기업의 숙제</span>입니다.
+          <div class="vision-rule" aria-hidden="true"></div>
+          <div class="vision-keys">
+            <div class="vision-key">
+              <p class="k">From</p>
+              <p class="v">구독형 챗봇의 단순 도입</p>
+            </div>
+            <div class="vision-key">
+              <p class="k">To</p>
+              <p class="v">업무 경험(AX) 자체의 변화</p>
+            </div>
+          </div>
+        </div>
+        <div class="vision-body reveal d1">
+          <p class="lead">많은 기업이 단순히 구독형 챗봇(LLM)을 사놓는 수준에 머뭅니다. 에이아잉은 기술의 대리 도입에 그치지 않고, 구성원 개개인의 '업무 경험(AX)' 자체를 변화시키는 것을 목표로 합니다.</p>
+          <p>진짜 필요한 자동화 파이프라인을 구축하고, 이를 완벽히 다룰 수 있도록 구성원을 훈련시킵니다.</p>
+          <p>그렇게 우리는 지속 가능한 성장 동력을 파트너사의 내부 프로세스에 완전히 안착시킵니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" aria-labelledby="contact-title">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-num">04 — 문의 / Contact</span>
+        <h2 class="sec-title" id="contact-title">상담을 <span class="light">시작하세요.</span></h2>
+      </div>
+      <div class="contact-grid">
+        <aside class="contact-aside reveal">
+          <p class="note">업무 환경 분석 및 AX 도입 상담을 신청해 주시면 <span class="acc">24시간 내</span>에 연락드립니다.</p>
+          <div class="contact-direct">
+            <div class="row"><span class="k">Tel</span><span class="v">010-7646-3634</span></div>
+            <div class="row"><span class="k">Email</span><span class="v">rlaalsdn456456@naver.com</span></div>
+            <div class="row"><span class="k">Location</span><span class="v">서울 서초구 신반포로33길 15</span></div>
+            <div class="row"><span class="k">Response</span><span class="v">영업일 24h 이내</span></div>
+          </div>
+        </aside>
+
+        <div class="reveal d1">
+          <form id="contactForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="name">성명 / 담당자명 <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="name" name="name" placeholder="홍길동" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="phone">연락처 <span class="req" aria-hidden="true">*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" autocomplete="tel" required />
+              </div>
+              <div class="field">
+                <label for="email">이메일 주소 <span class="req" aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" placeholder="name@company.com" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="topic">문의 영역 <span class="req" aria-hidden="true">*</span></label>
+                <select id="topic" name="topic" required>
+                  <option value="" disabled selected>선택해 주세요</option>
+                  <option value="b2b">B2B AX 도입 &amp; 개발 컨설팅</option>
+                  <option value="edu">AI 실무 교육 및 1:1 멘토링</option>
+                  <option value="commerce">템플릿 / 전자책 구매 관련 문의</option>
+                  <option value="partner">기타 파트너십</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="message">상세 문의 내용 <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" placeholder="현재 업무 환경, 자동화하고 싶은 영역, 도입 시점 등을 자유롭게 적어주세요." required></textarea>
+              </div>
+            </div>
+            <div class="form-submit-row">
+              <p class="form-hint">* 표시 항목은 필수입니다 · 실제 발송 없이 데모로 동작합니다</p>
+              <button type="submit" class="submit-btn">상담 신청 제출하기 <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </form>
+
+          <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+            <p class="badge">✨ Submission Received</p>
+            <h3>상담 신청이 성공적으로 접수되었습니다!</h3>
+            <p>입력하신 연락처와 이메일로 곧 안내해 드리겠습니다. 영업일 기준 24시간 내에 담당자가 직접 연락드립니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+          AI<span class="dot">-</span>ing
+          <span class="tag">에이아잉 · Beyond AI to AX</span>
+        </div>
+      </div>
+      <a class="footer-cta" href="#contact">무료 AX 상담 신청 <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="footer-biz">
+      <div class="biz-block">
+        <p class="biz-label">Company</p>
+        <p class="biz-line"><b>에이아잉 (AI-ing)</b></p>
+        <p class="biz-line">대표자 / 김민우</p>
+        <p class="biz-line">개인정보관리책임자 / 김민우</p>
+      </div>
+      <div class="biz-block">
+        <p class="biz-label">Address</p>
+        <p class="biz-line">서울특별시 서초구 신반포로33길 15, 102동 1002호</p>
+        <p class="biz-line">(잠원동, 신반포청구아파트)</p>
+      </div>
+      <div class="biz-block">
+        <p class="biz-label">Contact</p>
+        <a class="biz-line" href="tel:01076463634">010-7646-3634</a>
+        <a class="biz-line" href="mailto:rlaalsdn456456@naver.com">rlaalsdn456456@naver.com</a>
+      </div>
+      <div class="biz-block">
+        <p class="biz-label">Registration</p>
+        <p class="biz-line">사업자등록번호 / [등록 대기중] (신청 완료)</p>
+        <p class="biz-line">통신판매업신고 / [신고 대기중]</p>
+        <p class="biz-line">호스팅 / Cloudflare Inc. · 에이아잉</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copy">© 2026 에이아잉 (AI-ing). All Rights Reserved.</p>
+      <nav class="legal" aria-label="약관">
+        <a href="#contact">개인정보처리방침</a>
+        <a href="#contact">이용약관</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    var header = document.getElementById("siteHeader");
+    var onScroll = function () {
+      if (window.scrollY > 8) header.classList.add("scrolled");
+      else header.classList.remove("scrolled");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    var toggle = document.getElementById("navToggle");
+    toggle.addEventListener("click", function () {
+      var open = header.classList.toggle("menu-open");
+      toggle.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+    });
+    header.querySelectorAll(".nav-links a").forEach(function (a) {
+      a.addEventListener("click", function () {
+        header.classList.remove("menu-open");
+        toggle.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "메뉴 열기");
+      });
+    });
+
+    var reveals = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+      reveals.forEach(function (el) { io.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add("in"); });
+    }
+
+    var form = document.getElementById("contactForm");
+    var success = document.getElementById("formSuccess");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      form.style.display = "none";
+      success.classList.add("show");
+      success.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  })();
+</script>
+</body>
+</html>

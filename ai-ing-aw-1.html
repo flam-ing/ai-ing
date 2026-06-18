@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>에이아잉 (AI-ing) — Beyond AI to AX</title>
+<meta name="description" content="에이아잉(AI-ing)은 AX 컨설팅, 업무 맞춤형 AI 에이전트 시스템 기획·개발, 실무 맞춤형 교육까지 일원화된 자동화 구축 솔루션을 제공합니다." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --black:#0c0c0c;
+    --ink:#0c0c0c;
+    --acid:#e6ff3a;
+    --acid-deep:#d8ff3e;
+    --offwhite:#f2efe6;
+    --gray:#8c8c84;
+    --line:rgba(242,239,230,.14);
+    --line-dark:rgba(12,12,12,.14);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --ease-acid:cubic-bezier(.7,0,.2,1);
+    --pad:clamp(20px,5vw,72px);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+
+  body{
+    background:var(--black);
+    color:var(--offwhite);
+    font-family:"Noto Sans KR",system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  ::selection{background:var(--acid);color:#000;}
+  ::-moz-selection{background:var(--acid);color:#000;}
+
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+  /* ---------- Skip link ---------- */
+  .skip-link{
+    position:absolute;left:-999px;top:0;z-index:9999;
+    background:var(--acid);color:#000;padding:14px 22px;font-weight:700;
+    font-family:"Syne",sans-serif;border-radius:0 0 6px 0;
+  }
+  .skip-link:focus{left:0;}
+
+  :focus-visible{outline:3px solid var(--acid);outline-offset:3px;border-radius:2px;}
+
+  /* ---------- Grain overlay ---------- */
+  .grain{
+    position:fixed;inset:0;z-index:9000;pointer-events:none;
+    opacity:.05;mix-blend-mode:overlay;
+  }
+
+  /* ---------- Custom cursor ---------- */
+  .cursor,.cursor-dot{
+    position:fixed;top:0;left:0;z-index:9500;pointer-events:none;
+    border-radius:50%;mix-blend-mode:difference;will-change:transform;
+  }
+  .cursor{
+    width:46px;height:46px;border:1px solid var(--offwhite);
+    transform:translate(-50%,-50%);
+    transition:width .35s var(--ease),height .35s var(--ease),background .35s var(--ease),border-color .35s var(--ease);
+    display:grid;place-items:center;
+  }
+  .cursor-dot{
+    width:6px;height:6px;background:var(--offwhite);
+    transform:translate(-50%,-50%);
+  }
+  .cursor__label{
+    font-family:"Syne",sans-serif;font-weight:800;font-size:11px;
+    letter-spacing:.06em;color:#000;opacity:0;transform:scale(.4);
+    transition:opacity .3s var(--ease),transform .3s var(--ease);
+    text-transform:uppercase;
+  }
+  body.cursor-hover .cursor{width:88px;height:88px;background:var(--acid);border-color:var(--acid);}
+  body.cursor-hover .cursor__label{opacity:1;transform:scale(1);}
+  body.cursor-hover .cursor-dot{opacity:0;}
+  body.cursor-active .cursor{transform:translate(-50%,-50%) scale(.85);}
+  @media (hover:none),(pointer:coarse){.cursor,.cursor-dot{display:none!important;}}
+  @media (prefers-reduced-motion:reduce){.cursor,.cursor-dot{display:none!important;}}
+
+  /* ---------- Loader ---------- */
+  .loader{
+    position:fixed;inset:0;z-index:9800;background:var(--black);
+    display:grid;place-items:center;transition:transform 1s var(--ease) .2s;
+  }
+  .loader.done{transform:translateY(-101%);}
+  .loader__count{
+    font-family:"Anton",sans-serif;font-size:clamp(60px,16vw,180px);
+    color:var(--acid);line-height:1;letter-spacing:-.02em;
+  }
+  .loader__bar{
+    position:absolute;bottom:0;left:0;height:4px;background:var(--acid);width:0%;
+    transition:width .3s linear;
+  }
+
+  /* ---------- Header / Nav ---------- */
+  header.nav{
+    position:fixed;top:0;left:0;width:100%;z-index:1000;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px var(--pad);
+    mix-blend-mode:difference;
+    transition:transform .5s var(--ease);
+  }
+  header.nav.hide{transform:translateY(-130%);}
+  .brand{
+    font-family:"Syne",sans-serif;font-weight:800;font-size:20px;
+    letter-spacing:-.02em;color:var(--offwhite);display:flex;align-items:center;gap:8px;
+  }
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--acid);display:inline-block;animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}}
+
+  .nav__links{display:flex;gap:36px;align-items:center;}
+  .nav__links a{
+    font-family:"Syne",sans-serif;font-weight:700;font-size:13px;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--offwhite);
+    position:relative;padding:4px 0;
+  }
+  .nav__links a::after{
+    content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--acid);
+    transition:width .4s var(--ease);
+  }
+  .nav__links a:hover::after{width:100%;}
+
+  .burger{display:none;flex-direction:column;gap:6px;width:34px;padding:8px 0;z-index:1100;}
+  .burger span{display:block;height:2px;width:100%;background:var(--offwhite);transition:transform .4s var(--ease),opacity .3s;}
+  body.menu-open .burger span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  body.menu-open .burger span:nth-child(2){opacity:0;}
+  body.menu-open .burger span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+
+  .mobile-menu{
+    position:fixed;inset:0;z-index:1050;background:var(--acid);color:#000;
+    display:flex;flex-direction:column;justify-content:center;gap:8px;padding:var(--pad);
+    transform:translateY(-101%);transition:transform .7s var(--ease);
+  }
+  body.menu-open .mobile-menu{transform:translateY(0);}
+  .mobile-menu a{
+    font-family:"Anton",sans-serif;font-size:clamp(40px,12vw,72px);line-height:1.05;
+    color:#000;text-transform:uppercase;letter-spacing:-.01em;
+  }
+  .mobile-menu .mm-foot{margin-top:40px;font-family:"Syne";font-weight:700;font-size:14px;}
+
+  /* ---------- Sections base ---------- */
+  section{position:relative;}
+  .pad{padding:0 var(--pad);}
+
+  .sec-num{
+    font-family:"Syne",sans-serif;font-weight:800;font-size:13px;letter-spacing:.1em;
+    color:var(--acid);text-transform:uppercase;display:inline-flex;gap:10px;align-items:center;
+  }
+  .sec-num::before{content:"";width:38px;height:1px;background:var(--acid);display:inline-block;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+    padding:120px var(--pad) 48px;position:relative;overflow:hidden;
+  }
+  .hero__tagline{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+    font-family:"Syne",sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--gray);margin-bottom:auto;
+  }
+  .hero__tagline .acid{color:var(--acid);}
+
+  .mega{
+    font-family:"Anton",sans-serif;font-weight:400;
+    font-size:clamp(64px,15vw,260px);line-height:.86;letter-spacing:-.02em;
+    text-transform:uppercase;margin:0;
+  }
+  .mega .row{display:block;overflow:hidden;}
+  .mega .word{display:inline-block;}
+  .mega .char{display:inline-block;transform:translateY(110%);will-change:transform;}
+  .reveal-ready .mega .char{transition:transform 1s var(--ease);}
+  .mega .ital{
+    font-family:"Syne",sans-serif;font-style:normal;font-weight:800;
+    color:var(--acid);font-size:.82em;
+  }
+  .mega .stroke{
+    color:transparent;-webkit-text-stroke:1.5px var(--offwhite);
+  }
+  .mega .stroke .char{ -webkit-text-stroke:1.5px var(--offwhite);}
+
+  .hero__row2{
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:32px;
+    margin-top:clamp(28px,5vw,56px);
+  }
+  .hero__intro{max-width:520px;color:#cfccc2;font-size:clamp(15px,1.4vw,18px);line-height:1.7;}
+  .hero__intro strong{color:var(--offwhite);font-weight:700;}
+
+  .scrollcue{
+    display:inline-flex;align-items:center;gap:12px;font-family:"Syne";font-weight:700;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);
+  }
+  .scrollcue .arr{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;
+    display:grid;place-items:center;animation:bob 1.8s infinite var(--ease);}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    position:relative;display:inline-flex;align-items:center;gap:14px;
+    font-family:"Syne",sans-serif;font-weight:800;font-size:15px;letter-spacing:.01em;
+    padding:20px 34px;border-radius:60px;overflow:hidden;text-transform:uppercase;
+    background:var(--acid);color:#000;transition:color .4s var(--ease);will-change:transform;
+  }
+  .btn .txt{position:relative;z-index:2;display:inline-flex;align-items:center;gap:14px;}
+  .btn::before{
+    content:"";position:absolute;inset:0;background:var(--offwhite);
+    transform:translateY(101%);transition:transform .5s var(--ease);z-index:1;
+  }
+  .btn:hover::before{transform:translateY(0);}
+  .btn .arrow{transition:transform .5s var(--ease);}
+  .btn:hover .arrow{transform:translate(6px,-6px);}
+  .btn--ghost{background:transparent;color:var(--offwhite);border:1px solid var(--line);}
+  .btn--ghost::before{background:var(--acid);}
+  .btn--ghost:hover{color:#000;}
+  .btn--dark{background:var(--black);color:var(--offwhite);}
+  .btn--dark::before{background:var(--acid);}
+  .btn--dark:hover{color:#000;}
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:22px 0;overflow:hidden;white-space:nowrap;position:relative;
+  }
+  .marquee--acid{background:var(--acid);color:#000;border-color:#000;}
+  .marquee__track{display:inline-flex;gap:0;animation:scrollx 24s linear infinite;will-change:transform;}
+  .marquee--rev .marquee__track{animation-direction:reverse;animation-duration:30s;}
+  .marquee:hover .marquee__track{animation-play-state:paused;}
+  .marquee__item{
+    font-family:"Anton",sans-serif;font-size:clamp(30px,5vw,68px);
+    text-transform:uppercase;letter-spacing:.01em;padding:0 30px;display:inline-flex;align-items:center;gap:30px;
+  }
+  .marquee__item .star{color:var(--acid);font-family:"Syne";}
+  .marquee--acid .marquee__item .star{color:#000;}
+  @keyframes scrollx{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion:reduce){.marquee__track{animation:none;}}
+
+  /* ---------- Metrics ---------- */
+  .metrics{padding:clamp(90px,12vw,160px) 0;border-bottom:1px solid var(--line);}
+  .metrics__head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:clamp(50px,7vw,90px);}
+  .metrics__head h2{font-family:"Syne";font-weight:800;font-size:clamp(22px,3vw,34px);max-width:560px;line-height:1.2;}
+  .metrics__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);}
+  .metric{padding:clamp(34px,4vw,56px) clamp(20px,2.5vw,40px);border-right:1px solid var(--line);position:relative;}
+  .metric:last-child{border-right:none;}
+  .metric__num{
+    font-family:"Anton",sans-serif;font-size:clamp(64px,9vw,140px);line-height:.9;color:var(--acid);
+    letter-spacing:-.02em;display:flex;align-items:baseline;
+  }
+  .metric__num .suf{font-size:.4em;margin-left:6px;color:var(--offwhite);}
+  .metric__label{margin-top:18px;color:#cfccc2;font-size:clamp(14px,1.2vw,16px);line-height:1.5;max-width:240px;}
+  @media (max-width:780px){
+    .metrics__grid{grid-template-columns:1fr;}
+    .metric{border-right:none;border-bottom:1px solid var(--line);}
+    .metric:last-child{border-bottom:none;}
+  }
+
+  /* ---------- Services (horizontal index) ---------- */
+  .services{background:var(--offwhite);color:var(--ink);overflow:hidden;}
+  .services .pad{padding-top:clamp(80px,9vw,120px);}
+  .services__head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding-bottom:clamp(40px,5vw,64px);}
+  .services .sec-num{color:#000;}
+  .services .sec-num::before{background:#000;}
+  .services__head h2{font-family:"Anton",sans-serif;font-size:clamp(48px,9vw,150px);line-height:.86;text-transform:uppercase;letter-spacing:-.02em;}
+  .services__head .h2-ital{font-family:"Syne";font-weight:800;font-style:italic;text-transform:none;}
+  .services__hint{font-family:"Syne";font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#555;display:inline-flex;gap:10px;align-items:center;}
+
+  .htrack-wrap{position:relative;}
+  .htrack{
+    display:flex;gap:0;
+    will-change:transform;
+  }
+  .scard{
+    flex:0 0 min(82vw,640px);
+    border-left:1px solid var(--line-dark);
+    padding:clamp(30px,4vw,56px) clamp(26px,3vw,52px) clamp(40px,5vw,64px);
+    min-height:62vh;display:flex;flex-direction:column;justify-content:space-between;
+    transition:background .5s var(--ease),color .5s var(--ease);
+  }
+  .scard:last-child{border-right:1px solid var(--line-dark);}
+  .scard:hover{background:var(--ink);color:var(--offwhite);}
+  .scard__top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .scard__idx{font-family:"Anton",sans-serif;font-size:clamp(40px,5vw,80px);line-height:.8;letter-spacing:-.02em;}
+  .scard:hover .scard__idx{color:var(--acid);}
+  .scard__tag{font-family:"Syne";font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor;border-radius:40px;padding:8px 16px;}
+  .scard h3{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(26px,3.4vw,46px);line-height:1.05;letter-spacing:-.01em;margin:auto 0 22px;}
+  .scard p{font-size:clamp(14px,1.2vw,16.5px);line-height:1.65;max-width:480px;opacity:.86;}
+  .scard__plus{margin-top:26px;font-family:"Syne";font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;}
+  .scard__plus .pl{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;transition:background .4s var(--ease),color .4s var(--ease);}
+  .scard:hover .scard__plus .pl{background:var(--acid);color:#000;border-color:var(--acid);}
+  .htrack-progress{height:3px;background:rgba(0,0,0,.1);margin:0 var(--pad) clamp(70px,8vw,100px);position:relative;}
+  .htrack-progress span{position:absolute;left:0;top:0;height:100%;background:var(--ink);width:8%;}
+
+  /* ---------- Vision (sticky) ---------- */
+  .vision{position:relative;}
+  .vision__pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden;}
+  .vision__bg{
+    position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+    font-family:"Anton",sans-serif;font-size:26vw;color:rgba(230,255,58,.045);
+    white-space:nowrap;letter-spacing:-.02em;will-change:transform;
+  }
+  .vision__inner{padding:0 var(--pad);max-width:1100px;margin:0 auto;position:relative;z-index:2;}
+  .vision h2{
+    font-family:"Anton",sans-serif;font-size:clamp(38px,6.5vw,108px);line-height:.94;
+    text-transform:uppercase;letter-spacing:-.02em;margin-bottom:clamp(26px,4vw,48px);
+  }
+  .vision h2 .acid{color:var(--acid);}
+  .vision__body{display:flex;gap:48px;flex-wrap:wrap;}
+  .vision__body p{flex:1 1 320px;color:#cfccc2;font-size:clamp(15px,1.4vw,18px);line-height:1.75;}
+  .vision__body p strong{color:var(--offwhite);font-weight:700;}
+  .vision__scroll-spacer{height:60vh;}
+
+  /* ---------- Reveal util ---------- */
+  .rv{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+  .rv.in{opacity:1;transform:none;}
+  .rv-mask{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--ease-acid);}
+  .rv-mask.in{clip-path:inset(0 0 0 0);}
+  .rv-skew{opacity:0;transform:translateY(56px) skewY(4deg);transition:opacity 1s var(--ease),transform 1s var(--ease);}
+  .rv-skew.in{opacity:1;transform:none;}
+  [data-stagger] .rv{transition-delay:calc(var(--i,0)*.08s);}
+  @media (prefers-reduced-motion:reduce){
+    .rv,.rv-mask,.rv-skew{opacity:1!important;transform:none!important;clip-path:none!important;}
+    .mega .char{transform:none!important;}
+  }
+
+  /* ---------- Contact ---------- */
+  .contact{padding:clamp(90px,12vw,150px) 0;border-top:1px solid var(--line);}
+  .contact__grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(40px,6vw,90px);align-items:start;}
+  .contact h2{font-family:"Anton",sans-serif;font-size:clamp(46px,8vw,128px);line-height:.88;text-transform:uppercase;letter-spacing:-.02em;}
+  .contact h2 .acid{color:var(--acid);}
+  .contact__note{margin-top:28px;color:#cfccc2;font-size:clamp(15px,1.3vw,17px);line-height:1.7;max-width:420px;}
+  .contact__meta{margin-top:42px;display:flex;flex-direction:column;gap:14px;font-family:"Syne";font-weight:700;font-size:14px;}
+  .contact__meta a{display:inline-flex;align-items:center;gap:12px;color:var(--offwhite);position:relative;width:fit-content;}
+  .contact__meta a span.k{color:var(--gray);font-size:11px;letter-spacing:.08em;text-transform:uppercase;min-width:64px;}
+  .contact__meta a .u{position:relative;}
+  .contact__meta a .u::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--acid);transition:width .4s var(--ease);}
+  .contact__meta a:hover .u::after{width:100%;}
+
+  form{display:flex;flex-direction:column;gap:0;}
+  .field{position:relative;border-bottom:1px solid var(--line);padding:18px 0;}
+  .field label{display:block;font-family:"Syne";font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;}
+  .field label .req{color:var(--acid);}
+  .field input,.field select,.field textarea{
+    width:100%;background:transparent;border:none;color:var(--offwhite);
+    font-family:"Noto Sans KR",sans-serif;font-size:16px;padding:6px 0;line-height:1.5;
+  }
+  .field textarea{resize:vertical;min-height:90px;}
+  .field select{appearance:none;cursor:pointer;}
+  .field select option{background:#161616;color:var(--offwhite);}
+  .field input::placeholder,.field textarea::placeholder{color:#5c5c56;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;}
+  .field::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--acid);transition:width .45s var(--ease);}
+  .field:focus-within::after{width:100%;}
+  .field--has-arrow::before{content:"↓";position:absolute;right:2px;bottom:14px;color:var(--acid);font-family:"Syne";font-weight:800;pointer-events:none;}
+  .field .err{display:none;color:#ff5d52;font-size:12px;margin-top:6px;font-family:"Syne";font-weight:700;}
+  .field.invalid .err{display:block;}
+  .field.invalid::after{background:#ff5d52;width:100%;}
+  form .btn{margin-top:34px;align-self:flex-start;width:auto;}
+
+  .form-success{
+    display:none;border:1px solid var(--acid);border-radius:16px;padding:clamp(34px,5vw,56px);
+    background:linear-gradient(180deg,rgba(230,255,58,.08),transparent);
+  }
+  .form-success.show{display:block;animation:popIn .6s var(--ease);}
+  @keyframes popIn{from{opacity:0;transform:translateY(20px) scale(.98);}to{opacity:1;transform:none;}}
+  .form-success h3{font-family:"Anton";font-size:clamp(26px,3.4vw,42px);line-height:1.05;text-transform:uppercase;color:var(--acid);margin-bottom:16px;}
+  .form-success p{color:#cfccc2;font-size:16px;line-height:1.7;}
+
+  @media (max-width:860px){.contact__grid{grid-template-columns:1fr;}}
+
+  /* ---------- Footer ---------- */
+  footer.foot{background:var(--offwhite);color:var(--ink);padding:clamp(60px,8vw,110px) 0 40px;}
+  .foot__top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;border-bottom:1px solid var(--line-dark);padding-bottom:clamp(40px,5vw,60px);}
+  .foot__big{font-family:"Anton",sans-serif;font-size:clamp(54px,12vw,180px);line-height:.82;text-transform:uppercase;letter-spacing:-.03em;}
+  .foot__big .ital{font-family:"Syne";font-weight:800;font-style:italic;text-transform:none;}
+  .foot__cta{display:flex;flex-direction:column;gap:18px;align-items:flex-start;}
+  .foot__cta .lead{font-family:"Syne";font-weight:800;font-size:clamp(18px,2vw,24px);max-width:300px;line-height:1.25;}
+  .foot__biz{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px 40px;padding:clamp(40px,5vw,56px) 0;font-size:13.5px;line-height:1.7;color:#3a3a36;}
+  .foot__biz .blk b{display:block;font-family:"Syne";font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#000;margin-bottom:8px;}
+  .foot__biz a{position:relative;}
+  .foot__biz a:hover{color:#000;text-decoration:underline;text-underline-offset:3px;}
+  .foot__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;font-family:"Syne";font-weight:700;font-size:12px;letter-spacing:.02em;color:#555;}
+  .foot__bottom .links{display:flex;gap:24px;}
+  .foot__bottom .links a:hover{color:#000;}
+  .totop{font-family:"Syne";font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;color:#000;}
+
+  /* ---------- Responsive tweaks ---------- */
+  @media (max-width:880px){
+    .nav__links{display:none;}
+    .burger{display:flex;}
+    .hero__row2{align-items:flex-start;}
+  }
+  @media (max-width:600px){
+    .hero{padding-top:100px;}
+    .metric__num{font-size:clamp(56px,18vw,96px);}
+    .scard{min-height:auto;flex:0 0 86vw;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<!-- Grain -->
+<svg class="grain" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)"/>
+</svg>
+
+<!-- Custom cursor -->
+<div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- Loader -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__count" id="loaderCount">00</div>
+  <div class="loader__bar" id="loaderBar"></div>
+</div>
+
+<!-- Nav -->
+<header class="nav" id="nav">
+  <a href="#hero" class="brand" data-cursor="AI-ing"><span class="dot"></span>에이아잉 <span style="color:var(--gray);font-weight:700;">AI-ing</span></a>
+  <nav class="nav__links" aria-label="주요 메뉴">
+    <a href="#metrics">성과</a>
+    <a href="#services">서비스</a>
+    <a href="#vision">비전</a>
+    <a href="#contact" data-cursor="→">상담</a>
+  </nav>
+  <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Mobile menu -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="모바일 메뉴">
+  <a href="#metrics">성과</a>
+  <a href="#services">서비스</a>
+  <a href="#vision">비전</a>
+  <a href="#contact">상담 신청</a>
+  <div class="mm-foot">Beyond AI to AX · 010-7646-3634</div>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="hero" aria-label="소개">
+    <div class="hero__tagline">
+      <span>에이아잉 / AI-ing</span>
+      <span class="acid">Beyond AI to AX</span>
+      <span>서울 · 2026</span>
+    </div>
+
+    <h1 class="mega" id="megaHead" aria-label="Beyond AI to AX">
+      <span class="row" data-line><span class="word">BEYOND</span></span>
+      <span class="row" data-line><span class="word stroke">AI</span><span class="word">&nbsp;</span><span class="word ital">to</span></span>
+      <span class="row" data-line><span class="word">AX.</span></span>
+    </h1>
+
+    <div class="hero__row2">
+      <p class="hero__intro rv">
+        <strong>에이아잉</strong>은 기업의 일하는 방식을 개선하는 <strong>AX(AI Experience) 컨설팅</strong>,
+        업무 맞춤형 AI 에이전트 시스템 기획·개발, 임직원 전용 실무 맞춤형 교육까지
+        — <strong>일원화된 자동화 구축 솔루션</strong>을 제공합니다.
+      </p>
+      <a href="#contact" class="btn" data-cursor="GO">
+        <span class="txt">무료 AX 상담 신청
+          <svg class="arrow" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path d="M2 15L15 2M15 2H5M15 2V12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="hero__row2" style="margin-top:auto;padding-top:40px;">
+      <span class="scrollcue"><span class="arr"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1V13M7 13L1.5 7.5M7 13L12.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>스크롤하여 탐색</span>
+      <a href="#services" class="scrollcue" data-cursor="VIEW" style="color:var(--acid);">서비스 탐색 →</a>
+    </div>
+  </section>
+
+  <!-- MARQUEE 1 -->
+  <div class="marquee marquee--acid" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__item">AX 컨설팅 <span class="star">✦</span> AI 에이전트 구축 <span class="star">✦</span> 실무 교육 <span class="star">✦</span> 이커머스 콘텐츠 <span class="star">✦</span></span>
+      <span class="marquee__item">AX 컨설팅 <span class="star">✦</span> AI 에이전트 구축 <span class="star">✦</span> 실무 교육 <span class="star">✦</span> 이커머스 콘텐츠 <span class="star">✦</span></span>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <section class="metrics pad" id="metrics" aria-label="성과 지표">
+    <div class="metrics__head">
+      <div>
+        <span class="sec-num rv">01 / 성과</span>
+        <h2 class="rv" style="margin-top:20px;">숫자로 증명하는 AX 전환. 도입 그 이후의 실질 변화에 집중합니다.</h2>
+      </div>
+      <span class="services__hint rv" style="color:var(--gray);">실제 프로젝트 기준</span>
+    </div>
+
+    <div class="metrics__grid" data-stagger>
+      <div class="metric rv" style="--i:0">
+        <div class="metric__num"><span data-count="300" data-prefix="+">+0</span><span class="suf">%</span></div>
+        <p class="metric__label">평균 업무 생산성 개선율</p>
+      </div>
+      <div class="metric rv" style="--i:1">
+        <div class="metric__num"><span data-count="60">0</span><span class="suf">%</span></div>
+        <p class="metric__label">AI 에이전트 도입 후 운영 비용 절감</p>
+      </div>
+      <div class="metric rv" style="--i:2">
+        <div class="metric__num"><span data-count="100">0</span><span class="suf">%</span></div>
+        <p class="metric__label">고객사 맞춤형 커스텀 솔루션</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES (horizontal index) -->
+  <section class="services" id="services" aria-label="서비스">
+    <div class="pad">
+      <div class="services__head">
+        <div>
+          <span class="sec-num rv">02 / 서비스</span>
+          <h2 class="rv">우리가 <span class="h2-ital">실행하는</span> 것</h2>
+        </div>
+        <span class="services__hint rv">← 드래그 / 스크롤 →</span>
+      </div>
+    </div>
+
+    <div class="htrack-wrap" id="htrackWrap">
+      <div class="htrack" id="htrack" data-cursor="DRAG">
+
+        <article class="scard">
+          <div class="scard__top">
+            <span class="scard__idx">01</span>
+            <span class="scard__tag">B2B</span>
+          </div>
+          <h3>B2B AX 컨설팅 &amp; 구축</h3>
+          <div>
+            <p>기업 고유의 데이터와 업무 구조에 맞춘 AX 로드맵을 설계합니다. 독자적인 AI 에이전트를 설계하고 반복 업무를 끝내는 자동화 시스템을 직접 구축합니다.</p>
+            <span class="scard__plus"><span class="pl">+</span> 로드맵 · 에이전트 설계 · 자동화</span>
+          </div>
+        </article>
+
+        <article class="scard">
+          <div class="scard__top">
+            <span class="scard__idx">02</span>
+            <span class="scard__tag">교육</span>
+          </div>
+          <h3>AI 실무 교육 &amp; 멘토링</h3>
+          <div>
+            <p>실시간 Zoom 과외와 맞춤 멘토링을 제공합니다. 대학생부터 기업 임직원까지, AI 기초·응용을 실습 중심으로 다루는 현장형 특강을 운영합니다.</p>
+            <span class="scard__plus"><span class="pl">+</span> 실시간 Zoom · 1:1 멘토링 · 실습 특강</span>
+          </div>
+        </article>
+
+        <article class="scard">
+          <div class="scard__top">
+            <span class="scard__idx">03</span>
+            <span class="scard__tag">콘텐츠</span>
+          </div>
+          <h3>이커머스 &amp; 지식 콘텐츠</h3>
+          <div>
+            <p>AX 가이드북(정기간행 전자책)을 발급·소매 판매하고, 비즈니스 효율을 높이는 SW 템플릿과 선별된 IT 기자재를 공급합니다.</p>
+            <span class="scard__plus"><span class="pl">+</span> 전자책 · SW 템플릿 · IT 기자재</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+    <div class="htrack-progress" aria-hidden="true"><span id="htrackBar"></span></div>
+  </section>
+
+  <!-- MARQUEE 2 -->
+  <div class="marquee marquee--rev" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__item">AUTOMATE <span class="star">→</span> TRAIN <span class="star">→</span> TRANSFORM <span class="star">→</span> GROW <span class="star">→</span></span>
+      <span class="marquee__item">AUTOMATE <span class="star">→</span> TRAIN <span class="star">→</span> TRANSFORM <span class="star">→</span> GROW <span class="star">→</span></span>
+    </div>
+  </div>
+
+  <!-- VISION (sticky pinned) -->
+  <section class="vision" id="vision" aria-label="비전">
+    <div class="vision__pin">
+      <div class="vision__bg" id="visionBg" aria-hidden="true">AI · AX · AI · AX ·</div>
+      <div class="vision__inner">
+        <span class="sec-num rv">03 / 비전</span>
+        <h2 class="rv-skew" style="margin-top:22px;">모든 비즈니스의 <span class="acid">AI 전환</span>을<br/>쉽게, 에이아잉.</h2>
+        <div class="vision__body" data-stagger>
+          <p class="rv" style="--i:0">최첨단 AI 기술은 끝없이 늘어나지만, 현업에서 <strong>실제 생산성을 극대화</strong>하는 것은 여전히 많은 기업의 숙제입니다. 대부분은 구독형 챗봇(LLM)을 사놓는 수준에 머뭅니다.</p>
+          <p class="rv" style="--i:1">에이아잉은 기술의 대리 도입에 그치지 않습니다. 구성원 개개인의 <strong>'업무 경험(AX)' 자체를 변화</strong>시키는 것을 목표로, 진짜 필요한 자동화 파이프라인을 구축하고 이를 완벽히 다룰 수 있도록 구성원을 훈련시킵니다. 우리는 <strong>지속 가능한 성장 동력</strong>을 파트너사 내부 프로세스에 완전히 안착시킵니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact pad" id="contact" aria-label="문의">
+    <div class="contact__grid">
+      <div>
+        <span class="sec-num rv">04 / 상담</span>
+        <h2 class="rv-skew" style="margin-top:20px;">무료 <span class="acid">AX</span><br/>상담 신청</h2>
+        <p class="contact__note rv">업무 환경 분석 및 AX 도입 상담 신청을 남겨주시면 24시간 내에 연락드립니다.</p>
+        <div class="contact__meta rv">
+          <a href="tel:01076463634" data-cursor="CALL"><span class="k">Tel</span><span class="u">010-7646-3634</span></a>
+          <a href="mailto:rlaalsdn456456@naver.com" data-cursor="MAIL"><span class="k">Mail</span><span class="u">rlaalsdn456456@naver.com</span></a>
+        </div>
+      </div>
+
+      <div>
+        <form id="axForm" novalidate>
+          <div class="field">
+            <label for="f-name">성명 / 담당자명 <span class="req">*</span></label>
+            <input type="text" id="f-name" name="name" placeholder="홍길동 / OOO 매니저" autocomplete="name" required />
+            <span class="err">성명 또는 담당자명을 입력해 주세요.</span>
+          </div>
+          <div class="field">
+            <label for="f-phone">연락처 <span class="req">*</span></label>
+            <input type="tel" id="f-phone" name="phone" placeholder="010-0000-0000" autocomplete="tel" required />
+            <span class="err">연락 가능한 전화번호를 입력해 주세요.</span>
+          </div>
+          <div class="field">
+            <label for="f-email">이메일 <span class="req">*</span></label>
+            <input type="email" id="f-email" name="email" placeholder="name@company.com" autocomplete="email" required />
+            <span class="err">올바른 이메일 형식으로 입력해 주세요.</span>
+          </div>
+          <div class="field field--has-arrow">
+            <label for="f-area">문의 영역 <span class="req">*</span></label>
+            <select id="f-area" name="area" required>
+              <option value="" disabled selected>선택해 주세요</option>
+              <option>B2B AX 도입 &amp; 개발 컨설팅</option>
+              <option>AI 실무 교육 및 1:1 멘토링</option>
+              <option>템플릿 / 전자책 구매 관련 문의</option>
+              <option>기타 파트너십</option>
+            </select>
+            <span class="err">문의 영역을 선택해 주세요.</span>
+          </div>
+          <div class="field">
+            <label for="f-msg">상세 문의 내용 <span class="req">*</span></label>
+            <textarea id="f-msg" name="message" placeholder="현재 업무 환경, 도입을 고민 중인 영역, 일정 등을 자유롭게 적어주세요." required></textarea>
+            <span class="err">문의 내용을 입력해 주세요.</span>
+          </div>
+          <button type="submit" class="btn" data-cursor="SEND">
+            <span class="txt">상담 신청 제출하기
+              <svg class="arrow" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path d="M2 15L15 2M15 2H5M15 2V12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+        </form>
+
+        <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+          <h3>접수 완료</h3>
+          <p>✨ 상담 신청이 성공적으로 접수되었습니다! 입력하신 연락처와 이메일로 곧 안내해 드리겠습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="foot pad" aria-label="사업자 정보">
+  <div class="foot__top">
+    <div class="foot__big">AI-<span class="ital">ing</span>.</div>
+    <div class="foot__cta">
+      <span class="lead">AI 실행을 넘어<br/>비즈니스 경험으로.</span>
+      <a href="#contact" class="btn btn--dark" data-cursor="→"><span class="txt">상담 시작하기
+        <svg class="arrow" width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path d="M2 15L15 2M15 2H5M15 2V12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span></a>
+    </div>
+  </div>
+
+  <div class="foot__biz">
+    <div class="blk"><b>상호 / 대표</b>에이아잉 (AI-ing)<br/>대표자 김민우<br/>개인정보관리책임자 김민우</div>
+    <div class="blk"><b>주소</b>서울특별시 서초구 신반포로33길 15,<br/>102동 1002호 (잠원동, 신반포청구아파트)</div>
+    <div class="blk"><b>연락처</b>전화 <a href="tel:01076463634">010-7646-3634</a><br/>이메일 <a href="mailto:rlaalsdn456456@naver.com">rlaalsdn456456@naver.com</a></div>
+    <div class="blk"><b>등록 정보</b>사업자등록번호 [등록 대기중] (신청 완료)<br/>통신판매업신고번호 [신고 대기중]<br/>호스팅 Cloudflare Inc. / 에이아잉</div>
+  </div>
+
+  <div class="foot__bottom">
+    <span>© 2026 에이아잉 (AI-ing). All Rights Reserved.</span>
+    <div class="links">
+      <a href="#contact">개인정보처리방침</a>
+      <a href="#contact">이용약관</a>
+      <a href="#hero" class="totop">맨 위로 ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var isTouch = window.matchMedia("(hover:none),(pointer:coarse)").matches;
+
+  /* ---------- Loader ---------- */
+  var loader = document.getElementById("loader");
+  var lc = document.getElementById("loaderCount");
+  var lb = document.getElementById("loaderBar");
+  function finishLoad(){
+    document.body.classList.add("reveal-ready");
+    revealHero();
+  }
+  if(reduce){
+    if(lc) lc.textContent = "100";
+    if(loader){ loader.classList.add("done"); setTimeout(function(){loader.style.display="none";},900); }
+    finishLoad();
+  } else {
+    var p = 0;
+    var t = setInterval(function(){
+      p += Math.floor(Math.random()*9)+3;
+      if(p>=100){ p=100; clearInterval(t);
+        if(lc) lc.textContent = "100";
+        if(lb) lb.style.width = "100%";
+        setTimeout(function(){
+          loader.classList.add("done");
+          setTimeout(function(){loader.style.display="none";},1100);
+          finishLoad();
+        },280);
+      } else {
+        if(lc) lc.textContent = (p<10?"0":"")+p;
+        if(lb) lb.style.width = p+"%";
+      }
+    },95);
+  }
+
+  /* ---------- Hero letter-mask reveal ---------- */
+  function splitToChars(){
+    var words = document.querySelectorAll("#megaHead .word");
+    words.forEach(function(w){
+      if(w.classList.contains("ital")||w.textContent.trim()===""){
+        // wrap whole word as single char for transform
+        var html = w.innerHTML;
+        if(w.innerHTML.indexOf("&nbsp;")>-1){ return; }
+        w.innerHTML = '<span class="char">'+html+'</span>';
+        return;
+      }
+      var txt = w.textContent;
+      w.textContent = "";
+      txt.split("").forEach(function(ch){
+        var s = document.createElement("span");
+        s.className = "char";
+        s.textContent = ch;
+        w.appendChild(s);
+      });
+    });
+  }
+  splitToChars();
+
+  function revealHero(){
+    var chars = document.querySelectorAll("#megaHead .char");
+    chars.forEach(function(c,i){
+      if(reduce){ c.style.transform="none"; return; }
+      c.style.transitionDelay = (i*0.035)+"s";
+      requestAnimationFrame(function(){ c.style.transform="translateY(0)"; });
+    });
+  }
+
+  /* ---------- Custom cursor (lerp) ---------- */
+  if(!isTouch && !reduce){
+    var cur = document.querySelector(".cursor");
+    var dot = document.querySelector(".cursor-dot");
+    var label = document.querySelector(".cursor__label");
+    var mx=window.innerWidth/2, my=window.innerHeight/2;
+    var cx=mx, cy=my, dx=mx, dy=my;
+    window.addEventListener("mousemove",function(e){ mx=e.clientX; my=e.clientY; },{passive:true});
+    (function loop(){
+      cx += (mx-cx)*0.16; cy += (my-cy)*0.16;
+      dx += (mx-dx)*0.42; dy += (my-dy)*0.42;
+      cur.style.transform = "translate("+cx+"px,"+cy+"px) translate(-50%,-50%)";
+      dot.style.transform = "translate("+dx+"px,"+dy+"px) translate(-50%,-50%)";
+      requestAnimationFrame(loop);
+    })();
+    var hoverSel = 'a,button,[data-cursor],input,select,textarea,.scard';
+    document.querySelectorAll(hoverSel).forEach(function(el){
+      el.addEventListener("mouseenter",function(){
+        document.body.classList.add("cursor-hover");
+        label.textContent = el.getAttribute("data-cursor") || "";
+      });
+      el.addEventListener("mouseleave",function(){
+        document.body.classList.remove("cursor-hover");
+        label.textContent = "";
+      });
+    });
+    document.addEventListener("mousedown",function(){document.body.classList.add("cursor-active");});
+    document.addEventListener("mouseup",function(){document.body.classList.remove("cursor-active");});
+  }
+
+  /* ---------- Magnetic buttons ---------- */
+  if(!isTouch && !reduce){
+    document.querySelectorAll(".btn").forEach(function(btn){
+      var strength = 0.34;
+      btn.addEventListener("mousemove",function(e){
+        var r = btn.getBoundingClientRect();
+        var x = e.clientX - r.left - r.width/2;
+        var y = e.clientY - r.top - r.height/2;
+        btn.style.transform = "translate("+(x*strength)+"px,"+(y*strength)+"px)";
+      });
+      btn.addEventListener("mouseleave",function(){
+        btn.style.transform = "translate(0,0)";
+        btn.style.transition = "transform .6s cubic-bezier(.16,1,.3,1)";
+        setTimeout(function(){btn.style.transition="";},600);
+      });
+    });
+  }
+
+  /* ---------- Nav: hide on scroll down, show on up ---------- */
+  var nav = document.getElementById("nav");
+  var lastY = window.pageYOffset;
+  window.addEventListener("scroll",function(){
+    var y = window.pageYOffset;
+    if(y>lastY && y>160){ nav.classList.add("hide"); }
+    else { nav.classList.remove("hide"); }
+    lastY = y;
+  },{passive:true});
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.getElementById("burger");
+  var mm = document.getElementById("mobileMenu");
+  function toggleMenu(open){
+    document.body.classList.toggle("menu-open", open);
+    burger.setAttribute("aria-expanded", open?"true":"false");
+    burger.setAttribute("aria-label", open?"메뉴 닫기":"메뉴 열기");
+  }
+  burger.addEventListener("click",function(){ toggleMenu(!document.body.classList.contains("menu-open")); });
+  mm.querySelectorAll("a").forEach(function(a){ a.addEventListener("click",function(){ toggleMenu(false); }); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") toggleMenu(false); });
+
+  /* ---------- IntersectionObserver reveals ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  },{threshold:0.18, rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".rv,.rv-mask,.rv-skew").forEach(function(el){ io.observe(el); });
+
+  /* ---------- Count-up ---------- */
+  var counted = new WeakSet();
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting && !counted.has(en.target)){
+        counted.add(en.target);
+        animateCount(en.target);
+        cio.unobserve(en.target);
+      }
+    });
+  },{threshold:0.5});
+  document.querySelectorAll("[data-count]").forEach(function(el){ cio.observe(el); });
+
+  function animateCount(el){
+    var target = parseInt(el.getAttribute("data-count"),10);
+    var prefix = el.getAttribute("data-prefix") || "";
+    if(reduce){ el.textContent = prefix+target; return; }
+    var dur = 1600, start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var prog = Math.min((ts-start)/dur, 1);
+      var eased = 1 - Math.pow(1-prog, 3);
+      el.textContent = prefix + Math.round(target*eased);
+      if(prog<1) requestAnimationFrame(step);
+      else el.textContent = prefix+target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ---------- Services horizontal scroll + progress + drag ---------- */
+  var wrap = document.getElementById("htrackWrap");
+  var track = document.getElementById("htrack");
+  var bar = document.getElementById("htrackBar");
+  var servicesSec = document.getElementById("services");
+
+  function maxScroll(){ return Math.max(0, track.scrollWidth - window.innerWidth); }
+
+  // Scroll-driven horizontal mapping while section in viewport
+  if(!isTouch){
+    window.addEventListener("scroll",updateHTrack,{passive:true});
+    window.addEventListener("resize",updateHTrack);
+  }
+  function updateHTrack(){
+    var ms = maxScroll();
+    if(ms<=0){ track.style.transform="translateX(0)"; if(bar) bar.style.width="100%"; return; }
+    var rect = servicesSec.getBoundingClientRect();
+    var vh = window.innerHeight;
+    // progress as the section travels through viewport
+    var total = rect.height + vh;
+    var seen = vh - rect.top;
+    var prog = Math.min(Math.max(seen/total, 0), 1);
+    // bias so the horizontal motion happens mostly while cards are on screen
+    var eased = Math.min(Math.max((prog-0.12)/0.7, 0), 1);
+    var x = -eased*ms;
+    track.style.transform = "translateX("+x+"px)";
+    if(bar) bar.style.width = (8 + eased*92)+"%";
+  }
+  updateHTrack();
+
+  // Drag to scroll the page area (translates into vertical scroll feel)
+  if(!isTouch){
+    var dragging=false, startX=0, startScroll=0;
+    track.addEventListener("mousedown",function(e){
+      dragging=true; startX=e.clientX; startScroll=window.pageYOffset;
+      document.body.style.userSelect="none";
+    });
+    window.addEventListener("mousemove",function(e){
+      if(!dragging) return;
+      var dxp = startX - e.clientX;
+      window.scrollTo(0, startScroll + dxp*1.4);
+    });
+    window.addEventListener("mouseup",function(){ dragging=false; document.body.style.userSelect=""; });
+  }
+
+  /* ---------- Vision parallax bg ---------- */
+  var vbg = document.getElementById("visionBg");
+  var vision = document.getElementById("vision");
+  if(vbg && !reduce){
+    window.addEventListener("scroll",function(){
+      var r = vision.getBoundingClientRect();
+      var off = (window.innerHeight - r.top) * 0.12;
+      vbg.style.transform = "translateX("+(-off)+"px)";
+    },{passive:true});
+  }
+
+  /* ---------- Form validation ---------- */
+  var form = document.getElementById("axForm");
+  var success = document.getElementById("formSuccess");
+  function setInvalid(field, bad){ field.classList.toggle("invalid", bad); }
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var ok = true;
+    var name = form.querySelector("#f-name");
+    var phone = form.querySelector("#f-phone");
+    var email = form.querySelector("#f-email");
+    var area = form.querySelector("#f-area");
+    var msg = form.querySelector("#f-msg");
+
+    var checkName = name.value.trim().length>=1;
+    var checkPhone = /[0-9][0-9\-\s]{6,}/.test(phone.value.trim());
+    var checkEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    var checkArea = area.value !== "";
+    var checkMsg = msg.value.trim().length>=2;
+
+    setInvalid(name.closest(".field"), !checkName);
+    setInvalid(phone.closest(".field"), !checkPhone);
+    setInvalid(email.closest(".field"), !checkEmail);
+    setInvalid(area.closest(".field"), !checkArea);
+    setInvalid(msg.closest(".field"), !checkMsg);
+
+    ok = checkName && checkPhone && checkEmail && checkArea && checkMsg;
+    if(!ok){
+      var firstBad = form.querySelector(".field.invalid input,.field.invalid select,.field.invalid textarea");
+      if(firstBad) firstBad.focus();
+      return;
+    }
+    form.style.display="none";
+    success.classList.add("show");
+    success.setAttribute("tabindex","-1");
+    success.focus();
+  });
+  // clear invalid on input
+  form.querySelectorAll("input,select,textarea").forEach(function(el){
+    el.addEventListener("input",function(){ var f=el.closest(".field"); if(f) f.classList.remove("invalid"); });
+    el.addEventListener("change",function(){ var f=el.closest(".field"); if(f) f.classList.remove("invalid"); });
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>에이아잉 (AI-ing) — Beyond AI to AX</title>
+<meta name="description" content="에이아잉(AI-ing)은 AX(AI Experience) 컨설팅, 업무 맞춤형 AI 에이전트 구축, 실무 맞춤형 교육을 제공하는 일원화된 자동화 구축 솔루션입니다." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,800;0,900;1,800&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     에이아잉 (AI-ing) — DISPLAY BENTO variant
+     Near-black #0c0c0c + acid lime #e6ff3a
+     ============================================================ */
+
+  :root {
+    --black: #0c0c0c;
+    --ink: #121212;
+    --panel: #161616;
+    --panel-2: #1c1c1c;
+    --lime: #e6ff3a;
+    --lime-2: #d8ff3e;
+    --offwhite: #f2efe6;
+    --white: #ffffff;
+    --gray: #8c8c84;
+    --gray-2: #6a6a64;
+    --line: rgba(242, 239, 230, 0.12);
+    --line-strong: rgba(242, 239, 230, 0.22);
+
+    --font-display: "Archivo", "Noto Sans KR", sans-serif;
+    --font-serif: "Instrument Serif", "Noto Sans KR", serif;
+    --font-body: "Noto Sans KR", "Archivo", sans-serif;
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-2: cubic-bezier(0.7, 0, 0.2, 1);
+
+    --maxw: 1560px;
+    --gutter: clamp(18px, 4vw, 64px);
+    --gap: clamp(10px, 1vw, 18px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--black);
+    color: var(--offwhite);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    cursor: auto;
+  }
+
+  ::selection { background: var(--lime); color: var(--black); }
+  ::-moz-selection { background: var(--lime); color: var(--black); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+  ul { list-style: none; }
+
+  /* ---------- skip link ---------- */
+  .skip-link {
+    position: absolute; top: -200px; left: 16px; z-index: 9999;
+    background: var(--lime); color: var(--black); padding: 12px 20px;
+    font-weight: 800; border-radius: 4px; font-family: var(--font-display);
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .skip-link:focus { top: 16px; }
+
+  :focus-visible {
+    outline: 3px solid var(--lime);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============================================================
+     GRAIN / NOISE OVERLAY
+     ============================================================ */
+  .grain {
+    position: fixed; inset: -50%; z-index: 9000;
+    pointer-events: none;
+    width: 200%; height: 200%;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
+
+  /* ============================================================
+     CUSTOM CURSOR
+     ============================================================ */
+  .cursor, .cursor-dot {
+    position: fixed; top: 0; left: 0; z-index: 9500;
+    pointer-events: none;
+    border-radius: 50%;
+    will-change: transform;
+    mix-blend-mode: difference;
+  }
+  .cursor {
+    width: 42px; height: 42px;
+    border: 1.5px solid var(--offwhite);
+    margin: -21px 0 0 -21px;
+    transition: width .35s var(--ease), height .35s var(--ease),
+                margin .35s var(--ease), background-color .35s var(--ease),
+                border-color .35s var(--ease), opacity .3s ease;
+    display: grid; place-items: center;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px; margin: -3px 0 0 -3px;
+    background: var(--offwhite);
+    transition: opacity .3s ease, transform .3s var(--ease);
+  }
+  .cursor__label {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--black);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+    mix-blend-mode: normal;
+  }
+  body.cur-hover .cursor {
+    width: 84px; height: 84px; margin: -42px 0 0 -42px;
+    background: var(--lime);
+    border-color: var(--lime);
+    mix-blend-mode: normal;
+  }
+  body.cur-hover .cursor__label { opacity: 1; transform: scale(1); }
+  body.cur-hover .cursor-dot { opacity: 0; }
+  body.cur-down .cursor { transform: scale(0.85); }
+
+  @media (hover: none), (pointer: coarse) {
+    .cursor, .cursor-dot { display: none !important; }
+  }
+
+  /* ============================================================
+     LAYOUT HELPERS
+     ============================================================ */
+  .wrap {
+    width: 100%;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--gap);
+  }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.4em;
+    margin-bottom: clamp(28px, 4vw, 60px);
+    flex-wrap: wrap;
+  }
+  .sec-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(13px, 1vw, 15px);
+    color: var(--lime);
+    letter-spacing: 0.04em;
+    font-feature-settings: "tnum";
+  }
+  .sec-kicker {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: clamp(11px, 0.9vw, 13px);
+    color: var(--gray);
+  }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  header.nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: clamp(16px, 1.8vw, 26px) var(--gutter);
+    mix-blend-mode: difference;
+    transition: transform .5s var(--ease);
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(18px, 1.5vw, 22px);
+    letter-spacing: -0.02em;
+    color: var(--white);
+    display: flex; align-items: center; gap: 0.5em;
+  }
+  .brand .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--lime);
+    display: inline-block;
+    animation: pulse 2.4s var(--ease) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.5); opacity: 0.5; }
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: clamp(20px, 2.4vw, 40px);
+  }
+  .nav-links a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  .nav-links a.lk::after {
+    content: ""; position: absolute; left: 0; bottom: -5px;
+    width: 100%; height: 1.5px; background: var(--lime);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform .5s var(--ease);
+  }
+  .nav-links a.lk:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  .nav-cta {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--black);
+    background: var(--lime);
+    padding: 11px 20px;
+    border-radius: 100px;
+    transition: transform .5s var(--ease), background-color .4s var(--ease);
+  }
+  .nav-cta:hover { background: var(--white); }
+
+  .burger {
+    display: none;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--black);
+    place-items: center;
+    z-index: 1100;
+  }
+  .burger span {
+    position: relative; width: 20px; height: 2px; background: var(--black);
+    transition: transform .4s var(--ease), opacity .3s;
+  }
+  .burger span::before, .burger span::after {
+    content: ""; position: absolute; left: 0; width: 20px; height: 2px;
+    background: var(--black); transition: transform .4s var(--ease);
+  }
+  .burger span::before { top: -6px; }
+  .burger span::after { top: 6px; }
+  body.menu-open .burger span { background: transparent; }
+  body.menu-open .burger span::before { transform: translateY(6px) rotate(45deg); }
+  body.menu-open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
+
+  /* mobile menu overlay */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 1050;
+    background: var(--black);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: var(--gutter);
+    transform: translateY(-100%);
+    transition: transform .7s var(--ease);
+    pointer-events: none;
+  }
+  body.menu-open .mobile-menu { transform: translateY(0); pointer-events: auto; }
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(40px, 12vw, 72px);
+    line-height: 1.05;
+    color: var(--offwhite);
+    letter-spacing: -0.03em;
+    padding: 6px 0;
+    transition: color .3s, padding-left .4s var(--ease);
+  }
+  .mobile-menu a:hover { color: var(--lime); padding-left: 16px; }
+  .mobile-menu .mm-foot {
+    margin-top: 8vh; font-family: var(--font-body); font-size: 14px;
+    color: var(--gray); display: flex; flex-direction: column; gap: 4px;
+  }
+
+  /* ============================================================
+     HERO — BENTO
+     ============================================================ */
+  .hero {
+    padding-top: clamp(96px, 12vh, 150px);
+    padding-bottom: clamp(20px, 4vh, 40px);
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 2em; margin-bottom: clamp(14px, 2vh, 24px); flex-wrap: wrap;
+  }
+  .hero-tag {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: clamp(11px, 0.95vw, 13px);
+    color: var(--lime);
+    display: flex; align-items: center; gap: 0.8em;
+  }
+  .hero-tag::before {
+    content: ""; width: 38px; height: 1.5px; background: var(--lime);
+  }
+  .hero-loc {
+    font-family: var(--font-display);
+    font-size: 12px; font-weight: 600; color: var(--gray);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    text-align: right; line-height: 1.5;
+  }
+
+  .hero-display {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(58px, 13.5vw, 230px);
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--offwhite);
+    margin-bottom: clamp(20px, 2.5vh, 34px);
+  }
+  .hero-display .ser {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    color: var(--lime);
+  }
+  .hero-display .line { display: block; overflow: hidden; }
+  .hero-display .line > span {
+    display: block;
+    transform: translateY(110%);
+    transition: transform 1.1s var(--ease);
+  }
+  .hero-display.in .line > span { transform: translateY(0); }
+  .hero-display .line:nth-child(2) > span { transition-delay: .09s; }
+  .hero-display .line:nth-child(3) > span { transition-delay: .18s; }
+
+  .hero-slogan {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(15px, 1.6vw, 24px);
+    letter-spacing: -0.01em;
+    color: var(--lime);
+    margin-bottom: clamp(28px, 4vh, 50px);
+    max-width: 30ch;
+  }
+  .hero-slogan .ko {
+    color: var(--gray);
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  /* hero bento row */
+  .hero-bento { margin-top: auto; }
+  .cell {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: clamp(20px, 1.8vw, 30px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color .5s var(--ease), background-color .5s var(--ease), transform .6s var(--ease);
+  }
+  .cell.lime {
+    background: var(--lime);
+    color: var(--black);
+    border-color: var(--lime);
+  }
+  .cell.lime-grad {
+    background: linear-gradient(135deg, var(--lime) 0%, #b6e000 60%, #8fb800 100%);
+    color: var(--black);
+    border-color: transparent;
+  }
+  .cell.duo {
+    background:
+      radial-gradient(120% 120% at 100% 0%, rgba(230,255,58,0.16), transparent 55%),
+      var(--panel-2);
+  }
+
+  .hero-bento .c-intro { grid-column: span 6; display: flex; flex-direction: column; justify-content: space-between; gap: 1.4em; min-height: 190px; }
+  .hero-bento .c-intro p {
+    font-size: clamp(14px, 1.05vw, 17px);
+    line-height: 1.6;
+    color: var(--offwhite);
+    max-width: 46ch;
+  }
+  .hero-bento .c-cta { grid-column: span 3; display: flex; flex-direction: column; justify-content: space-between; gap: 1.6em; }
+  .hero-bento .c-cta .lbl {
+    font-family: var(--font-display); font-weight: 800; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .hero-bento .c-mark { grid-column: span 3; display: grid; place-items: center; padding: 0; }
+
+  .ax-mark { width: 100%; height: 100%; min-height: 190px; }
+
+  /* magnetic button */
+  .magnetic { display: inline-block; will-change: transform; }
+  .btn {
+    --bg: var(--lime); --fg: var(--black);
+    display: inline-flex; align-items: center; gap: 0.8em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(14px, 1vw, 16px);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    background: var(--bg);
+    padding: 16px 26px;
+    border-radius: 100px;
+    position: relative; overflow: hidden;
+    transition: color .5s var(--ease);
+    z-index: 0;
+  }
+  .btn .btn-arrow { transition: transform .5s var(--ease); display: inline-block; }
+  .btn::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--black);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform .55s var(--ease);
+  }
+  .btn:hover { color: var(--lime); }
+  .btn:hover::before { transform: scaleX(1); transform-origin: left; }
+  .btn:hover .btn-arrow { transform: translateX(6px) rotate(0deg); }
+  .btn.ghost {
+    --bg: transparent; --fg: var(--offwhite);
+    border: 1.5px solid var(--line-strong);
+  }
+  .btn.ghost::before { background: var(--lime); }
+  .btn.ghost:hover { color: var(--black); }
+  .btn.ghost:hover { border-color: var(--lime); }
+
+  /* ============================================================
+     MARQUEE
+     ============================================================ */
+  .marquee {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: clamp(16px, 1.6vw, 24px) 0;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    background: var(--ink);
+    margin-top: clamp(40px, 6vh, 80px);
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-track {
+    display: inline-flex; align-items: center;
+    animation: scroll-x 26s linear infinite;
+    will-change: transform;
+  }
+  .marquee-track.rev { animation-direction: reverse; }
+  .marquee-track span {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(28px, 4.4vw, 64px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--offwhite);
+    padding: 0 0.4em;
+    display: inline-flex; align-items: center; gap: 0.55em;
+  }
+  .marquee-track span em {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    text-transform: none; color: var(--lime);
+  }
+  .marquee-track .star {
+    color: var(--lime); font-size: 0.7em; line-height: 1;
+  }
+  @keyframes scroll-x {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============================================================
+     STATS — BENTO, oversized count-up
+     ============================================================ */
+  .stats { padding: clamp(70px, 10vh, 140px) 0; }
+  .stats-grid { grid-auto-rows: minmax(0, auto); }
+  .stat {
+    grid-column: span 4;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: clamp(26px, 2.6vw, 48px);
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: clamp(240px, 30vw, 380px);
+    position: relative; overflow: hidden;
+    transition: border-color .5s var(--ease), transform .7s var(--ease), background-color .6s var(--ease);
+  }
+  .stat:hover { border-color: var(--line-strong); transform: translateY(-6px); }
+  .stat.feature {
+    background: var(--lime);
+    color: var(--black);
+    border-color: var(--lime);
+  }
+  .stat .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(72px, 11vw, 170px);
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    display: flex; align-items: flex-start;
+    font-feature-settings: "tnum";
+  }
+  .stat .num .sym {
+    font-size: 0.42em; line-height: 1; margin-top: 0.15em;
+    font-weight: 800;
+  }
+  .stat.feature .num .sym { color: var(--black); }
+  .stat:not(.feature) .num .sym { color: var(--lime); }
+  .stat .lbl {
+    font-size: clamp(14px, 1.1vw, 18px);
+    font-weight: 500;
+    line-height: 1.45;
+    max-width: 22ch;
+  }
+  .stat .stat-tag {
+    font-family: var(--font-display); font-weight: 800; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    opacity: 0.55;
+  }
+
+  /* ============================================================
+     SERVICES — broken grid bento
+     ============================================================ */
+  .services { padding: clamp(70px, 10vh, 130px) 0; }
+  .svc-grid { gap: var(--gap); }
+  .svc {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: clamp(28px, 3vw, 52px);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; gap: 1.2em;
+    transition: border-color .5s var(--ease), transform .7s var(--ease), background-color .55s var(--ease);
+    min-height: clamp(360px, 40vw, 520px);
+  }
+  .svc:nth-child(1) { grid-column: span 7; }
+  .svc:nth-child(2) { grid-column: span 5; margin-top: clamp(0px, 4vw, 70px); }
+  .svc:nth-child(3) { grid-column: span 12; min-height: clamp(300px, 30vw, 420px); }
+  .svc:nth-child(3) { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: stretch; gap: clamp(24px, 4vw, 70px); }
+
+  .svc:hover { transform: translateY(-8px); border-color: var(--line-strong); }
+  .svc.invert { background: var(--offwhite); color: var(--black); border-color: var(--offwhite); }
+  .svc.invert .svc-sub { color: var(--gray-2); }
+  .svc.invert .svc-num { color: var(--black); -webkit-text-stroke: 1.5px var(--black); }
+
+  .svc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1em; }
+  .svc-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(54px, 7vw, 120px);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--offwhite);
+    opacity: 0.85;
+  }
+  .svc-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1.5px solid var(--line-strong);
+    display: grid; place-items: center; flex-shrink: 0;
+    transition: background-color .5s var(--ease), border-color .5s var(--ease), transform .6s var(--ease);
+  }
+  .svc:hover .svc-icon { background: var(--lime); border-color: var(--lime); transform: rotate(45deg); }
+  .svc:hover .svc-icon svg { stroke: var(--black); }
+  .svc-icon svg { stroke: var(--offwhite); transition: stroke .5s var(--ease); transition: transform .6s var(--ease); }
+  .svc:hover .svc-icon svg { transform: rotate(-45deg); }
+  .svc.invert .svc-icon { border-color: rgba(12,12,12,0.2); }
+  .svc.invert .svc-icon svg { stroke: var(--black); }
+
+  .svc-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(26px, 2.8vw, 44px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin-top: auto;
+  }
+  .svc-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--lime); }
+  .svc.invert .svc-title em { color: #6b7d00; }
+  .svc-sub {
+    font-size: clamp(14px, 1.05vw, 16.5px);
+    line-height: 1.65;
+    color: var(--gray);
+    max-width: 52ch;
+  }
+  .svc-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.4em; }
+  .svc-tags span {
+    font-family: var(--font-display); font-weight: 600; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border: 1px solid var(--line-strong); color: var(--gray);
+    padding: 7px 13px; border-radius: 100px;
+    transition: border-color .4s, color .4s;
+  }
+  .svc.invert .svc-tags span { border-color: rgba(12,12,12,0.18); color: var(--gray-2); }
+  .svc:hover .svc-tags span { border-color: var(--lime); color: var(--lime); }
+  .svc.invert:hover .svc-tags span { border-color: #6b7d00; color: #4d5a00; }
+
+  .svc-3-art {
+    border-radius: 16px;
+    background:
+      radial-gradient(130% 130% at 0% 100%, rgba(230,255,58,0.22), transparent 55%),
+      var(--panel-2);
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    min-height: 200px;
+    overflow: hidden;
+  }
+
+  /* ============================================================
+     VISION — STICKY PIN
+     ============================================================ */
+  .vision { background: var(--offwhite); color: var(--black); position: relative; }
+  .vision-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(20px, 4vw, 64px);
+    padding: clamp(60px, 9vh, 130px) 0;
+    align-items: start;
+  }
+  .vision-sticky {
+    position: sticky; top: clamp(80px, 14vh, 140px);
+    align-self: start;
+  }
+  .vision-kicker {
+    font-family: var(--font-display); font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    font-size: 13px; color: #7d8a00; margin-bottom: 1.4em;
+    display: flex; align-items: center; gap: 0.8em;
+  }
+  .vision-kicker .sec-num { color: #7d8a00; }
+  .vision h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(34px, 5vw, 84px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  .vision h2 em {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: #6b7d00; letter-spacing: -0.01em;
+  }
+  .vision-badge {
+    margin-top: 2em;
+    display: inline-flex; align-items: center; gap: 0.7em;
+    font-family: var(--font-display); font-weight: 800; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    background: var(--black); color: var(--offwhite);
+    padding: 12px 20px; border-radius: 100px;
+  }
+  .vision-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+
+  .vision-body { display: flex; flex-direction: column; gap: clamp(28px, 4vw, 52px); padding-top: clamp(8px, 2vw, 30px); }
+  .vision-step {
+    border-top: 1.5px solid rgba(12,12,12,0.16);
+    padding-top: 1.6em;
+  }
+  .vision-step .vs-n {
+    font-family: var(--font-display); font-weight: 900; font-size: 13px;
+    color: #7d8a00; letter-spacing: 0.04em; margin-bottom: 0.9em;
+    display: block;
+  }
+  .vision-step p {
+    font-size: clamp(16px, 1.5vw, 22px);
+    line-height: 1.55;
+    font-weight: 400;
+    color: #1c1c18;
+  }
+  .vision-step p strong { font-weight: 700; color: var(--black); }
+  .vision-step .hl {
+    background: linear-gradient(transparent 62%, var(--lime) 62%);
+    font-weight: 700;
+    padding: 0 2px;
+  }
+
+  /* ============================================================
+     CONTACT
+     ============================================================ */
+  .contact { padding: clamp(70px, 10vh, 140px) 0; position: relative; }
+  .contact-grid {
+    display: grid; grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(28px, 5vw, 90px);
+    align-items: start;
+  }
+  .contact-aside h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(40px, 6vw, 100px);
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.6em;
+  }
+  .contact-aside h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; text-transform: none; color: var(--lime); }
+  .contact-note {
+    font-size: clamp(15px, 1.2vw, 18px);
+    color: var(--gray);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin-bottom: 2em;
+  }
+  .contact-meta { display: flex; flex-direction: column; gap: 1em; border-top: 1px solid var(--line); padding-top: 1.6em; }
+  .contact-meta a, .contact-meta span {
+    display: flex; align-items: center; gap: 0.7em;
+    font-size: 15px; color: var(--offwhite);
+  }
+  .contact-meta .ml { color: var(--gray); font-family: var(--font-display); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; min-width: 64px; }
+
+  /* form */
+  .form-shell {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: clamp(26px, 3vw, 50px);
+    position: relative; overflow: hidden;
+  }
+  .form-row { margin-bottom: clamp(18px, 1.6vw, 24px); }
+  .form-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+  label.fld-label {
+    display: block;
+    font-family: var(--font-display); font-weight: 700; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gray); margin-bottom: 0.7em;
+  }
+  label.fld-label .req { color: var(--lime); }
+  .fld {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--line-strong);
+    color: var(--offwhite);
+    font-family: var(--font-body);
+    font-size: 16px;
+    padding: 12px 2px;
+    transition: border-color .4s var(--ease);
+  }
+  .fld::placeholder { color: var(--gray-2); }
+  .fld:focus { outline: none; border-color: var(--lime); }
+  select.fld {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e6ff3a' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 4px center;
+    cursor: pointer;
+    color: var(--offwhite);
+  }
+  select.fld option { background: var(--panel); color: var(--offwhite); }
+  textarea.fld { resize: vertical; min-height: 110px; line-height: 1.55; }
+  .fld.error { border-color: #ff5b48; }
+  .fld-err {
+    color: #ff7a6b; font-size: 12.5px; margin-top: 6px; display: none;
+    font-family: var(--font-display); font-weight: 600;
+  }
+  .fld-err.show { display: block; }
+
+  .form-submit { margin-top: clamp(10px, 1vw, 18px); width: 100%; justify-content: center; }
+
+  .form-success {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+    padding: clamp(20px, 3vw, 40px) 0;
+  }
+  .form-success.show { display: flex; animation: succ .8s var(--ease) both; }
+  @keyframes succ { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  .form-success .sx-mark {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--lime);
+    display: grid; place-items: center; color: var(--black); font-size: 30px;
+  }
+  .form-success h3 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  .form-success p { color: var(--gray); font-size: 15px; line-height: 1.6; max-width: 40ch; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer.site-foot {
+    background: var(--ink);
+    border-top: 1px solid var(--line);
+    padding: clamp(56px, 8vh, 110px) 0 clamp(30px, 4vh, 50px);
+  }
+  .foot-display {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(64px, 17vw, 280px);
+    line-height: 0.8;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    color: var(--offwhite);
+    margin-bottom: clamp(40px, 6vh, 80px);
+    position: relative;
+  }
+  .foot-display .ser { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--lime); text-transform: none; }
+  .foot-cols {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: clamp(28px, 4vw, 60px);
+    padding-bottom: clamp(36px, 5vh, 60px);
+    border-bottom: 1px solid var(--line);
+  }
+  .foot-col h4 {
+    font-family: var(--font-display); font-weight: 800; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--lime);
+    margin-bottom: 1.4em;
+  }
+  .foot-col p, .foot-col a { font-size: 14px; line-height: 1.9; color: var(--gray); display: block; }
+  .foot-col a:hover { color: var(--offwhite); }
+  .foot-col .biz { font-size: 13px; line-height: 1.95; }
+  .foot-col .biz b { color: var(--offwhite); font-weight: 500; }
+  .foot-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1em; padding-top: clamp(24px, 3vh, 36px);
+  }
+  .foot-bottom .legal { display: flex; gap: 1.6em; flex-wrap: wrap; }
+  .foot-bottom .legal a { font-size: 13px; color: var(--gray); }
+  .foot-bottom .legal a:hover { color: var(--lime); }
+  .foot-copy { font-size: 13px; color: var(--gray-2); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.02em; }
+
+  /* ============================================================
+     SCROLL REVEAL
+     ============================================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(46px);
+    transition: opacity 1s var(--ease), transform 1.1s var(--ease);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .reveal-mask { clip-path: inset(0 0 100% 0); transition: clip-path 1.2s var(--ease); }
+  .reveal-mask.in { clip-path: inset(0 0 0 0); }
+
+  .reveal-skew {
+    opacity: 0; transform: translateY(60px) skewY(4deg);
+    transition: opacity .9s var(--ease), transform 1.1s var(--ease);
+  }
+  .reveal-skew.in { opacity: 1; transform: none; }
+
+  [data-stagger] > * {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .9s var(--ease), transform 1s var(--ease);
+  }
+  [data-stagger].in > * { opacity: 1; transform: none; }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 1080px) {
+    .nav-links .lk { display: none; }
+    .nav-cta { display: none; }
+    .burger { display: grid; }
+
+    .hero-bento .c-intro { grid-column: span 12; }
+    .hero-bento .c-cta { grid-column: span 7; }
+    .hero-bento .c-mark { grid-column: span 5; }
+
+    .stat { grid-column: span 6; }
+
+    .svc:nth-child(1), .svc:nth-child(2), .svc:nth-child(3) {
+      grid-column: span 12; margin-top: 0;
+    }
+    .svc:nth-child(3) { grid-template-columns: 1fr; }
+
+    .vision-inner { grid-template-columns: 1fr; }
+    .vision-sticky { position: relative; top: 0; }
+
+    .contact-grid { grid-template-columns: 1fr; }
+    .foot-cols { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 680px) {
+    :root { --gap: 10px; }
+    .hero-top { align-items: flex-start; }
+    .hero-loc { text-align: left; }
+    .hero-bento .c-cta, .hero-bento .c-mark { grid-column: span 12; }
+    .ax-mark { min-height: 150px; }
+
+    .stat { grid-column: span 12; min-height: 220px; }
+
+    .form-row.two { grid-template-columns: 1fr; }
+
+    .foot-cols { grid-template-columns: 1fr; }
+    .foot-bottom { flex-direction: column; align-items: flex-start; }
+
+    .vision-step p { font-size: 17px; }
+  }
+
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+    .cursor, .cursor-dot { display: none !important; }
+    body { cursor: auto !important; }
+    .marquee-track { animation: none !important; transform: none !important; }
+    .brand .dot { animation: none !important; }
+    .reveal, .reveal-skew, .reveal-mask, [data-stagger] > *, .hero-display .line > span {
+      opacity: 1 !important; transform: none !important; clip-path: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">본문 바로가기</a>
+
+<!-- GRAIN -->
+<svg class="grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grainFilter)" />
+</svg>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" aria-hidden="true"><span class="cursor__label">VIEW</span></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav">
+  <a href="#top" class="brand" data-cursor="" aria-label="에이아잉 홈">
+    <span class="dot"></span>AI-ing
+  </a>
+  <nav class="nav-links" aria-label="주요 메뉴">
+    <a href="#services" class="lk">Services</a>
+    <a href="#vision" class="lk">Vision</a>
+    <a href="#contact" class="lk">Contact</a>
+    <a href="#contact" class="nav-cta magnetic" data-cursor-label="→">무료 AX 상담</a>
+  </nav>
+  <button class="burger" aria-label="메뉴 열기" aria-expanded="false" id="burger"><span></span></button>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <nav aria-label="모바일 메뉴">
+    <a href="#services">Services</a>
+    <a href="#vision">Vision</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact">무료 AX 상담 →</a>
+  </nav>
+  <div class="mm-foot">
+    <span>rlaalsdn456456@naver.com</span>
+    <span>010-7646-3634</span>
+    <span>Seoul, Republic of Korea</span>
+  </div>
+</div>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ============ HERO ============ -->
+<section class="hero wrap" aria-label="히어로">
+  <div class="hero-top">
+    <span class="hero-tag">AX Automation Studio</span>
+    <span class="hero-loc">Seoul · Republic of Korea<br>AI Experience Consulting</span>
+  </div>
+
+  <h1 class="hero-display" id="heroDisplay">
+    <span class="line"><span>Beyond AI</span></span>
+    <span class="line"><span>to <span class="ser">Experience</span></span></span>
+    <span class="line"><span>—AX<span class="ser" aria-hidden="true">.</span></span></span>
+  </h1>
+
+  <p class="hero-slogan reveal" data-rev>“Beyond AI to AX” — <span class="ko">AI 실행을 넘어 비즈니스 경험으로.</span></p>
+
+  <div class="hero-bento bento">
+    <div class="cell duo c-intro reveal-skew" data-rev>
+      <p>에이아잉은 기업의 일하는 방식을 개선하는 <strong style="color:var(--lime)">AX(AI Experience) 컨설팅</strong>, 업무 맞춤형 AI 에이전트 시스템 기획·개발, 임직원 전용 실무 맞춤형 교육까지 일원화된 자동화 구축 솔루션을 제공합니다.</p>
+      <span class="hero-tag" style="color:var(--gray)">AI-ing = AI를 끊임없이 실행하며 나아가다</span>
+    </div>
+
+    <div class="cell lime-grad c-cta reveal-skew" data-rev style="transition-delay:.08s">
+      <span class="lbl">START HERE / 시작하기</span>
+      <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+        <a href="#contact" class="btn magnetic" data-cursor-label="→" style="--bg:var(--black); --fg:var(--lime);">
+          무료 AX 상담 신청 <span class="btn-arrow">→</span>
+        </a>
+        <a href="#services" class="magnetic" data-cursor-label="→" style="font-family:var(--font-display); font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:0.04em; color:var(--black); border-bottom:2px solid var(--black); padding-bottom:2px;">서비스 탐색 ↘</a>
+      </div>
+    </div>
+
+    <div class="cell c-mark reveal-skew" data-rev style="transition-delay:.16s">
+      <svg class="ax-mark" viewBox="0 0 200 200" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+        <circle cx="100" cy="100" r="78" stroke="var(--line-strong)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="54" stroke="var(--line)" stroke-width="1"/>
+        <g class="spin-mark">
+          <path d="M100 22 L100 178" stroke="var(--lime)" stroke-width="2"/>
+          <path d="M22 100 L178 100" stroke="var(--lime)" stroke-width="2"/>
+          <circle cx="100" cy="100" r="14" fill="var(--lime)"/>
+        </g>
+        <text x="100" y="106" text-anchor="middle" font-family="Archivo" font-weight="900" font-size="13" fill="var(--black)">AX</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>AI 컨설팅 <span class="star">✦</span> <em>AX 구축</em> <span class="star">✦</span> AI 에이전트 <span class="star">✦</span> 실무 교육 <span class="star">✦</span> 자동화 <span class="star">✦</span> </span>
+    <span>AI 컨설팅 <span class="star">✦</span> <em>AX 구축</em> <span class="star">✦</span> AI 에이전트 <span class="star">✦</span> 실무 교육 <span class="star">✦</span> 자동화 <span class="star">✦</span> </span>
+  </div>
+</div>
+
+<!-- ============ STATS ============ -->
+<section class="stats wrap" aria-label="성과 지표">
+  <div class="sec-head reveal" data-rev>
+    <span class="sec-num">(01)</span>
+    <span class="sec-kicker">Proven Impact · 검증된 성과</span>
+  </div>
+
+  <div class="stats-grid bento" data-stagger data-rev>
+    <div class="stat feature">
+      <span class="stat-tag">Productivity</span>
+      <div>
+        <div class="num"><span class="sym">+</span><span class="count" data-target="300">0</span><span class="sym">%</span></div>
+        <p class="lbl">평균 업무 생산성 개선율</p>
+      </div>
+    </div>
+    <div class="stat">
+      <span class="stat-tag">Cost Saving</span>
+      <div>
+        <div class="num"><span class="count" data-target="60">0</span><span class="sym">%</span></div>
+        <p class="lbl">AI 에이전트 도입 후 운영 비용 절감</p>
+      </div>
+    </div>
+    <div class="stat">
+      <span class="stat-tag">Custom-Built</span>
+      <div>
+        <div class="num"><span class="count" data-target="100">0</span><span class="sym">%</span></div>
+        <p class="lbl">고객사 맞춤형 커스텀 솔루션</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="services wrap" id="services" aria-label="서비스">
+  <div class="sec-head reveal" data-rev>
+    <span class="sec-num">(02)</span>
+    <span class="sec-kicker">What We Build · 서비스</span>
+  </div>
+
+  <div class="svc-grid bento">
+    <!-- 1 -->
+    <article class="svc reveal-skew" data-rev data-cursor-label="→">
+      <div class="svc-head">
+        <span class="svc-num">01</span>
+        <span class="svc-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M19 5l-2.5 2.5M7.5 16.5L5 19"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+      </div>
+      <h3 class="svc-title">B2B <em>AX</em><br>컨설팅 &amp; 구축</h3>
+      <p class="svc-sub">기업 고유 데이터·업무 구조에 맞춘 AX 로드맵을 설계하고, 독자적 AI 에이전트와 자동화 시스템을 직접 구축합니다.</p>
+      <div class="svc-tags"><span>AX Roadmap</span><span>AI Agent</span><span>Automation</span></div>
+    </article>
+
+    <!-- 2 -->
+    <article class="svc reveal-skew" data-rev data-cursor-label="→" style="transition-delay:.08s">
+      <div class="svc-head">
+        <span class="svc-num">02</span>
+        <span class="svc-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+        </span>
+      </div>
+      <h3 class="svc-title">AI 실무<br><em>교육</em> &amp; 멘토링</h3>
+      <p class="svc-sub">실시간 Zoom 과외와 맞춤 멘토링으로 대학생·기업 임직원을 위한 AI 기초·응용 실습 특강을 진행합니다.</p>
+      <div class="svc-tags"><span>Live Zoom</span><span>1:1 Mentoring</span><span>Workshop</span></div>
+    </article>
+
+    <!-- 3 -->
+    <article class="svc invert reveal-skew" data-rev data-cursor-label="→">
+      <div style="display:flex; flex-direction:column; justify-content:space-between; gap:1.2em;">
+        <div class="svc-head">
+          <span class="svc-num">03</span>
+          <span class="svc-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4zM4 8v12h16V8M9 12h6"/></svg>
+          </span>
+        </div>
+        <div>
+          <h3 class="svc-title">이커머스 &amp;<br>지식 <em>콘텐츠</em></h3>
+          <p class="svc-sub" style="margin-top:1em;">AX 가이드북(정기간행 전자책)을 발급·소매 판매하고, 비즈니스 효율 SW 템플릿과 선별된 IT 기자재를 공급합니다.</p>
+          <div class="svc-tags"><span>E-book</span><span>SW Template</span><span>IT Supply</span></div>
+        </div>
+      </div>
+      <div class="svc-3-art" aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="g3" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#d8ff3e"/>
+              <stop offset="1" stop-color="#8fb800" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g stroke="#0c0c0c" stroke-width="1" opacity="0.18">
+            <path d="M0 160 L320 40 M0 120 L320 0 M0 200 L320 80"/>
+          </g>
+          <rect x="40" y="60" width="80" height="100" rx="6" fill="url(#g3)" opacity="0.9"/>
+          <rect x="130" y="40" width="80" height="120" rx="6" fill="#0c0c0c" opacity="0.85"/>
+          <rect x="220" y="80" width="70" height="80" rx="6" fill="#0c0c0c" opacity="0.12"/>
+          <circle cx="250" cy="50" r="18" fill="#d8ff3e"/>
+        </svg>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ VISION (STICKY PIN) ============ -->
+<section class="vision" id="vision" aria-label="비전">
+  <div class="wrap vision-inner">
+    <div class="vision-sticky">
+      <div class="vision-kicker"><span class="sec-num">(03)</span> Our Vision · 비전</div>
+      <h2 class="reveal" data-rev>모든 비즈니스의<br>AI 전환을 <em>쉽게,</em><br>에이아잉.</h2>
+      <span class="vision-badge"><span class="dot"></span>Beyond AI to AX</span>
+    </div>
+
+    <div class="vision-body">
+      <div class="vision-step reveal" data-rev>
+        <span class="vs-n">— 01 / 문제</span>
+        <p>최첨단 AI 기술은 끊임없이 늘어나지만, 현업에서 <strong>실제 생산성을 극대화</strong>하는 것은 여전히 많은 기업의 숙제입니다. 다수의 기업이 단순히 구독형 챗봇(LLM)을 사놓는 수준에 머뭅니다.</p>
+      </div>
+      <div class="vision-step reveal" data-rev style="transition-delay:.08s">
+        <span class="vs-n">— 02 / 관점</span>
+        <p>에이아잉은 기술의 대리 도입에 그치지 않고, 구성원 개개인의 <span class="hl">'업무 경험(AX)' 자체를 변화</span>시키는 것을 목표로 합니다.</p>
+      </div>
+      <div class="vision-step reveal" data-rev style="transition-delay:.16s">
+        <span class="vs-n">— 03 / 실행</span>
+        <p>진짜 필요한 <strong>자동화 파이프라인</strong>을 구축하고, 이를 완벽히 다룰 수 있도록 구성원을 훈련시킵니다.</p>
+      </div>
+      <div class="vision-step reveal" data-rev style="transition-delay:.24s">
+        <span class="vs-n">— 04 / 약속</span>
+        <p>우리는 <strong>지속 가능한 성장 동력</strong>을 파트너사 내부 프로세스에 완전히 안착시킵니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact wrap" id="contact" aria-label="문의">
+  <div class="sec-head reveal" data-rev>
+    <span class="sec-num">(04)</span>
+    <span class="sec-kicker">Let's Talk · 상담 신청</span>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-aside reveal" data-rev>
+      <h2>무료 <em>AX</em><br>상담 신청</h2>
+      <p class="contact-note">업무 환경 분석 및 AX 도입 상담 신청을 남겨주시면 24시간 내에 연락드립니다.</p>
+      <div class="contact-meta">
+        <a href="mailto:rlaalsdn456456@naver.com" class="magnetic" data-cursor-label="→"><span class="ml">Email</span> rlaalsdn456456@naver.com</a>
+        <a href="tel:01076463634" class="magnetic" data-cursor-label="→"><span class="ml">Tel</span> 010-7646-3634</a>
+        <span><span class="ml">Loc</span> 서울특별시 서초구 신반포로33길 15</span>
+      </div>
+    </div>
+
+    <div class="form-shell reveal-skew" data-rev>
+      <form id="axForm" novalidate>
+        <div class="form-row two">
+          <div>
+            <label class="fld-label" for="f-name">성명 / 담당자명 <span class="req">*</span></label>
+            <input class="fld" type="text" id="f-name" name="name" placeholder="홍길동" autocomplete="name" />
+            <p class="fld-err" data-for="f-name">성명을 입력해 주세요.</p>
+          </div>
+          <div>
+            <label class="fld-label" for="f-phone">연락처 <span class="req">*</span></label>
+            <input class="fld" type="tel" id="f-phone" name="phone" placeholder="010-0000-0000" autocomplete="tel" />
+            <p class="fld-err" data-for="f-phone">연락처를 입력해 주세요.</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="fld-label" for="f-email">이메일 <span class="req">*</span></label>
+          <input class="fld" type="email" id="f-email" name="email" placeholder="name@company.com" autocomplete="email" />
+          <p class="fld-err" data-for="f-email">올바른 이메일을 입력해 주세요.</p>
+        </div>
+
+        <div class="form-row">
+          <label class="fld-label" for="f-area">문의 영역 <span class="req">*</span></label>
+          <select class="fld" id="f-area" name="area">
+            <option value="" disabled selected>영역을 선택해 주세요</option>
+            <option value="b2b">B2B AX 도입 &amp; 개발 컨설팅</option>
+            <option value="edu">AI 실무 교육 및 1:1 멘토링</option>
+            <option value="shop">템플릿 / 전자책 구매 관련 문의</option>
+            <option value="etc">기타 파트너십</option>
+          </select>
+          <p class="fld-err" data-for="f-area">문의 영역을 선택해 주세요.</p>
+        </div>
+
+        <div class="form-row">
+          <label class="fld-label" for="f-msg">상세 문의 내용 <span class="req">*</span></label>
+          <textarea class="fld" id="f-msg" name="message" placeholder="현재 업무 환경과 도입하고 싶은 자동화에 대해 알려주세요." rows="4"></textarea>
+          <p class="fld-err" data-for="f-msg">문의 내용을 입력해 주세요.</p>
+        </div>
+
+        <button type="submit" class="btn form-submit magnetic" data-cursor-label="→">
+          상담 신청 제출하기 <span class="btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+        <div class="sx-mark">✦</div>
+        <h3>✨ 상담 신청이 성공적으로<br>접수되었습니다!</h3>
+        <p>입력하신 연락처와 이메일로 곧 안내해 드리겠습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot" aria-label="사이트 정보">
+  <div class="wrap">
+    <div class="foot-display reveal-mask" data-rev>AI<span class="ser">-ing</span></div>
+
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h4>Studio</h4>
+        <p class="biz">
+          <b>에이아잉 (AI-ing)</b><br>
+          AI 실행을 넘어 비즈니스 경험으로.<br>
+          기업의 일하는 방식을 바꾸는<br>
+          AX 자동화 구축 솔루션.
+        </p>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="tel:01076463634">010-7646-3634</a>
+        <a href="mailto:rlaalsdn456456@naver.com">rlaalsdn456456@naver.com</a>
+        <p>서울특별시 서초구 신반포로33길 15,<br>102동 1002호 (잠원동, 신반포청구아파트)</p>
+      </div>
+      <div class="foot-col">
+        <h4>Business Info</h4>
+        <p class="biz">
+          대표자 <b>김민우</b><br>
+          개인정보관리책임자 <b>김민우</b><br>
+          사업자등록번호 [등록 대기중] (신청 완료)<br>
+          통신판매업신고번호 [신고 대기중]<br>
+          호스팅 Cloudflare Inc. / 에이아잉
+        </p>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2026 에이아잉 (AI-ing). All Rights Reserved.</span>
+      <div class="legal">
+        <a href="#" class="magnetic" data-cursor-label="→">개인정보처리방침</a>
+        <a href="#" class="magnetic" data-cursor-label="→">이용약관</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
+  /* ---------------------------------------------------------
+     CUSTOM CURSOR (lerp follow)
+     --------------------------------------------------------- */
+  if (!isTouch && !reduceMotion) {
+    var cursor = document.querySelector(".cursor");
+    var dot = document.querySelector(".cursor-dot");
+    var label = document.querySelector(".cursor__label");
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var cx = mx, cy = my, dx = mx, dy = my;
+
+    window.addEventListener("mousemove", function (e) {
+      mx = e.clientX; my = e.clientY;
+    });
+
+    function raf() {
+      // smooth follow for ring, faster for dot
+      cx += (mx - cx) * 0.16;
+      cy += (my - cy) * 0.16;
+      dx += (mx - dx) * 0.42;
+      dy += (my - dy) * 0.42;
+      cursor.style.transform = "translate(" + cx + "px," + cy + "px)";
+      dot.style.transform = "translate(" + dx + "px," + dy + "px)";
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    var hoverSel = "a, button, [data-cursor-label], input, textarea, select, .svc, label";
+    document.querySelectorAll(hoverSel).forEach(function (el) {
+      el.addEventListener("mouseenter", function () {
+        document.body.classList.add("cur-hover");
+        var lbl = el.getAttribute("data-cursor-label") || "VIEW";
+        label.textContent = lbl;
+      });
+      el.addEventListener("mouseleave", function () {
+        document.body.classList.remove("cur-hover");
+      });
+    });
+    window.addEventListener("mousedown", function () { document.body.classList.add("cur-down"); });
+    window.addEventListener("mouseup", function () { document.body.classList.remove("cur-down"); });
+
+    // hide when leaving window
+    document.addEventListener("mouseleave", function () {
+      cursor.style.opacity = "0"; dot.style.opacity = "0";
+    });
+    document.addEventListener("mouseenter", function () {
+      cursor.style.opacity = "1"; dot.style.opacity = "1";
+    });
+  }
+
+  /* ---------------------------------------------------------
+     MAGNETIC BUTTONS
+     --------------------------------------------------------- */
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll(".magnetic").forEach(function (el) {
+      var strength = 0.32;
+      el.addEventListener("mousemove", function (e) {
+        var r = el.getBoundingClientRect();
+        var relX = e.clientX - r.left - r.width / 2;
+        var relY = e.clientY - r.top - r.height / 2;
+        el.style.transform = "translate(" + relX * strength + "px," + relY * strength + "px)";
+      });
+      el.addEventListener("mouseleave", function () {
+        el.style.transform = "translate(0,0)";
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     HERO INTRO
+     --------------------------------------------------------- */
+  var hero = document.getElementById("heroDisplay");
+  if (hero) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { hero.classList.add("in"); });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     SCROLL REVEAL (IntersectionObserver)
+     --------------------------------------------------------- */
+  var revealEls = document.querySelectorAll("[data-rev]");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          // stagger children
+          if (entry.target.hasAttribute("data-stagger")) {
+            Array.prototype.forEach.call(entry.target.children, function (child, i) {
+              child.style.transitionDelay = (i * 0.1) + "s";
+            });
+          }
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16, rootMargin: "0px 0px -8% 0px" });
+
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* ---------------------------------------------------------
+     COUNT-UP (on scroll enter)
+     --------------------------------------------------------- */
+  var counters = document.querySelectorAll(".count");
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute("data-target"), 10);
+    if (reduceMotion) { el.textContent = target; return; }
+    var dur = 1600, start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      // easeOutExpo
+      var eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+      el.textContent = Math.round(eased * target);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          cio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
+  } else {
+    counters.forEach(function (el) { el.textContent = el.getAttribute("data-target"); });
+  }
+
+  /* ---------------------------------------------------------
+     MOBILE MENU
+     --------------------------------------------------------- */
+  var burger = document.getElementById("burger");
+  var mobileMenu = document.getElementById("mobileMenu");
+  if (burger) {
+    burger.addEventListener("click", function () {
+      var open = document.body.classList.toggle("menu-open");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+      burger.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+    });
+    mobileMenu.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () {
+        document.body.classList.remove("menu-open");
+        burger.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     NAV HIDE-ON-SCROLL-DOWN
+     --------------------------------------------------------- */
+  var nav = document.querySelector("header.nav");
+  var lastY = 0;
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY;
+    if (document.body.classList.contains("menu-open")) { nav.style.transform = "none"; return; }
+    if (y > lastY && y > 160) nav.style.transform = "translateY(-130%)";
+    else nav.style.transform = "translateY(0)";
+    lastY = y;
+  }, { passive: true });
+
+  /* ---------------------------------------------------------
+     FORM VALIDATION + SUCCESS
+     --------------------------------------------------------- */
+  var form = document.getElementById("axForm");
+  var success = document.getElementById("formSuccess");
+
+  function showErr(id, show) {
+    var input = document.getElementById(id);
+    var err = document.querySelector('.fld-err[data-for="' + id + '"]');
+    if (input) input.classList.toggle("error", show);
+    if (err) err.classList.toggle("show", show);
+  }
+
+  if (form) {
+    // clear error on input
+    form.querySelectorAll(".fld").forEach(function (el) {
+      el.addEventListener("input", function () { showErr(el.id, false); });
+      el.addEventListener("change", function () { showErr(el.id, false); });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ok = true;
+      var firstBad = null;
+
+      var name = document.getElementById("f-name");
+      var phone = document.getElementById("f-phone");
+      var email = document.getElementById("f-email");
+      var area = document.getElementById("f-area");
+      var msg = document.getElementById("f-msg");
+
+      function fail(el) { ok = false; showErr(el.id, true); if (!firstBad) firstBad = el; }
+
+      if (!name.value.trim()) fail(name);
+      if (!phone.value.trim()) fail(phone);
+      var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(email.value.trim())) fail(email);
+      if (!area.value) fail(area);
+      if (!msg.value.trim()) fail(msg);
+
+      if (!ok) {
+        if (firstBad) firstBad.focus();
+        return;
+      }
+
+      form.style.display = "none";
+      success.classList.add("show");
+      success.setAttribute("tabindex", "-1");
+      success.focus();
+      success.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     SPIN MARK (hero AX mark idle rotation via CSS-less rAF)
+     --------------------------------------------------------- */
+  if (!reduceMotion) {
+    var spin = document.querySelector(".spin-mark");
+    if (spin) {
+      var ang = 0;
+      (function loop() {
+        ang = (ang + 0.18) % 360;
+        spin.style.transform = "rotate(" + ang + "deg)";
+        spin.style.transformOrigin = "100px 100px";
+        requestAnimationFrame(loop);
+      })();
+    }
+  }
+})();
+</script>
+</body>
+</html>
