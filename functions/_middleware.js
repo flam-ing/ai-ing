@@ -2,12 +2,17 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   
-  // Only apply password protection to routes starting with /slides or matching /slides exactly
-  const isSlidesRoute = url.pathname === "/slides" || url.pathname === "/slides/" || url.pathname.startsWith("/slides/");
+  // Only apply password protection to sub-routes under /slides (e.g. specific slide HTML files or downloads)
+  // The main slides listing /slides/ index page should be public
+  const isSlidesRoute = url.pathname.startsWith("/slides");
+  const isPublicPortal = url.pathname === "/slides" || url.pathname === "/slides/" || url.pathname === "/slides/index.html";
   
-  if (!isSlidesRoute) {
+  const requiresAuth = isSlidesRoute && !isPublicPortal;
+  
+  if (!requiresAuth) {
     return context.next();
   }
+
   
   const cookieHeader = request.headers.get("Cookie") || "";
   const sessionCookieName = "ai-ing-auth";

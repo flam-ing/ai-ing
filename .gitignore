@@ -13,7 +13,11 @@ untitled/
 !logo.png
 *.pdf
 
-
+# Allow assets inside slides directory
+!slides/**/*.png
+!slides/**/*.pdf
+!slides/**/*.pptx
+!slides/**/*.mov
 
 # Python virtual environment (if any)
 venv/
