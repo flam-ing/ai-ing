@@ -19,7 +19,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    const resendApiKey = env.RESEND_API_KEY || 're_74hdmhBF_DCDT7FYiNfHFWkibrzonQz3e';
+    const resendApiKey = env.RESEND_API_KEY || 're_KVeyZQ3a_Nr3kS4aSpUdgnucaK13tLqQA';
     if (!resendApiKey) {
       return new Response(JSON.stringify({ error: '서버 설정 오류: RESEND_API_KEY 환경변수가 설정되지 않았습니다. Cloudflare Pages 대시보드에서 RESEND_API_KEY를 등록해 주세요.' }), {
         status: 500,
@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
       },
       body: JSON.stringify({
         from: 'AI-ing Contact <onboarding@resend.dev>',
-        to: 'rlaalsdn4564@gmail.com',
+        to: 'rlaalsdn456456@naver.com',
         subject: `[에이아잉 문의] 새로운 문의가 접수되었습니다.`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e3e5ea; border-radius: 8px;">
