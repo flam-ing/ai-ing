@@ -3210,7 +3210,8 @@ grid-template-columns: 1fr;
     try {
       const paymentParams = {
         storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
-        paymentId: "payment-" + crypto.randomUUID(),
+        paymentId: "pay" + crypto.randomUUID().replace(/-/g, ""),
+
         orderName: "에이아잉 교육 서비스",
         totalAmount: amount,
         currency: "CURRENCY_KRW",
@@ -3299,19 +3300,15 @@ grid-template-columns: 1fr;
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
         <!-- Kakao Pay -->
         <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          💛 카카오페이 결제
-        </button>
-        
-        <!-- Naver Pay -->
-        <button type="button" id="btn-pay-naver" onclick="triggerPortOnePayment('NAVERPAY')" style="width:100%;padding:14px;background:#03C75A;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          💚 네이버페이 결제
+          카카오페이 결제
         </button>
         
         <!-- Card -->
         <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#3b33a5;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          💳 일반 신용카드 결제
+          일반 신용카드 결제
         </button>
       </div>
+
       
       <button onclick="cancelPGWindow()" style="width:100%;padding:12px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-weight:700;color:#5c6573;cursor:pointer;outline:none;">뒤로가기</button>
     </div>
