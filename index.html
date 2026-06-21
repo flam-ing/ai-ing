@@ -3210,7 +3210,7 @@ grid-template-columns: 1fr;
     try {
       const paymentParams = {
         storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
-        paymentId: "pay" + crypto.randomUUID().replace(/-/g, ""),
+        paymentId: "pay" + Date.now() + Math.random().toString(36).substring(2, 10),
 
         orderName: "에이아잉 교육 서비스",
         totalAmount: amount,
