@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>교육 자료 포털 | AI-ing (에이아잉)</title>
+<meta name="description" content="AI-ing (에이아잉) 수강생 및 실무진 전용 교육 자료 및 강의 슬라이드 포털입니다.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root {
+    --bg-dark: #07080d;
+    --paper-card: #0d0f17;
+    --line-ink: rgba(255,255,255,0.08);
+    --line-glow: rgba(230,24,98,0.15);
+    --brand-pink: #e61862;
+    --brand-violet: #3b33a5;
+    --brand-cyan: #00f2fe;
+    --text-white: #fff;
+    --text-muted: #94a3b8;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Nav styling */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: rgba(7, 8, 13, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line-ink);
+    z-index: 100;
+  }
+  .nav-container {
+    width: min(1200px, 92vw);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+  }
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+  .brand-name {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-link {
+    padding: 9px 15px;
+    color: #c5ccda;
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-link:hover {
+    color: var(--brand-pink);
+  }
+  .nav-btn {
+    margin-left: 10px;
+    padding: 11px 20px;
+    border-radius: 2px;
+    background: var(--brand-pink);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 700;
+    transition: filter 0.2s;
+  }
+  .nav-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Hero section */
+  .hero {
+    padding: 140px 0 60px;
+    text-align: center;
+    background: radial-gradient(circle at top, rgba(59,51,165,0.18) 0%, transparent 60%);
+  }
+  .hero-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand-pink);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .hero-desc {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Grid Layout */
+  .grid-section {
+    width: min(1000px, 92vw);
+    margin: 40px auto 100px;
+  }
+  .materials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 768px) {
+    .materials-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--line-ink);
+    border-radius: 6px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--brand-violet);
+    transition: background 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(230, 24, 98, 0.3);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  }
+  .card.active::before {
+    background: var(--brand-pink);
+  }
+  
+  .card-top {
+    margin-bottom: 24px;
+  }
+  .card-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .session-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brand-pink);
+    border: 1px solid rgba(230, 24, 98, 0.25);
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(230, 24, 98, 0.05);
+  }
+  .lock-badge {
+    font-size: 11px;
+    color: var(--brand-cyan);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+  .lock-badge.coming-soon {
+    color: var(--text-muted);
+  }
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .card-bottom {
+    margin-top: 10px;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 14.5px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  .action-btn.active {
+    background: var(--brand-pink);
+    color: #fff;
+  }
+  .action-btn.active:hover {
+    background: #f72c76;
+  }
+  .action-btn.disabled {
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.22);
+    border: 1px solid var(--line-ink);
+    pointer-events: none;
+  }
+
+  /* Footer styling */
+  footer {
+    margin-top: auto;
+    background: #050609;
+    padding: 50px 0 40px;
+    border-top: 1px solid var(--line-ink);
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .footer-container {
+    width: min(1200px, 92vw);
+    margin: 0 auto;
+  }
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .footer-brand img {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  .footer-details {
+    line-height: 1.8;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+  }
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 16px;
+  }
+  .footer-links a:hover {
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-container">
+      <a href="/" class="brand-link">
+        <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
+        <span class="brand-name">AI-ing</span>
+      </a>
+      <div class="nav-links">
+        <a href="/services.html" class="nav-link">서비스</a>
+        <a href="/about.html" class="nav-link">대표자</a>
+        <a href="/payment.html" class="nav-link">결제</a>
+        <a href="/contact.html" class="nav-btn">무료 상담 신청</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-tag">Class materials portal</div>
+    <h1 class="hero-title">수강생 및 실무 자료 포털</h1>
+    <p class="hero-desc">에이아잉 교육 과정 및 AX 업무 자동화 특강의 수강 전용 슬라이드와 실무 가이드라인을 한눈에 볼 수 있는 보안 인덱스입니다.</p>
+  </header>
+
+  <!-- GRID SECTION -->
+  <main class="grid-section">
+    <div class="materials-grid">
+      
+      <!-- Card 1: Session 1 -->
+      <div class="card active">
+        <div class="card-top">
+          <div class="card-badge-row">
+            <span class="session-badge">SESSION 1</span>
+            <span class="lock-badge"><i class="fa-solid fa-lock"></i> 비밀번호 필요</span>
+          </div>
+          <h3 class="card-title">웹 개발 첫걸음 &amp; 나만의 ChatGPT 게임 만들기</h3>
+          <p class="card-desc">HTML, CSS, JS 기본 원리 및 F12 개발자 도구 활용, ChatGPT를 이용해 나만의 웹 미니게임을 설계하고 무료 서버 배포(Netlify)를 달성하는 기초 실습 슬라이드입니다.</p>
+        </div>
+        <div class="card-bottom">
+          <a href="lecture-slides.html#slide-1" class="action-btn active">슬라이드 열기 <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Card 2: Session 2 -->
+      <div class="card active">
+        <div class="card-top">
+          <div class="card-badge-row">
+            <span class="session-badge">SESSION 2</span>
+            <span class="lock-badge"><i class="fa-solid fa-lock"></i> 비밀번호 필요</span>
+          </div>
+          <h3 class="card-title">AI 창작 도구 &amp; 미디어 연동 컴포지션</h3>
+          <p class="card-desc">이미지 및 음원 생성형 AI 도구 활용 방안, HTML 코드에 BGM, 일러스트, 영상 미디어 파일을 연동하여 몰입감 넘치는 미니게임을 완성하는 심화 실습 슬라이드입니다.</p>
+        </div>
+        <div class="card-bottom">
+          <a href="lecture-slides.html#slide-14" class="action-btn active">슬라이드 열기 <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Card 3: Session 3 -->
+      <div class="card">
+        <div class="card-top">
+          <div class="card-badge-row">
+            <span class="session-badge">SESSION 3</span>
+            <span class="lock-badge coming-soon"><i class="fa-solid fa-hourglass-half"></i> 준비 중</span>
+          </div>
+          <h3 class="card-title">맥미니 + OpenClaw 기반 24시간 개인 AI 비서 구축</h3>
+          <p class="card-desc">맥미니 로컬 인프라 세팅 및 OpenClaw 연동, 실시간 메신저(텔레그램, 슬랙 등) 및 노션 연동을 통한 실무 비서 운영 및 스케줄러 가이드라인 자료입니다.</p>
+        </div>
+        <div class="card-bottom">
+          <a href="#" class="action-btn disabled">자료 준비 중</a>
+        </div>
+      </div>
+
+      <!-- Card 4: Session 4 -->
+      <div class="card">
+        <div class="card-top">
+          <div class="card-badge-row">
+            <span class="session-badge">SESSION 4</span>
+            <span class="lock-badge coming-soon"><i class="fa-solid fa-hourglass-half"></i> 준비 중</span>
+          </div>
+          <h3 class="card-title">실무자를 위한 스크래핑 &amp; 크롤링 기술 전수</h3>
+          <p class="card-desc">Playwright, Python 스크립트를 통한 데이터 자동 수집 기술과 반복적인 세무/상담 엑셀 자료 전처리 및 보고서 작성을 자동화하는 실전 가이드라인 자료입니다.</p>
+        </div>
+        <div class="card-bottom">
+          <a href="#" class="action-btn disabled">자료 준비 중</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="logo.png" alt="AI-ing Logo">
+        <span>AI-ing 에이아잉</span>
+      </div>
+      <div class="footer-details">
+        상호명: 에이아잉 (대표자: 김민우) &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
+        연락처: 010-7646-3634 &nbsp;|&nbsp; 이메일: rlaalsdn456456@naver.com<br>
+        사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 호스팅 서비스: Cloudflare / 에이아잉
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 AI-ing. All rights reserved.</span>
+        <div class="footer-links">
+          <a href="/privacy.html">개인정보처리방침</a>
+          <a href="/terms.html">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
