@@ -3095,6 +3095,7 @@ grid-template-columns: 1fr;
   window.openPaymentModal = function() {
     document.getElementById('payment-modal').style.display = 'flex';
     document.getElementById('payment-step-1').style.display = 'block';
+    document.getElementById('payment-pg-window').style.display = 'none';
     document.getElementById('payment-step-2').style.display = 'none';
     document.getElementById('payment-amount').value = 100000;
   };
@@ -3108,13 +3109,40 @@ grid-template-columns: 1fr;
   window.resetPaymentAmount = function() {
     document.getElementById('payment-amount').value = 100000;
   };
-  window.triggerMockPayment = function(method) {
+  window.openPGWindow = function() {
     const amount = Number(document.getElementById('payment-amount').value);
-    const formatted = amount.toLocaleString() + '원';
-    document.getElementById('receipt-amount').innerText = formatted;
-    document.getElementById('receipt-method').innerText = method;
+    if (!amount || amount < 1000) {
+      alert("최소 결제 금액은 1,000원입니다.");
+      return;
+    }
+    document.getElementById('pg-amount-display').innerText = amount.toLocaleString() + '원';
     document.getElementById('payment-step-1').style.display = 'none';
-    document.getElementById('payment-step-2').style.display = 'block';
+    document.getElementById('payment-pg-window').style.display = 'block';
+  };
+  window.cancelPGWindow = function() {
+    document.getElementById('payment-pg-window').style.display = 'none';
+    document.getElementById('payment-step-1').style.display = 'block';
+  };
+  window.submitPGPayment = function() {
+    const btn = document.getElementById('pg-submit-btn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:pg-spin .6s linear infinite;vertical-align:middle;margin-right:6px;"></span>처리 중...`;
+    
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+      
+      const amount = Number(document.getElementById('payment-amount').value);
+      const cardCo = document.getElementById('pg-card-company').value;
+      const formatted = amount.toLocaleString() + '원';
+      
+      document.getElementById('receipt-amount').innerText = formatted;
+      document.getElementById('receipt-method').innerText = `${cardCo} (카드결제)`;
+      
+      document.getElementById('payment-pg-window').style.display = 'none';
+      document.getElementById('payment-step-2').style.display = 'block';
+    }, 1500);
   };
 </script>
 
@@ -3123,9 +3151,11 @@ grid-template-columns: 1fr;
 <div id="payment-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,8,13,0.65);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
   <div style="position:relative;width:min(440px,100%);background:#fff;border-radius:6px;box-shadow:0 24px 64px rgba(0,0,0,0.35);border:1px solid #e3e5ea;overflow:hidden;animation:aiingModalFade .3s ease;">
     <button onclick="closePaymentModal()" style="position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;color:#8b93a5;cursor:pointer;line-height:1;outline:none;">&times;</button>
+    
+    <!-- Step 1: Set Amount -->
     <div id="payment-step-1" style="padding:32px;">
       <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제 금액 설정</h3>
-      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">결제하실 금액을 입력하신 후 결제 수단을 선택해 주세요.</p>
+      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">결제하실 금액을 입력하신 후 결제하기 버튼을 눌러주세요.</p>
       <div style="margin-bottom:16px;">
         <label style="display:block;font-size:12.5px;font-weight:700;color:#3b33a5;margin-bottom:8px;text-transform:uppercase;">결제 금액 (KRW)</label>
         <div style="position:relative;display:flex;align-items:center;">
@@ -3139,22 +3169,59 @@ grid-template-columns: 1fr;
         <button onclick="addPaymentAmount(100000)" style="padding:8px 0;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:12px;font-weight:500;color:#5c6573;cursor:pointer;outline:none;">+10만</button>
         <button onclick="resetPaymentAmount()" style="padding:8px 0;background:#fff;border:1px solid #e61862;border-radius:4px;font-size:12px;font-weight:700;color:#e61862;cursor:pointer;outline:none;">초기화</button>
       </div>
-      <label style="display:block;font-size:12.5px;font-weight:700;color:#3b33a5;margin-bottom:12px;text-transform:uppercase;">결제 수단 선택</label>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <button onclick="triggerMockPayment('토스페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#f0f3ff;border:1px solid #c5d2ff;border-radius:4px;font-size:14px;font-weight:700;color:#0050ff;cursor:pointer;transition:background 0.2s;">
-          <img src="https://minwoo19930301.github.io/resume/icon/toss.png" alt="Toss" style="height:16px;width:auto;border-radius:2px;display:block;object-fit:contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4e/Toss_Logo.png'; this.style.height='12px';"> 토스페이
-        </button>
-        <button onclick="triggerMockPayment('카카오페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#fffde6;border:1px solid #ffe9a6;border-radius:4px;font-size:14px;font-weight:700;color:#3c1e1e;cursor:pointer;transition:background 0.2s;">
-          <img src="https://minwoo19930301.github.io/resume/icon/kakaopay.png" alt="Kakao" style="height:16px;width:auto;display:block;object-fit:contain;" onerror="this.style.display='none';"> 카카오페이
-        </button>
-        <button onclick="triggerMockPayment('네이버페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#e5fcf2;border:1px solid #b3f2d4;border-radius:4px;font-size:14px;font-weight:700;color:#03cf5d;cursor:pointer;transition:background 0.2s;">
-          <img src="https://minwoo19930301.github.io/resume/icon/naverpay.svg" alt="Naver" style="height:14px;width:auto;display:block;object-fit:contain;" onerror="this.style.display='none';"> 네이버페이
-        </button>
-        <button onclick="triggerMockPayment('신용카드')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-weight:700;color:#0c0e14;cursor:pointer;transition:background 0.2s;">
-          카드 결제
-        </button>
+      <button onclick="openPGWindow()" style="width:100%;padding:14px;background:#e61862;color:#fff;border-radius:4px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;font-family:'GmarketSans',sans-serif;" class="btn-gradient-hover">결제하기</button>
+    </div>
+
+    <!-- Step 2: Mock PG Window -->
+    <div id="payment-pg-window" style="display:none;padding:32px;background:#f8f9fa;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #e3e5ea;margin-bottom:16px;">
+        <span style="font-size:14px;font-weight:700;color:#0050ff;display:flex;align-items:center;gap:6px;">
+          <img src="https://minwoo19930301.github.io/resume/icon/toss.png" style="height:14px;width:auto;display:inline-block;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4e/Toss_Logo.png'; this.style.height='11px';"> Toss Payments 안전결제
+        </span>
+        <span style="font-size:12px;color:#8b93a5;font-weight:500;">테스트 결제창</span>
+      </div>
+      <div style="margin-bottom:16px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;padding:12px 16px;">
+        <div style="font-size:12px;color:#5c6573;margin-bottom:2px;">결제 요청 금액</div>
+        <div style="font-size:20px;font-weight:700;color:#0c0e14;" id="pg-amount-display">100,000원</div>
+      </div>
+      
+      <div style="background:#fff;border:1px solid #e3e5ea;border-radius:4px;padding:16px;margin-bottom:20px;">
+        <div style="margin-bottom:12px;">
+          <label style="display:block;font-size:11px;font-weight:700;color:#8b93a5;margin-bottom:4px;text-transform:uppercase;">카드사 선택</label>
+          <select id="pg-card-company" style="width:100%;padding:10px;border-radius:4px;border:1px solid #e3e5ea;font-size:13.5px;color:#0c0e14;outline:none;background:#fff;font-weight:500;">
+            <option>신한카드</option>
+            <option>현대카드</option>
+            <option>삼성카드</option>
+            <option>국민카드</option>
+            <option>농협카드</option>
+            <option>롯데카드</option>
+            <option>비씨카드</option>
+            <option>하나카드</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;font-size:11px;font-weight:700;color:#8b93a5;margin-bottom:4px;text-transform:uppercase;">카드 번호 (16자리)</label>
+          <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" value="4518-1234-5678-9012" style="width:100%;padding:10px;border-radius:4px;border:1px solid #e3e5ea;font-size:13.5px;color:#0c0e14;outline:none;font-family:monospace;letter-spacing:1px;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;color:#8b93a5;margin-bottom:4px;text-transform:uppercase;">유효 기간</label>
+            <input type="text" placeholder="MM/YY" value="12/28" style="width:100%;padding:10px;border-radius:4px;border:1px solid #e3e5ea;font-size:13.5px;color:#0c0e14;outline:none;text-align:center;">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;color:#8b93a5;margin-bottom:4px;text-transform:uppercase;">비밀번호 앞2자리</label>
+            <input type="password" placeholder="●●" value="12" style="width:100%;padding:10px;border-radius:4px;border:1px solid #e3e5ea;font-size:13.5px;color:#0c0e14;outline:none;text-align:center;letter-spacing:3px;">
+          </div>
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:8px;">
+        <button onclick="cancelPGWindow()" style="flex:1;padding:12px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-weight:700;color:#5c6573;cursor:pointer;outline:none;">취소</button>
+        <button onclick="submitPGPayment()" id="pg-submit-btn" style="flex:2;padding:12px;background:#0050ff;border:none;border-radius:4px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;outline:none;">결제 요청</button>
       </div>
     </div>
+
+    <!-- Step 3: Success Receipt -->
     <div id="payment-step-2" style="display:none;padding:48px 32px;text-align:center;">
       <div style="width:60px;height:60px;border-radius:50%;background:#03cf5d;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">✓</div>
       <h3 style="font-size:22px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제가 완료되었습니다</h3>
@@ -3166,14 +3233,14 @@ grid-template-columns: 1fr;
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
           <span>결제 수단</span>
-          <span style="font-weight:700;color:#0c0e14;" id="receipt-method">네이버페이</span>
+          <span style="font-weight:700;color:#0c0e14;" id="receipt-method">카드 결제</span>
         </div>
         <div style="display:flex;justify-content:space-between;color:#5c6573;">
           <span>주문 상태</span>
           <span style="font-weight:700;color:#03cf5d;">결제완료 (승인)</span>
         </div>
       </div>
-      <button onclick="closePaymentModal()" style="width:100%;padding:14px;border-radius:4px;background:#3b33a5;color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;">확인</button>
+      <button onclick="closePaymentModal()" style="width:100%;padding:14px;border-radius:4px;background:#3b33a5;color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;outline:none;">확인</button>
     </div>
   </div>
 </div>
@@ -3182,6 +3249,9 @@ grid-template-columns: 1fr;
 @keyframes aiingModalFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+@keyframes pg-spin {
+  to { transform: rotate(360deg); }
 }
 </style>
 
