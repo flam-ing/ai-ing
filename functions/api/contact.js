@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
       },
       body: JSON.stringify({
         from: 'AI-ing Contact <onboarding@resend.dev>',
-        to: 'rlaalsdn456456@naver.com',
+        to: 'kmw4564@g.skku.edu',
         subject: `[에이아잉 문의] 새로운 문의가 접수되었습니다.`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e3e5ea; border-radius: 8px;">
