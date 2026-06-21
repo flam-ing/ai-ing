@@ -2,10 +2,17 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   
+  // Only apply password protection to routes starting with /slides or matching /slides exactly
+  const isSlidesRoute = url.pathname === "/slides" || url.pathname === "/slides/" || url.pathname.startsWith("/slides/");
+  
+  if (!isSlidesRoute) {
+    return context.next();
+  }
+  
   const cookieHeader = request.headers.get("Cookie") || "";
   const sessionCookieName = "ai-ing-auth";
   
-  // Set the password from Cloudflare Pages Environment Variable, fallback to "1234" if not configured yet
+  // Set the password from Cloudflare Pages Environment Variable, fallback to "3633" if not configured yet
   const CORRECT_PASSWORD = env.SLIDES_PASSWORD || "3633";
   const expectedToken = "verified";
   
