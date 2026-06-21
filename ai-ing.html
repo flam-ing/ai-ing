@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>에이아잉 (AI-ing) — AI 도입을 넘어 실전 실행으로</title>
-<meta name="description" content="G마켓 테크블로그 에디터장 출신 IT 전문가 김민우가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 실전 코딩 교육. 에이아잉(AI-ing)." />
+<title>AI-ing — AI 도입을 넘어 실전 실행으로</title>
+<meta name="description" content="G마켓 테크블로그 에디터장 출신 IT 전문가 김민우가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 실전 코딩 교육. AI-ing." />
 <meta name="theme-color" content="#07080d" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="에이아잉 (AI-ing) — AI 도입을 넘어 실전 실행으로" />
+<meta property="og:title" content="AI-ing — AI 도입을 넘어 실전 실행으로" />
 <meta property="og:description" content="현직 대기업 IT 리드 개발자가 직접 설계·운영하는 AX 컨설팅 · 1:1 코딩 과외 · 기관 교육." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23g)'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' font-weight='700' text-anchor='middle' fill='%2306070d'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -352,12 +353,13 @@
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a class="brand" href="#hero" data-cursor>
-      <img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing</span><span class="ko">에이아잉</span>
+      <img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing</span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="#services" data-cursor>서비스</a>
       <a href="#about" data-cursor>대표자</a>
       <a href="#cases" data-cursor>사례</a>
+      <a href="#payment" data-cursor>결제</a>
       <a href="#contact" class="nav-cta" data-cursor>무료 상담 신청</a>
     </nav>
     <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
@@ -368,8 +370,9 @@
   <a href="#services" data-mm>서비스</a>
   <a href="#about" data-mm>대표자</a>
   <a href="#cases" data-mm>사례</a>
+  <a href="#payment" data-mm>결제</a>
   <a href="#contact" data-mm class="grad-text">무료 상담 신청</a>
-  <p class="mm-foot">AI 도입을 넘어 실전 실행으로 — 에이아잉 (AI-ing)</p>
+  <p class="mm-foot">AI 도입을 넘어 실전 실행으로 — AI-ing</p>
 </nav>
 
 <main id="main">
@@ -554,11 +557,50 @@
 </section>
 
 <!-- CONTACT -->
-<section class="contact sec-pad" id="contact" aria-labelledby="contact-h">
+
+  <!-- ============ PAYMENT ============ -->
+  <section class="payment sec-pad" id="payment" aria-labelledby="payment-h" style="background:var(--paper);border-top:1px solid var(--line-ink);scroll-margin-top:64px;">
+    <div class="shell" style="text-align:center;">
+      <div class="eyebrow" style="display:flex;justify-content:center;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--indigo);text-transform:uppercase;margin-bottom:18px;">
+        <span style="width:24px;height:2px;background:var(--indigo);"></span>05 / PAYMENT SERVICES
+      </div>
+      <h2 id="payment-h" style="font-size:clamp(28px,3.8vw,42px);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;">AI-ing 결제 및 정산 안내</h2>
+      <p style="color:var(--ink-mute);font-weight:300;font-size:16.5px;line-height:1.7;max-width:620px;margin:0 auto 48px;">
+        자문 서비스 및 1:1 교육의 편의를 위해 온라인 카드 결제 및 간편 결제(Toss Payments / PortOne) 시스템을 연동 중입니다.
+      </p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:32px;">
+        <!-- Card 1: Account Transfer -->
+        <div class="card c1" style="background:var(--paper-card);border:1px solid var(--line-ink);border-top:3px solid var(--indigo);padding:32px;border-radius:3px;">
+          <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--indigo);margin-bottom:20px;text-transform:uppercase;">METHOD 01</div>
+          <h3 style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:12px;">무통장 입금 (계좌이체)</h3>
+          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">상담 진행 후 발행된 인보이스(청구서)에 따라 정해진 계좌로 송금합니다. 현금영수증 및 세금계산서 발행이 즉시 지원됩니다.</p>
+          <div style="background:var(--paper);padding:16px 20px;border-radius:2px;border:1px solid var(--line-ink);">
+            <div style="font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px;">주거래 계좌 정보</div>
+            <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:2px;">토스뱅크 1002-6334-1822</div>
+            <div style="font-size:13px;color:var(--ink-mute);">예금주: 김민우(에이아잉)</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Card / PG Payment -->
+        <div class="card c2" style="background:var(--paper-card);border:1px solid var(--line-ink);border-top:3px solid var(--cyan);padding:32px;border-radius:3px;">
+          <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
+          <h3 style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:12px;">신용카드 및 간편 결제</h3>
+          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">토스페이, 카카오페이, 네이버페이 및 국내 주요 신용카드 결제를 위한 PG사 연동 심사가 진행 중입니다. 심사 완료 후 활성화됩니다.</p>
+          <div style="display:flex;align-items:center;gap:8px;opacity:0.65;font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:700;">
+            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:ring 2s infinite;"></span>
+            SYSTEM INTEGRATING (PORTONE / TOSS PAYMENTS)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact sec-pad" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
     <div class="contact-head reveal">
       <div class="eyebrow">05 / Contact</div>
-      <h2 id="contact-h">에이아잉과 비즈니스·커리어 혁신하기</h2>
+      <h2 id="contact-h">AI-ing과 비즈니스·커리어 혁신하기</h2>
       <p>상담을 원하시는 영역을 선택해 주시면, 확인 후 <strong>24시간 이내</strong>에 직접 메일 또는 문자로 회신드립니다.</p>
     </div>
 
@@ -612,13 +654,13 @@
   <div class="shell">
     <div class="foot-brand"><img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing <span>에이아잉</span></span></div>
     <div class="foot-biz">
-      상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
+      상호명: AI-ing &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
       사업장 소재지: 서울특별시 서초구 신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)<br>
       연락처: <a href="tel:01076463634" data-cursor>010-7646-3634</a> &nbsp;|&nbsp; 이메일: <a href="mailto:rlaalsdn456456@naver.com" data-cursor>rlaalsdn456456@naver.com</a><br>
       사업자등록번호: [등록 대기중] &nbsp;|&nbsp; 통신판매업신고번호: [신고 대기중] &nbsp;|&nbsp; 호스팅 서비스: Cloudflare / 에이아잉
     </div>
     <div class="foot-bottom">
-      <span class="cp">© 2026 에이아잉(AI-ing). All rights reserved.</span>
+      <span class="cp">© 2026 AI-ing. All rights reserved.</span>
       <div class="lk"><a href="#" data-cursor>개인정보처리방침</a><a href="#" data-cursor>이용약관</a></div>
     </div>
   </div>
