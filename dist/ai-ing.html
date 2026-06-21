@@ -1798,10 +1798,11 @@ grid-template-columns: 1fr;
 
 <!-- HERO -->
 <section class="hero tab-content-section active" id="hero">
-  <!-- Seamless Background Videos -->
+  <!-- Seamless Background Video -->
   <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
-    <video id="bg-video-1" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:1;"></video>
-    <video id="bg-video-2" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:0;"></video>
+    <video autoplay muted loop playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);">
+      <source src="bg_video_1.mp4" type="video/mp4">
+    </video>
   </div>
   <div style="position:absolute;inset:0;background:rgba(7,8,13,0.3);z-index:1;pointer-events:none;"></div>
 
@@ -2969,57 +2970,6 @@ grid-template-columns: 1fr;
   }
   window.startVideo = startVideo;
 
-  // Seamless Background video playlist cycling (Cross-fading between 2 video tags)
-  const bgVideos = ['bg_video_1.mp4', 'bg_video_2.mp4', 'bg_video_3.mp4', 'bg_video_4.mp4'];
-  let currentVideoIndex = 0;
-  const vid1 = document.getElementById('bg-video-1');
-  const vid2 = document.getElementById('bg-video-2');
-  
-  if (vid1 && vid2) {
-    vid1.src = bgVideos[currentVideoIndex];
-    vid1.load();
-    
-    let activeVideo = vid1;
-    let inactiveVideo = vid2;
-    
-    const handleTimeUpdate = (e) => {
-      const video = e.target;
-      // Start crossfade 1.5 seconds before current video ends
-      if (video.duration - video.currentTime < 1.5) {
-        video.removeEventListener('timeupdate', handleTimeUpdate);
-        
-        currentVideoIndex = (currentVideoIndex + 1) % bgVideos.length;
-        inactiveVideo.src = bgVideos[currentVideoIndex];
-        inactiveVideo.load();
-        
-        inactiveVideo.play().then(() => {
-          // Fade active video out, inactive video in
-          activeVideo.style.opacity = '0';
-          inactiveVideo.style.opacity = '1';
-          
-          // Swap active/inactive video references
-          const temp = activeVideo;
-          activeVideo = inactiveVideo;
-          inactiveVideo = temp;
-          
-          // Add listener to the new active video
-          activeVideo.addEventListener('timeupdate', handleTimeUpdate);
-        }).catch(err => {
-          console.log('Video crossfade error, swapping instantly:', err);
-          activeVideo.style.opacity = '0';
-          inactiveVideo.style.opacity = '1';
-          const temp = activeVideo;
-          activeVideo = inactiveVideo;
-          inactiveVideo = temp;
-          activeVideo.addEventListener('timeupdate', handleTimeUpdate);
-        });
-      }
-    };
-    
-    vid1.addEventListener('timeupdate', handleTimeUpdate);
-  }
-
-
   // Scroll Story for Services
   function setupScrollStory() {
     const story = document.getElementById('services');
@@ -3176,7 +3126,7 @@ grid-template-columns: 1fr;
     <div id="payment-pg-window" style="display:none;padding:32px;background:#f8f9fa;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #e3e5ea;margin-bottom:16px;">
         <span style="font-size:14px;font-weight:700;color:#0050ff;display:flex;align-items:center;gap:6px;">
-          <img src="https://minwoo19930301.github.io/resume/icon/toss.png" style="height:14px;width:auto;display:inline-block;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4e/Toss_Logo.png'; this.style.height='11px';"> Toss Payments 안전결제
+          신용카드 안전결제
         </span>
         <span style="font-size:12px;color:#8b93a5;font-weight:500;">테스트 결제창</span>
       </div>
