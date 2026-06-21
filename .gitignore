@@ -13,6 +13,12 @@ untitled/
 !logo.png
 *.pdf
 
+# Large files exceeding Cloudflare Pages 25MB limit
+slides/ai-agents-slides/ai_agents_slides_image_pack.pptx
+slides/downloads/portfolio-presentation.pptx
+slides/downloads/frontend-presentation.pptx
+
+
 # Python virtual environment (if any)
 venv/
 .venv/
