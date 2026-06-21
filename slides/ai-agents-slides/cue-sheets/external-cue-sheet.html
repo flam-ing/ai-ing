@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>외부 강의 큐시트</title>
+<style>
+  :root { --ink:#111827; --muted:#6b7280; --line:#d8e0ee; --blue:#2563eb; --bg:#f8fafc; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Segoe UI,sans-serif; line-height:1.55; }
+  main { max-width:1280px; margin:0 auto; padding:28px 24px 64px; }
+  .top { display:flex; align-items:end; justify-content:space-between; gap:20px; margin-bottom:18px; border-bottom:3px solid var(--blue); padding-bottom:14px; }
+  h1 { margin:0; font-size:30px; letter-spacing:0; }
+  .count { color:var(--muted); font-weight:800; }
+  .row { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:14px; align-items:stretch; margin:0 0 14px; break-inside:avoid; page-break-inside:avoid; }
+  .cell { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; box-shadow:0 10px 24px rgba(15,23,42,.05); }
+  .clean { position:relative; padding-left:76px; }
+  .num { position:absolute; left:20px; top:18px; width:38px; height:38px; border-radius:50%; display:grid; place-items:center; background:#e8f0ff; color:#1746b8; font-weight:900; }
+  h2 { margin:0 0 8px; font-size:22px; letter-spacing:0; }
+  p { margin:0; font-size:18px; font-weight:650; }
+  .raw { font-size:14px; color:#253044; white-space:normal; }
+  .raw strong { display:block; font-size:15px; color:#0f172a; margin:0 0 4px; }
+  @media print {
+    body { background:#fff; }
+    main { max-width:none; padding:0; }
+    .top { margin:0 0 10mm; }
+    .row { grid-template-columns:1.2fr .8fr; gap:5mm; margin-bottom:5mm; break-inside:avoid; page-break-inside:avoid; }
+    .cell { box-shadow:none; border-radius:6px; padding:5mm; }
+    .clean { padding-left:18mm; }
+    .num { left:5mm; top:5mm; }
+    h1 { font-size:20pt; }
+    h2 { font-size:13pt; }
+    p { font-size:10.8pt; }
+    .raw { font-size:8.5pt; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="top"><h1>외부 강의 큐시트</h1><div class="count">86 slides</div></header>
+  
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">1</div>
+          <h2>오늘 배울 것</h2>
+          <p>AI 서비스 방식, 요금제, 모델/앱 구분, AFK 에이전트 시연 목표를 소개한다.</p>
+        </div>
+        <div class="cell raw"><strong>서비스 기업의 미래 고객은 사람이 아니라 AI?</strong><br>맥미니와 오픈클로로 만든 개인 비서<br>AI 서비스 강의</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">2</div>
+          <h2>목차</h2>
+          <p>기, 승, 전, 결 흐름으로 전체 발표 구조를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>서비스 기업의 미래 고객은 사람이 아니라 AI?</strong><br>맥미니와 오픈클로로 만든 개인 비서<br>AI 서비스 강의</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">3</div>
+          <h2>기: AI가 서비스 되는 방식과 요금제</h2>
+          <p>첫 번째 섹션의 시작을 알린다.</p>
+        </div>
+        <div class="cell raw"><strong>서비스 기업의 미래 고객은 사람이 아니라 AI?</strong><br>맥미니와 오픈클로로 만든 개인 비서<br>AI 서비스 강의</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">4</div>
+          <h2>클라이언트-서버-DB 전체 구조</h2>
+          <p>웹 서비스의 기본 구조를 한 화면에 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">5</div>
+          <h2>DB 확대와 엑셀 등장</h2>
+          <p>DB 쪽으로 확대되며 엑셀 형태의 데이터가 나타난다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">6</div>
+          <h2>엑셀 시트 구조</h2>
+          <p>여러 시트와 테이블 형태로 데이터 구조를 설명한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">7</div>
+          <h2>엑셀 데이터 묶음</h2>
+          <p>시트들이 겹치며 데이터 묶음처럼 보이게 한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">8</div>
+          <h2>엑셀 중심 화면</h2>
+          <p>엑셀/시트 묶음을 중심으로 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">9</div>
+          <h2>전체 구조 복귀</h2>
+          <p>다시 클라이언트-서버-DB 전체 구조로 돌아온다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">10</div>
+          <h2>전체 구조 정리</h2>
+          <p>웹 요청 흐름 설명 전 전체 그림을 다시 정리한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">11</div>
+          <h2>HTML 웹 요청</h2>
+          <p>클라이언트가 `https://www.reddit.com/r/technology/`로 요청하는 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">12</div>
+          <h2>DNS 변환</h2>
+          <p>DNS가 도메인을 IP와 포트로 바꾸는 과정을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">13</div>
+          <h2>HTML용 SQL 요청</h2>
+          <p>서버가 DB에 SQL로 HTML 페이지용 데이터를 요청한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">14</div>
+          <h2>DB 결과 반환</h2>
+          <p>DB 결과가 서버로 돌아오는 흐름을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">15</div>
+          <h2>HTML 응답 반환</h2>
+          <p>서버가 HTML 응답을 만들어 클라이언트에 돌려준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">16</div>
+          <h2>JSON API 요청</h2>
+          <p>클라이언트가 `https://www.reddit.com/r/technology.json`으로 API 요청을 보낸다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">17</div>
+          <h2>API DNS 변환</h2>
+          <p>API 요청에서도 DNS 변환이 일어나는 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">18</div>
+          <h2>JSON용 SQL 요청</h2>
+          <p>서버가 DB에 JSON 응답용 데이터를 SQL로 요청한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">19</div>
+          <h2>API 결과 반환</h2>
+          <p>DB 결과가 API 서버 쪽으로 돌아온다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">20</div>
+          <h2>JSON 응답과 토큰/키</h2>
+          <p>JSON 응답 흐름을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">21</div>
+          <h2>DB 재확대</h2>
+          <p>DB 쪽으로 다시 확대해 뇌 전환을 준비한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">22</div>
+          <h2>DB에서 뇌로 전환</h2>
+          <p>DB/엑셀 영역이 뇌로 대체되는 전환 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">23</div>
+          <h2>다운로드</h2>
+          <p>다운로드 화면과 모델 배포 페이지와 상품 페이지 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">24</div>
+          <h2>HTML 결과 화면</h2>
+          <p>최종 HTML 응답 예시와 Arena 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">25</div>
+          <h2>랭킹 차트</h2>
+          <p>바 차트들이 아래에서 올라오며 랭킹을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">26</div>
+          <h2>HTML 비용</h2>
+          <p>HTML 비용과 관련 스크린샷/설명 요소가 순차적으로 등장한다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">27</div>
+          <h2>해줘</h2>
+          <p>답변이 타이핑되는 듯한 방식으로 나타난다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">28</div>
+          <h2>AI API</h2>
+          <p>AI API 흐름을 순환 하이라이트로 표현한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">29</div>
+          <h2>결제와 구독</h2>
+          <p>계정, 결제, 구독 화면 흐름과 token/key 개념, Claude 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">30</div>
+          <h2>Anthropic API</h2>
+          <p>Anthropic API와 개발자, 공공기관, 회사들이 등장하는 장면이다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">31</div>
+          <h2>승: AI 에이전트의 등장</h2>
+          <p>두 번째 섹션의 시작을 알린다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">32</div>
+          <h2>OpenClaw 등장</h2>
+          <p>OpenClaw가 처음 등장하는 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">33</div>
+          <h2>OpenClaw 통계</h2>
+          <p>OpenClaw 통계와 말풍선들이 하나씩 등장한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">34</div>
+          <h2>OpenClaw와 Mac mini</h2>
+          <p>OpenClaw와 Mac mini 연결 흐름을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">35</div>
+          <h2>Mac mini 자료</h2>
+          <p>Mac mini 관련 자료 세 개가 순차적으로 나타난다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">36</div>
+          <h2>Telegram 명령</h2>
+          <p>Telegram 화면에서 OpenClaw 메시지가 타이핑된다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">37</div>
+          <h2>30초 대기</h2>
+          <p>Telegram에서 명령 후 30초 대기 상태를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">38</div>
+          <h2>Telegram 응답</h2>
+          <p>Telegram 응답이 타이핑처럼 이어진다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">39</div>
+          <h2>OpenClaw API</h2>
+          <p>OpenClaw API 데이터가 빠르게 순환하는 느낌을 준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">40</div>
+          <h2>Claude API와 OpenClaw</h2>
+          <p>Claude API와 OpenClaw 연결 및 반환 흐름을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">41</div>
+          <h2>경고</h2>
+          <p>주의 또는 경고 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">42</div>
+          <h2>업무용 컴퓨터 설치 금지</h2>
+          <p>업무용 컴퓨터 설치 금지와 대안 흐름을 설명한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">43</div>
+          <h2>대안 화면</h2>
+          <p>ban_alternatives 화면을 확대했다가 줌아웃한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">44</div>
+          <h2>Copow/QwenPaw Talk</h2>
+          <p>Copow 또는 QwenPaw Talk 화면과 스크린샷을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">45</div>
+          <h2>VM</h2>
+          <p>VM과 클라우드 실행환경을 소개한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">46</div>
+          <h2>VM 설정 방법</h2>
+          <p>VM 설정 방법과 BotFather, AI Studio API key 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">47</div>
+          <h2>Moltbook</h2>
+          <p>Moltbook 관련 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">48</div>
+          <h2>내가 한 것</h2>
+          <p>실제로 해본 작업을 정리한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">49</div>
+          <h2>멀티에이전트</h2>
+          <p>여러 에이전트가 협업하는 구조를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">50</div>
+          <h2>Discord</h2>
+          <p>Discord 기반 에이전트 예시를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">51</div>
+          <h2>Hermes</h2>
+          <p>Hermes를 소개한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">52</div>
+          <h2>Hermes vs OpenClaw</h2>
+          <p>Hermes와 OpenClaw를 비교하고 좋은 타일에 glow 효과를 준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">53</div>
+          <h2>Hermes 전체 흐름</h2>
+          <p>Hermes 동작 방식을 전체 화면으로 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">54</div>
+          <h2>Hermes 왼쪽 확대</h2>
+          <p>Hermes 흐름 중 왼쪽 영역을 확대한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">55</div>
+          <h2>Hermes 중앙 확대</h2>
+          <p>Hermes 흐름 중 중앙 영역을 확대한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">56</div>
+          <h2>Hermes 오른쪽 확대</h2>
+          <p>Hermes 흐름 중 오른쪽 영역을 확대한다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">57</div>
+          <h2>전: AI 회사들의 에이전트 정책들</h2>
+          <p>세 번째 섹션의 시작을 알린다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">58</div>
+          <h2>전체 서비스 맵 1</h2>
+          <p>전체 서비스 맵에서 Web/API만 먼저 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">59</div>
+          <h2>전체 서비스 맵 2</h2>
+          <p>CLI 영역이 추가로 드러난다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">60</div>
+          <h2>전체 서비스 맵 3</h2>
+          <p>Web/API/CLI/GUI 전체 서비스 맵을 공개한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">61</div>
+          <h2>Apps</h2>
+          <p>Apps 화면과 데이터 흐름 효과를 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">62</div>
+          <h2>Use Computer</h2>
+          <p>Use Computer 버튼이 지연 후 활성화되는 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">63</div>
+          <h2>Video Demo</h2>
+          <p>video1과 video2 데모를 나란히 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">64</div>
+          <h2>AFK</h2>
+          <p>AFK가 Away From Keyboard로 확장된다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">65</div>
+          <h2>AFK 예시</h2>
+          <p>휴대폰 명령이 각 컴퓨터로 전달되는 예시를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">66</div>
+          <h2>ChatGPT 예시</h2>
+          <p>ChatGPT 사용 예시 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">67</div>
+          <h2>Codex 예시 1</h2>
+          <p>Codex 사용 예시 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">68</div>
+          <h2>Codex 예시 2</h2>
+          <p>Codex 예시를 더 자세히 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">69</div>
+          <h2>Instructions</h2>
+          <p>Codex, OpenClaw, Telegram, iMac 관련 설치 지시 체크리스트를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">70</div>
+          <h2>Codex Qwen</h2>
+          <p>Codex/Antigravity 요청이 특정 모델 API로 라우팅되는 비교를 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">71</div>
+          <h2>결: 후기 및 고찰</h2>
+          <p>마지막 섹션의 시작을 알린다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">72</div>
+          <h2>OpenClaw Heartbeats</h2>
+          <p>OpenClaw heartbeats와 반복 비용 느낌을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>OpenClaw: 컴퓨터 조작 레이어의 등장</strong><br><br>대답만 하는 것이 아니라<br>브라우저, 파일, 터미널, 앱을 실제로 다루는 쪽으로 간다.<br><br>OpenClaw<br>24시간 대기하는 실행 레이어<br><br>명령을 받아 작업을 실행<br><br>브라우저 · 파일 · 터미널 조작<br><br>모델은 따로 연결해야 함<br><br>---<br><br><strong>업무용 컴퓨터에 바로 깔지 말 것</strong><br><br>파일 · 브라우저 · 계정 접근권을 가진 도구라서<br>실행 공간을 분리해야 한다.<br><br>업무용 PC 직접 설치 X<br><br>- 클라우드 VM<br>- VM / 컨테이너<br>- 분리 PC<br><br>---<br><br><strong>맥미니 품절 대란</strong><br><br>24시간 OpenClaw용으로는<br>‘싼 완제품 + 조용함 + 16GB 기본’ 조합이 매력적이었다.<br><br>결론:<br>‘서버 격 깡통 컴퓨터’를 찾던 사람들 눈에<br>맥미니 M4가 갑자기 싸 보였다.</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">73</div>
+          <h2>No CLI/API/MCP</h2>
+          <p>CLI, API, MCP 없이 쓰는 흐름 또는 한계를 정리한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">74</div>
+          <h2>Claude SEO</h2>
+          <p>Claude 다운로드 검색/SEO 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">75</div>
+          <h2>Claude Download</h2>
+          <p>Claude 다운로드 팝업이 뜨는 장면이다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">76</div>
+          <h2>Fake Install</h2>
+          <p>가짜 설치 또는 피싱성 안내 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">77</div>
+          <h2>Dashboard 1</h2>
+          <p>대시보드 창 하나가 등장한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">78</div>
+          <h2>Dashboard 2</h2>
+          <p>대시보드 창 두 개가 포개진다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">79</div>
+          <h2>Dashboard 3</h2>
+          <p>대시보드 창 세 개가 계단식으로 포개진다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">80</div>
+          <h2>Dashboard 4</h2>
+          <p>대시보드 창 네 개가 모두 포개진다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">81</div>
+          <h2>Harness</h2>
+          <p>Harness 관련 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">82</div>
+          <h2>Limitless</h2>
+          <p>Limitless 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">83</div>
+          <h2>Stocks</h2>
+          <p>자동화 예시 프로젝트 프로젝트와 GitHub 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">84</div>
+          <h2>Volley Fire</h2>
+          <p>API key 관리 예시 프로젝트 프로젝트와 GitHub 링크를 보여준다.</p>
+        </div>
+        <div class="cell raw"><strong>웹 방식: 브라우저에서 바로 쓰는 AI</strong><br><br><strong>웹 요금제: 월 구독제와 사용량 제한</strong><br><br>월 구독제의 핵심<br>일정 사용량을 넘으면 잠시 멈춘다<br><br>토큰/메시지 한도에 걸리면 다음 리셋까지 기다려야 한다.<br><br>---<br><br><strong>AI 챗봇 사용량은 ChatGPT가 압도적으로 앞선다</strong><br><br>1. ChatGPT — 72.68%<br>2. Gemini — 13.54%<br>3. Perplexity — 5.59%<br>4. Claude — 0.55%<br><br>---<br><br><strong>하지만 웹 AI는 ‘해줘’에 약하다</strong><br><br>"이거 해줘"<br><br>하는 방법 알려줄게:<br>1. 먼저 사이트에 들어가고<br>2. 버튼을 클릭한 다음<br>3. 설정을 확인하면 돼<br>4. 필요하면 다시 물어봐<br><br>---<br><br><strong>API key는 과금형 출입증이다</strong><br><br>서비스가 호출할 때마다 키로 식별하고,<br>토큰을 세고,<br>사용량만큼 청구한다.<br><br>서비스 / 앱<br>→ API key<br>→ 누가 쓰는지 식별<br>→ TOKEN METER<br>→ 토큰 계산<br>→ 사용량 청구<br><br>쓴 만큼 과금</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">85</div>
+          <h2>Future</h2>
+          <p>Future 화면을 보여준다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+
+      <section class="row">
+        <div class="cell clean">
+          <div class="num">86</div>
+          <h2>Last Loop</h2>
+          <p>last와 last2가 1초 단위로 반복 전환되며 마무리한다.</p>
+        </div>
+        <div class="cell raw">관련 원문 없음</div>
+      </section>
+</main>
+</body>
+</html>
