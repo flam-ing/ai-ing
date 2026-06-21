@@ -1,9 +1,0 @@
-# Short URLs for slide decks redirecting to the protected /slides/ folder
-/web          /slides/lecture-slides.html         301
-/ai-browser   /slides/ai-browser-slides.html      301
-/sls          /slides/sls-ppt/index.html          301
-/ai-agents    /slides/ai-agents-slides/index.html 301
-/entry        /slides/entry-poop-slides.html      301
-/portfolio    /slides/portfolio-slides.html       301
-/frontend     /slides/frontend-slides.html        301
-/slides       /slides/                            301
