@@ -1708,11 +1708,11 @@ grid-template-columns: 1fr;
 
   <!-- ============ HERO ============ -->
   <section id="hero" class="tab-content-section active" style="position:relative;min-height:100vh;background:#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
-    <!-- Seamless Background Video -->
+    <!-- Seamless Background Videos -->
     <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
-      <video autoplay muted loop playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);">
-        <source src="bg_video_1.mp4" type="video/mp4">
-      </video>
+      <video id="bg-video-1" src="bg_video_1.mp4" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:1;"></video>
+      <video id="bg-video-2" src="bg_video_2.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
+      <video id="bg-video-3" src="bg_video_3.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
     </div>
     <div style="position:absolute;inset:0;background:rgba(7,8,13,0.3);z-index:1;pointer-events:none;"></div>
 
@@ -3011,6 +3011,60 @@ grid-template-columns: 1fr;
       pendingPlay.add(config.playerId);
   }
   window.startVideo = startVideo;
+
+  // Seamless Background video playlist cycling (Cross-fading between 3 statically loaded videos)
+  const vids = [
+    document.getElementById('bg-video-1'),
+    document.getElementById('bg-video-2'),
+    document.getElementById('bg-video-3')
+  ];
+  
+  if (vids[0] && vids[1] && vids[2]) {
+    let currentIdx = 0;
+    
+    // Play the first video initially
+    vids[0].play().catch(e => console.log(e));
+    
+    const handleTimeUpdate = (e) => {
+      const activeVideo = e.target;
+      
+      // Start crossfade 2 seconds before the video ends
+      if (activeVideo.duration && activeVideo.duration - activeVideo.currentTime < 2) {
+        activeVideo.removeEventListener('timeupdate', handleTimeUpdate);
+        
+        const nextIdx = (currentIdx + 1) % vids.length;
+        const nextVideo = vids[nextIdx];
+        
+        // Prepare and play the next video
+        nextVideo.currentTime = 0;
+        nextVideo.play().then(() => {
+          // Fade active out, next in
+          activeVideo.style.opacity = '0';
+          nextVideo.style.opacity = '1';
+          
+          // Pause the old video after transition completes (1.5s)
+          const oldVideo = activeVideo;
+          setTimeout(() => {
+            if (currentIdx !== nextIdx) {
+              oldVideo.pause();
+            }
+          }, 1500);
+          
+          currentIdx = nextIdx;
+          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
+        }).catch(err => {
+          console.log('Video cycle error:', err);
+          activeVideo.style.opacity = '0';
+          nextVideo.style.opacity = '1';
+          activeVideo.pause();
+          currentIdx = nextIdx;
+          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
+        });
+      }
+    };
+    
+    vids[0].addEventListener('timeupdate', handleTimeUpdate);
+  }
 
   // On page load, check hash for tab
   window.addEventListener('DOMContentLoaded', () => {
