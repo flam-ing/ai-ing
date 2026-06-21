@@ -1,0 +1,24 @@
+{
+  "kind": "Listing",
+  "subreddit": "technology",
+  "source": "demo/reddit-technology.json",
+  "data": {
+    "children": [
+      {
+        "title": "AI model infrastructure and chip news",
+        "score": 4821,
+        "type": "post"
+      },
+      {
+        "title": "Platform policy, privacy, robotics updates",
+        "score": 2114,
+        "type": "post"
+      },
+      {
+        "title": "JSON response: structured for software",
+        "score": 1288,
+        "type": "post"
+      }
+    ]
+  }
+}

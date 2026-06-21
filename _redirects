@@ -1,0 +1,9 @@
+# Short URLs for slide decks
+/web          /lecture-slides.html         301
+/ai-browser   /ai-browser-slides.html      301
+/sls          /sls-ppt/index.html          301
+/ai-agents    /ai-agents-slides/index.html 301
+/entry        /entry-poop-slides.html      301
+/portfolio    /portfolio-slides.html       301
+/frontend     /frontend-slides.html        301
+/slides       /slides.html                 301
