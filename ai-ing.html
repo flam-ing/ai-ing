@@ -340,7 +340,19 @@
     .marquee-track{animation:none}
     .cursor,.cursor-dot{display:none}
   }
+
+  /* Tabbed sections */
+  .tab-content-section {
+    display: none !important;
+  }
+  .tab-content-section.active {
+    display: block !important;
+  }
+  #hero.tab-content-section.active {
+    display: flex !important;
+  }
 </style>
+
 </head>
 <body>
 
@@ -352,85 +364,55 @@
 <!-- NAV -->
 <header class="nav" id="nav">
   <div class="nav-inner">
-    <a class="brand" href="#hero" data-cursor>
+    <a class="brand" href="#hero" onclick="event.preventDefault(); showTab('hero');" data-cursor>
       <img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing</span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
-      <a href="#services" data-cursor>서비스</a>
-      <a href="#about" data-cursor>대표자</a>
-      <a href="#cases" data-cursor>사례</a>
-      <a href="#payment" data-cursor>결제</a>
-      <a href="#contact" class="nav-cta" data-cursor>무료 상담 신청</a>
+      <a href="#services" onclick="event.preventDefault(); showTab('services');" data-cursor class="nav-link-tab">서비스</a>
+      <a href="#about" onclick="event.preventDefault(); showTab('about');" data-cursor class="nav-link-tab">대표자</a>
+      <a href="#cases" onclick="event.preventDefault(); showTab('cases');" data-cursor class="nav-link-tab">사례</a>
+      <a href="#payment" onclick="event.preventDefault(); showTab('payment');" data-cursor class="nav-link-tab">결제</a>
+      <a href="#contact" onclick="event.preventDefault(); showTab('contact');" class="nav-cta nav-link-tab" data-cursor>무료 상담 신청</a>
     </nav>
     <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
   </div>
 </header>
 
 <nav class="mobile-menu" id="mobileMenu" aria-label="모바일 메뉴">
-  <a href="#services" data-mm>서비스</a>
-  <a href="#about" data-mm>대표자</a>
-  <a href="#cases" data-mm>사례</a>
-  <a href="#payment" data-mm>결제</a>
-  <a href="#contact" data-mm class="grad-text">무료 상담 신청</a>
+  <a href="#services" onclick="event.preventDefault(); showTab('services');" data-mm>서비스</a>
+  <a href="#about" onclick="event.preventDefault(); showTab('about');" data-mm>대표자</a>
+  <a href="#cases" onclick="event.preventDefault(); showTab('cases');" data-mm>사례</a>
+  <a href="#payment" onclick="event.preventDefault(); showTab('payment');" data-mm>결제</a>
+  <a href="#contact" onclick="event.preventDefault(); showTab('contact');" data-mm class="grad-text">무료 상담 신청</a>
   <p class="mm-foot">AI 도입을 넘어 실전 실행으로 — AI-ing</p>
 </nav>
 
 <main id="main">
 
 <!-- HERO -->
-<section class="hero" id="hero">
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="hero-veil" aria-hidden="true"></div>
+<section class="hero tab-content-section active" id="hero">
+  <!-- Background Video -->
+  <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
+    <video id="bg-video" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(24px) brightness(0.48);"></video>
+  </div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,#07080d 100%);z-index:1;pointer-events:none;"></div>
 
-  <!-- VARIANT A : 타이포 임팩트 + 포트레이트/영상 -->
-  <div class="hero-variant" id="heroA">
-    <div class="hero-grid">
-      <div>
-        <div class="hero-eyebrow reveal"><span class="dot"></span><span class="t">AI Experience — 실전 파트너</span></div>
-        <h1 class="reveal">AI 도입을 넘어<br><span class="grad-text">실전 실행</span>으로<br>비즈니스를 혁신하다</h1>
-        <p class="lead reveal">G마켓 테크블로그 에디터장 출신 IT 전문가가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.</p>
-        <div class="hero-actions reveal">
-          <a href="#contact" class="btn btn-grad" data-cursor data-magnetic>무료 AX 도입 자문 신청 →</a>
-          <button class="btn btn-ghost" data-cursor data-video="SEiK-a6uov0"><span class="pin">▶</span>게스트 강연 영상</button>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="portrait">
-          <img class="parallax" src="https://minwoo19930301.github.io/resume/img/pic.jpeg" alt="김민우 대표" />
-          <div class="duo"></div><div class="shade"></div>
-          <button class="play" data-video="SEiK-a6uov0" aria-label="강연 영상 재생">▶</button>
-          <div class="cap"><div class="k">▶ Guest Lecture</div><div class="v">맥미니 + OpenClaw로 만드는<br>24시간 AI 비서</div></div>
-          <div class="badge">멘토링 <b>1위</b></div>
-        </div>
-      </div>
+  <div class="shell" style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 0 60px;">
+    <div class="eyebrow" style="display:inline-flex;align-items:center;gap:11px;margin-bottom:28px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#e61862;box-shadow:0 0 12px #e61862;animation:ring 2s infinite;"></span>
+      <span style="font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:rgba(255,255,255,0.7);text-transform:uppercase;white-space:nowrap;">AI-ing</span>
+    </div>
+    <h1 style="font-size:clamp(36px,5.2vw,72px);font-weight:700;line-height:1.15;letter-spacing:-.025em;color:#fff;margin-bottom:24px;">
+      AI 도입 실전 실행<br>& 맞춤형 멘토링
+    </h1>
+    <p style="max-width:600px;font-size:clamp(16px,1.6vw,19px);font-weight:300;line-height:1.75;color:rgba(255,255,255,0.65);margin-bottom:40px;word-break:keep-all;">
+      프로세스 자동화 설계부터 1:1 맞춤 코딩 교육까지, 비즈니스와 커리어의 혁신을 함께합니다.
+    </p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+      <a href="#services" onclick="event.preventDefault(); showTab('services');" class="btn" style="background:var(--grad);color:#06070d;font-weight:700;">서비스 알아보기</a>
+      <a href="#contact" onclick="event.preventDefault(); showTab('contact');" class="btn btn-ghost" style="color:#e8ecf4;">무료 자문 신청 →</a>
     </div>
   </div>
-
-  <!-- VARIANT B : 시네마틱 (디자인 파일) -->
-  <div class="hero-variant" id="heroB" hidden>
-    <div class="hero-grid">
-      <div>
-        <div class="hero-eyebrow reveal"><span class="dot"></span><span class="t">실전 작동하는 AI 자동화</span></div>
-        <h1 class="reveal">AI 도입을 넘어<br><span class="grad-text">실전 실행</span>으로<br>비즈니스를 혁신하다</h1>
-        <p class="lead reveal">G마켓 테크블로그 에디터장 출신 IT 전문가가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.</p>
-        <div class="hero-actions reveal">
-          <a href="#contact" class="btn btn-grad" data-cursor data-magnetic>무료 AX 도입 자문 신청 →</a>
-          <button class="btn btn-ghost" data-cursor data-video="SEiK-a6uov0"><span class="pin">▶</span>게스트 강연 영상</button>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="portrait">
-          <img class="parallax" src="https://minwoo19930301.github.io/resume/img/pic.jpeg" alt="김민우 대표" />
-          <div class="duo"></div><div class="shade"></div>
-          <button class="play" data-video="SEiK-a6uov0" aria-label="강연 영상 재생">▶</button>
-          <div class="cap"><div class="k">▶ Guest Lecture</div><div class="v">맥미니 + OpenClaw로 만드는<br>24시간 AI 비서</div></div>
-          <div class="badge">멘토링 <b>1위</b></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="scroll-hint" aria-hidden="true"><span class="t">SCROLL</span><span class="bar"></span></div>
 </section>
 
 <!-- TECH MARQUEE -->
@@ -440,7 +422,7 @@
 </div>
 
 <!-- ABOUT / CREDENTIALS -->
-<section class="about sec-pad" id="about" aria-labelledby="about-h">
+<section class="about sec-pad tab-content-section" id="about" aria-labelledby="about-h">
   <div class="shell">
     <div class="sec-num reveal">02 / 대표자 &amp; 신뢰 지표</div>
     <h2 class="sec-h reveal" id="about-h">현직 대기업 IT 리드 개발자가 직접 설계하고 운영합니다</h2>
@@ -472,7 +454,7 @@
 </section>
 
 <!-- SERVICES -->
-<section class="services sec-pad" id="services" aria-labelledby="services-h">
+<section class="services sec-pad tab-content-section" id="services" aria-labelledby="services-h">
   <div class="shell">
     <div class="sec-num reveal">03 / CORE SERVICES</div>
     <h2 class="sec-h reveal" id="services-h">어려운 기술 용어 없이, 직관적인 비즈니스 언어로</h2>
@@ -514,7 +496,7 @@
 </section>
 
 <!-- CASES -->
-<section class="cases sec-pad" id="cases" aria-labelledby="cases-h">
+<section class="cases sec-pad tab-content-section" id="cases" aria-labelledby="cases-h">
   <div class="shell">
     <div class="sec-num reveal">04 / CASE STUDIES</div>
     <h2 class="sec-h reveal" id="cases-h">입증된 자동화 및 교육 사례</h2>
@@ -559,7 +541,7 @@
 <!-- CONTACT -->
 
   <!-- ============ PAYMENT ============ -->
-  <section class="payment sec-pad" id="payment" aria-labelledby="payment-h" style="background:var(--paper);border-top:1px solid var(--line-ink);scroll-margin-top:64px;">
+  <section class="payment sec-pad tab-content-section" id="payment" aria-labelledby="payment-h" style="background:var(--paper);border-top:1px solid var(--line-ink);scroll-margin-top:64px;">
     <div class="shell" style="text-align:center;">
       <div class="eyebrow" style="display:flex;justify-content:center;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--indigo);text-transform:uppercase;margin-bottom:18px;">
         <span style="width:24px;height:2px;background:var(--indigo);"></span>05 / PAYMENT SERVICES
@@ -596,7 +578,7 @@
     </div>
   </section>
 
-  <section class="contact sec-pad" id="contact" aria-labelledby="contact-h">
+  <section class="contact sec-pad tab-content-section" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
     <div class="contact-head reveal">
       <div class="eyebrow">05 / Contact</div>
@@ -886,6 +868,63 @@
   /* ---- marquee dynamic duration ---- */
   if(track && !reduce){ var tw=track.scrollWidth/2; track.style.animationDuration=Math.max(20, tw/55)+"s"; }
 })();
+
+  // Tab Navigation function
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-content-section').forEach(sec => {
+      sec.classList.remove('active');
+    });
+    const target = document.getElementById(tabId);
+    if (target) {
+      target.classList.add('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    
+    // Close burger menu / mobile menu if active (for mobile view in ai-ing.html)
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (burger && mobileMenu) {
+      burger.classList.remove('active');
+      mobileMenu.classList.remove('show');
+    }
+    
+    // Update active nav link indicator
+    document.querySelectorAll('.nav-link-tab').forEach(link => {
+      if (link.getAttribute('href') === '#' + tabId) {
+        link.style.color = '#e61862';
+      } else {
+        link.style.color = '';
+      }
+    });
+  }
+
+  // Background video playlist cycling
+  const bgVideos = ['bg_video_1.mp4', 'bg_video_2.mp4', 'bg_video_3.mp4', 'bg_video_4.mp4'];
+  let currentVideoIndex = 0;
+  const bgVideoEl = document.getElementById('bg-video');
+  if (bgVideoEl) {
+    bgVideoEl.src = bgVideos[currentVideoIndex];
+    bgVideoEl.addEventListener('ended', () => {
+      currentVideoIndex = (currentVideoIndex + 1) % bgVideos.length;
+      bgVideoEl.src = bgVideos[currentVideoIndex];
+      bgVideoEl.play().catch(e => console.log('Video play error:', e));
+    });
+  }
+
+  // On page load, check hash for tab
+  window.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#')) {
+      const tabId = hash.substring(1);
+      const target = document.getElementById(tabId);
+      if (target && target.classList.contains('tab-content-section')) {
+        showTab(tabId);
+        return;
+      }
+    }
+    showTab('hero');
+  });
 </script>
+
 </body>
 </html>
