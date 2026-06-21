@@ -2451,10 +2451,9 @@ grid-template-columns: 1fr;
         <div class="card c2" style="background:var(--paper-card);border:1px solid var(--line-ink);border-top:3px solid var(--cyan);padding:32px;border-radius:3px;">
           <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
           <h3 style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:12px;">신용카드 및 간편 결제</h3>
-          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 네이버페이 및 국내 주요 신용카드 결제를 위한 PG사 연동 심사가 진행 중입니다. 심사 완료 후 활성화됩니다.</p>
-          <div style="display:flex;align-items:center;gap:8px;opacity:0.65;font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:700;">
-            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:ring 2s infinite;"></span>
-            SYSTEM INTEGRATING (PORTONE)
+          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 네이버페이 및 국내 주요 신용카드 결제가 가능합니다. 결제 버튼을 눌러 금액을 설정하고 즉시 결제를 진행할 수 있습니다.</p>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button type="button" onclick="openPaymentModal()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#e61862;color:#fff;font-size:14px;font-weight:700;border:none;transition:background 0.2s,transform 0.2s;cursor:pointer;" class="btn-gradient-hover">결제하기</button>
           </div>
         </div>
       </div>
@@ -3092,8 +3091,99 @@ grid-template-columns: 1fr;
     handleRoute();
       setupScrollStory();
   });
+
+  window.openPaymentModal = function() {
+    document.getElementById('payment-modal').style.display = 'flex';
+    document.getElementById('payment-step-1').style.display = 'block';
+    document.getElementById('payment-step-2').style.display = 'none';
+    document.getElementById('payment-amount').value = 100000;
+  };
+  window.closePaymentModal = function() {
+    document.getElementById('payment-modal').style.display = 'none';
+  };
+  window.addPaymentAmount = function(amount) {
+    const input = document.getElementById('payment-amount');
+    input.value = Number(input.value) + amount;
+  };
+  window.resetPaymentAmount = function() {
+    document.getElementById('payment-amount').value = 100000;
+  };
+  window.triggerMockPayment = function(method) {
+    const amount = Number(document.getElementById('payment-amount').value);
+    const formatted = amount.toLocaleString() + '원';
+    document.getElementById('receipt-amount').innerText = formatted;
+    document.getElementById('receipt-method').innerText = method;
+    document.getElementById('payment-step-1').style.display = 'none';
+    document.getElementById('payment-step-2').style.display = 'block';
+  };
 </script>
 
+
+<!-- Payment Modal -->
+<div id="payment-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,8,13,0.65);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+  <div style="position:relative;width:min(440px,100%);background:#fff;border-radius:6px;box-shadow:0 24px 64px rgba(0,0,0,0.35);border:1px solid #e3e5ea;overflow:hidden;animation:aiingModalFade .3s ease;">
+    <button onclick="closePaymentModal()" style="position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;color:#8b93a5;cursor:pointer;line-height:1;outline:none;">&times;</button>
+    <div id="payment-step-1" style="padding:32px;">
+      <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제 금액 설정</h3>
+      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">결제하실 금액을 입력하신 후 결제 수단을 선택해 주세요.</p>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12.5px;font-weight:700;color:#3b33a5;margin-bottom:8px;text-transform:uppercase;">결제 금액 (KRW)</label>
+        <div style="position:relative;display:flex;align-items:center;">
+          <input type="number" id="payment-amount" value="100000" min="1000" step="1000" style="width:100%;padding:14px 16px;padding-right:40px;border-radius:4px;border:1px solid #e3e5ea;font-size:18px;font-weight:700;color:#0c0e14;outline:none;text-align:right;">
+          <span style="position:absolute;right:16px;font-size:15px;font-weight:700;color:#8b93a5;">원</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px;">
+        <button onclick="addPaymentAmount(10000)" style="padding:8px 0;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:12px;font-weight:500;color:#5c6573;cursor:pointer;outline:none;">+1만</button>
+        <button onclick="addPaymentAmount(50000)" style="padding:8px 0;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:12px;font-weight:500;color:#5c6573;cursor:pointer;outline:none;">+5만</button>
+        <button onclick="addPaymentAmount(100000)" style="padding:8px 0;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:12px;font-weight:500;color:#5c6573;cursor:pointer;outline:none;">+10만</button>
+        <button onclick="resetPaymentAmount()" style="padding:8px 0;background:#fff;border:1px solid #e61862;border-radius:4px;font-size:12px;font-weight:700;color:#e61862;cursor:pointer;outline:none;">초기화</button>
+      </div>
+      <label style="display:block;font-size:12.5px;font-weight:700;color:#3b33a5;margin-bottom:12px;text-transform:uppercase;">결제 수단 선택</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <button onclick="triggerMockPayment('토스페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#f0f3ff;border:1px solid #c5d2ff;border-radius:4px;font-size:14px;font-weight:700;color:#0050ff;cursor:pointer;transition:background 0.2s;">
+          <img src="https://minwoo19930301.github.io/resume/icon/toss.png" alt="Toss" style="height:16px;width:auto;border-radius:2px;display:block;object-fit:contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4e/Toss_Logo.png'; this.style.height='12px';"> 토스페이
+        </button>
+        <button onclick="triggerMockPayment('카카오페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#fffde6;border:1px solid #ffe9a6;border-radius:4px;font-size:14px;font-weight:700;color:#3c1e1e;cursor:pointer;transition:background 0.2s;">
+          <img src="https://minwoo19930301.github.io/resume/icon/kakaopay.png" alt="Kakao" style="height:16px;width:auto;display:block;object-fit:contain;" onerror="this.style.display='none';"> 카카오페이
+        </button>
+        <button onclick="triggerMockPayment('네이버페이')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#e5fcf2;border:1px solid #b3f2d4;border-radius:4px;font-size:14px;font-weight:700;color:#03cf5d;cursor:pointer;transition:background 0.2s;">
+          <img src="https://minwoo19930301.github.io/resume/icon/naverpay.svg" alt="Naver" style="height:14px;width:auto;display:block;object-fit:contain;" onerror="this.style.display='none';"> 네이버페이
+        </button>
+        <button onclick="triggerMockPayment('신용카드')" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:#f4f5f7;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-weight:700;color:#0c0e14;cursor:pointer;transition:background 0.2s;">
+          카드 결제
+        </button>
+      </div>
+    </div>
+    <div id="payment-step-2" style="display:none;padding:48px 32px;text-align:center;">
+      <div style="width:60px;height:60px;border-radius:50%;background:#03cf5d;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">✓</div>
+      <h3 style="font-size:22px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제가 완료되었습니다</h3>
+      <p style="font-size:14px;color:#5c6573;font-weight:300;margin-bottom:24px;line-height:1.5;">에이아잉 교육 서비스 결제가 성공적으로 이루어졌습니다.</p>
+      <div style="background:#f4f5f7;border-radius:4px;border:1px solid #e3e5ea;padding:16px;text-align:left;font-size:13.5px;margin-bottom:28px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
+          <span>결제 금액</span>
+          <span style="font-weight:700;color:#0c0e14;" id="receipt-amount">100,000원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
+          <span>결제 수단</span>
+          <span style="font-weight:700;color:#0c0e14;" id="receipt-method">네이버페이</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;color:#5c6573;">
+          <span>주문 상태</span>
+          <span style="font-weight:700;color:#03cf5d;">결제완료 (승인)</span>
+        </div>
+      </div>
+      <button onclick="closePaymentModal()" style="width:100%;padding:14px;border-radius:4px;background:#3b33a5;color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;">확인</button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes aiingModalFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 </body>

@@ -111,6 +111,9 @@ def sync_copies():
     for page in ["about.html", "services.html", "payment.html", "contact.html"]:
         shutil.copy(os.path.join(codex_dir, "index.html"), os.path.join(codex_dir, page))
         shutil.copy(os.path.join(codex_dir, "index.html"), os.path.join(codex_dir, "dist", page))
+    
+    # Also sync ai-ing.html to dist/
+    shutil.copy(os.path.join(codex_dir, "ai-ing.html"), os.path.join(codex_dir, "dist/ai-ing.html"))
     print("Generated copies for routing fallbacks.")
 
 if __name__ == "__main__":
