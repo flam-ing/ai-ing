@@ -1710,10 +1710,10 @@ grid-template-columns: 1fr;
   <section id="hero" class="tab-content-section active" style="position:relative;min-height:100vh;background:#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
     <!-- Seamless Background Videos -->
     <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
-      <video id="bg-video-1" src="bg_video_1.mp4" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:1;"></video>
-      <video id="bg-video-2" src="bg_video_2.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
-      <video id="bg-video-3" src="bg_video_3.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
-      <video id="bg-video-4" src="bg_video_4.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
+      <video id="bg-video-1" src="bg_video_1.mp4" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:1;"></video>
+      <video id="bg-video-2" src="bg_video_2.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:0;"></video>
+      <video id="bg-video-3" src="bg_video_3.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:0;"></video>
+      <video id="bg-video-4" src="bg_video_4.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:0;"></video>
     </div>
     <div style="position:absolute;inset:0;background:rgba(7,8,13,0.3);z-index:1;pointer-events:none;"></div>
 
@@ -3031,14 +3031,21 @@ grid-template-columns: 1fr;
   if (vids.length > 0) {
     let currentIdx = 0;
     
+    // Set video playback rate to 0.6 (slow motion)
+    vids.forEach(vid => {
+      if (vid) {
+        vid.playbackRate = 0.6;
+      }
+    });
+    
     // Play the first video initially
     vids[0].play().catch(e => console.log(e));
     
     const handleTimeUpdate = (e) => {
       const activeVideo = e.target;
       
-      // Start crossfade 2 seconds before the video ends
-      if (activeVideo.duration && activeVideo.duration - activeVideo.currentTime < 2) {
+      // Start crossfade 1.2 seconds before the video ends (slower playback means 1.2s is roughly 2s original time)
+      if (activeVideo.duration && activeVideo.duration - activeVideo.currentTime < 1.2) {
         activeVideo.removeEventListener('timeupdate', handleTimeUpdate);
         
         const nextIdx = (currentIdx + 1) % vids.length;
@@ -3051,13 +3058,13 @@ grid-template-columns: 1fr;
           activeVideo.style.opacity = '0';
           nextVideo.style.opacity = '1';
           
-          // Pause the old video after transition completes (1.5s)
+          // Pause the old video after transition completes (1.2s)
           const oldVideo = activeVideo;
           setTimeout(() => {
             if (currentIdx !== nextIdx) {
               oldVideo.pause();
             }
-          }, 1500);
+          }, 1200);
           
           currentIdx = nextIdx;
           nextVideo.addEventListener('timeupdate', handleTimeUpdate);
