@@ -2991,21 +2991,15 @@ grid-template-columns: 1fr;
   if (vids.length > 0) {
     let currentIdx = 0;
     
-    // Set video playback rate to 0.6 (slow motion)
-    vids.forEach(vid => {
-      if (vid) {
-        vid.playbackRate = 0.6;
-      }
-    });
-    
     // Play the first video initially
     vids[0].play().catch(e => console.log(e));
     
     const handleTimeUpdate = (e) => {
       const activeVideo = e.target;
       
-      // Start crossfade 1.2 seconds before the video ends (slower playback means 1.2s is roughly 2s original time)
-      if (activeVideo.duration && activeVideo.duration - activeVideo.currentTime < 1.2) {
+      // Start crossfade after 5 seconds of playback, or 1.2s before the end if the video is shorter
+      const threshold = activeVideo.duration ? Math.min(5, activeVideo.duration - 1.2) : 5;
+      if (activeVideo.currentTime >= threshold) {
         activeVideo.removeEventListener('timeupdate', handleTimeUpdate);
         
         const nextIdx = (currentIdx + 1) % vids.length;
