@@ -1633,12 +1633,24 @@ grid-template-columns: 1fr;
   background: rgba(255, 255, 255, 0.6);
   pointer-events: none;
 }
-.story-card > p,
-.story-card > span,
-.story-card > h3,
-.story-card > ul {
+.story-card p,
+.story-card span,
+.story-card h3,
+.story-card ul {
   position: relative;
   z-index: 2;
+}
+.story-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: auto;
+  max-width: 800px;
 }
 .story-kicker {
   margin: 0;
@@ -2316,46 +2328,52 @@ grid-template-columns: 1fr;
       <div class="story-scene">
         <div class="story-card">
           <div class="story-photo" style="background-image:url('img/story-1.png');"></div>
-          <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">01 / B2B · AUTO</p>
-          <span class="story-line"></span>
-          <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
-          <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
-          <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
-          </ul>
+          <div class="story-content">
+            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">01 / B2B · AUTO</p>
+            <span class="story-line"></span>
+            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
+            <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- Scene 2 -->
       <div class="story-scene">
         <div class="story-card">
           <div class="story-photo" style="background-image:url('img/story-2.png');"></div>
-          <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">02 / 1:1 · MENTOR</p>
-          <span class="story-line"></span>
-          <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
-          <p class="story-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
-          <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
-          </ul>
+          <div class="story-content">
+            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">02 / 1:1 · MENTOR</p>
+            <span class="story-line"></span>
+            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
+            <p class="story-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- Scene 3 -->
       <div class="story-scene">
         <div class="story-card">
           <div class="story-photo" style="background-image:url('img/story-3.png');"></div>
-          <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">03 / 기관 · EDU</p>
-          <span class="story-line"></span>
-          <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
-          <p class="story-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
-          <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
-            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
-          </ul>
+          <div class="story-content">
+            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">03 / 기관 · EDU</p>
+            <span class="story-line"></span>
+            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
+            <p class="story-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- Progress dots -->
