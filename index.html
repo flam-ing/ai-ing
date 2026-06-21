@@ -54,7 +54,7 @@
   }
 
   ::selection {
-    background: rgba(34, 211, 238, .3);
+    background: rgba(230,24,98, .3);
     color: #fff;
   }
 
@@ -79,14 +79,14 @@
   }
 
   @keyframes aiingRing {
-    0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, .5); }
-    70% { box-shadow: 0 0 0 20px rgba(34, 211, 238, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(230,24,98, .5); }
+    70% { box-shadow: 0 0 0 20px rgba(230,24,98, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(230,24,98, 0); }
   }
 
   /* Style-hover/focus replacements */
   .hover-cyan:hover {
-    color: #22d3ee !important;
+    color: #e61862 !important;
   }
 
   .btn-gradient-hover:hover {
@@ -100,7 +100,7 @@
   }
 
   .stat-card-hover:hover {
-    border-color: rgba(34, 211, 238, .6) !important;
+    border-color: rgba(230,24,98, .6) !important;
     transform: translateY(-4px);
   }
 
@@ -110,7 +110,7 @@
   }
 
   .input-focus-cyan:focus {
-    border-color: #22d3ee !important;
+    border-color: #e61862 !important;
   }
 
   /* Hero Variants Layout */
@@ -139,7 +139,7 @@
   }
 
   .switcher-btn.active {
-    background: linear-gradient(135deg, #22d3ee, #6366f1) !important;
+    background: linear-gradient(135deg, #e61862, #3b33a5) !important;
     color: #06070d !important;
     border: 1px solid transparent !important;
   }
@@ -156,7 +156,7 @@
 
   .case-item.active {
     border-color: #c9cdf5 !important;
-    border-left-color: #6366f1 !important;
+    border-left-color: #3b33a5 !important;
     background: #fbfbfe !important;
   }
 
@@ -175,11 +175,11 @@
     width: 30px;
     height: 30px;
     border-radius: 2px;
-    background: rgba(99, 102, 241, .1);
+    background: rgba(59,51,165, .1);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6366f1;
+    color: #3b33a5;
     font-size: 18px;
     transition: transform .35s;
   }
@@ -203,8 +203,8 @@
   }
 
   .area-choice-btn.active {
-    background: rgba(34, 211, 238, .1) !important;
-    border-color: #22d3ee !important;
+    background: rgba(230,24,98, .1) !important;
+    border-color: #e61862 !important;
   }
 
   .area-choice-dot {
@@ -220,7 +220,7 @@
   }
 
   .area-choice-btn.active .area-choice-dot {
-    border-color: #22d3ee !important;
+    border-color: #e61862 !important;
   }
 
   .area-choice-dot-inner {
@@ -232,7 +232,7 @@
   }
 
   .area-choice-btn.active .area-choice-dot-inner {
-    background: #22d3ee !important;
+    background: #e61862 !important;
   }
 </style>
 </head>
@@ -243,7 +243,7 @@
   <nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
     <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
       <a href="#hero" style="display:flex;align-items:center;gap:11px;text-decoration:none;">
-        <span style="width:30px;height:30px;border-radius:3px;background:linear-gradient(135deg,#22d3ee,#6366f1);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:#06070d;">A</span>
+        <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
         <span style="font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;">AI-ing</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b7385;letter-spacing:.04em;">에이아잉</span>
       </a>
@@ -251,13 +251,13 @@
         <a href="#services" class="hover-cyan" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
         <a href="#about" class="hover-cyan" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
         <a href="#cases" class="hover-cyan" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">사례</a>
-        <a href="#contact" class="btn-gradient-hover" style="margin-left:10px;padding:11px 20px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);color:#06070d;text-decoration:none;font-size:14.5px;font-weight:700;transition:filter .2s;">무료 상담 신청</a>
+        <a href="#contact" class="btn-gradient-hover" style="margin-left:10px;padding:11px 20px;border-radius:2px;background:linear-gradient(135deg,#e61862,#3b33a5);color:#06070d;text-decoration:none;font-size:14.5px;font-weight:700;transition:filter .2s;">무료 상담 신청</a>
       </div>
     </div>
   </nav>
 
   <!-- ============ HERO ============ -->
-  <section id="hero" style="position:relative;min-height:100vh;background:radial-gradient(1100px 600px at 50% -10%,rgba(99,102,241,.2),transparent 60%),radial-gradient(900px 500px at 85% 20%,rgba(34,211,238,.12),transparent 55%),#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
+  <section id="hero" style="position:relative;min-height:100vh;background:radial-gradient(1100px 600px at 50% -10%,rgba(59,51,165,.2),transparent 60%),radial-gradient(900px 500px at 85% 20%,rgba(230,24,98,.12),transparent 55%),#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
     <canvas id="particle-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;"></canvas>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,#07080d 100%);z-index:1;pointer-events:none;"></div>
 
@@ -266,31 +266,31 @@
       <div style="width:min(1200px,92vw);margin:0 auto;padding:118px 0 38px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;">
         <div>
           <div data-reveal="up" style="display:inline-flex;align-items:center;gap:11px;margin-bottom:24px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee;animation:aiingPulse 2s infinite;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#e61862;box-shadow:0 0 12px #e61862;animation:aiingPulse 2s infinite;"></span>
             <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.18em;color:#aeb6c7;text-transform:uppercase;white-space:nowrap;">AI Experience — 실전 파트너</span>
           </div>
           <h1 data-reveal="up" data-delay="80" style="font-size:clamp(34px,4.6vw,64px);font-weight:700;line-height:1.09;letter-spacing:-.025em;color:#fff;margin-bottom:22px;">
-            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로<br>비즈니스를 혁신하다
+            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로<br>비즈니스를 혁신하다
           </h1>
           <p data-reveal="up" data-delay="160" style="max-width:540px;font-size:clamp(15px,1.5vw,18px);font-weight:300;line-height:1.75;color:#aab2c4;margin-bottom:32px;">
             G마켓 테크블로그 에디터장 출신 IT 전문가가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.
           </p>
           <div data-reveal="up" data-delay="240" style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
-            <button onclick="openVideo('SEiK-a6uov0')" class="btn-outline-hover" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:2px;background:transparent;color:#e8ecf4;font-weight:500;font-size:16px;font-family:inherit;border:1px solid rgba(255,255,255,.22);cursor:pointer;transition:background .2s,border-color .2s;"><span style="width:24px;height:24px;border-radius:50%;background:rgba(34,211,238,.16);display:inline-flex;align-items:center;justify-content:center;color:#22d3ee;font-size:11px;padding-left:2px;">▶</span>게스트 강연 영상</button>
+            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#e61862,#3b33a5);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
+            <button onclick="openVideo('SEiK-a6uov0')" class="btn-outline-hover" style="display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:2px;background:transparent;color:#e8ecf4;font-weight:500;font-size:16px;font-family:inherit;border:1px solid rgba(255,255,255,.22);cursor:pointer;transition:background .2s,border-color .2s;"><span style="width:24px;height:24px;border-radius:50%;background:rgba(230,24,98,.16);display:inline-flex;align-items:center;justify-content:center;color:#e61862;font-size:11px;padding-left:2px;">▶</span>게스트 강연 영상</button>
           </div>
         </div>
         <div data-reveal="up" data-delay="200" style="position:relative;">
           <div style="position:relative;aspect-ratio:4/5;border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 70px rgba(0,0,0,.5);">
             <img id="parallax-photo" src="https://minwoo19930301.github.io/resume/img/pic.jpeg" alt="김민우 대표" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 16%;display:block;transform:scale(1.08);will-change:transform;" />
-            <div style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(34,211,238,.16),transparent 44%,rgba(99,102,241,.34));mix-blend-mode:screen;pointer-events:none;"></div>
+            <div style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(230,24,98,.16),transparent 44%,rgba(59,51,165,.34));mix-blend-mode:screen;pointer-events:none;"></div>
             <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,8,13,.9),transparent 44%);pointer-events:none;"></div>
-            <button onclick="openVideo('SEiK-a6uov0')" aria-label="강연 영상 재생" style="position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,#22d3ee,#6366f1);display:flex;align-items:center;justify-content:center;color:#06070d;font-size:22px;padding-left:5px;animation:aiingRing 2.4s infinite;">▶</button>
+            <button onclick="openVideo('SEiK-a6uov0')" aria-label="강연 영상 재생" style="position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,#e61862,#3b33a5);display:flex;align-items:center;justify-content:center;color:#06070d;font-size:22px;padding-left:5px;animation:aiingRing 2.4s infinite;">▶</button>
             <div style="position:absolute;left:22px;right:22px;bottom:20px;pointer-events:none;">
-              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#22d3ee;text-transform:uppercase;margin-bottom:7px;">▶ Guest Lecture</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#e61862;text-transform:uppercase;margin-bottom:7px;">▶ Guest Lecture</div>
               <div style="font-size:15px;font-weight:500;color:#fff;line-height:1.45;">맥미니 + OpenClaw로 만드는<br>24시간 AI 비서</div>
             </div>
-            <div style="position:absolute;top:18px;right:18px;padding:7px 12px;background:rgba(7,8,13,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:#e6eaf2;white-space:nowrap;">멘토링 <span style="color:#22d3ee;font-weight:700;">1위</span></div>
+            <div style="position:absolute;top:18px;right:18px;padding:7px 12px;background:rgba(7,8,13,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:#e6eaf2;white-space:nowrap;">멘토링 <span style="color:#e61862;font-weight:700;">1위</span></div>
           </div>
         </div>
       </div>
@@ -331,17 +331,17 @@
       <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;padding:130px 0 90px;">
         <div>
           <div data-reveal="up" style="display:inline-flex;align-items:center;gap:11px;margin-bottom:26px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee;animation:aiingPulse 2s infinite;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#e61862;box-shadow:0 0 12px #e61862;animation:aiingPulse 2s infinite;"></span>
             <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;color:#aeb6c7;text-transform:uppercase;">실전 작동하는 AI 자동화</span>
           </div>
           <h1 data-reveal="up" data-delay="80" style="font-size:clamp(36px,5vw,66px);font-weight:700;line-height:1.08;letter-spacing:-.025em;color:#fff;margin-bottom:24px;">
-            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로.
+            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로.
           </h1>
           <p data-reveal="up" data-delay="160" style="max-width:520px;font-size:clamp(15px,1.5vw,18px);font-weight:300;line-height:1.75;color:#aab2c4;margin-bottom:36px;">
             G마켓 테크블로그 에디터장 출신 IT 전문가가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.
           </p>
           <div data-reveal="up" data-delay="240" style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
+            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#e61862,#3b33a5);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
             <a href="#services" class="btn-outline-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:transparent;color:#e8ecf4;font-weight:500;font-size:16px;text-decoration:none;border:1px solid rgba(255,255,255,.22);transition:background .2s;">커리큘럼 보기</a>
           </div>
         </div>
@@ -352,16 +352,16 @@
             <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#28c840;"><span style="width:6px;height:6px;border-radius:50%;background:#28c840;box-shadow:0 0 8px #28c840;animation:aiingPulse 1.6s infinite;"></span>ONLINE</span>
           </div>
           <div style="padding:20px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;color:#9aa3b5;">
-            <div style="color:#22d3ee;margin-bottom:4px;">$ agent.status()</div>
+            <div style="color:#e61862;margin-bottom:4px;">$ agent.status()</div>
             <div style="display:flex;justify-content:space-between;gap:14px;white-space:nowrap;"><span>🧠 모델 · Brain</span><span style="color:#e6eaf2;">Claude / GPT</span></div>
             <div style="display:flex;justify-content:space-between;gap:14px;white-space:nowrap;"><span>🤖 OpenClaw · 손발</span><span style="color:#e6eaf2;">실행 중</span></div>
             <div style="display:flex;justify-content:space-between;gap:14px;white-space:nowrap;"><span>💬 메신저 · 입구</span><span style="color:#e6eaf2;">Telegram</span></div>
             <div style="display:flex;justify-content:space-between;gap:14px;white-space:nowrap;"><span>📝 메모리 · 노트</span><span style="color:#e6eaf2;">Notion</span></div>
             <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;gap:14px;white-space:nowrap;">
               <span style="color:#6c7488;">API 비용 최적화</span>
-              <span style="font-size:18px;font-weight:700;background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">-60%</span>
+              <span style="font-size:18px;font-weight:700;background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">-60%</span>
             </div>
-            <div style="color:#22d3ee;margin-top:6px;">$ <span style="display:inline-block;width:8px;height:15px;background:#22d3ee;vertical-align:middle;animation:aiingBlink 1.1s steps(1) infinite;"></span></div>
+            <div style="color:#e61862;margin-top:6px;">$ <span style="display:inline-block;width:8px;height:15px;background:#e61862;vertical-align:middle;animation:aiingBlink 1.1s steps(1) infinite;"></span></div>
           </div>
         </div>
       </div>
@@ -370,19 +370,19 @@
     <!-- VARIANT 3 : Editorial layered -->
     <div id="hero-variant-3" class="hero-variant" style="position:relative;z-index:2;width:min(1200px,92vw);margin:0 auto;">
       <div style="position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none;">
-        <span style="font-size:min(34vw,440px);font-weight:700;letter-spacing:-.03em;background:linear-gradient(135deg,rgba(34,211,238,.1),rgba(99,102,241,.07));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">AI-ing</span>
+        <span style="font-size:min(34vw,440px);font-weight:700;letter-spacing:-.03em;background:linear-gradient(135deg,rgba(230,24,98,.1),rgba(59,51,165,.07));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;">AI-ing</span>
       </div>
       <div style="padding:140px 0 90px;">
-        <div data-reveal="up" style="max-width:760px;padding:48px;border-radius:3px;background:rgba(12,14,22,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-left:3px solid #22d3ee;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.18em;color:#22d3ee;text-transform:uppercase;margin-bottom:22px;">// 01 — 실전 실행 파트너</div>
+        <div data-reveal="up" style="max-width:760px;padding:48px;border-radius:3px;background:rgba(12,14,22,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-left:3px solid #e61862;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.18em;color:#e61862;text-transform:uppercase;margin-bottom:22px;">// 01 — 실전 실행 파트너</div>
           <h1 style="font-size:clamp(36px,5.4vw,70px);font-weight:700;line-height:1.08;letter-spacing:-.025em;color:#fff;margin-bottom:24px;">
-            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로<br>비즈니스를 혁신하다
+            AI 도입을 넘어<br><span style="background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">실전 실행</span>으로<br>비즈니스를 혁신하다
           </h1>
           <p style="font-size:clamp(15px,1.5vw,18px);font-weight:300;line-height:1.75;color:#b3bbcc;margin-bottom:36px;">
             G마켓 테크블로그 에디터장 출신 IT 전문가가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.
           </p>
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
+            <a href="#contact" class="btn-gradient-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:linear-gradient(135deg,#e61862,#3b33a5);color:#06070d;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;">무료 AX 도입 자문 신청 →</a>
             <a href="#services" class="btn-outline-hover" style="display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:2px;background:transparent;color:#e8ecf4;font-weight:500;font-size:16px;text-decoration:none;border:1px solid rgba(255,255,255,.22);transition:background .2s;">커리큘럼 보기</a>
           </div>
         </div>
@@ -398,34 +398,34 @@
   <!-- ============ ABOUT / CREDENTIALS ============ -->
   <section id="about" style="position:relative;background:#07080d;padding:clamp(80px,9vw,130px) 0;color:#fff;scroll-margin-top:64px;">
     <div style="width:min(1200px,92vw);margin:0 auto;">
-      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#22d3ee;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#22d3ee;"></span>02 / 대표자 &amp; 신뢰 지표</div>
+      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#e61862;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#e61862;"></span>02 / 대표자 &amp; 신뢰 지표</div>
       <h2 data-reveal="up" data-delay="60" style="font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.18;max-width:760px;margin-bottom:14px;">현직 대기업 IT 리드 개발자가 직접 설계하고 운영합니다</h2>
       <p data-reveal="up" data-delay="120" style="color:#9aa3b5;font-weight:300;font-size:17px;line-height:1.7;max-width:620px;margin-bottom:56px;">비전문 마케터가 아닌, 실제 대기업 백엔드 아키텍처를 다루는 개발자의 기술적 신뢰도.</p>
 
       <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:start;">
-        <div data-reveal="up" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.1);border-top:3px solid #22d3ee;padding:38px;">
+        <div data-reveal="up" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.1);border-top:3px solid #e61862;padding:38px;">
           <div style="display:flex;align-items:center;gap:18px;margin-bottom:30px;">
-            <div style="width:62px;height:62px;border-radius:3px;background:linear-gradient(135deg,#22d3ee,#6366f1);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#06070d;">김</div>
+            <div style="width:62px;height:62px;border-radius:3px;background:linear-gradient(135deg,#e61862,#3b33a5);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#06070d;">김</div>
             <div>
               <div style="font-size:23px;font-weight:700;letter-spacing:-.01em;">김민우 <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#7e879b;font-weight:500;">Minwoo Kim</span></div>
-              <div style="color:#22d3ee;font-size:14px;font-weight:500;margin-top:4px;">대표 · 백엔드 아키텍트 · AI 에이전트 전문가</div>
+              <div style="color:#e61862;font-size:14px;font-weight:500;margin-top:4px;">대표 · 백엔드 아키텍트 · AI 에이전트 전문가</div>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:0;">
             <div style="display:flex;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);">
-              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#22d3ee;padding-top:2px;">01</span>
+              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#e61862;padding-top:2px;">01</span>
               <p style="color:#c7cdda;font-weight:300;font-size:15.5px;line-height:1.6;"><strong style="color:#fff;font-weight:500;">G마켓(Gmarket)</strong> 백엔드 개발자 · 테크블로그 3기 에디터장 — PR 워크플로우 도입, 누적 방문수 45만 달성</p>
             </div>
             <div style="display:flex;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);">
-              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#22d3ee;padding-top:2px;">02</span>
+              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#e61862;padding-top:2px;">02</span>
               <p style="color:#c7cdda;font-weight:300;font-size:15.5px;line-height:1.6;"><strong style="color:#fff;font-weight:500;">롯데e커머스(Lotte ON)</strong> 백엔드 개발자 · 사내 기술블로그 기고 발표자</p>
             </div>
             <div style="display:flex;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);">
-              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#22d3ee;padding-top:2px;">03</span>
+              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#e61862;padding-top:2px;">03</span>
               <p style="color:#c7cdda;font-weight:300;font-size:15.5px;line-height:1.6;"><strong style="color:#fff;font-weight:500;">정부/기관 검증 멘토</strong> — 과학기술정보통신부 연계 ICT 멘토, 고용노동부 디지털 인재 과정 멘토(최종 1등 팀 배출)</p>
             </div>
             <div style="display:flex;gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,.07);">
-              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#22d3ee;padding-top:2px;">04</span>
+              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#e61862;padding-top:2px;">04</span>
               <p style="color:#c7cdda;font-weight:300;font-size:15.5px;line-height:1.6;"><strong style="color:#fff;font-weight:500;">AI 에이전트 전문가</strong> — 유튜브 채널 게스트 출연 (맥미니 + OpenClaw로 24시간 개인 비서 구축)</p>
             </div>
           </div>
@@ -433,19 +433,19 @@
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div data-reveal="up" data-delay="60" class="stat-card-hover" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.09);padding:28px;transition:border-color .3s,transform .3s;">
-            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="45" data-suffix="만+">0만+</div>
+            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="45" data-suffix="만+">0만+</div>
             <div style="color:#9aa3b5;font-weight:300;font-size:14px;margin-top:10px;line-height:1.4;">테크블로그 누적 방문수</div>
           </div>
           <div data-reveal="up" data-delay="120" class="stat-card-hover" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.09);padding:28px;transition:border-color .3s,transform .3s;">
-            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="12" data-suffix="명">0명</div>
+            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="12" data-suffix="명">0명</div>
             <div style="color:#9aa3b5;font-weight:300;font-size:14px;margin-top:10px;line-height:1.4;">1:1 멘토링 누적 지도</div>
           </div>
           <div data-reveal="up" data-delay="180" class="stat-card-hover" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.09);padding:28px;transition:border-color .3s,transform .3s;">
-            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="2" data-suffix="명">0명</div>
+            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="2" data-suffix="명">0명</div>
             <div style="color:#9aa3b5;font-weight:300;font-size:14px;margin-top:10px;line-height:1.4;">IT 업계 취업 성공</div>
           </div>
           <div data-reveal="up" data-delay="240" class="stat-card-hover" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.09);padding:28px;transition:border-color .3s,transform .3s;">
-            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#22d3ee,#6366f1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="60" data-prefix="-" data-suffix="%">-0%</div>
+            <div style="font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#e61862,#3b33a5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-count="60" data-prefix="-" data-suffix="%">-0%</div>
             <div style="color:#9aa3b5;font-weight:300;font-size:14px;margin-top:10px;line-height:1.4;">OpenClaw API 비용 절감</div>
           </div>
         </div>
@@ -456,39 +456,39 @@
   <!-- ============ SERVICES ============ -->
   <section id="services" style="background:#f4f5f7;padding:clamp(80px,9vw,130px) 0;scroll-margin-top:64px;">
     <div style="width:min(1200px,92vw);margin:0 auto;">
-      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#6366f1;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#6366f1;"></span>03 / CORE SERVICES</div>
+      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#3b33a5;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#3b33a5;"></span>03 / CORE SERVICES</div>
       <h2 data-reveal="up" data-delay="60" style="font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.18;max-width:760px;margin-bottom:14px;color:#0c0e14;">어려운 기술 용어 없이, 직관적인 비즈니스 언어로</h2>
       <p data-reveal="up" data-delay="120" style="color:#5c6573;font-weight:300;font-size:17px;line-height:1.7;max-width:640px;margin-bottom:56px;">AI 모델은 뇌, OpenClaw는 손발, 메신저는 입구, 메모리는 업무 노트입니다.</p>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
         <!-- 01 -->
-        <div data-reveal="up" data-delay="0" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #6366f1;padding:32px;transition:transform .3s,box-shadow .3s;">
+        <div data-reveal="up" data-delay="0" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #3b33a5;padding:32px;transition:transform .3s,box-shadow .3s;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:#6366f1;">01</span>
-            <span style="padding:5px 10px;border:1px solid rgba(99,102,241,.32);color:#6366f1;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;">B2B · AUTO</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:#3b33a5;">01</span>
+            <span style="padding:5px 10px;border:1px solid rgba(59,51,165,.32);color:#3b33a5;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;">B2B · AUTO</span>
           </div>
           <h3 style="font-size:21px;font-weight:700;letter-spacing:-.01em;line-height:1.32;margin-bottom:6px;color:#0c0e14;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
-          <div style="font-size:16px;font-weight:700;color:#6366f1;margin-bottom:14px;">2,000,000원 <span style="font-size:12px;font-weight:300;color:#6b7385;">/ 프로젝트 기준 (VAT 별도)</span></div>
+          <div style="font-size:16px;font-weight:700;color:#3b33a5;margin-bottom:14px;">2,000,000원 <span style="font-size:12px;font-weight:300;color:#6b7385;">/ 프로젝트 기준 (VAT 별도)</span></div>
           <p style="color:#5c6573;font-weight:300;font-size:14px;line-height:1.6;margin-bottom:20px;"><strong style="color:#0c0e14;font-weight:500;">대상</strong> · 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
           <div style="display:flex;flex-direction:column;gap:13px;padding-top:20px;border-top:1px solid #eef0f3;">
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">직무별 프로세스 진단</strong> — 상담 응대, 세무 자료 정리, 리서치, 보고서 작성 등 반복 업무 분석</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">도구 설계 및 비교</strong> — ChatGPT·Claude·Codex·OpenClaw 과금/보안 수준 가이드</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">24시간 AI 비서 운영</strong> — 맥미니 등 로컬 기기로 OpenClaw 에이전트 세팅, 텔레그램/슬랙/노션 연동</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">직무별 프로세스 진단</strong> — 상담 응대, 세무 자료 정리, 리서치, 보고서 작성 등 반복 업무 분석</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">도구 설계 및 비교</strong> — ChatGPT·Claude·Codex·OpenClaw 과금/보안 수준 가이드</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">24시간 AI 비서 운영</strong> — 맥미니 등 로컬 기기로 OpenClaw 에이전트 세팅, 텔레그램/슬랙/노션 연동</span></div>
           </div>
         </div>
         <!-- 02 -->
-        <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #22d3ee;padding:32px;transition:transform .3s,box-shadow .3s;">
+        <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:#0891b2;">02</span>
-            <span style="padding:5px 10px;border:1px solid rgba(34,211,238,.4);color:#0891b2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;">1:1 · MENTOR</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:#c2114f;">02</span>
+            <span style="padding:5px 10px;border:1px solid rgba(230,24,98,.4);color:#c2114f;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;">1:1 · MENTOR</span>
           </div>
           <h3 style="font-size:21px;font-weight:700;letter-spacing:-.01em;line-height:1.32;margin-bottom:6px;color:#0c0e14;">1:1 맞춤형 코딩 과외 &amp; 프로젝트 멘토링</h3>
-          <div style="font-size:16px;font-weight:700;color:#0891b2;margin-bottom:14px;">400,000원 <span style="font-size:12px;font-weight:300;color:#6b7385;">/ 4주 기준 (회당 2시간)</span></div>
+          <div style="font-size:16px;font-weight:700;color:#c2114f;margin-bottom:14px;">400,000원 <span style="font-size:12px;font-weight:300;color:#6b7385;">/ 4주 기준 (회당 2시간)</span></div>
           <p style="color:#5c6573;font-weight:300;font-size:14px;line-height:1.6;margin-bottom:20px;"><strong style="color:#0c0e14;font-weight:500;">대상</strong> · 비전공 입문자, 컴퓨터공학 전공생, MSA/대용량 트래픽 프로젝트 취업 준비생</p>
           <div style="display:flex;flex-direction:column;gap:13px;padding-top:20px;border-top:1px solid #eef0f3;">
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">입문자 밀착 과외</strong> — Java·Python·Git/GitHub 기초부터 객체지향·상속까지 Google Meet 1:1 라이브</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">실무형 프로젝트 멘토링</strong> — MSA 책임 분리, API Gateway 설계, N+1 개선, 대용량 데이터 처리</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">포트폴리오 &amp; 발표 피드백</strong> — 기술 용어 검증, GitHub 협업 구조, 면접 스토리라인 빌드업</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">입문자 밀착 과외</strong> — Java·Python·Git/GitHub 기초부터 객체지향·상속까지 Google Meet 1:1 라이브</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">실무형 프로젝트 멘토링</strong> — MSA 책임 분리, API Gateway 설계, N+1 개선, 대용량 데이터 처리</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">포트폴리오 &amp; 발표 피드백</strong> — 기술 용어 검증, GitHub 협업 구조, 면접 스토리라인 빌드업</span></div>
           </div>
         </div>
         <!-- 03 -->
@@ -501,9 +501,9 @@
           <div style="font-size:16px;font-weight:700;color:#059669;margin-bottom:14px;">150,000원 <span style="font-size:12px;font-weight:300;color:#6b7385;">/ 시간 기준 (유선 조율)</span></div>
           <p style="color:#5c6573;font-weight:300;font-size:14px;line-height:1.6;margin-bottom:20px;"><strong style="color:#0c0e14;font-weight:500;">대상</strong> · 교육지원센터, 중소기업협회, 코딩 아카데미, 초·중·고 교육 기관</p>
           <div style="display:flex;flex-direction:column;gap:13px;padding-top:20px;border-top:1px solid #eef0f3;">
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">청소년 디지털 특강</strong> — 엔트리·Python·Java 실습 (게임 제작, AI 활용 웹페이지 만들기)</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">현직자 커리어 코칭</strong> — 취준생 취업 전략 특강 및 프로젝트 심사 (학원/아카데미 7회 참여)</span></div>
-            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#22d3ee;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">사내 기술 세미나</strong> — 'AI와 비즈니스의 상관관계', 'AI 에이전트 비용 최적화와 보안 운영'</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">청소년 디지털 특강</strong> — 엔트리·Python·Java 실습 (게임 제작, AI 활용 웹페이지 만들기)</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">현직자 커리어 코칭</strong> — 취준생 취업 전략 특강 및 프로젝트 심사 (학원/아카데미 7회 참여)</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span style="font-size:14px;font-weight:300;line-height:1.55;color:#3d4350;"><strong style="color:#0c0e14;font-weight:500;">사내 기술 세미나</strong> — 'AI와 비즈니스의 상관관계', 'AI 에이전트 비용 최적화와 보안 운영'</span></div>
           </div>
         </div>
       </div>
@@ -513,22 +513,22 @@
   <!-- ============ CASES ============ -->
   <section id="cases" style="background:#fff;padding:clamp(80px,9vw,130px) 0;border-top:1px solid #eef0f3;scroll-margin-top:64px;">
     <div style="width:min(960px,92vw);margin:0 auto;">
-      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#6366f1;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#6366f1;"></span>04 / CASE STUDIES</div>
+      <div data-reveal="up" style="display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#3b33a5;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#3b33a5;"></span>04 / CASE STUDIES</div>
       <h2 data-reveal="up" data-delay="60" style="font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.18;margin-bottom:48px;color:#0c0e14;">입증된 자동화 및 교육 사례</h2>
 
       <div style="display:flex;flex-direction:column;gap:12px;">
         <!-- Case 1 -->
         <div id="case-item-1" class="case-item active">
           <button onclick="toggleCase(1)" style="width:100%;display:flex;align-items:center;gap:18px;padding:26px 28px;background:none;border:none;cursor:pointer;text-align:left;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#6366f1;flex-shrink:0;">CASE 01</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#3b33a5;flex-shrink:0;">CASE 01</span>
             <span style="font-size:clamp(17px,2vw,21px);font-weight:700;letter-spacing:-.01em;color:#0c0e14;flex:1;">24시간 동작하는 개인 AI 비서 구축 (OpenClaw)</span>
             <span class="case-icon-btn">+</span>
           </button>
           <div class="case-content">
             <div style="padding:0 28px 28px 28px;">
               <p style="color:#3d4350;font-weight:300;font-size:15.5px;line-height:1.7;margin-bottom:16px;"><strong style="color:#0c0e14;font-weight:500;">요약 ·</strong> 맥미니와 OpenClaw 시스템을 통합하여 대외 강의 및 실무자 컨설팅용 자동화 비서를 24시간 가동시키는 아키텍처를 제시.</p>
-              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(34,211,238,.3);border-left:3px solid #22d3ee;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#0891b2;letter-spacing:.1em;">KEY RESULT</span>
+              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(230,24,98,.3);border-left:3px solid #e61862;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#c2114f;letter-spacing:.1em;">KEY RESULT</span>
                 <p style="color:#0c0e14;font-weight:300;font-size:15px;line-height:1.65;margin-top:6px;">텔레그램 연동, 모델 라우팅, 장기 기억 관리로 <strong style="font-weight:700;">API 비용을 60% 이상 최적화</strong>하며 24시간 업무 처리 자동화 시연 완료.</p>
               </div>
             </div>
@@ -537,15 +537,15 @@
         <!-- Case 2 -->
         <div id="case-item-2" class="case-item">
           <button onclick="toggleCase(2)" style="width:100%;display:flex;align-items:center;gap:18px;padding:26px 28px;background:none;border:none;cursor:pointer;text-align:left;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#6366f1;flex-shrink:0;">CASE 02</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#3b33a5;flex-shrink:0;">CASE 02</span>
             <span style="font-size:clamp(17px,2vw,21px);font-weight:700;letter-spacing:-.01em;color:#0c0e14;flex:1;">고용노동부 디지털 인재 양성 멘토링 1위 (MSA 배달 플랫폼)</span>
             <span class="case-icon-btn">+</span>
           </button>
           <div class="case-content">
             <div style="padding:0 28px 28px 28px;">
               <p style="color:#3d4350;font-weight:300;font-size:15.5px;line-height:1.7;margin-bottom:16px;"><strong style="color:#0c0e14;font-weight:500;">요약 ·</strong> 5명의 백엔드 수강생을 대상으로 MSA 분산 락, 트랜잭션 보상 처리, 대용량 조회 페이징 속도 개선 등을 밀착 코칭.</p>
-              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(34,211,238,.3);border-left:3px solid #22d3ee;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#0891b2;letter-spacing:.1em;">KEY RESULT</span>
+              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(230,24,98,.3);border-left:3px solid #e61862;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#c2114f;letter-spacing:.1em;">KEY RESULT</span>
                 <p style="color:#0c0e14;font-weight:300;font-size:15px;line-height:1.65;margin-top:6px;">성능 병목 원인과 해결 방안을 면접관에게 <strong style="font-weight:700;">'말로 설명할 수 있는 수준'</strong>까지 스피치 코칭하여 최종 우승 달성.</p>
               </div>
             </div>
@@ -554,15 +554,15 @@
         <!-- Case 3 -->
         <div id="case-item-3" class="case-item">
           <button onclick="toggleCase(3)" style="width:100%;display:flex;align-items:center;gap:18px;padding:26px 28px;background:none;border:none;cursor:pointer;text-align:left;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#6366f1;flex-shrink:0;">CASE 03</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#3b33a5;flex-shrink:0;">CASE 03</span>
             <span style="font-size:clamp(17px,2vw,21px);font-weight:700;letter-spacing:-.01em;color:#0c0e14;flex:1;">반포잠원교육지원센터 청소년 웹 제작 특강</span>
             <span class="case-icon-btn">+</span>
           </button>
           <div class="case-content">
             <div style="padding:0 28px 28px 28px;">
               <p style="color:#3d4350;font-weight:300;font-size:15.5px;line-height:1.7;margin-bottom:16px;"><strong style="color:#0c0e14;font-weight:500;">요약 ·</strong> 초·중학생 눈높이에 맞춘 HTML·CSS·JavaScript 교육 및 AI 코드 도구를 접목한 자기주도 웹 제작.</p>
-              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(34,211,238,.3);border-left:3px solid #22d3ee;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#0891b2;letter-spacing:.1em;">KEY RESULT</span>
+              <div style="padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(230,24,98,.3);border-left:3px solid #e61862;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#c2114f;letter-spacing:.1em;">KEY RESULT</span>
                 <p style="color:#0c0e14;font-weight:300;font-size:15px;line-height:1.65;margin-top:6px;">학생들이 결과물을 Padlet에 공유하고 상호 피드백하는 <strong style="font-weight:700;">협업식 교육 기획</strong>으로 학부모 및 센터 만족도 극대화.</p>
               </div>
             </div>
@@ -573,17 +573,17 @@
   </section>
 
   <!-- ============ CONTACT ============ -->
-  <section id="contact" style="position:relative;background:radial-gradient(900px 500px at 50% 0%,rgba(99,102,241,.18),transparent 60%),#07080d;padding:clamp(80px,9vw,130px) 0;color:#fff;overflow:hidden;scroll-margin-top:64px;">
+  <section id="contact" style="position:relative;background:radial-gradient(900px 500px at 50% 0%,rgba(59,51,165,.18),transparent 60%),#07080d;padding:clamp(80px,9vw,130px) 0;color:#fff;overflow:hidden;scroll-margin-top:64px;">
     <div style="width:min(820px,92vw);margin:0 auto;">
       <div data-reveal="up" style="text-align:center;margin-bottom:48px;">
-        <div style="display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#22d3ee;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#22d3ee;"></span>05 / CONTACT</div>
+        <div style="display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.18em;color:#e61862;text-transform:uppercase;margin-bottom:18px;"><span style="width:24px;height:2px;background:#e61862;"></span>05 / CONTACT</div>
         <h2 style="font-size:clamp(28px,3.8vw,48px);font-weight:700;letter-spacing:-.02em;line-height:1.14;margin-bottom:16px;">에이아잉과 비즈니스·커리어 혁신하기</h2>
         <p style="color:#9aa3b5;font-weight:300;font-size:17px;line-height:1.7;max-width:560px;margin:0 auto;">상담을 원하시는 영역을 선택해 주시면, 확인 후 <strong style="color:#e6eaf2;font-weight:500;">24시간 이내</strong>에 직접 메일 또는 문자로 회신드립니다.</p>
       </div>
 
       <!-- Success Msg -->
-      <div id="form-success-container" style="display:none;border-radius:3px;background:#0d0f17;border:1px solid rgba(34,211,238,.3);border-top:3px solid #22d3ee;padding:64px 32px;text-align:center;">
-        <div style="width:66px;height:66px;border-radius:3px;background:linear-gradient(135deg,#22d3ee,#6366f1);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;color:#06070d;">✓</div>
+      <div id="form-success-container" style="display:none;border-radius:3px;background:#0d0f17;border:1px solid rgba(230,24,98,.3);border-top:3px solid #e61862;padding:64px 32px;text-align:center;">
+        <div style="width:66px;height:66px;border-radius:3px;background:linear-gradient(135deg,#e61862,#3b33a5);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;color:#06070d;">✓</div>
         <h3 style="font-size:26px;font-weight:700;margin-bottom:12px;">문의가 접수되었습니다</h3>
         <p style="color:#9aa3b5;font-weight:300;font-size:16px;line-height:1.7;">24시간 이내에 김민우 대표가 직접 회신드리겠습니다.<br>감사합니다.</p>
         <button onclick="resetForm()" style="margin-top:28px;padding:13px 26px;border-radius:2px;background:transparent;border:1px solid rgba(255,255,255,.22);color:#e8ecf4;font-weight:500;font-size:15px;cursor:pointer;">다시 작성하기</button>
@@ -591,7 +591,7 @@
 
       <!-- Form Container -->
       <form id="contact-form" onsubmit="handleFormSubmit(event)" data-reveal="up" data-delay="100" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.1);padding:clamp(26px,4vw,42px);">
-        <label style="display:block;font-size:14px;font-weight:500;color:#c7cdda;margin-bottom:14px;">신청 영역 <span style="color:#22d3ee;">*</span></label>
+        <label style="display:block;font-size:14px;font-weight:500;color:#c7cdda;margin-bottom:14px;">신청 영역 <span style="color:#e61862;">*</span></label>
         
         <!-- Hidden input for submission -->
         <input type="hidden" name="inquiry_type" id="inquiry-type-input" value="b2b">
@@ -617,23 +617,23 @@
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
           <div>
-            <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">성함 <span style="color:#22d3ee;">*</span></label>
+            <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">성함 <span style="color:#e61862;">*</span></label>
             <input required type="text" placeholder="홍길동" class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s;">
           </div>
           <div>
-            <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">연락처 <span style="color:#22d3ee;">*</span></label>
+            <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">연락처 <span style="color:#e61862;">*</span></label>
             <input required type="tel" placeholder="010-0000-0000" class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s;">
           </div>
         </div>
         <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">이메일 <span style="color:#22d3ee;">*</span></label>
+          <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">이메일 <span style="color:#e61862;">*</span></label>
           <input required type="email" placeholder="name@example.com" class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s;">
         </div>
         <div style="margin-bottom:28px;">
-          <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">문의 내용 <span style="color:#22d3ee;">*</span></label>
+          <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">문의 내용 <span style="color:#e61862;">*</span></label>
           <textarea required rows="4" placeholder="예: 현재 세무사 사무실을 운영 중인데 반복적인 영수증 수집 업무를 슬랙/OpenClaw로 자동화하고 싶습니다." class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;resize:vertical;line-height:1.6;transition:border-color .2s;"></textarea>
         </div>
-        <button type="submit" class="btn-gradient-hover" style="width:100%;padding:18px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);color:#06070d;font-weight:700;font-size:17px;border:none;cursor:pointer;transition:filter .2s,transform .2s;">무료 상담 및 문의 제출하기</button>
+        <button type="submit" class="btn-gradient-hover" style="width:100%;padding:18px;border-radius:2px;background:linear-gradient(135deg,#e61862,#3b33a5);color:#06070d;font-weight:700;font-size:17px;border:none;cursor:pointer;transition:filter .2s,transform .2s;">무료 상담 및 문의 제출하기</button>
       </form>
     </div>
   </section>
@@ -642,7 +642,7 @@
   <footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
     <div style="width:min(1200px,92vw);margin:0 auto;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
-        <span style="width:28px;height:28px;border-radius:2px;background:linear-gradient(135deg,#22d3ee,#6366f1);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:#06070d;">A</span>
+        <img src="logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
         <span style="font-weight:700;font-size:17px;color:#fff;">AI-ing <span style="font-weight:300;color:#6b7385;font-size:14px;">에이아잉</span></span>
       </div>
       <div style="font-size:13px;font-weight:300;line-height:2;color:#6b7385;max-width:880px;">
@@ -771,7 +771,7 @@
           const b = particles[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
           if (d < 112) {
-            ctx.strokeStyle = 'rgba(99,102,241,' + (1 - d / 112) * 0.16 + ')';
+            ctx.strokeStyle = 'rgba(59,51,165,' + (1 - d / 112) * 0.16 + ')';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -785,7 +785,7 @@
       for (const p of particles) {
         const dm = Math.hypot(p.x - mouse.x, p.y - mouse.y);
         const near = dm < 150;
-        ctx.fillStyle = near ? 'rgba(34,211,238,0.95)' : 'rgba(150,170,255,0.45)';
+        ctx.fillStyle = near ? 'rgba(230,24,98,0.95)' : 'rgba(226,219,236,0.45)';
         ctx.beginPath();
         ctx.arc(p.x, p.y, near ? p.r + 0.6 : p.r, 0, Math.PI * 2);
         ctx.fill();

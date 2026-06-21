@@ -31,10 +31,10 @@
     --text:#e8ecf4;
     --muted:#9aa3b5;
     --muted-2:#6b7385;
-    --cyan:#22d3ee;
-    --cyan-deep:#0891b2;
-    --indigo:#6366f1;
-    --grad:linear-gradient(135deg,#22d3ee,#6366f1);
+    --cyan:#e61862;
+    --cyan-deep:#c2114f;
+    --indigo:#3b33a5;
+    --grad:linear-gradient(135deg,#e61862,#3b33a5);
     --line:rgba(255,255,255,.1);
     --line-2:rgba(255,255,255,.07);
     --line-ink:#e3e5ea;
@@ -54,7 +54,7 @@
     font-family:var(--body);font-weight:400;line-height:1.6;
     overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   }
-  ::selection{background:rgba(34,211,238,.3);color:#fff}
+  ::selection{background:rgba(230,24,98,.3);color:#fff}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   img{max-width:100%;display:block}
@@ -72,10 +72,10 @@
 
   /* custom cursor */
   .cursor,.cursor-dot{position:fixed;top:0;left:0;z-index:9500;pointer-events:none;border-radius:50%;will-change:transform}
-  .cursor{width:40px;height:40px;border:1px solid rgba(34,211,238,.7);transform:translate(-50%,-50%);
+  .cursor{width:40px;height:40px;border:1px solid rgba(230,24,98,.7);transform:translate(-50%,-50%);
     transition:width .3s var(--ease),height .3s var(--ease),background .3s var(--ease),border-color .3s var(--ease)}
   .cursor-dot{width:5px;height:5px;background:var(--cyan);transform:translate(-50%,-50%)}
-  .cursor.hover{width:74px;height:74px;background:rgba(34,211,238,.16);border-color:var(--cyan)}
+  .cursor.hover{width:74px;height:74px;background:rgba(230,24,98,.16);border-color:var(--cyan)}
   .cursor.hover .clabel{opacity:1;transform:scale(1)}
   .clabel{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--cyan);opacity:0;transform:scale(.4);transition:.3s var(--ease)}
   body.cursor-on,body.cursor-on a,body.cursor-on button{cursor:none}
@@ -113,7 +113,7 @@
 
   /* hero */
   .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;
-    background:radial-gradient(1100px 600px at 50% -10%,rgba(99,102,241,.22),transparent 60%),radial-gradient(900px 500px at 85% 18%,rgba(34,211,238,.13),transparent 55%),var(--bg)}
+    background:radial-gradient(1100px 600px at 50% -10%,rgba(59,51,165,.22),transparent 60%),radial-gradient(900px 500px at 85% 18%,rgba(230,24,98,.13),transparent 55%),var(--bg)}
   #particles{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
   .hero-veil{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 58%,var(--bg) 100%)}
   .hero-variant{position:relative;z-index:2;width:100%}
@@ -137,15 +137,15 @@
   .btn-grad:hover{filter:brightness(1.08);transform:translateY(-2px)}
   .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.22);font-weight:500}
   .btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.4)}
-  .btn-ghost .pin{width:24px;height:24px;border-radius:50%;background:rgba(34,211,238,.16);display:inline-flex;align-items:center;justify-content:center;color:var(--cyan);font-size:11px;padding-left:2px}
+  .btn-ghost .pin{width:24px;height:24px;border-radius:50%;background:rgba(230,24,98,.16);display:inline-flex;align-items:center;justify-content:center;color:var(--cyan);font-size:11px;padding-left:2px}
 
   /* portrait card (shared) */
   .portrait{position:relative;aspect-ratio:4/5;border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 70px rgba(0,0,0,.5)}
   .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 16%;transform:scale(1.08);will-change:transform}
-  .portrait .duo{position:absolute;inset:0;background:linear-gradient(150deg,rgba(34,211,238,.16),transparent 44%,rgba(99,102,241,.34));mix-blend-mode:screen;pointer-events:none}
+  .portrait .duo{position:absolute;inset:0;background:linear-gradient(150deg,rgba(230,24,98,.16),transparent 44%,rgba(59,51,165,.34));mix-blend-mode:screen;pointer-events:none}
   .portrait .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,8,13,.9),transparent 44%);pointer-events:none}
   .portrait .play{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#06070d;font-size:22px;padding-left:5px;animation:ring 2.4s infinite}
-  @keyframes ring{0%{box-shadow:0 0 0 0 rgba(34,211,238,.5)}70%{box-shadow:0 0 0 20px rgba(34,211,238,0)}100%{box-shadow:0 0 0 0 rgba(34,211,238,0)}}
+  @keyframes ring{0%{box-shadow:0 0 0 0 rgba(230,24,98,.5)}70%{box-shadow:0 0 0 20px rgba(230,24,98,0)}100%{box-shadow:0 0 0 0 rgba(230,24,98,0)}}
   .portrait .cap{position:absolute;left:22px;right:22px;bottom:20px;pointer-events:none}
   .portrait .cap .k{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--cyan);text-transform:uppercase;margin-bottom:7px}
   .portrait .cap .v{font-size:15px;font-weight:500;color:#fff;line-height:1.45}
@@ -189,7 +189,7 @@
   .cred strong{color:#fff;font-weight:500}
   .metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .metric{border-radius:3px;background:var(--bg-2);border:1px solid var(--line-2);padding:28px;transition:border-color .3s,transform .3s}
-  .metric:hover{border-color:rgba(34,211,238,.6);transform:translateY(-4px)}
+  .metric:hover{border-color:rgba(230,24,98,.6);transform:translateY(-4px)}
   .metric .num{font-family:var(--display);font-size:clamp(34px,4vw,46px);font-weight:700;letter-spacing:-.02em}
   .metric .desc{color:var(--muted);font-weight:300;font-size:14px;margin-top:10px;line-height:1.4}
 
@@ -208,8 +208,8 @@
   .card-top .i{font-family:var(--mono);font-size:15px;font-weight:700}
   .card.c1 .card-top .i{color:var(--indigo)}.card.c2 .card-top .i{color:var(--cyan-deep)}.card.c3 .card-top .i{color:#059669}
   .card-top .tag{padding:5px 10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-  .card.c1 .tag{border:1px solid rgba(99,102,241,.32);color:var(--indigo)}
-  .card.c2 .tag{border:1px solid rgba(34,211,238,.4);color:var(--cyan-deep)}
+  .card.c1 .tag{border:1px solid rgba(59,51,165,.32);color:var(--indigo)}
+  .card.c2 .tag{border:1px solid rgba(230,24,98,.4);color:var(--cyan-deep)}
   .card.c3 .tag{border:1px solid rgba(16,185,129,.4);color:#059669}
   .card h3{font-size:21px;line-height:1.32;margin-bottom:14px;color:var(--ink)}
   .card .who{color:var(--ink-mute);font-weight:300;font-size:14px;line-height:1.6;margin-bottom:20px}
@@ -229,7 +229,7 @@
   .case-bar{width:100%;display:flex;align-items:center;gap:18px;padding:24px 28px;text-align:left}
   .case-bar .n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--indigo);flex-shrink:0}
   .case-bar .ttl{font-family:var(--display);font-size:clamp(16px,2vw,21px);font-weight:700;letter-spacing:-.01em;color:var(--ink);flex:1}
-  .case-bar .pm{flex-shrink:0;width:30px;height:30px;border-radius:2px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;color:var(--indigo);font-size:18px;transition:transform .35s}
+  .case-bar .pm{flex-shrink:0;width:30px;height:30px;border-radius:2px;background:rgba(59,51,165,.1);display:flex;align-items:center;justify-content:center;color:var(--indigo);font-size:18px;transition:transform .35s}
   .case.open .case-bar .pm{transform:rotate(45deg)}
   .case-body{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .45s ease}
   .case.open .case-body{grid-template-rows:1fr}
@@ -237,13 +237,13 @@
   .case-body-pad{padding:0 28px 28px}
   .case-body-pad>p{color:var(--ink-soft);font-weight:300;font-size:15.5px;line-height:1.7;margin-bottom:16px}
   .case-body-pad>p strong{color:var(--ink);font-weight:500}
-  .key{padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(34,211,238,.3);border-left:3px solid var(--cyan)}
+  .key{padding:18px 20px;border-radius:2px;background:#f6fdff;border:1px solid rgba(230,24,98,.3);border-left:3px solid var(--cyan)}
   .key .k{font-family:var(--mono);font-size:12px;color:var(--cyan-deep);letter-spacing:.1em}
   .key p{color:var(--ink);font-weight:300;font-size:15px;line-height:1.65;margin-top:6px}
   .key p strong{font-weight:700}
 
   /* contact (dark) */
-  .contact{background:radial-gradient(900px 500px at 50% 0%,rgba(99,102,241,.18),transparent 60%),var(--bg);color:#fff;overflow:hidden}
+  .contact{background:radial-gradient(900px 500px at 50% 0%,rgba(59,51,165,.18),transparent 60%),var(--bg);color:#fff;overflow:hidden}
   .contact .wrap{width:min(820px,92vw);margin:0 auto}
   .contact-head{text-align:center;margin-bottom:48px}
   .contact-head .eyebrow{margin-bottom:18px}
@@ -255,7 +255,7 @@
   .f-lbl .req{color:var(--cyan)}
   .area-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:30px}
   .area{display:flex;align-items:center;gap:12px;padding:18px;border-radius:2px;text-align:left;background:var(--bg);border:1px solid rgba(255,255,255,.14);transition:.25s}
-  .area.on{background:rgba(34,211,238,.1);border-color:var(--cyan)}
+  .area.on{background:rgba(230,24,98,.1);border-color:var(--cyan)}
   .area .rd{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .25s}
   .area.on .rd{border-color:var(--cyan)}
   .area .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:transparent;transition:background .25s}
@@ -271,7 +271,7 @@
   .field textarea{resize:vertical;min-height:96px;line-height:1.6}
   .f-err{color:#ff7a6e;font-size:12px;margin-top:6px;min-height:14px;display:block}
   .f-submit{width:100%;justify-content:center;padding:18px;font-size:17px;margin-top:14px}
-  .success{display:none;border-radius:3px;background:var(--bg-2);border:1px solid rgba(34,211,238,.3);border-top:3px solid var(--cyan);padding:60px 32px;text-align:center}
+  .success{display:none;border-radius:3px;background:var(--bg-2);border:1px solid rgba(230,24,98,.3);border-top:3px solid var(--cyan);padding:60px 32px;text-align:center}
   .success.show{display:block;animation:popin .6s var(--ease)}
   @keyframes popin{from{opacity:0;transform:scale(.97) translateY(16px)}to{opacity:1;transform:none}}
   .success .ic{width:66px;height:66px;border-radius:3px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;color:#06070d}
@@ -352,7 +352,7 @@
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a class="brand" href="#hero" data-cursor>
-      <span class="mk">A</span><span class="nm">AI-ing</span><span class="ko">에이아잉</span>
+      <img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing</span><span class="ko">에이아잉</span>
     </a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="#services" data-cursor>서비스</a>
@@ -610,7 +610,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="shell">
-    <div class="foot-brand"><span class="mk">A</span><span class="nm">AI-ing <span>에이아잉</span></span></div>
+    <div class="foot-brand"><img class="mk" src="logo.png" alt="AI-ing Logo" style="object-fit:cover;"><span class="nm">AI-ing <span>에이아잉</span></span></div>
     <div class="foot-biz">
       상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
       사업장 소재지: 서울특별시 서초구 신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)<br>
@@ -692,11 +692,11 @@
       }
       for(i=0;i<particles.length;i++){ for(j=i+1;j<particles.length;j++){
         var a=particles[i], b=particles[j], d=Math.hypot(a.x-b.x,a.y-b.y);
-        if(d<112){ ctx.strokeStyle="rgba(99,102,241,"+(1-d/112)*0.16+")"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+        if(d<112){ ctx.strokeStyle="rgba(59,51,165,"+(1-d/112)*0.16+")"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
       }}
       for(i=0;i<particles.length;i++){
         p=particles[i]; var dm=Math.hypot(p.x-mouse.x,p.y-mouse.y), near=dm<150;
-        ctx.fillStyle = near ? "rgba(34,211,238,0.95)" : "rgba(150,170,255,0.45)";
+        ctx.fillStyle = near ? "rgba(230,24,98,0.95)" : "rgba(226,219,236,0.45)";
         ctx.beginPath(); ctx.arc(p.x,p.y, near?p.r+0.6:p.r, 0, Math.PI*2); ctx.fill();
       }
       raf=requestAnimationFrame(draw);

@@ -10,6 +10,7 @@ Thumbs.db
 design_fetched.tar
 untitled/
 *.png
+!logo.png
 *.pdf
 
 # Python virtual environment (if any)
