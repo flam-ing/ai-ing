@@ -1745,7 +1745,7 @@ grid-template-columns: 1fr;
       <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
         <a href="#services" onclick="event.preventDefault(); navigateTo('services');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
         <a href="#about" onclick="event.preventDefault(); navigateTo('about');" class="hover-cyan nav-link-tab" style="display:none;padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
-        <a href="#payment" onclick="event.preventDefault(); navigateTo('payment');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">결제(준비중)</a>
+        <a href="#payment" onclick="event.preventDefault(); navigateTo('payment');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">결제</a>
         <a href="#contact" onclick="event.preventDefault(); navigateTo('contact');" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:2px;background:#e61862;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;transition:filter .2s;">무료 상담 신청</a>
       </div>
     </div>
@@ -2416,11 +2416,12 @@ grid-template-columns: 1fr;
         <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;">
           <div style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
           <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:12px;">신용카드 및 간편 결제</h3>
-          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 네이버페이 및 국내 주요 신용카드 결제 서비스 심사가 진행 중입니다. 준비가 완료되는 대로 지원될 예정입니다. 그 전까지는 **계좌 이체(METHOD 01)** 서비스를 이용해 주세요.</p>
+          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이 및 국내 주요 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 원하시는 결제 수단을 선택하세요.</p>
           <div style="display:flex;gap:10px;margin-top:16px;">
-            <button type="button" disabled style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#cbd5e1;color:#64748b;font-size:14px;font-weight:700;border:none;cursor:not-allowed;" class="btn-disabled">카드결제 준비 중</button>
+            <button type="button" onclick="openPaymentModal()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#e61862;color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제</button>
           </div>
         </div>
+
       </div>
     </div>
   </section>
