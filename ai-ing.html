@@ -3,7 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI-ing — AI 도입을 넘어 실전 실행으로</title>
+<title>AI-ing (에이아잉) | AX 컨설팅 및 AI 코딩 교육</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "에이아잉 (AI-ing)",
+  "image": "https://ai-ing.org/logo.png",
+  "@id": "https://ai-ing.org",
+  "url": "https://ai-ing.org",
+  "telephone": "+82-10-7646-3634",
+  "email": "rlaalsdn456456@naver.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)",
+    "addressLocality": "서초구",
+    "addressRegion": "서울특별시",
+    "postalCode": "06520",
+    "addressCountry": "KR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 37.514757,
+    "longitude": 127.011684
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "00:00",
+    "closes": "23:59"
+  },
+  "sameAs": [
+    "https://blog.naver.com/rlaalsdn456456"
+  ]
+}
+</script>
 <meta name="description" content="G마켓 테크블로그 에디터장 출신 IT 전문가 김민우가 설계하는 직무별 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 실전 코딩 교육. AI-ing." />
 <meta name="theme-color" content="#07080d" />
 <meta property="og:type" content="website" />
@@ -54,7 +96,7 @@
   body{
     background:var(--bg);color:var(--text);
     font-family:var(--body);font-weight:400;line-height:1.6;
-    overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:clip;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   }
   ::selection{background:rgba(230,24,98,.3);color:#fff}
   a{color:inherit;text-decoration:none}
@@ -87,7 +129,7 @@
     background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
     border-bottom:1px solid var(--line);transition:transform .5s var(--ease)}
   .nav-inner{width:min(var(--maxw),92vw);display:flex;justify-content:space-between;align-items:center;padding:14px 0}
-  .brand{display:flex;align-items:center;gap:11px}
+  .brand{display:flex;align-items:center;gap:11px;white-space:nowrap}
   .brand .mk{width:30px;height:30px;border-radius:4px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:15px;color:#06070d}
   .brand .nm{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff}
   .brand .ko{font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.04em}
@@ -1114,13 +1156,12 @@ opacity: 1;
     transform: translateY(0);
 }
 @keyframes tech-scroll {
-0% {
-        transform: translate3d(0, 0, 0);
-    }
-
-    100% {
-        transform: translate3d(calc(var(--marquee-distance) * -1), 0, 0);
-    }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 @media (max-width: 768px) {
 .resume-wrapper .page-hero {
@@ -1592,7 +1633,132 @@ width: 100%;
 .resume-wrapper .guidance-grid {
 grid-template-columns: 1fr;
 }
-}</style>
+} /* Close max-width 768px media query */
+
+/* ===== GLOBAL SCROLL STORY ===== */
+.scroll-story {
+  position: relative;
+  height: 300vh;
+  background: #07080d;
+}
+.scroll-story-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.story-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 24px;
+  text-align: center;
+  opacity: 0;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+.story-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.55;
+  filter: blur(10px) grayscale(0.15) brightness(0.4) saturate(0.9);
+  will-change: transform;
+  pointer-events: none;
+}
+.story-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(7, 8, 13, 0.45);
+  pointer-events: none;
+}
+.story-scene > p,
+.story-scene > span,
+.story-scene > h3,
+.story-scene > ul {
+  position: relative;
+  z-index: 2;
+}
+.story-kicker {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: normal;
+  color: rgba(255, 255, 255, 0.45);
+}
+.story-line {
+  width: 40px;
+  height: 2px;
+  background: #e61862;
+  transform-origin: center;
+  will-change: transform;
+}
+.story-title {
+  max-width: 760px;
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.2;
+  color: #fff;
+}
+.story-desc {
+  margin: 0;
+  max-width: 560px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: normal;
+}
+.story-progress {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+.story-progress span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background-color 0.3s;
+}
+.story-progress span.on {
+  background: #fff;
+}
+
+/* Responsive Payment Buttons / QR Code */
+@media (max-width: 768px) {
+  .pc-only-qr {
+    display: none !important;
+  }
+  .mobile-only-buttons {
+    display: flex !important;
+  }
+}
+@media (min-width: 769px) {
+  .pc-only-qr {
+    display: block !important;
+  }
+  .mobile-only-buttons {
+    display: none !important;
+  }
+}
+</style>
 
 </head>
 <body>
@@ -1674,14 +1840,6 @@ grid-template-columns: 1fr;
                 </div>
                 <strong class="name">김민우</strong>
                 <p class="hero-tagline">강의·멘토링·컨설팅 이력</p>
-                <div class="hero-contact-list">
-                    <span class="contact">
-                        Phone: <a href="tel:+821076463634">+82 10-7646-3634</a>
-                    </span>
-                    <span class="contact">
-                        Email: <a href="mailto:rlaalsdn456456@naver.com">rlaalsdn456456@naver.com</a>
-                    </span>
-                </div>
             </div>
         </div>
         <div class="scroll-cue"></div>
@@ -2148,29 +2306,56 @@ grid-template-columns: 1fr;
             </div>
             <div class="tech-icons-container">
                 <div class="tech-icons" id="techIcons">
-                    <img src="https://minwoo19930301.github.io/resume/icon/java.svg" alt="Java">
-                    <img src="https://minwoo19930301.github.io/resume/icon/javascript.png" alt="JavaScript">
-                    <img src="https://minwoo19930301.github.io/resume/icon/python.svg" alt="Python">
-                    <img src="https://minwoo19930301.github.io/resume/icon/react.svg" alt="React">
-                    <img src="https://minwoo19930301.github.io/resume/icon/mongodb.svg" alt="MongoDB">
-                    <img src="https://minwoo19930301.github.io/resume/icon/aws.svg" alt="AWS">
-                    <img src="https://minwoo19930301.github.io/resume/icon/nodejs.svg" alt="Node.js">
-                    <img src="https://minwoo19930301.github.io/resume/icon/databricks.png" alt="Databricks">
-                    <img src="https://minwoo19930301.github.io/resume/icon/vue.png" alt="Vue.js">
-                    <img src="https://minwoo19930301.github.io/resume/icon/dotnet.svg" alt=".NET">
-                    <img src="https://minwoo19930301.github.io/resume/icon/spring.svg" alt="Spring">
-                    <img src="https://minwoo19930301.github.io/resume/icon/linux.png" alt="Linux">
-                    <img src="https://minwoo19930301.github.io/resume/icon/mssql.png" alt="MSSQL">
-                    <img src="https://minwoo19930301.github.io/resume/icon/kotlin.png" alt="Kotlin">
-                    <img src="https://minwoo19930301.github.io/resume/icon/oracle.svg" alt="Oracle">
-                    <img src="https://minwoo19930301.github.io/resume/icon/claude.svg" alt="Claude">
-                    <img src="https://minwoo19930301.github.io/resume/icon/openai.svg" alt="ChatGPT">
-                    <img src="https://minwoo19930301.github.io/resume/icon/codex.svg" alt="Codex">
-                    <img src="https://minwoo19930301.github.io/resume/icon/gemini.svg" alt="Gemini">
-                    <img src="https://minwoo19930301.github.io/resume/icon/cursor.svg" alt="Cursor">
-                    <img src="https://minwoo19930301.github.io/resume/icon/antigravity.svg" alt="Antigravity">
-                    <img src="https://minwoo19930301.github.io/resume/icon/openclaw.svg" alt="OpenClaw">
-                    <img src="https://minwoo19930301.github.io/resume/icon/hermes.svg" alt="Hermes">
+                    <div class="tech-icons-group">
+                        <img src="https://minwoo19930301.github.io/resume/icon/java.svg" alt="Java">
+                        <img src="https://minwoo19930301.github.io/resume/icon/javascript.png" alt="JavaScript">
+                        <img src="https://minwoo19930301.github.io/resume/icon/python.svg" alt="Python">
+                        <img src="https://minwoo19930301.github.io/resume/icon/react.svg" alt="React">
+                        <img src="https://minwoo19930301.github.io/resume/icon/mongodb.svg" alt="MongoDB">
+                        <img src="https://minwoo19930301.github.io/resume/icon/aws.svg" alt="AWS">
+                        <img src="https://minwoo19930301.github.io/resume/icon/nodejs.svg" alt="Node.js">
+                        <img src="https://minwoo19930301.github.io/resume/icon/databricks.png" alt="Databricks">
+                        <img src="https://minwoo19930301.github.io/resume/icon/vue.png" alt="Vue.js">
+                        <img src="https://minwoo19930301.github.io/resume/icon/dotnet.svg" alt=".NET">
+                        <img src="https://minwoo19930301.github.io/resume/icon/spring.svg" alt="Spring">
+                        <img src="https://minwoo19930301.github.io/resume/icon/linux.png" alt="Linux">
+                        <img src="https://minwoo19930301.github.io/resume/icon/mssql.png" alt="MSSQL">
+                        <img src="https://minwoo19930301.github.io/resume/icon/kotlin.png" alt="Kotlin">
+                        <img src="https://minwoo19930301.github.io/resume/icon/oracle.svg" alt="Oracle">
+                        <img src="https://minwoo19930301.github.io/resume/icon/claude.svg" alt="Claude">
+                        <img src="https://minwoo19930301.github.io/resume/icon/openai.svg" alt="ChatGPT">
+                        <img src="https://minwoo19930301.github.io/resume/icon/codex.svg" alt="Codex">
+                        <img src="https://minwoo19930301.github.io/resume/icon/gemini.svg" alt="Gemini">
+                        <img src="https://minwoo19930301.github.io/resume/icon/cursor.svg" alt="Cursor">
+                        <img src="https://minwoo19930301.github.io/resume/icon/antigravity.svg" alt="Antigravity">
+                        <img src="https://minwoo19930301.github.io/resume/icon/openclaw.svg" alt="OpenClaw">
+                        <img src="https://minwoo19930301.github.io/resume/icon/hermes.svg" alt="Hermes">
+                    </div>
+                    <div class="tech-icons-group" aria-hidden="true">
+                        <img src="https://minwoo19930301.github.io/resume/icon/java.svg" alt="Java">
+                        <img src="https://minwoo19930301.github.io/resume/icon/javascript.png" alt="JavaScript">
+                        <img src="https://minwoo19930301.github.io/resume/icon/python.svg" alt="Python">
+                        <img src="https://minwoo19930301.github.io/resume/icon/react.svg" alt="React">
+                        <img src="https://minwoo19930301.github.io/resume/icon/mongodb.svg" alt="MongoDB">
+                        <img src="https://minwoo19930301.github.io/resume/icon/aws.svg" alt="AWS">
+                        <img src="https://minwoo19930301.github.io/resume/icon/nodejs.svg" alt="Node.js">
+                        <img src="https://minwoo19930301.github.io/resume/icon/databricks.png" alt="Databricks">
+                        <img src="https://minwoo19930301.github.io/resume/icon/vue.png" alt="Vue.js">
+                        <img src="https://minwoo19930301.github.io/resume/icon/dotnet.svg" alt=".NET">
+                        <img src="https://minwoo19930301.github.io/resume/icon/spring.svg" alt="Spring">
+                        <img src="https://minwoo19930301.github.io/resume/icon/linux.png" alt="Linux">
+                        <img src="https://minwoo19930301.github.io/resume/icon/mssql.png" alt="MSSQL">
+                        <img src="https://minwoo19930301.github.io/resume/icon/kotlin.png" alt="Kotlin">
+                        <img src="https://minwoo19930301.github.io/resume/icon/oracle.svg" alt="Oracle">
+                        <img src="https://minwoo19930301.github.io/resume/icon/claude.svg" alt="Claude">
+                        <img src="https://minwoo19930301.github.io/resume/icon/openai.svg" alt="ChatGPT">
+                        <img src="https://minwoo19930301.github.io/resume/icon/codex.svg" alt="Codex">
+                        <img src="https://minwoo19930301.github.io/resume/icon/gemini.svg" alt="Gemini">
+                        <img src="https://minwoo19930301.github.io/resume/icon/cursor.svg" alt="Cursor">
+                        <img src="https://minwoo19930301.github.io/resume/icon/antigravity.svg" alt="Antigravity">
+                        <img src="https://minwoo19930301.github.io/resume/icon/openclaw.svg" alt="OpenClaw">
+                        <img src="https://minwoo19930301.github.io/resume/icon/hermes.svg" alt="Hermes">
+                    </div>
                 </div>
             </div>
         </section>
@@ -2200,20 +2385,63 @@ grid-template-columns: 1fr;
   </div>
 </section>
 
-<!-- CONTACT -->
+  <!-- ============ SERVICES ============ -->
+  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;background:#07080d;color:#fff;scroll-margin-top:64px;display:none;">
+    <div class="scroll-story-sticky">
+      <!-- Scene 1 -->
+      <div class="story-scene">
+        <div class="story-photo" style="background-image:url('img/story-1.png');"></div>
+        <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">01 / B2B · AUTO</p>
+        <span class="story-line"></span>
+        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
+        <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
+        </ul>
+      </div>
+      <!-- Scene 2 -->
+      <div class="story-scene">
+        <div class="story-photo" style="background-image:url('img/story-2.png');"></div>
+        <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">02 / 1:1 · MENTOR</p>
+        <span class="story-line"></span>
+        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 코딩 과외 &amp; 프로젝트 멘토링</h3>
+        <p class="story-desc"><strong>대상:</strong> 비전공 입문자, 컴퓨터공학 전공생, MSA/대용량 트래픽 프로젝트 취업 준비생</p>
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>입문자 밀착 과외</strong> — Java·Python·Git 기초부터 객체지향까지 Google Meet 1:1 라이브 (총 12명 지도, 취업 성공사례 다수)</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실무형 프로젝트 멘토링</strong> — MSA 책임 분리, API Gateway 설계, N+1 개선, 분산 락, 성능 리뷰 및 프론트엔드 구조 코칭</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>멘토링 성과 및 진행</strong> — 고용노동부 연계 디지털 인재 양성 과정 프로젝트 멘토링 2회 진행 (배달 중계 플랫폼 팀 최종 발표 1등 수상), 과학기술정보통신부 연계 고령자 병원 동행 서비스 멘토링 진행 중</span></li>
+        </ul>
+      </div>
+      <!-- Scene 3 -->
+      <div class="story-scene">
+        <div class="story-photo" style="background-image:url('img/story-3.png');"></div>
+        <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">03 / 기관 · EDU</p>
+        <span class="story-line"></span>
+        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관 특강 및 청소년 디지털 코딩 교육</h3>
+        <p class="story-desc"><strong>대상:</strong> 교육지원센터, 중소기업협회, 코딩 아카데미, 초·중·고 교육 기관</p>
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 특강 및 심사</strong> — 한국경영혁신중소기업협회 추천 더조은/MBC아카데미 취업 특강 및 프로젝트 심사위원 7회 참여</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 디지털 교육</strong> — 반포잠원교육지원센터 초·중학생 대상 디지털 특강 (엔트리 블록코딩, 게임 제작, HTML/CSS/JS AI 활용 웹 제작 지도)</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 세미나 및 게스트 출연</strong> — 사내 전직원 대상 세미나 기획 및 발표 4회 진행 (AI 에이전트 비용 최적화와 보안 운영), 외부 유튜브 채널 게스트 강연 (개발자 취업 전략, 24시간 개인 AI 비서 만들기)</span></li>
+        </ul>
+      </div>
+      <!-- Progress dots -->
+      <div class="story-progress">
+        <span class="on"></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ PAYMENT ============ -->
   <section class="payment sec-pad tab-content-section" id="payment" aria-labelledby="payment-h" style="background:var(--paper);border-top:1px solid var(--line-ink);scroll-margin-top:64px;">
     <div class="shell" style="text-align:center;">
-      <div class="eyebrow" style="display:flex;justify-content:center;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--indigo);text-transform:uppercase;margin-bottom:18px;">
-        <span style="width:24px;height:2px;background:var(--indigo);"></span>05 / PAYMENT SERVICES
-      </div>
-      <h2 id="payment-h" style="font-size:clamp(28px,3.8vw,42px);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;">AI-ing 결제 및 정산 안내</h2>
-      <p style="color:var(--ink-mute);font-weight:300;font-size:16.5px;line-height:1.7;max-width:620px;margin:0 auto 48px;">
-        자문 서비스 및 1:1 교육의 편의를 위해 온라인 카드 결제 및 간편 결제(PortOne) 시스템을 연동 중입니다.
-      </p>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:32px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:0px;">
         <!-- Card 1: Account Transfer -->
         <div class="card c1" style="background:var(--paper-card);border:1px solid var(--line-ink);border-top:3px solid var(--indigo);padding:32px;border-radius:3px;">
           <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--indigo);margin-bottom:20px;text-transform:uppercase;">METHOD 01</div>
@@ -2224,9 +2452,13 @@ grid-template-columns: 1fr;
             <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:2px;">토스뱅크 1002-6334-1822</div>
             <div style="font-size:13px;color:var(--ink-mute);">예금주: 김민우(에이아잉)</div>
           </div>
-          <div style="display:flex;gap:10px;margin-top:16px;">
+          <div class="mobile-only-buttons" style="display:flex;gap:10px;margin-top:16px;">
             <a href="http://aq.gy/f/iYQcx" target="_blank" rel="noopener noreferrer" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:var(--indigo);color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;text-align:center;" class="btn-gradient-hover">송금하기</a>
             <button type="button" onclick="copyAccount()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:transparent;color:var(--indigo);border:1px solid var(--indigo);font-size:14px;font-weight:700;transition:background 0.2s,color 0.2s;cursor:pointer;" class="btn-outline-hover">계좌번호 복사</button>
+          </div>
+          <div class="pc-only-qr" style="margin-top:20px;text-align:center;display:none;">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:500;">계좌 송금 서비스 QR</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http%3A%2F%2Faq.gy%2Ff%2FiYQcx" alt="Toss Remittance QR" style="width:130px;height:130px;border:1px solid var(--line-ink);border-radius:4px;padding:4px;background:#fff;display:inline-block;">
           </div>
         </div>
 
@@ -2246,58 +2478,33 @@ grid-template-columns: 1fr;
 
   <section class="contact sec-pad tab-content-section" id="contact" aria-labelledby="contact-h">
   <div class="wrap">
-    <div class="contact-head reveal">
-      <div class="eyebrow">05 / Contact</div>
-      <h2 id="contact-h">AI-ing과 비즈니스·커리어 혁신하기</h2>
-      <p>상담을 원하시는 영역을 선택해 주시면, 확인 후 <strong>24시간 이내</strong>에 직접 메일 또는 문자로 회신드립니다.</p>
+    <div class="contact-head reveal" style="text-align:center;margin-bottom:36px;">
+      <h2 id="contact-h" style="font-size:clamp(24px,3vw,34px);font-weight:700;font-family:var(--mono);">Contact</h2>
+      <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.7;margin-top:16px;font-family:var(--mono);">
+        직접 연락처 또는 이메일로 문의(010-7646-3634 / <a href="mailto:rlaalsdn456456@naver.com" style="color:#e61862;text-decoration:none;">rlaalsdn456456@naver.com</a>)주시거나,<br>아래에 정보를 남겨주시면 24시간 이내에 회신드리겠습니다.
+      </p>
     </div>
 
     <div class="contact-container">
-<form id="axForm" class="reveal" novalidate>
-      <label class="f-lbl">신청 영역 <span class="req">*</span></label>
-      <div class="area-grid" id="areaGrid" role="radiogroup" aria-label="신청 영역">
-        <button type="button" class="area on" data-area="b2b" role="radio" aria-checked="true"><span class="rd"></span><span class="t">B2B AX 도입 &amp; 업무 자동화 컨설팅</span></button>
-        <button type="button" class="area" data-area="tutor" role="radio" aria-checked="false"><span class="rd"></span><span class="t">1:1 맞춤형 코딩 과외 / 멘토링</span></button>
-        <button type="button" class="area" data-area="edu" role="radio" aria-checked="false"><span class="rd"></span><span class="t">기관/단체 특강 &amp; 청소년 코딩 강의</span></button>
-        <button type="button" class="area" data-area="etc" role="radio" aria-checked="false"><span class="rd"></span><span class="t">기타 문의 및 파트너십</span></button>
-      </div>
-
-      <div class="f-row">
-        <div class="field">
-          <label for="f-name">성함 <span class="req">*</span></label>
-          <input type="text" id="f-name" name="name" placeholder="홍길동" autocomplete="name" required />
-          <span class="f-err" data-err></span>
-        </div>
-        <div class="field">
-          <label for="f-phone">연락처 <span class="req">*</span></label>
-          <input type="tel" id="f-phone" name="phone" placeholder="010-0000-0000" autocomplete="tel" required />
-          <span class="f-err" data-err></span>
-        </div>
-      </div>
+    <form id="axForm" class="reveal" novalidate>
       <div class="field">
-        <label for="f-email">이메일 <span class="req">*</span></label>
-        <input type="email" id="f-email" name="email" placeholder="name@example.com" autocomplete="email" required />
+        <label for="f-contact">이메일 또는 연락처 <span class="req">*</span></label>
+        <input type="text" id="f-contact" name="contact" placeholder="name@example.com 또는 010-0000-0000" required />
         <span class="f-err" data-err></span>
       </div>
       <div class="field">
         <label for="f-msg">문의 내용 <span class="req">*</span></label>
-        <textarea id="f-msg" name="message" rows="4" placeholder="예: 현재 세무사 사무실을 운영 중인데 반복적인 영수증 수집 업무를 슬랙/OpenClaw로 자동화하고 싶습니다." required></textarea>
+        <textarea id="f-msg" name="message" rows="4" placeholder="예: 반복적인 업무를 슬랙/OpenClaw로 자동화하고 싶습니다." required></textarea>
         <span class="f-err" data-err></span>
       </div>
       <button type="submit" class="btn btn-grad f-submit" data-cursor data-magnetic>무료 상담 및 문의 제출하기</button>
     </form>
-  <div class="qr-side-card">
-    <p style="font-size:13.5px;color:#9aa3b5;line-height:1.5;margin-bottom:16px;word-break:keep-all;">
-      모바일 기기로 편하게 작성하시려면<br>아래 QR코드를 스캔해 주세요.
-    </p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ai-ing.org/%23contact&color=ffffff&bgcolor=0d0f17" alt="QR Code" style="width:150px;height:150px;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:4px;background:#0d0f17;">
-  </div>
 </div>
 
     <div class="success" id="success" role="status" aria-live="polite">
       <div class="ic" aria-hidden="true">✓</div>
       <h3>문의가 접수되었습니다</h3>
-      <p>24시간 이내에 김민우 대표가 직접 회신드리겠습니다.<br>감사합니다.</p>
+      <p>24시간 이내에 회신드리겠습니다.<br>감사합니다.</p>
       <button type="button" id="resetForm" data-cursor>다시 작성하기</button>
     </div>
   </div>
@@ -2509,34 +2716,54 @@ grid-template-columns: 1fr;
   modal.addEventListener("click",function(e){ if(e.target===modal) closeVideo(); });
   addEventListener("keydown",function(e){ if(e.key==="Escape"){ if(modal.classList.contains("open")) closeVideo(); else if(document.body.classList.contains("menu-open")) closeMenu(); } });
 
-  /* ---- CONTACT: area select ---- */
-  var areaGrid=document.getElementById("areaGrid"), area="b2b";
-  areaGrid.querySelectorAll(".area").forEach(function(btn){
-    btn.addEventListener("click",function(){
-      area=btn.getAttribute("data-area");
-      areaGrid.querySelectorAll(".area").forEach(function(b){ var on=b===btn; b.classList.toggle("on",on); b.setAttribute("aria-checked",on?"true":"false"); });
-    });
-  });
-
   /* ---- CONTACT: form ---- */
   var form=document.getElementById("axForm"), success=document.getElementById("success");
   function setErr(input,msg){ var w=input.closest(".field"), e=w&&w.querySelector("[data-err]"); if(e) e.textContent=msg||""; if(w) input.style.borderColor=msg?"#ff5a4d":""; }
   form.querySelectorAll("input,textarea").forEach(function(f){ f.addEventListener("input",function(){ setErr(f,""); }); });
   form.addEventListener("submit",function(e){
     e.preventDefault();
-    var name=form.name,phone=form.phone,email=form.email,msg=form.message, ok=true, first=null;
+    var contact=form.contact,msg=form.message, ok=true, first=null;
     function fail(f,m){ setErr(f,m); ok=false; if(!first)first=f; }
-    if(!name.value.trim()) fail(name,"성함을 입력해 주세요.");
-    if(!phone.value.trim()) fail(phone,"연락처를 입력해 주세요."); else if(phone.value.replace(/[^0-9]/g,"").length<9) fail(phone,"올바른 연락처를 입력해 주세요.");
-    if(!email.value.trim()) fail(email,"이메일을 입력해 주세요."); else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) fail(email,"올바른 이메일 형식이 아닙니다.");
+    if(!contact.value.trim()) fail(contact,"이메일 또는 연락처를 입력해 주세요.");
     if(!msg.value.trim()) fail(msg,"문의 내용을 입력해 주세요.");
     if(!ok){ if(first) first.focus(); return; }
-    form.style.display="none"; success.classList.add("show"); success.setAttribute("tabindex","-1"); success.focus();
-    success.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+    
+    var submitBtn = form.querySelector('.f-submit');
+    var originalBtnText = submitBtn ? submitBtn.textContent : '무료 상담 및 문의 제출하기';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '전송 중...';
+    }
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contact: contact.value.trim(),
+        content: msg.value.trim()
+      })
+    })
+    .then(function(res){
+      if (!res.ok) {
+        return res.json().then(function(err){ throw new Error(err.error || '이메일 전송에 실패했습니다.'); });
+      }
+      form.style.display="none"; success.classList.add("show"); success.setAttribute("tabindex","-1"); success.focus();
+      success.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+    })
+    .catch(function(err){
+      alert("문의 제출 중 오류가 발생했습니다: " + err.message);
+    })
+    .finally(function(){
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
   });
   document.getElementById("resetForm").addEventListener("click",function(){
     success.classList.remove("show"); form.style.display=""; form.reset();
-    areaGrid.querySelectorAll(".area").forEach(function(b,i){ b.classList.toggle("on",i===0); b.setAttribute("aria-checked",i===0?"true":"false"); }); area="b2b";
   });
 
   /* ---- marquee dynamic duration ---- */
@@ -2808,9 +3035,77 @@ grid-template-columns: 1fr;
     vid1.addEventListener('timeupdate', handleTimeUpdate);
   }
 
+
+  // Scroll Story for Services
+  function setupScrollStory() {
+    const story = document.getElementById('services');
+    if (!story) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scenes = Array.from(story.querySelectorAll('.story-scene'));
+    const dots = Array.from(story.querySelectorAll('.story-progress span'));
+    const clamp01 = v => Math.min(Math.max(v, 0), 1);
+    let storyTicking = false;
+
+    const updateStory = () => {
+      if (!story.classList.contains('active')) return;
+      const total = story.offsetHeight - window.innerHeight;
+      if (total <= 0) return;
+      const raw = clamp01(-story.getBoundingClientRect().top / total);
+      const p = 0.5 + raw * (scenes.length - 1);
+      
+      scenes.forEach((scene, i) => {
+        const d = p - (i + 0.5);
+        const vis = clamp01(1 - Math.abs(d) * 2.4);
+        const eased = vis * vis * (3 - 2 * vis); // smoothstep
+        
+        if (prefersReducedMotion) {
+          scene.style.opacity = Math.abs(d) < 0.5 ? '1' : '0';
+          return;
+        }
+        
+        scene.style.opacity = String(eased);
+        scene.style.transform = `translateY(${d * -90}px) scale(${0.94 + eased * 0.06})`;
+        const photo = scene.querySelector('.story-photo');
+        if (photo) {
+          photo.style.transform = `translateY(${d * -28}px) scale(1.12)`;
+        }
+        const line = scene.querySelector('.story-line');
+        if (line) {
+          line.style.transform = `scaleX(${eased})`;
+        }
+      });
+
+      const idx = Math.min(Math.round(p - 0.5), scenes.length - 1);
+      dots.forEach((dot, i) => dot.classList.toggle('on', i <= idx));
+      storyTicking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!storyTicking) {
+        requestAnimationFrame(updateStory);
+        storyTicking = true;
+      }
+    }, { passive: true });
+    
+    window.addEventListener('resize', updateStory);
+    
+    // Listen for tab changes (via class MutationObserver)
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateStory();
+        }
+      });
+    });
+    observer.observe(story, { attributes: true });
+    
+    updateStory();
+  }
+
   // On page load, check hash for tab
   window.addEventListener('DOMContentLoaded', () => {
     handleRoute();
+      setupScrollStory();
   });
 </script>
 

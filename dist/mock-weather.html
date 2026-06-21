@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 날씨 정보 서비스</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .weather-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 16px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .location {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #38bdf8;
+    }
+
+    .date {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 15px;
+    }
+
+    .weather-icon {
+      font-size: 3.5rem;
+      margin: 15px 0;
+      color: #f59e0b;
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
+    }
+
+    .temp-container {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .temp-value {
+      color: #ffffff;
+      /* Students will edit this element in DevTools! */
+    }
+
+    .temp-unit {
+      color: #38bdf8;
+    }
+
+    .description {
+      font-size: 1rem;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 15px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .info-val {
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    /* Hint styling for students */
+    .devtools-hint {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #64748b;
+      line-height: 1.4;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="weather-card">
+    <div class="location">대한민국 서울 (Seoul, KR)</div>
+    <div class="date">실시간 날씨 정보</div>
+    
+    <div class="weather-icon">☀️</div>
+    
+    <div class="temp-container">
+      <span class="temp-value" id="weather-temp">24</span><span class="temp-unit">°C</span>
+    </div>
+    
+    <div class="description">맑음 (Sunny)</div>
+    
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">습도</span>
+        <span class="info-val">45%</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">풍속</span>
+        <span class="info-val">2.1 m/s</span>
+      </div>
+    </div>
+
+    <div class="devtools-hint">
+      💡 <strong>F12 실습 방법</strong><br>
+      마우스 우클릭 -> <strong>검사(Inspect)</strong> 누르고,<br>
+      오른쪽 창에서 <code>id="weather-temp"</code>의 <strong>24</strong> 부분을 찾아 더블클릭 후 원하는 숫자로 수정해 보세요!
+    </div>
+  </div>
+
+</body>
+</html>
