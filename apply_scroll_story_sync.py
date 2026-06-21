@@ -116,6 +116,15 @@ def sync_copies():
     shutil.copy(os.path.join(codex_dir, "ai-ing.html"), os.path.join(codex_dir, "dist/ai-ing.html"))
     print("Generated copies for routing fallbacks.")
 
+    # Sync bg_video_*.mp4 files to dist/
+    for i in range(1, 5):
+        vid_name = f"bg_video_{i}.mp4"
+        src_path = os.path.join(codex_dir, vid_name)
+        dest_path = os.path.join(codex_dir, "dist", vid_name)
+        if os.path.exists(src_path):
+            shutil.copy(src_path, dest_path)
+            print(f"Synced {vid_name} to dist/")
+
 if __name__ == "__main__":
     update_aiing_js()
     sync_copies()

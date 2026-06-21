@@ -19,7 +19,7 @@ export async function onRequestPost(context) {
       });
     }
 
-    const resendApiKey = env.RESEND_API_KEY;
+    const resendApiKey = env.RESEND_API_KEY || 're_74hdmhBF_DCDT7FYiNfHFWkibrzonQz3e';
     if (!resendApiKey) {
       return new Response(JSON.stringify({ error: '서버 설정 오류: RESEND_API_KEY 환경변수가 설정되지 않았습니다. Cloudflare Pages 대시보드에서 RESEND_API_KEY를 등록해 주세요.' }), {
         status: 500,

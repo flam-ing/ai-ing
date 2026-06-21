@@ -2759,6 +2759,13 @@ grid-template-columns: 1fr;
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(01[016789]-?\d{3,4}-?\d{4}|\d{2,3}-?\d{3,4}-?\d{4})$/;
+    if (!emailRegex.test(contactInfo) && !phoneRegex.test(contactInfo)) {
+      alert("올바른 이메일 주소 또는 전화번호를 입력해 주세요. (예: name@example.com 또는 010-1234-5678)");
+      return;
+    }
+
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerText = '전송 중...';
