@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <style>
   @font-face{font-family:'GmarketSans';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');font-weight:300;font-style:normal;font-display:swap;}
@@ -42,7 +42,7 @@
 
     --display:'GmarketSans','Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
     --body:'Pretendard','GmarketSans',-apple-system,sans-serif;
-    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --mono:'GmarketSans',sans-serif;
     --ease:cubic-bezier(.16,1,.3,1);
     --pad:clamp(20px,5vw,80px);
     --maxw:1200px;
@@ -391,26 +391,26 @@
 
 <!-- HERO -->
 <section class="hero tab-content-section active" id="hero">
-  <!-- Background Video -->
+  <!-- Seamless Background Videos -->
   <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
-    <video id="bg-video" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(24px) brightness(0.48);"></video>
+    <video id="bg-video-1" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:1;"></video>
+    <video id="bg-video-2" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:0;"></video>
   </div>
   <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,#07080d 100%);z-index:1;pointer-events:none;"></div>
 
-  <div class="shell" style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 0 60px;">
-    <div class="eyebrow" style="display:inline-flex;align-items:center;gap:11px;margin-bottom:28px;">
-      <span style="width:8px;height:8px;border-radius:50%;background:#e61862;box-shadow:0 0 12px #e61862;animation:ring 2s infinite;"></span>
-      <span style="font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:rgba(255,255,255,0.7);text-transform:uppercase;white-space:nowrap;">AI-ing</span>
-    </div>
-    <h1 style="font-size:clamp(36px,5.2vw,72px);font-weight:700;line-height:1.15;letter-spacing:-.025em;color:#fff;margin-bottom:24px;">
-      AI 도입 실전 실행<br>& 맞춤형 멘토링
-    </h1>
-    <p style="max-width:600px;font-size:clamp(16px,1.6vw,19px);font-weight:300;line-height:1.75;color:rgba(255,255,255,0.65);margin-bottom:40px;word-break:keep-all;">
-      프로세스 자동화 설계부터 1:1 맞춤 코딩 교육까지, 비즈니스와 커리어의 혁신을 함께합니다.
+  <div class="shell" style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 0 60px;">
+    <img src="logo.png" alt="AI-ing Logo" style="width:120px;height:120px;border-radius:24px;margin-bottom:28px;object-fit:cover;box-shadow:0 12px 36px rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.15);">
+    <h1 style="font-family:var(--display);font-size:clamp(42px,5.8vw,80px);font-weight:700;color:#fff;letter-spacing:-.03em;margin-bottom:28px;">AI-ing</h1>
+    <h2 style="font-family:var(--display);font-size:clamp(20px,2.6vw,38px);font-weight:500;line-height:1.45;color:#fff;margin-bottom:32px;word-break:keep-all;letter-spacing:-.02em;">
+      AI 도입 및 프로세스 자동화 설계의 AX 컨설팅<br>
+      <span style="font-size:0.9em;opacity:0.9;font-weight:300;">부터 1:1, 특강, 멘토링의 AI코딩 교육까지</span>
+    </h2>
+    <p style="max-width:680px;font-size:clamp(16px,1.6vw,21px);font-weight:300;line-height:1.7;color:rgba(255,255,255,0.7);margin-bottom:48px;word-break:keep-all;">
+      AI로 ing하려는 모든 분들의 혁신을 함께 합니다.
     </p>
     <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
-      <a href="#services" onclick="event.preventDefault(); showTab('services');" class="btn" style="background:var(--grad);color:#06070d;font-weight:700;">서비스 알아보기</a>
-      <a href="#contact" onclick="event.preventDefault(); showTab('contact');" class="btn btn-ghost" style="color:#e8ecf4;">무료 자문 신청 →</a>
+      <a href="#services" onclick="event.preventDefault(); showTab('services');" class="btn" style="background:var(--grad);color:#06070d;font-weight:700;font-family:var(--display);">서비스 알아보기</a>
+      <a href="#contact" onclick="event.preventDefault(); showTab('contact');" class="btn btn-ghost" style="color:#e8ecf4;font-family:var(--display);">무료 자문 신청 →</a>
     </div>
   </div>
 </section>
@@ -548,7 +548,7 @@
       </div>
       <h2 id="payment-h" style="font-size:clamp(28px,3.8vw,42px);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;">AI-ing 결제 및 정산 안내</h2>
       <p style="color:var(--ink-mute);font-weight:300;font-size:16.5px;line-height:1.7;max-width:620px;margin:0 auto 48px;">
-        자문 서비스 및 1:1 교육의 편의를 위해 온라인 카드 결제 및 간편 결제(Toss Payments / PortOne) 시스템을 연동 중입니다.
+        자문 서비스 및 1:1 교육의 편의를 위해 온라인 카드 결제 및 간편 결제(PortOne) 시스템을 연동 중입니다.
       </p>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:32px;">
@@ -568,10 +568,10 @@
         <div class="card c2" style="background:var(--paper-card);border:1px solid var(--line-ink);border-top:3px solid var(--cyan);padding:32px;border-radius:3px;">
           <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
           <h3 style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:12px;">신용카드 및 간편 결제</h3>
-          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">토스페이, 카카오페이, 네이버페이 및 국내 주요 신용카드 결제를 위한 PG사 연동 심사가 진행 중입니다. 심사 완료 후 활성화됩니다.</p>
+          <p style="color:var(--ink-mute);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 네이버페이 및 국내 주요 신용카드 결제를 위한 PG사 연동 심사가 진행 중입니다. 심사 완료 후 활성화됩니다.</p>
           <div style="display:flex;align-items:center;gap:8px;opacity:0.65;font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:700;">
             <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:ring 2s infinite;"></span>
-            SYSTEM INTEGRATING (PORTONE / TOSS PAYMENTS)
+            SYSTEM INTEGRATING (PORTONE)
           </div>
         </div>
       </div>
@@ -898,17 +898,84 @@
     });
   }
 
-  // Background video playlist cycling
+  
+  // Tab Navigation function
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-content-section').forEach(sec => {
+      sec.classList.remove('active');
+    });
+    const target = document.getElementById(tabId);
+    if (target) {
+      target.classList.add('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    
+    // Close burger menu / mobile menu if active (for mobile view in ai-ing.html)
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (burger && mobileMenu) {
+      burger.classList.remove('active');
+      mobileMenu.classList.remove('show');
+    }
+    
+    // Update active nav link indicator
+    document.querySelectorAll('.nav-link-tab').forEach(link => {
+      if (link.getAttribute('href') === '#' + tabId) {
+        link.style.color = '#e61862';
+      } else {
+        link.style.color = '';
+      }
+    });
+  }
+
+  // Seamless Background video playlist cycling (Cross-fading between 2 video tags)
   const bgVideos = ['bg_video_1.mp4', 'bg_video_2.mp4', 'bg_video_3.mp4', 'bg_video_4.mp4'];
   let currentVideoIndex = 0;
-  const bgVideoEl = document.getElementById('bg-video');
-  if (bgVideoEl) {
-    bgVideoEl.src = bgVideos[currentVideoIndex];
-    bgVideoEl.addEventListener('ended', () => {
-      currentVideoIndex = (currentVideoIndex + 1) % bgVideos.length;
-      bgVideoEl.src = bgVideos[currentVideoIndex];
-      bgVideoEl.play().catch(e => console.log('Video play error:', e));
-    });
+  const vid1 = document.getElementById('bg-video-1');
+  const vid2 = document.getElementById('bg-video-2');
+  
+  if (vid1 && vid2) {
+    vid1.src = bgVideos[currentVideoIndex];
+    vid1.load();
+    
+    let activeVideo = vid1;
+    let inactiveVideo = vid2;
+    
+    const handleTimeUpdate = (e) => {
+      const video = e.target;
+      // Start crossfade 1.5 seconds before current video ends
+      if (video.duration - video.currentTime < 1.5) {
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+        
+        currentVideoIndex = (currentVideoIndex + 1) % bgVideos.length;
+        inactiveVideo.src = bgVideos[currentVideoIndex];
+        inactiveVideo.load();
+        
+        inactiveVideo.play().then(() => {
+          // Fade active video out, inactive video in
+          activeVideo.style.opacity = '0';
+          inactiveVideo.style.opacity = '1';
+          
+          // Swap active/inactive video references
+          const temp = activeVideo;
+          activeVideo = inactiveVideo;
+          inactiveVideo = temp;
+          
+          // Add listener to the new active video
+          activeVideo.addEventListener('timeupdate', handleTimeUpdate);
+        }).catch(err => {
+          console.log('Video crossfade error, swapping instantly:', err);
+          activeVideo.style.opacity = '0';
+          inactiveVideo.style.opacity = '1';
+          const temp = activeVideo;
+          activeVideo = inactiveVideo;
+          inactiveVideo = temp;
+          activeVideo.addEventListener('timeupdate', handleTimeUpdate);
+        });
+      }
+    };
+    
+    vid1.addEventListener('timeupdate', handleTimeUpdate);
   }
 
   // On page load, check hash for tab
@@ -925,6 +992,7 @@
     showTab('hero');
   });
 </script>
+
 
 </body>
 </html>
