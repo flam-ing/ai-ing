@@ -1639,7 +1639,7 @@ grid-template-columns: 1fr;
 .scroll-story {
   position: relative;
   height: 300vh;
-  background: #07080d;
+  background: #ffffff;
 }
 .scroll-story-sticky {
   position: sticky;
@@ -1672,7 +1672,7 @@ grid-template-columns: 1fr;
   background-size: cover;
   background-position: center;
   opacity: 0.55;
-  filter: blur(10px) grayscale(0.15) brightness(0.4) saturate(0.9);
+  filter: blur(12px) grayscale(1) brightness(1.05);
   will-change: transform;
   pointer-events: none;
 }
@@ -1681,7 +1681,7 @@ grid-template-columns: 1fr;
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(7, 8, 13, 0.45);
+  background: rgba(255, 255, 255, 0.76);
   pointer-events: none;
 }
 .story-scene > p,
@@ -1696,7 +1696,7 @@ grid-template-columns: 1fr;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: normal;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(12, 14, 20, 0.65);
 }
 .story-line {
   width: 40px;
@@ -1708,18 +1708,18 @@ grid-template-columns: 1fr;
 .story-title {
   max-width: 760px;
   font-size: clamp(26px, 4vw, 40px);
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: normal;
   line-height: 1.2;
-  color: #fff;
+  color: #0c0e14;
 }
 .story-desc {
   margin: 0;
   max-width: 560px;
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 400;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
+  color: #2d3748;
   letter-spacing: normal;
 }
 .story-progress {
@@ -1734,11 +1734,11 @@ grid-template-columns: 1fr;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.15);
   transition: background-color 0.3s;
 }
 .story-progress span.on {
-  background: #fff;
+  background: #000000;
 }
 
 /* Responsive Payment Buttons / QR Code */
@@ -2365,28 +2365,13 @@ grid-template-columns: 1fr;
     
     
     <footer class="main-footer">
-        <div class="social-links">
-            <a href="https://blog.naver.com/rlaalsdn456456" target="_blank">
-                <img src="https://minwoo19930301.github.io/resume/icon/naverblog.svg" alt="Naver Blog Icon">
-                블로그
-            </a>
-            <a href="https://www.linkedin.com/in/%EB%AF%BC%EC%9A%B0-%EA%B9%80-307124246/" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
-                    alt="LinkedIn Icon">
-                링크드인
-            </a>
-            <a href="https://github.com/minwoo19930301" target="_blank">
-                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Icon">
-                깃허브
-            </a>
-        </div>
     </footer>
 
   </div>
 </section>
 
   <!-- ============ SERVICES ============ -->
-  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;background:#07080d;color:#fff;scroll-margin-top:64px;display:none;">
+  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;background:#ffffff;color:#0c0e14;scroll-margin-top:64px;display:none;">
     <div class="scroll-story-sticky">
       <!-- Scene 1 -->
       <div class="story-scene">
@@ -2395,7 +2380,7 @@ grid-template-columns: 1fr;
         <span class="story-line"></span>
         <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
         <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
-        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
           <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
           <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
           <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
@@ -2407,12 +2392,12 @@ grid-template-columns: 1fr;
         <div class="story-photo" style="background-image:url('img/story-2.png');"></div>
         <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">02 / 1:1 · MENTOR</p>
         <span class="story-line"></span>
-        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 코딩 과외 &amp; 프로젝트 멘토링</h3>
-        <p class="story-desc"><strong>대상:</strong> 비전공 입문자, 컴퓨터공학 전공생, MSA/대용량 트래픽 프로젝트 취업 준비생</p>
-        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>입문자 밀착 과외</strong> — Java·Python·Git 기초부터 객체지향까지 Google Meet 1:1 라이브 (총 12명 지도, 취업 성공사례 다수)</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실무형 프로젝트 멘토링</strong> — MSA 책임 분리, API Gateway 설계, N+1 개선, 분산 락, 성능 리뷰 및 프론트엔드 구조 코칭</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>멘토링 성과 및 진행</strong> — 고용노동부 연계 디지털 인재 양성 과정 프로젝트 멘토링 2회 진행 (배달 중계 플랫폼 팀 최종 발표 1등 수상), 과학기술정보통신부 연계 고령자 병원 동행 서비스 멘토링 진행 중</span></li>
+        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
+        <p class="story-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI 협업 생산성 극대화</strong> — Cursor, GitHub Copilot 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — LLM API 연동, RAG(검색 증강 생성) 패턴, 백엔드 아키텍처(MSA 책임 분리, 분산 락, 성능 최적화) 설계 멘토링</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 고령자 병원 동행 서비스 코칭</span></li>
         </ul>
       </div>
       <!-- Scene 3 -->
@@ -2420,12 +2405,12 @@ grid-template-columns: 1fr;
         <div class="story-photo" style="background-image:url('img/story-3.png');"></div>
         <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">03 / 기관 · EDU</p>
         <span class="story-line"></span>
-        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관 특강 및 청소년 디지털 코딩 교육</h3>
-        <p class="story-desc"><strong>대상:</strong> 교육지원센터, 중소기업협회, 코딩 아카데미, 초·중·고 교육 기관</p>
-        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.85);margin-top:14px;">
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 특강 및 심사</strong> — 한국경영혁신중소기업협회 추천 더조은/MBC아카데미 취업 특강 및 프로젝트 심사위원 7회 참여</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 디지털 교육</strong> — 반포잠원교육지원센터 초·중학생 대상 디지털 특강 (엔트리 블록코딩, 게임 제작, HTML/CSS/JS AI 활용 웹 제작 지도)</span></li>
-          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 세미나 및 게스트 출연</strong> — 사내 전직원 대상 세미나 기획 및 발표 4회 진행 (AI 에이전트 비용 최적화와 보안 운영), 외부 유튜브 채널 게스트 강연 (개발자 취업 전략, 24시간 개인 AI 비서 만들기)</span></li>
+        <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
+        <p class="story-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
+        <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 AI 디지털 교육</strong> — 반포잠원교육지원센터 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
+          <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>현직자 취업 특강 및 심사</strong> — 한국경영혁신중소기업협회 추천 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
         </ul>
       </div>
       <!-- Progress dots -->
