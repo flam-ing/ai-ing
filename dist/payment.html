@@ -1713,6 +1713,7 @@ grid-template-columns: 1fr;
       <video id="bg-video-1" src="bg_video_1.mp4" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:1;"></video>
       <video id="bg-video-2" src="bg_video_2.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
       <video id="bg-video-3" src="bg_video_3.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
+      <video id="bg-video-4" src="bg_video_4.mp4" muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.5s ease;opacity:0;"></video>
     </div>
     <div style="position:absolute;inset:0;background:rgba(7,8,13,0.3);z-index:1;pointer-events:none;"></div>
 
@@ -3012,14 +3013,15 @@ grid-template-columns: 1fr;
   }
   window.startVideo = startVideo;
 
-  // Seamless Background video playlist cycling (Cross-fading between 3 statically loaded videos)
+  // Seamless Background video playlist cycling (Cross-fading between statically loaded videos)
   const vids = [
     document.getElementById('bg-video-1'),
     document.getElementById('bg-video-2'),
-    document.getElementById('bg-video-3')
-  ];
+    document.getElementById('bg-video-3'),
+    document.getElementById('bg-video-4')
+  ].filter(Boolean);
   
-  if (vids[0] && vids[1] && vids[2]) {
+  if (vids.length > 0) {
     let currentIdx = 0;
     
     // Play the first video initially
