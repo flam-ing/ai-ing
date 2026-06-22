@@ -3184,10 +3184,6 @@ grid-template-columns: 1fr;
       channelKey = "channel-key-659caa1e-6f55-42f5-8b02-d06e3837a446"; // KakaoPay test channel key
       easyPayProvider = "KAKAOPAY";
       methodNameKr = "카카오페이";
-    } else if (method === 'NAVERPAY') {
-      channelKey = "channel-key-naverpay-test"; // Replace with actual test channel key if needed
-      easyPayProvider = "NAVERPAY";
-      methodNameKr = "네이버페이";
     } else if (method === 'CARD') {
       channelKey = "channel-key-b95c36d1-7b94-49c4-bbde-c943bf57b12d"; // Korea Payment Networks card channel key
       payMethod = "CARD";
@@ -3196,7 +3192,6 @@ grid-template-columns: 1fr;
 
     const payBtnMap = {
       'KAKAOPAY': document.getElementById('btn-pay-kakao'),
-      'NAVERPAY': document.getElementById('btn-pay-naver'),
       'CARD': document.getElementById('btn-pay-card')
     };
     
