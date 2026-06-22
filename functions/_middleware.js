@@ -2,6 +2,11 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   
+  if (url.pathname === "/slides") {
+    url.pathname = "/slides/";
+    return Response.redirect(url.toString(), 301);
+  }
+
   // Only apply password protection to sub-routes under /slides (e.g. specific slide HTML files or downloads)
   // The main slides listing /slides/ index page should be public
   const isSlidesRoute = url.pathname.startsWith("/slides");

@@ -23,3 +23,10 @@ untitled/
 venv/
 .venv/
 __pycache__/
+
+# Dependencies and build outputs
+node_modules/
+dist/
+.env
+.env.*
+
