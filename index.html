@@ -2416,7 +2416,7 @@ grid-template-columns: 1fr;
         <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;">
           <div style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
           <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:12px;">신용카드 및 간편 결제</h3>
-          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이 및 국내 주요 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 원하시는 결제 수단을 선택하세요.</p>
+          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">1시간 1:1 맞춤형 코딩 과외 또는 AX 컨설팅 이용권(50,000원)을 신용카드 및 간편결제(카카오페이)로 편리하게 결제하실 수 있습니다.</p>
           <div style="display:flex;gap:10px;margin-top:16px;">
             <button type="button" onclick="openPaymentModal()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#e61862;color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제</button>
           </div>
@@ -3146,7 +3146,7 @@ grid-template-columns: 1fr;
     document.getElementById('payment-step-1').style.display = 'block';
     document.getElementById('payment-pg-window').style.display = 'none';
     document.getElementById('payment-step-2').style.display = 'none';
-    document.getElementById('payment-amount').value = 100000;
+    document.getElementById('payment-amount').value = 50000;
   };
   window.closePaymentModal = function() {
     document.getElementById('payment-modal').style.display = 'none';
@@ -3156,7 +3156,7 @@ grid-template-columns: 1fr;
     input.value = Number(input.value) + amount;
   };
   window.resetPaymentAmount = function() {
-    document.getElementById('payment-amount').value = 100000;
+    document.getElementById('payment-amount').value = 50000;
   };
   window.openPGWindow = function() {
     const amount = Number(document.getElementById('payment-amount').value);
@@ -3264,11 +3264,11 @@ grid-template-columns: 1fr;
     <!-- Step 1: Set Amount -->
     <div id="payment-step-1" style="padding:32px;">
       <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제 금액 설정</h3>
-      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">결제하실 금액을 입력하신 후 결제하기 버튼을 눌러주세요.</p>
+      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">1시간 1:1 코딩 과외 / AX 컨설팅 이용권은 기본 50,000원이며 자유롭게 금액을 설정하여 결제하실 수도 있습니다.</p>
       <div style="margin-bottom:16px;">
         <label style="display:block;font-size:12.5px;font-weight:700;color:#3b33a5;margin-bottom:8px;text-transform:uppercase;">결제 금액 (KRW)</label>
         <div style="position:relative;display:flex;align-items:center;">
-          <input type="number" id="payment-amount" value="100000" min="1000" step="1000" style="width:100%;padding:14px 16px;padding-right:40px;border-radius:4px;border:1px solid #e3e5ea;font-size:18px;font-weight:700;color:#0c0e14;outline:none;text-align:right;">
+          <input type="number" id="payment-amount" value="50000" min="1000" step="1000" style="width:100%;padding:14px 16px;padding-right:40px;border-radius:4px;border:1px solid #e3e5ea;font-size:18px;font-weight:700;color:#0c0e14;outline:none;text-align:right;">
           <span style="position:absolute;right:16px;font-size:15px;font-weight:700;color:#8b93a5;">원</span>
         </div>
       </div>
@@ -3289,7 +3289,7 @@ grid-template-columns: 1fr;
       </div>
       <div style="margin-bottom:20px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:13px;color:#5c6573;">결제 금액</span>
-        <span style="font-size:18px;font-weight:700;color:#0c0e14;" id="pg-amount-display">100,000원</span>
+        <span style="font-size:18px;font-weight:700;color:#0c0e14;" id="pg-amount-display">50,000원</span>
       </div>
       
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
