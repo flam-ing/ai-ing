@@ -32,3 +32,6 @@ dist/
 .env
 .env.*
 
+# Local private business archives
+business_archive/
+
