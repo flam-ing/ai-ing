@@ -11,6 +11,8 @@ design_fetched.tar
 untitled/
 *.png
 !logo.png
+!favicon-*.png
+!apple-touch-icon.png
 *.pdf
 
 # Allow assets inside slides directory
