@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>객체지향 프로그래밍 · CS 4년 커리큘럼</title>
+  <meta name="description" content="클래스와 객체·캡슐화·상속·다형성·추상화·SOLID를 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="oop" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">1학년 기초 · 객체지향 프로그래밍</span>
+        <h1 class="page-title">객체지향 프로그래밍</h1>
+        <p class="page-lead">객체지향은 프로그램을 <strong>현실의 사물처럼</strong> 바라보는 방식입니다. 데이터와 그 데이터를 다루는 기능을 한 덩어리(객체)로 묶어, 크고 복잡한 프로그램을 정돈합니다.</p>
+
+        <section class="anchor">
+          <h2 id="what">OOP란?</h2>
+          <p>객체지향 프로그래밍(OOP, Object-Oriented Programming)은 프로그램을 <strong>"객체"들의 상호작용</strong>으로 설계하는 방법입니다. 객체란 현실의 사물처럼 <strong>속성(데이터)</strong>과 <strong>행동(기능)</strong>을 함께 가진 단위입니다.</p>
+          <p>자동차를 떠올려 보세요. 색·속도 같은 <em>속성</em>과, 달리기·멈추기 같은 <em>행동</em>이 한 몸에 들어 있습니다. OOP는 코드를 이처럼 자연스러운 단위로 나눠, 사람이 이해하고 고치기 쉽게 만듭니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>클래스와 객체부터 시작해 OOP의 네 기둥인 <strong>캡슐화 · 상속 · 다형성 · 추상화</strong>, 마지막으로 좋은 설계 원칙 <strong>SOLID</strong>를 간단히 소개합니다. 예제는 파이썬으로 보여줍니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="class-object">클래스와 객체</h2>
+          <p><strong>클래스(class)</strong>는 객체를 찍어 내는 <strong>설계도</strong>이고, <strong>객체(object)</strong>는 그 설계도로 만든 <strong>실제 물건</strong>입니다. "붕어빵 틀"이 클래스라면, 그 틀로 구운 붕어빵 하나하나가 객체입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="클래스와 객체">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="40" width="110" height="70" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+                <text x="75" y="32" fill="#58a6ff" text-anchor="middle">Dog (설계도)</text>
+                <text x="75" y="65" fill="#c9d1d9" text-anchor="middle">name</text>
+                <text x="75" y="85" fill="#c9d1d9" text-anchor="middle">bark()</text>
+                <line x1="130" y1="75" x2="200" y2="55" stroke="#3fb950" stroke-width="2" marker-end="url(#oopa)"/>
+                <line x1="130" y1="75" x2="200" y2="110" stroke="#3fb950" stroke-width="2" marker-end="url(#oopa)"/>
+                <rect x="210" y="35" width="90" height="40" fill="#1c232c" stroke="#3fb950"/><text x="255" y="60" fill="#c9d1d9" text-anchor="middle">"바둑이"</text>
+                <rect x="210" y="95" width="90" height="40" fill="#1c232c" stroke="#3fb950"/><text x="255" y="120" fill="#c9d1d9" text-anchor="middle">"초코"</text>
+                <text x="350" y="60" fill="#8b949e" text-anchor="middle">객체</text>
+                <text x="350" y="120" fill="#8b949e" text-anchor="middle">객체</text>
+              </g>
+              <defs><marker id="oopa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker></defs>
+            </svg>
+            <div class="caption">하나의 클래스(설계도)로 서로 다른 객체를 여러 개 만든다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">dog.py</span></div>
+            <pre><code class="language-python">class Dog:                       # 설계도(클래스)
+    def __init__(self, name):    # 객체가 생길 때 호출(생성자)
+        self.name = name         # 속성: 이름
+    def bark(self):              # 행동(메서드)
+        print(f"{self.name}: 멍멍!")
+
+a = Dog("바둑이")   # 설계도로 객체 생성
+b = Dog("초코")
+a.bark()            # 바둑이: 멍멍!
+b.bark()            # 초코: 멍멍!</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 self가 뭐죠?</div>
+            <p><code>self</code>는 "지금 이 객체 자신"을 가리킵니다. <code>a.bark()</code>를 부르면 self는 a가 되어, a의 이름을 출력합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="encapsulation">캡슐화</h2>
+          <p><strong>캡슐화(encapsulation)</strong>는 객체의 <strong>내부 데이터를 바깥에서 함부로 못 건드리게 숨기고</strong>, 정해진 통로(메서드)로만 접근하게 하는 것입니다. 약 캡슐이 내용물을 감싸듯, 데이터를 보호합니다.</p>
+          <p>예를 들어 은행 계좌의 잔액을 외부에서 마음대로 음수로 바꾸면 안 됩니다. 대신 <code>deposit()</code>·<code>withdraw()</code> 같은 메서드를 통해서만 규칙을 지키며 바꾸게 합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">account.py</span></div>
+            <pre><code class="language-python">class Account:
+    def __init__(self):
+        self.__balance = 0          # __ : 외부 접근 차단(숨김)
+
+    def deposit(self, amount):      # 정해진 통로로만 변경
+        if amount &gt; 0:
+            self.__balance += amount
+
+    def get_balance(self):
+        return self.__balance
+
+acc = Account()
+acc.deposit(1000)
+print(acc.get_balance())   # 1000
+# acc.__balance = -999     # 직접 접근 시도 → 막혀서 안 통함</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 왜 숨기나?</div>
+            <p>내부를 숨기면, 나중에 구현을 바꿔도 바깥 코드가 깨지지 않습니다. 사용자는 <strong>"무엇을 할 수 있는지"</strong>만 알면 되고, <strong>"어떻게 동작하는지"</strong>는 몰라도 됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="inheritance">상속</h2>
+          <p><strong>상속(inheritance)</strong>은 이미 만든 클래스의 속성과 기능을 <strong>물려받아 새 클래스를 만드는</strong> 것입니다. 공통 부분을 부모 클래스에 한 번만 작성하고, 자식 클래스는 차이점만 추가하면 됩니다. 코드 중복이 크게 줄어듭니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="상속 계층">
+              <g font-family="monospace" font-size="12">
+                <rect x="130" y="20" width="100" height="40" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="180" y="44" fill="#c9d1d9" text-anchor="middle">Animal</text>
+                <line x1="180" y1="60" x2="90" y2="110" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="180" y1="60" x2="270" y2="110" stroke="#30363d" stroke-width="1.5"/>
+                <rect x="40" y="110" width="100" height="40" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="90" y="134" fill="#c9d1d9" text-anchor="middle">Dog</text>
+                <rect x="220" y="110" width="100" height="40" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="270" y="134" fill="#c9d1d9" text-anchor="middle">Cat</text>
+                <text x="180" y="90" fill="#8b949e" text-anchor="middle">물려받음 ↓</text>
+              </g>
+            </svg>
+            <div class="caption">Dog과 Cat은 Animal의 공통 기능(eat 등)을 물려받고, 각자 우는 소리만 추가</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">inheritance.py</span></div>
+            <pre><code class="language-python">class Animal:                # 부모 클래스
+    def __init__(self, name):
+        self.name = name
+    def eat(self):
+        print(f"{self.name}가 밥을 먹는다")
+
+class Dog(Animal):           # Animal 상속
+    def speak(self):
+        print("멍멍")
+
+d = Dog("바둑이")
+d.eat()      # 바둑이가 밥을 먹는다  ← 부모에게 물려받음
+d.speak()    # 멍멍                ← 자식이 추가한 기능</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="polymorphism">다형성</h2>
+          <p><strong>다형성(polymorphism)</strong>은 "여러(poly) 모습(morph)"이라는 뜻으로, <strong>같은 이름의 명령이 객체에 따라 다르게 동작</strong>하는 성질입니다. <code>speak()</code>라는 같은 명령을 내려도 개는 "멍멍", 고양이는 "야옹"으로 답합니다.</p>
+          <p>덕분에 객체의 종류를 일일이 구분하지 않고도, 그냥 <code>speak()</code>를 부르면 각자 알아서 자기 방식으로 행동합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="다형성: 같은 명령 다른 반응">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="55" width="100" height="40" fill="#1c232c" stroke="#58a6ff" stroke-width="2"/><text x="70" y="80" fill="#c9d1d9" text-anchor="middle">speak()</text>
+                <text x="70" y="42" fill="#8b949e" text-anchor="middle">같은 명령</text>
+                <line x1="120" y1="75" x2="220" y2="45" stroke="#58a6ff" stroke-width="2" marker-end="url(#oopoly)"/>
+                <line x1="120" y1="75" x2="220" y2="120" stroke="#58a6ff" stroke-width="2" marker-end="url(#oopoly)"/>
+                <rect x="225" y="25" width="130" height="38" fill="#161b22" stroke="#3fb950"/><text x="290" y="49" fill="#c9d1d9" text-anchor="middle">Dog → "멍멍"</text>
+                <rect x="225" y="100" width="130" height="38" fill="#161b22" stroke="#3fb950"/><text x="290" y="124" fill="#c9d1d9" text-anchor="middle">Cat → "야옹"</text>
+              </g>
+              <defs><marker id="oopoly" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">하나의 speak() 명령이 객체 종류에 따라 다른 결과를 낸다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">polymorphism.py</span></div>
+            <pre><code class="language-python">class Dog(Animal):
+    def speak(self): print("멍멍")
+
+class Cat(Animal):
+    def speak(self): print("야옹")
+
+# 종류를 구분하지 않고 같은 명령만 내림
+animals = [Dog("바둑이"), Cat("나비")]
+for a in animals:
+    a.speak()    # 멍멍 / 야옹  — 객체마다 다르게 동작</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 왜 좋은가</div>
+            <p>나중에 <code>Cow</code>(소) 클래스를 추가해도, <code>speak()</code>만 정의하면 위 반복문은 <strong>고치지 않아도</strong> 그대로 작동합니다. 확장에 강한 코드가 됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="abstraction">추상화</h2>
+          <p><strong>추상화(abstraction)</strong>는 <strong>복잡한 내부는 감추고 꼭 필요한 부분만 드러내는</strong> 것입니다. 자동차 운전자는 엔진의 작동 원리를 몰라도 핸들과 페달만으로 운전합니다. 핵심 기능만 단순한 인터페이스로 보여 주는 것이 추상화입니다.</p>
+          <p>OOP에서는 <strong>추상 클래스</strong>로 "이런 기능을 반드시 만들어야 한다"는 틀만 정하고, 구체적인 내용은 자식 클래스가 채우게 합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">abstraction.py</span></div>
+            <pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Shape(ABC):               # 추상 클래스(틀)
+    @abstractmethod
+    def area(self):             # "넓이는 반드시 구현하라"는 약속
+        pass
+
+class Circle(Shape):
+    def __init__(self, r): self.r = r
+    def area(self):             # 약속을 구체적으로 채움
+        return 3.14 * self.r * self.r
+
+c = Circle(5)
+print(c.area())   # 78.5
+# Shape()         # 추상 클래스는 직접 객체로 못 만듦(에러)</code></pre>
+          </div>
+          <table>
+            <thead><tr><th>개념</th><th>핵심 비유</th><th>한 줄 요약</th></tr></thead>
+            <tbody>
+              <tr><td>캡슐화</td><td>약 캡슐</td><td>데이터를 숨기고 통로로만 접근</td></tr>
+              <tr><td>상속</td><td>유전</td><td>부모의 기능을 물려받기</td></tr>
+              <tr><td>다형성</td><td>같은 명령, 다른 반응</td><td>객체마다 자기 방식으로 동작</td></tr>
+              <tr><td>추상화</td><td>자동차 핸들</td><td>핵심만 드러내고 내부는 숨김</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="anchor">
+          <h2 id="solid">SOLID 간단 소개</h2>
+          <p><strong>SOLID</strong>는 객체지향 설계를 <strong>튼튼하고 고치기 쉽게</strong> 만드는 다섯 가지 원칙의 머리글자입니다. 지금은 이름과 핵심 한 줄만 기억해 두고, 나중에 코드가 커질 때 다시 보면 깊이 이해됩니다.</p>
+          <table>
+            <thead><tr><th>글자</th><th>원칙</th><th>핵심 한 줄</th></tr></thead>
+            <tbody>
+              <tr><td><code>S</code></td><td>단일 책임</td><td>클래스는 한 가지 일만 책임진다</td></tr>
+              <tr><td><code>O</code></td><td>개방-폐쇄</td><td>확장엔 열려 있고, 수정엔 닫혀 있다</td></tr>
+              <tr><td><code>L</code></td><td>리스코프 치환</td><td>자식은 부모 자리에 넣어도 잘 돌아간다</td></tr>
+              <tr><td><code>I</code></td><td>인터페이스 분리</td><td>안 쓰는 기능까지 떠안기지 않는다</td></tr>
+              <tr><td><code>D</code></td><td>의존성 역전</td><td>구체적인 것보다 추상적인 것에 의존한다</td></tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            <div class="callout-title">📌 한마디로</div>
+            <p>SOLID의 목적은 단 하나, <strong>"나중에 바꾸기 쉬운 코드"</strong>를 만드는 것입니다. 요구사항은 항상 변하기 때문에, 변화에 강한 구조가 좋은 설계입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="constructor">
+          <h2>생성자와 초기화</h2>
+          <p>객체가 태어나는 순간 호출되는 특별한 메서드가 <strong>생성자(constructor)</strong>입니다. 파이썬에서는 <code>__init__</code>이 그 역할을 합니다. 객체가 처음부터 <strong>올바른 상태</strong>를 갖도록 속성에 초깃값을 넣어 주는 것이 핵심입니다. 생성자를 잘 쓰면 "값을 빠뜨린 반쪽짜리 객체"가 만들어지는 일을 막을 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="생성자 호출 흐름">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="50" width="120" height="36" fill="#1c232c" stroke="#58a6ff" stroke-width="2"/><text x="80" y="73" fill="#c9d1d9" text-anchor="middle">User("민수")</text>
+                <text x="80" y="40" fill="#8b949e" text-anchor="middle">객체 생성 요청</text>
+                <line x1="140" y1="68" x2="220" y2="68" stroke="#3fb950" stroke-width="2" marker-end="url(#ctora)"/>
+                <rect x="225" y="40" width="150" height="56" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+                <text x="300" y="62" fill="#bc8cff" text-anchor="middle">__init__ 호출</text>
+                <text x="300" y="82" fill="#c9d1d9" text-anchor="middle">self.name = "민수"</text>
+              </g>
+              <defs><marker id="ctora" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker></defs>
+            </svg>
+            <div class="caption">객체를 만드는 순간, 생성자가 자동으로 불려 초기 상태를 채운다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">constructor.py</span></div>
+            <pre><code class="language-python">class User:
+    def __init__(self, name, age=0):   # 생성자: 기본값도 줄 수 있음
+        self.name = name               # 필수 속성 초기화
+        self.age = age
+        self.active = True             # 만들어질 때부터 활성 상태
+
+u = User("민수", 20)
+print(u.name, u.age, u.active)   # 민수 20 True
+g = User("게스트")               # age 생략 → 기본값 0
+print(g.age)                     # 0</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 기본값 인자</div>
+            <p>생성자 매개변수에 <code>age=0</code>처럼 기본값을 주면, 호출할 때 생략할 수 있습니다. 단, 기본값으로 <strong>리스트·딕셔너리 같은 가변 객체</strong>는 피하세요. 모든 객체가 같은 리스트를 공유하는 함정이 있습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="instance-vs-class-var">
+          <h2>인스턴스 변수 vs 클래스 변수</h2>
+          <p>속성에는 두 종류가 있습니다. <strong>인스턴스 변수</strong>는 <code>self.x</code>처럼 객체마다 따로 갖는 값이고, <strong>클래스 변수</strong>는 클래스 본문에 직접 쓴, <strong>모든 객체가 공유</strong>하는 값입니다. "이 값은 객체별로 다른가, 아니면 종 전체가 같은가?"를 기준으로 고릅니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="인스턴스 변수와 클래스 변수">
+              <g font-family="monospace" font-size="12">
+                <rect x="140" y="15" width="120" height="40" fill="#161b22" stroke="#bc8cff" stroke-width="2"/><text x="200" y="33" fill="#bc8cff" text-anchor="middle">Dog 클래스</text><text x="200" y="48" fill="#8b949e" text-anchor="middle">species="개" (공유)</text>
+                <line x1="200" y1="55" x2="90" y2="95" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="200" y1="55" x2="310" y2="95" stroke="#30363d" stroke-width="1.5"/>
+                <rect x="30" y="95" width="120" height="50" fill="#1c232c" stroke="#3fb950"/><text x="90" y="115" fill="#c9d1d9" text-anchor="middle">바둑이</text><text x="90" y="133" fill="#8b949e" text-anchor="middle">name (개별)</text>
+                <rect x="250" y="95" width="120" height="50" fill="#1c232c" stroke="#3fb950"/><text x="310" y="115" fill="#c9d1d9" text-anchor="middle">초코</text><text x="310" y="133" fill="#8b949e" text-anchor="middle">name (개별)</text>
+              </g>
+            </svg>
+            <div class="caption">species는 클래스가 공유, name은 객체마다 따로</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">class_var.py</span></div>
+            <pre><code class="language-python">class Dog:
+    species = "개"              # 클래스 변수: 모든 객체 공유
+    def __init__(self, name):
+        self.name = name        # 인스턴스 변수: 객체마다 따로
+
+a = Dog("바둑이"); b = Dog("초코")
+print(a.species, b.species)    # 개 개  ← 공유
+print(a.name, b.name)          # 바둑이 초코  ← 개별
+
+Dog.species = "강아지"         # 클래스 변수 변경 → 모두에 반영
+print(a.species, b.species)    # 강아지 강아지</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 흔한 함정</div>
+            <p>클래스 변수를 카운터처럼 쓸 땐 <code>Dog.count += 1</code>로 클래스에 접근하세요. <code>self.count += 1</code>은 그 객체만의 인스턴스 변수를 새로 만들어, 공유가 깨집니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="static-classmethod">
+          <h2>정적 메서드와 클래스 메서드</h2>
+          <p>메서드에도 세 종류가 있습니다. 보통의 <strong>인스턴스 메서드</strong>는 <code>self</code>를 받아 그 객체를 다루고, <strong>클래스 메서드</strong>(<code>@classmethod</code>)는 <code>cls</code>를 받아 클래스 자체를 다룹니다. <strong>정적 메서드</strong>(<code>@staticmethod</code>)는 둘 다 받지 않는, 그저 클래스 안에 모아 둔 일반 함수입니다.</p>
+          <table>
+            <thead><tr><th>종류</th><th>첫 인자</th><th>주로 하는 일</th></tr></thead>
+            <tbody>
+              <tr><td>인스턴스 메서드</td><td><code>self</code></td><td>객체의 속성을 읽고 바꿈</td></tr>
+              <tr><td>클래스 메서드</td><td><code>cls</code></td><td>대체 생성자, 클래스 변수 관리</td></tr>
+              <tr><td>정적 메서드</td><td>없음</td><td>관련 있는 유틸리티 계산</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">methods.py</span></div>
+            <pre><code class="language-python">class Pizza:
+    def __init__(self, size):
+        self.size = size
+
+    @classmethod
+    def large(cls):              # 대체 생성자: 큰 피자를 쉽게 생성
+        return cls(40)           # cls() = Pizza()
+
+    @staticmethod
+    def is_valid_size(size):     # self/cls 불필요한 순수 계산
+        return 10 &lt;= size &lt;= 50
+
+big = Pizza.large()             # 객체 없이 클래스로 호출
+print(big.size)                 # 40
+print(Pizza.is_valid_size(5))   # False</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 클래스 메서드의 대표 쓰임</div>
+            <p>입력 형식이 여러 가지일 때 <code>from_string()</code>, <code>from_json()</code> 같은 <strong>대체 생성자</strong>를 클래스 메서드로 만들면, 생성 방법을 깔끔하게 여러 개 제공할 수 있습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="operator-overloading">
+          <h2>연산자 오버로딩</h2>
+          <p><strong>연산자 오버로딩(operator overloading)</strong>은 <code>+</code>·<code>==</code>·<code>&lt;</code> 같은 연산자가 <strong>내 클래스의 객체에도 자연스럽게 동작</strong>하도록 정의하는 것입니다. 파이썬은 <code>__add__</code>, <code>__eq__</code>, <code>__len__</code> 같은 특수 메서드(던더 메서드)를 보고 연산자를 처리합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">vector.py</span></div>
+            <pre><code class="language-python">class Vector:
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
+    def __add__(self, other):           # v1 + v2 처리
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __eq__(self, other):            # v1 == v2 처리
+        return self.x == other.x and self.y == other.y
+
+    def __repr__(self):                 # print() 표현
+        return f"Vector({self.x}, {self.y})"
+
+v = Vector(1, 2) + Vector(3, 4)
+print(v)               # Vector(4, 6)
+print(v == Vector(4, 6))   # True</code></pre>
+          </div>
+          <table>
+            <thead><tr><th>연산자</th><th>특수 메서드</th></tr></thead>
+            <tbody>
+              <tr><td><code>+</code> / <code>-</code></td><td><code>__add__</code> / <code>__sub__</code></td></tr>
+              <tr><td><code>==</code> / <code>&lt;</code></td><td><code>__eq__</code> / <code>__lt__</code></td></tr>
+              <tr><td><code>len(x)</code></td><td><code>__len__</code></td></tr>
+              <tr><td><code>str(x)</code> / print</td><td><code>__str__</code> / <code>__repr__</code></td></tr>
+            </tbody>
+          </table>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 과하면 독</div>
+            <p>의미가 명확할 때만 쓰세요. <code>+</code>가 "더하기"처럼 직관적이어야 합니다. 억지로 오버로딩하면 읽는 사람이 동작을 예측하지 못해 오히려 혼란스럽습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="composition-vs-inheritance">
+          <h2>컴포지션 vs 상속</h2>
+          <p>코드를 재사용하는 방법은 상속만 있는 게 아닙니다. <strong>컴포지션(composition)</strong>은 한 객체가 다른 객체를 <strong>속성으로 품어</strong> 그 기능을 빌려 쓰는 방식입니다. 상속이 "~는 ~의 한 종류다(is-a)"라면, 컴포지션은 "~는 ~를 가지고 있다(has-a)"입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="컴포지션과 상속 비교">
+              <g font-family="monospace" font-size="11">
+                <text x="100" y="20" fill="#8b949e" text-anchor="middle">상속 (is-a)</text>
+                <rect x="55" y="30" width="90" height="32" fill="#161b22" stroke="#58a6ff"/><text x="100" y="50" fill="#c9d1d9" text-anchor="middle">Animal</text>
+                <line x1="100" y1="62" x2="100" y2="92" stroke="#30363d" stroke-width="1.5" marker-end="url(#cmp1)"/>
+                <rect x="55" y="95" width="90" height="32" fill="#161b22" stroke="#3fb950"/><text x="100" y="115" fill="#c9d1d9" text-anchor="middle">Dog</text>
+                <text x="320" y="20" fill="#8b949e" text-anchor="middle">컴포지션 (has-a)</text>
+                <rect x="275" y="30" width="90" height="32" fill="#161b22" stroke="#bc8cff"/><text x="320" y="50" fill="#c9d1d9" text-anchor="middle">Car</text>
+                <line x1="320" y1="62" x2="320" y2="92" stroke="#d29922" stroke-width="1.5" marker-end="url(#cmp2)"/>
+                <rect x="275" y="95" width="90" height="32" fill="#1c232c" stroke="#d29922"/><text x="320" y="115" fill="#c9d1d9" text-anchor="middle">Engine</text>
+              </g>
+              <defs>
+                <marker id="cmp1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#30363d"/></marker>
+                <marker id="cmp2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">Dog는 Animal의 한 종류, Car는 Engine을 부품으로 가짐</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">composition.py</span></div>
+            <pre><code class="language-python">class Engine:
+    def start(self):
+        print("부릉~ 시동")
+
+class Car:
+    def __init__(self):
+        self.engine = Engine()    # Car는 Engine을 "가지고 있다"
+    def drive(self):
+        self.engine.start()       # 품은 객체의 기능을 빌려 씀
+        print("출발!")
+
+Car().drive()      # 부릉~ 시동 / 출발!</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 언제 무엇을?</div>
+            <p>"<strong>~는 ~의 한 종류</strong>"가 자연스러우면 상속, "<strong>~는 ~를 부품으로 갖는다</strong>"가 자연스러우면 컴포지션입니다. 실무에서는 상속이 결합을 강하게 만들어 변경이 어려워지므로, <strong>"상속보다 컴포지션을 선호하라"</strong>는 격언이 널리 통합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="abstract-interface">
+          <h2>추상 클래스와 인터페이스</h2>
+          <p>추상화 절에서 본 추상 클래스를 더 깊이 봅니다. <strong>추상 클래스</strong>는 일부 기능은 구현해 두고, 일부는 "반드시 채워라"는 빈칸(추상 메서드)으로 남긴 클래스입니다. <strong>인터페이스</strong>는 한발 더 나아가, <strong>구현 없이 "이런 메서드들을 제공하라"는 약속(규격)</strong>만 정의합니다.</p>
+          <p>자바에는 <code>interface</code> 키워드가 따로 있지만, 파이썬에서는 모든 메서드가 추상 메서드인 추상 클래스로 인터페이스를 흉내 냅니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">interface.py</span></div>
+            <pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Payment(ABC):              # 인터페이스 역할: 결제 규격
+    @abstractmethod
+    def pay(self, amount): ...   # "결제 기능을 반드시 제공하라"
+
+class CardPayment(Payment):
+    def pay(self, amount):
+        print(f"카드로 {amount}원 결제")
+
+class KakaoPayment(Payment):
+    def pay(self, amount):
+        print(f"카카오페이로 {amount}원 결제")
+
+def checkout(method: Payment, amount):   # 규격에만 의존
+    method.pay(amount)
+
+checkout(CardPayment(), 5000)    # 카드로 5000원 결제
+checkout(KakaoPayment(), 3000)   # 카카오페이로 3000원 결제</code></pre>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>추상 클래스</th><th>인터페이스</th></tr></thead>
+            <tbody>
+              <tr><td>구현</td><td>일부 구현 가능</td><td>원칙적으로 규격만</td></tr>
+              <tr><td>강조점</td><td>"무엇인가(is-a)"</td><td>"무엇을 할 수 있는가"</td></tr>
+              <tr><td>다중 적용</td><td>보통 하나만</td><td>여러 개 동시에 가능</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 왜 규격에 의존하나</div>
+            <p><code>checkout()</code>은 결제 수단이 카드인지 카카오인지 몰라도 됩니다. 오직 "pay 할 수 있다"는 약속만 믿습니다. 새 결제 수단이 생겨도 <code>checkout()</code>은 고치지 않습니다 — 이것이 다형성과 SOLID의 D(의존성 역전)가 빛나는 순간입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="design-patterns">
+          <h2>디자인 패턴 입문 (싱글톤·팩토리)</h2>
+          <p><strong>디자인 패턴(design pattern)</strong>은 자주 마주치는 설계 문제에 대해 <strong>선배 개발자들이 정리해 둔 검증된 해법</strong>입니다. 바퀴를 다시 발명하지 않도록, 이름과 구조를 공유합니다. 가장 자주 들리는 두 가지를 가볍게 맛봅니다.</p>
+          <p><strong>싱글톤(Singleton)</strong>은 "이 클래스의 객체는 <strong>딱 하나만</strong> 존재해야 한다"를 보장합니다. 설정값·로그 관리자처럼 전역에 하나면 충분한 것에 씁니다. <strong>팩토리(Factory)</strong>는 "<strong>어떤 객체를 만들지 결정하는 일</strong>"을 별도 함수/클래스에 맡겨, 사용하는 쪽이 구체 클래스를 직접 알지 않게 합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">singleton.py</span></div>
+            <pre><code class="language-python">class Config:
+    _instance = None                      # 유일한 객체를 담을 자리
+    def __new__(cls):
+        if cls._instance is None:         # 없으면 한 번만 생성
+            cls._instance = super().__new__(cls)
+        return cls._instance              # 항상 같은 객체 반환
+
+a = Config(); b = Config()
+print(a is b)        # True — 둘은 같은 하나의 객체</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">factory.py</span></div>
+            <pre><code class="language-python">class Dog:
+    def speak(self): return "멍멍"
+class Cat:
+    def speak(self): return "야옹"
+
+def animal_factory(kind):        # 무엇을 만들지 여기서 결정
+    return {"dog": Dog, "cat": Cat}[kind]()
+
+pet = animal_factory("dog")      # 사용하는 쪽은 Dog를 직접 몰라도 됨
+print(pet.speak())               # 멍멍</code></pre>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚨 패턴은 도구, 목적이 아니다</div>
+            <p>패턴을 외워 억지로 끼워 맞추면 코드가 더 복잡해집니다. "이 문제가 정말 그 패턴이 푸는 문제인가?"를 먼저 물으세요. 싱글톤은 전역 상태를 만들어 테스트를 어렵게 한다는 비판도 있으니 남용은 금물입니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>객체지향은 데이터(속성)와 기능(행동)을 객체라는 한 덩어리로 묶는 방식이다.</li>
+            <li>클래스는 설계도, 객체는 그 설계도로 만든 실제 물건이다.</li>
+            <li>캡슐화는 내부를 숨겨 보호하고, 상속은 기능을 물려받아 중복을 줄인다.</li>
+            <li>다형성은 같은 명령이 객체마다 다르게 동작하게, 추상화는 핵심만 드러낸다.</li>
+            <li>SOLID는 변화에 강하고 고치기 쉬운 코드를 위한 다섯 가지 설계 원칙이다.</li>
+            <li>생성자(__init__)는 객체가 처음부터 올바른 상태를 갖게 초기화한다.</li>
+            <li>인스턴스 변수는 객체별로, 클래스 변수는 모든 객체가 공유한다.</li>
+            <li>클래스 메서드(cls)는 대체 생성자에, 정적 메서드는 순수 계산에 쓴다.</li>
+            <li>연산자 오버로딩은 던더 메서드로 +·== 등을 내 객체에 맞게 정의한다.</li>
+            <li>코드 재사용은 상속(is-a)보다 컴포지션(has-a)을 먼저 고려한다.</li>
+            <li>인터페이스는 "무엇을 할 수 있는가"라는 약속만 정의해 결합을 낮춘다.</li>
+            <li>디자인 패턴(싱글톤·팩토리)은 검증된 해법이지만 남용하면 독이다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>클래스 / 객체</dt><dd>클래스는 설계도, 객체는 그것으로 만든 실제 인스턴스.</dd></dl>
+          <dl class="term"><dt>캡슐화(Encapsulation)</dt><dd>내부 데이터를 숨기고 정해진 메서드로만 접근하게 함.</dd></dl>
+          <dl class="term"><dt>상속(Inheritance)</dt><dd>기존 클래스의 속성과 기능을 물려받아 새 클래스를 만듦.</dd></dl>
+          <dl class="term"><dt>다형성(Polymorphism)</dt><dd>같은 이름의 명령이 객체에 따라 다르게 동작하는 성질.</dd></dl>
+          <dl class="term"><dt>추상화(Abstraction)</dt><dd>복잡한 내부는 감추고 꼭 필요한 부분만 드러냄.</dd></dl>
+          <dl class="term"><dt>SOLID</dt><dd>고치기 쉬운 객체지향 설계를 위한 다섯 가지 원칙.</dd></dl>
+          <dl class="term"><dt>생성자(Constructor)</dt><dd>객체가 생성될 때 자동 호출되어 초기 상태를 채우는 메서드(파이썬 __init__).</dd></dl>
+          <dl class="term"><dt>클래스 변수 / 인스턴스 변수</dt><dd>각각 모든 객체가 공유하는 값과, 객체마다 따로 갖는 값.</dd></dl>
+          <dl class="term"><dt>클래스 메서드 / 정적 메서드</dt><dd>cls로 클래스를 다루는 메서드 / self·cls 없이 클래스에 모아 둔 함수.</dd></dl>
+          <dl class="term"><dt>연산자 오버로딩</dt><dd>__add__·__eq__ 같은 특수 메서드로 연산자를 내 클래스에 맞게 정의하는 것.</dd></dl>
+          <dl class="term"><dt>컴포지션(Composition)</dt><dd>다른 객체를 속성으로 품어 기능을 빌려 쓰는 has-a 재사용 방식.</dd></dl>
+          <dl class="term"><dt>인터페이스(Interface)</dt><dd>구현 없이 "이런 기능을 제공하라"는 약속(규격)만 정의한 것.</dd></dl>
+          <dl class="term"><dt>디자인 패턴(Design Pattern)</dt><dd>자주 만나는 설계 문제에 대해 정리된 검증된 해법(싱글톤·팩토리 등).</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 30 - Firebase와 BaaS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Code block */
+    .code-block {
+      margin-top: 2rem;
+      padding: 1.4rem 1.6rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: 3px solid #6ee7b7;
+      border-radius: 10px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #e0e0e0;
+      line-height: 1.7;
+      max-width: 1000px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .code-block .kw { color: #f472b6; }
+    .code-block .str { color: #6ee7b7; }
+    .code-block .com { color: #666; font-style: italic; }
+    .code-block .fn { color: #60a5fa; }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 30 · Part 6 서버/DB</div>
+      <h1>Firebase와<br/>BaaS</h1>
+      <h3>서버 코드 한 줄 없이 — 풀스택 앱을 만드는 가장 빠른 길</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">☁️</div>
+          <div class="card-title">BaaS의 정체</div>
+          <div class="card-desc">Backend as a Service가 무엇이고 왜 입문자에게 유용한지 설명할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔥</div>
+          <div class="card-title">Firebase 핵심 기능</div>
+          <div class="card-desc">Firestore, Authentication, Storage가 각각 무엇을 담당하는지 구분한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <div class="card-title">서버 없는 데이터 흐름</div>
+          <div class="card-desc">서버 코드를 직접 쓰지 않고 데이터를 저장·조회하는 흐름을 이해한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">BaaS</span>가<br/>필요할까?</h2>
+      <p>
+        앱 하나를 만들려고 했더니 <span class="highlight-pink">서버, DB, 로그인, 파일 업로드</span>를<br/>
+        전부 직접 구축해야 한다면? 본업(앱 만들기)에 도달하기까지 너무 멀다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        BaaS는 <span class="highlight">"이미 다 만들어진 백엔드"</span>를 빌려 쓰는 방식이다.<br/>
+        프론트엔드 코드 몇 줄로 <span class="highlight-blue">로그인·DB·파일 저장</span>이 끝난다.
+      </p>
+    </div>
+
+    <!-- 4. BaaS vs 직접 구축 -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <h2>직접 구축 <span class="highlight">vs</span> BaaS</h2>
+      <p>같은 결과물을 만드는 데 걸리는 시간과 노력의 차이</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 직접 구축</div>
+          <ul>
+            <li>서버 임대 · OS 설치 · DB 설치</li>
+            <li>인증 시스템 직접 구현 (수일~수주)</li>
+            <li>파일 업로드 서버 · 보안 · 백업까지</li>
+            <li>장애 대응 · 모니터링 · 운영 부담</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ BaaS 사용</div>
+          <ul>
+            <li>웹 콘솔에서 프로젝트 생성 (수 분)</li>
+            <li>로그인 토글 한 번으로 인증 완성</li>
+            <li>이미지 업로드 함수 한 줄로 끝</li>
+            <li>운영·백업·확장은 제공자가 책임</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Firebase 핵심 기능 4인방 -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <h2>Firebase <span class="highlight">핵심 4인방</span></h2>
+      <p>풀스택 앱이 필요로 하는 거의 모든 백엔드 기능을 한 묶음으로 제공한다.</p>
+      <div class="card-grid four-col">
+        <div class="card">
+          <div class="card-icon">📂</div>
+          <div class="card-title">Firestore</div>
+          <div class="card-desc">문서·컬렉션 구조의 <span class="highlight">NoSQL DB</span>. 실시간 동기화 지원</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <div class="card-title">Authentication</div>
+          <div class="card-desc">이메일·구글·깃허브 로그인을 <span class="highlight-blue">몇 줄</span>로 연동</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗄️</div>
+          <div class="card-title">Storage</div>
+          <div class="card-desc">이미지·동영상·파일을 업로드·다운로드하는 <span class="highlight-yellow">클라우드 저장소</span></div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Hosting</div>
+          <div class="card-desc">정적 웹사이트를 <span class="highlight-pink">CDN</span>으로 빠르게 배포</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Firebase Console -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <div class="big-emoji">🖥️</div>
+      <h2>Firebase Console —<br/><span class="highlight-blue">웹 화면에서 다 된다</span></h2>
+      <p>코드 없이도 프로젝트 관리, 데이터 확인, 사용자 관리가 가능하다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">프로젝트 생성</div>
+            <div class="step-desc">console.firebase.google.com에서 클릭 몇 번으로 새 프로젝트 시작</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">기능 활성화</div>
+            <div class="step-desc">Firestore, Authentication, Storage를 토글로 켜기만 하면 사용 가능</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">데이터 직접 확인</div>
+            <div class="step-desc">저장된 문서를 표 형태로 보고, 직접 추가·수정·삭제할 수 있다</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">사용자 관리</div>
+            <div class="step-desc">가입한 사용자 목록 확인, 비밀번호 재설정 메일 보내기까지</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Firestore 구조 -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">📂</div>
+      <h2>Firestore —<br/><span class="highlight">문서와 컬렉션</span></h2>
+      <p>표(Table)가 아니라 <span class="highlight-blue">문서(Document)</span>와 <span class="highlight-yellow">컬렉션(Collection)</span>이라는 NoSQL 구조다.</p>
+      <div class="flow">
+        <div class="flow-item">📁 <strong>users</strong><br/>(컬렉션)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">📄 user_001<br/>(문서)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">{ name: "민수",<br/>email: "..." }</div>
+      </div>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight">컬렉션</span> = 폴더, <span class="highlight-blue">문서</span> = JSON 파일.<br/>
+        문서 안에 또 다른 컬렉션을 중첩할 수도 있다.
+      </p>
+    </div>
+
+    <!-- 8. SDK 코드 예시 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <div class="big-emoji">⚡</div>
+      <h2>SDK —<br/><span class="highlight">React에서 바로 호출</span></h2>
+      <p><code>firebase-js-sdk</code>를 설치하면, 서버 한 줄 없이도 데이터를 읽고 쓸 수 있다.</p>
+      <div class="code-block"><span class="com">// 1. SDK import</span>
+<span class="kw">import</span> { initializeApp } <span class="kw">from</span> <span class="str">"firebase/app"</span>;
+<span class="kw">import</span> { getFirestore, collection, addDoc } <span class="kw">from</span> <span class="str">"firebase/firestore"</span>;
+
+<span class="com">// 2. 초기화</span>
+<span class="kw">const</span> app = <span class="fn">initializeApp</span>(firebaseConfig);
+<span class="kw">const</span> db = <span class="fn">getFirestore</span>(app);
+
+<span class="com">// 3. 데이터 추가 — 서버 코드 0줄!</span>
+<span class="kw">await</span> <span class="fn">addDoc</span>(<span class="fn">collection</span>(db, <span class="str">"posts"</span>), {
+  title: <span class="str">"첫 글"</span>,
+  createdAt: <span class="kw">new</span> <span class="fn">Date</span>()
+});</div>
+    </div>
+
+    <!-- 9. Authentication -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">🔐</div>
+      <h2>Authentication —<br/><span class="highlight-blue">로그인을 몇 줄로</span></h2>
+      <p>이메일·비밀번호부터 SNS 로그인까지, 인증 시스템을 직접 만들 필요가 없다.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📧</div>
+          <div class="feature-name">이메일</div>
+          <div class="feature-sub">+ 비밀번호</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🟡</div>
+          <div class="feature-name">Google</div>
+          <div class="feature-sub">OAuth 로그인</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚫</div>
+          <div class="feature-name">GitHub</div>
+          <div class="feature-sub">개발자 친화</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍎</div>
+          <div class="feature-name">Apple</div>
+          <div class="feature-sub">iOS 필수</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📘</div>
+          <div class="feature-name">Facebook</div>
+          <div class="feature-sub">SNS 연동</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-name">전화번호</div>
+          <div class="feature-sub">SMS 인증</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <div class="feature-name">익명</div>
+          <div class="feature-sub">게스트 모드</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔗</div>
+          <div class="feature-name">맞춤 토큰</div>
+          <div class="feature-sub">자체 서버 연동</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Storage 흐름 -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <div class="big-emoji">🗄️</div>
+      <h2>Storage —<br/><span class="highlight">파일 업로드 흐름</span></h2>
+      <p>이미지나 동영상을 클라우드에 업로드하고 URL로 받아오는 과정.</p>
+      <div class="flow">
+        <div class="flow-item">📷 사용자<br/>파일 선택</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.08);">🚀 SDK<br/>uploadBytes()</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">☁️ Firebase<br/>Storage</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">🔗 다운로드<br/>URL 발급</div>
+      </div>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight-yellow">발급받은 URL</span>을 Firestore 문서에 저장하면 끝 — <br/>
+        이미지·동영상이 들어가는 앱이 <span class="highlight">서버 없이</span> 완성된다.
+      </p>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">🏢</div>
+      <h2>Firebase는 <span class="highlight">풀옵션 사무실</span>이다</h2>
+      <p>건물을 직접 짓지 말고, 이미 갖춰진 사무실에 입주해서 일만 하자.</p>
+      <div class="analogy">
+        <div class="analogy-title">🏢 풀옵션 사무실 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">사무실 임대</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">Firebase</span> 프로젝트 생성</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">책상·캐비넷</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">Firestore</span> — 데이터 저장 공간</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">출입증 발급기</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">Authentication</span> — 사용자 신원 확인</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">창고·자료실</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">Storage</span> — 파일·이미지 보관소</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">건물 짓기</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">서버를 직접 구축 — 본업 아닌 일에 시간 낭비</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI와 대화 -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI에게 이렇게 물어요</span></h2>
+      <p>BaaS 개념을 알면 Firebase 관련 질문의 정확도가 확 올라간다.</p>
+      <div class="chat">
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble">서버 없이 로그인 기능 만들 수 있어?</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">목적과 환경을 알려주시면 더 좋은 답을 드릴 수 있습니다.</div>
+        </div>
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble" style="background:rgba(110,231,183,0.15);">React 앱에 Firebase Authentication으로 Google 로그인을 붙이고, 사용자 정보를 Firestore의 users 컬렉션에 저장하는 코드 보여줘.</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">네! signInWithPopup으로 구글 로그인을 호출하고, 성공 콜백에서 setDoc으로 users/{uid} 문서를 만들면 됩니다. 전체 코드를 보여드리겠습니다...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">☁️</div>
+          <div class="summary-label">BaaS</div>
+          <div class="summary-desc">백엔드를 직접 구축<br/>대신 빌려 쓰는 방식</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔥</div>
+          <div class="summary-label">Firebase</div>
+          <div class="summary-desc">Google이 제공하는<br/>대표적인 BaaS</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📂</div>
+          <div class="summary-label">Firestore</div>
+          <div class="summary-desc">문서·컬렉션 구조의<br/>NoSQL 실시간 DB</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔐</div>
+          <div class="summary-label">Authentication</div>
+          <div class="summary-desc">이메일·SNS 로그인을<br/>몇 줄로 연동</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🗄️</div>
+          <div class="summary-label">Storage</div>
+          <div class="summary-desc">이미지·파일을 위한<br/>클라우드 저장소</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚡</div>
+          <div class="summary-label">SDK</div>
+          <div class="summary-desc">firebase-js-sdk로<br/>프론트에서 바로 호출</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. 다음 -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 31 · 인증과 보안 기초</span></h2>
+      <p>
+        BaaS를 쓰더라도 <span class="highlight-pink">보안은 직접 신경 써야</span> 한다.<br/>
+        인증과 인가의 차이, JWT의 동작 원리, XSS·CSRF·SQL 인젝션 — <span class="highlight-blue">실전 보안의 기초</span>를 배운다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> Firebase = 풀옵션 사무실. 입주만 하면 책상·캐비넷·출입증이 다 있다.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

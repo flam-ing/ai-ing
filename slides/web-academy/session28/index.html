@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 28 - REST API와 데이터 교환</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+    .step-list { margin-top: 2rem; max-width: 900px; }
+    .step { display: flex; gap: 1.2rem; padding: 1.1rem 0; align-items: flex-start; }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6ee7b7, #60a5fa); color: #0f0f1a; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+    .chat { margin-top: 2rem; max-width: 900px; display: flex; flex-direction: column; gap: 1rem; }
+    .chat-row { display: flex; gap: 1rem; align-items: flex-start; }
+    .chat-row.ai { flex-direction: row-reverse; }
+    .chat-avatar { font-size: 1.8rem; flex-shrink: 0; }
+    .chat-bubble { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0.9rem 1.2rem; font-size: 1rem; color: #e0e0e0; line-height: 1.6; max-width: 75%; }
+    .chat-row.ai .chat-bubble { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.2); }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 28 · Part 6 서버/DB</div>
+      <h1>REST API</h1>
+      <h3>URL로 자원을 가리키고, HTTP 메서드로 행위를 말한다 — 프론트와 백을 잇는 표준 언어</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📜</div>
+          <div class="card-title">REST 원칙</div>
+          <div class="card-desc">자원과 행위를 분리해 표현하는 설계 원칙을 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">엔드포인트 설계</div>
+          <div class="card-desc">URL과 HTTP 메서드의 조합을 읽고 설계한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">JSON</div>
+          <div class="card-desc">데이터 교환의 표준 형식을 다룬다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">REST</span>를<br/>표준처럼 쓸까?</h2>
+      <p>
+        서비스마다 <span class="highlight-blue">요청 방식이 제각각</span>이라면, 새 프로젝트마다 처음부터 배워야 한다.<br/>
+        REST는 <span class="highlight">"URL은 자원, 메서드는 행위"</span> 라는 단순한 규칙으로 이 혼란을 정리한다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        한 번 배우면 <span class="highlight-yellow">어느 회사 API든 같은 감각으로 읽을 수 있다.</span>
+      </p>
+    </div>
+
+    <!-- 4. HTTP 메서드 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>HTTP 메서드 — <span class="highlight">CRUD</span>의 네 동사</h2>
+      <p>같은 URL이라도 <span class="highlight-blue">어떤 메서드</span>로 호출하느냐에 따라 의미가 완전히 달라진다.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">👀</div>
+          <div class="feature-name">GET</div>
+          <div class="feature-sub">조회 · Read</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">➕</div>
+          <div class="feature-name">POST</div>
+          <div class="feature-sub">생성 · Create</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✏️</div>
+          <div class="feature-name">PUT</div>
+          <div class="feature-sub">수정 · Update</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🗑️</div>
+          <div class="feature-name">DELETE</div>
+          <div class="feature-sub">삭제 · Delete</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 심화A — REST API 설계 원칙 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">📜</div>
+      <h2>REST 원칙 —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>REST는 6가지 제약 조건을 가진 아키텍처 스타일이다. 핵심만 쉽게 이해하자.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">무상태 (Stateless)</div><div class="step-desc">각 요청은 독립적으로 완결되어야 한다. 서버는 이전 요청을 기억하지 않으므로 매 요청에 필요한 정보를 모두 담는다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">균일 인터페이스 (Uniform Interface)</div><div class="step-desc">URL로 자원을 식별하고, HTTP 메서드로 행위를 표현하는 일관된 방식. GET /users, DELETE /users/1처럼.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">클라이언트-서버 분리</div><div class="step-desc">UI(프론트)와 데이터 처리(백)를 분리. 각각 독립적으로 발전할 수 있고 다양한 클라이언트(웹·앱)가 같은 API를 사용한다.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">캐시 가능 (Cacheable)</div><div class="step-desc">응답에 캐시 가능 여부를 명시. GET 요청 결과를 브라우저가 캐시하면 동일 요청 시 서버 부하 없이 빠르게 반환.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 엔드포인트 예시 (구 5번) -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <h2>엔드포인트 <span class="highlight">실전 예시</span></h2>
+      <p>자원(users)을 두고 메서드와 경로를 조합해 네 가지 동작을 표현한다.</p>
+      <pre style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.2rem; font-family: 'Menlo', monospace; font-size: 0.95rem; color: #6ee7b7; overflow-x: auto; line-height: 1.6; max-width: 900px;"><code>GET    /api/users         → 사용자 목록 조회
+GET    /api/users/1       → id=1 사용자 단건 조회
+POST   /api/users         → 새 사용자 생성
+PUT    /api/users/1       → id=1 사용자 정보 수정
+DELETE /api/users/1       → id=1 사용자 삭제</code></pre>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight-yellow">핵심:</span> URL은 <span class="highlight">명사(자원)</span>, 메서드는 <span class="highlight-blue">동사(행위)</span>.
+      </p>
+    </div>
+
+    <!-- 7. 심화B — 날씨 앱 API 호출 flow -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🌤️</div>
+      <h2>날씨 앱 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>날씨 앱을 열 때 기상청 API를 호출하는 과정을 따라가보자.</p>
+      <div class="flow">
+        <div class="flow-item">앱 실행<br/><span style="font-size:0.85rem;color:#888;">위치 정보 획득</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">GET 요청<br/><span style="font-size:0.85rem;color:#888;">/weather?lat=37&lon=127</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">기상청 서버<br/><span style="font-size:0.85rem;color:#888;">DB 조회·처리</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">JSON 응답<br/><span style="font-size:0.85rem;color:#888;">화면에 날씨 표시</span></div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> URL에 위치 정보를 쿼리로 담아 GET 요청 → 서버는 JSON으로 응답. API 키로 사용자를 인증한다.</p>
+    </div>
+
+    <!-- 8. JSON (구 6번) -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">📦</div>
+      <h2>데이터의 공용어 — <span class="highlight-blue">JSON</span></h2>
+      <p>서버와 클라이언트가 주고받는 <span class="highlight">데이터 형식</span>. 사람과 기계 모두 읽기 쉽다.</p>
+      <pre style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.2rem; font-family: 'Menlo', monospace; font-size: 0.95rem; color: #6ee7b7; overflow-x: auto; line-height: 1.6; max-width: 900px;"><code>{
+  "id": 1,
+  "name": "김철수",
+  "age": 30,
+  "roles": ["admin", "user"]
+}</code></pre>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight-yellow">Postman</span> 같은 도구로 코드 없이도 요청을 보내고 응답을 확인할 수 있다.
+      </p>
+    </div>
+
+    <!-- 9. 실생활 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">👤</div><div class="card-title">카카오 로그인 API</div><div class="card-desc">앱에서 "카카오로 로그인" → 카카오 OAuth API 호출 → 사용자 토큰 발급 → 서비스 인증 완료</div></div>
+        <div class="card"><div class="card-icon">🗺️</div><div class="card-title">네이버 지도 API</div><div class="card-desc">배달앱 주소 검색 → 네이버 지도 API에 GET 요청 → 좌표 반환 → 지도에 핀 표시</div></div>
+        <div class="card"><div class="card-icon">💳</div><div class="card-title">결제 PG사 API</div><div class="card-desc">결제 버튼 클릭 → PG사 REST API에 POST 요청 → 결제 승인 JSON 응답 → 주문 완료 처리</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 매 서비스마다 로그인·지도·결제를 처음부터 직접 개발해야 했을 것이다.</p>
+    </div>
+
+    <!-- 10. 오해 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before"><div class="compare-label">❌ 흔한 오해</div><ul><li>API = 앱(Application)</li><li>REST API = HTTP 전부</li><li>API 키 = 비밀번호</li></ul></div>
+        <div class="compare-box after"><div class="compare-label">✓ 실제로는</div><ul><li>API는 Application Programming Interface — 소프트웨어 간 소통 규격</li><li>REST는 HTTP를 사용하는 아키텍처 스타일 중 하나 (GraphQL도 HTTP 사용)</li><li>API 키는 사용자 식별·사용량 추적 목적, 비밀번호와 용도가 다름</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 (구 7번) -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">📋</div>
+      <h2>REST API는 <span class="highlight">식당 메뉴판</span>이다</h2>
+      <p>메뉴에 따라 주문 방법이 정해져 있듯이, 엔드포인트마다 요청 규칙이 정해져 있다.</p>
+      <div class="analogy">
+        <div class="analogy-title">📋 메뉴판 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">메뉴 항목</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">엔드포인트</span> — /users, /orders ...</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">주문 방식</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">HTTP 메서드</span> — GET · POST · PUT · DELETE</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">그릇 규격</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">JSON 구조</span> — 정해진 키와 타입</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">주문서</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">Request Body</span> — POST/PUT 시 함께 보내는 데이터</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">날씨 API 연동하고 싶어요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">어떤 날씨 API를 사용하실 건가요? 무료 API가 여러 개 있어요.</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">OpenWeatherMap API를 JavaScript fetch로 호출해서 서울 현재 날씨를 표시하는 코드 작성해줘. API 키는 MY_KEY로 대체해서.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">fetch(`https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=MY_KEY&units=metric`) 으로 GET 요청하고 .then(res =&gt; res.json())으로 파싱하는 전체 코드를 작성해드릴게요.</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">REST API는 HTTP를 기반으로 URL(자원)과 메서드(행위)를 분리한 표준화된 데이터 교환 방식</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">REST API를 쓰면 실시간 데이터가 자동으로 업데이트된다 (Polling이나 WebSocket이 필요)</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">GET은 조회, POST는 생성, PUT은 수정, DELETE는 삭제 — URL은 명사, 메서드는 동사</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">API 키를 알면 해당 서비스의 모든 기능을 제한 없이 사용할 수 있다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 REST를 이해하면 모르는 API 문서도 URL과 메서드만 보면 바로 파악할 수 있어요!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 (구 8번) -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📜</div>
+          <div class="summary-label">REST</div>
+          <div class="summary-desc">URL = 자원<br/>메서드 = 행위</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔁</div>
+          <div class="summary-label">CRUD</div>
+          <div class="summary-desc">GET · POST<br/>PUT · DELETE</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔗</div>
+          <div class="summary-label">엔드포인트</div>
+          <div class="summary-desc">자원을 가리키는<br/>일관된 URL 체계</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📦</div>
+          <div class="summary-label">JSON</div>
+          <div class="summary-desc">데이터 교환의<br/>사실상 표준</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧪</div>
+          <div class="summary-label">Postman</div>
+          <div class="summary-desc">코드 없이<br/>API 테스트</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🌍</div>
+          <div class="summary-label">표준의 힘</div>
+          <div class="summary-desc">한 번 배우면<br/>어디든 적용</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 (구 9번) -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 29 · 관계형 데이터베이스 (SQL)</span></h2>
+      <p>
+        JavaScript로 서버 코드를 짜는 세상을 연 주인공.<br/>
+        <span class="highlight-blue">V8 엔진</span>, <span class="highlight-yellow">이벤트 루프</span>, 그리고 <span class="highlight-pink">Express</span>로 API 서버 만들기.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> REST는 <strong>URL = 명사, 메서드 = 동사</strong>라는 문법이다.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 37 - Vercel·Netlify 실전 배포</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 37 · Part 7 클라우드/배포</div>
+      <h1>Vercel·Netlify<br/>실전 배포</h1>
+      <h3>git push 한 번으로 — 전 세계에 내 사이트가 뜨는 마법</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">▲</div>
+          <div class="card-title">배포 플랫폼의 흐름</div>
+          <div class="card-desc">Vercel·Netlify 같은 정적/풀스택 배포 플랫폼의 핵심 흐름을 설명할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">GitHub 자동 배포</div>
+          <div class="card-desc">저장소를 연결해 push만으로 자동 배포되는 환경을 구성할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔑</div>
+          <div class="card-title">환경 변수와 프리뷰</div>
+          <div class="card-desc">API 키 관리법과 PR 프리뷰 배포의 역할을 이해한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">배포 플랫폼</span>을<br/>써야 할까?</h2>
+      <p>
+        예전엔 사이트 하나를 띄우려면 <span class="highlight-pink">서버 임대 → OS 설치 → Nginx 설정 → SSL 발급 → 배포 스크립트…</span><br/>
+        하루 종일 걸리던 일이 일상이었다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        지금은 <span class="highlight">"GitHub 저장소 연결" 버튼 한 번</span>이면 끝.<br/>
+        모든 자질구레한 인프라를 <span class="highlight-blue">Vercel·Netlify</span>가 대신 처리해준다.
+      </p>
+    </div>
+
+    <!-- 4. Vercel vs Netlify -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <h2>Vercel <span class="highlight">vs</span> Netlify</h2>
+      <p>둘 다 비슷한 철학 — 차이점도 알아두면 선택이 쉽다.</p>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color: rgba(110,231,183,0.4);">
+          <div class="card-icon">▲</div>
+          <div class="card-title" style="color:#6ee7b7;">Vercel</div>
+          <div class="card-desc">
+            • <strong>Next.js</strong>를 만든 회사가 운영<br/>
+            • Next.js·React 프로젝트에 최적화<br/>
+            • 서버리스 함수 + Edge 함수 강력<br/>
+            • 한국에서도 빠른 글로벌 CDN
+          </div>
+        </div>
+        <div class="card" style="border-color: rgba(96,165,250,0.4);">
+          <div class="card-icon">🟢</div>
+          <div class="card-title" style="color:#60a5fa;">Netlify</div>
+          <div class="card-desc">
+            • 정적 사이트 배포의 <strong>원조</strong><br/>
+            • 모든 프레임워크 폭넓게 지원<br/>
+            • Netlify Forms·Functions 풍부<br/>
+            • Jamstack 생태계의 중심
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💡 Next.js를 쓴다면 Vercel, 그 외엔 둘 다 좋다. 입문자는 어느 것을 골라도 무방.</p>
+    </div>
+
+    <!-- 5. 자동 배포 흐름 -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <div class="big-emoji">⚡</div>
+      <h2>자동 배포 <span class="highlight">4단계 흐름</span></h2>
+      <p>코드 한 줄 고치고 push 했을 뿐인데 — 1~2분 후 전 세계에 반영된다.</p>
+      <div class="flow">
+        <div class="flow-item">⌨️ 코드 수정<br/>git push</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.08);">🤖 자동<br/>빌드 시작</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.08);">📦 CDN으로<br/>배포</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">🔗 URL<br/>발급·갱신</div>
+      </div>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight-yellow">핵심:</span> 사람이 개입할 일이 없다.<br/>
+        <span class="highlight">Git이 곧 배포의 트리거</span> — 이걸 <strong>CI/CD</strong>라고 부른다.
+      </p>
+    </div>
+
+    <!-- 6. GitHub 연동 단계 -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <div class="big-emoji">🔗</div>
+      <h2>GitHub 연동 —<br/><span class="highlight-blue">처음 한 번이면 끝</span></h2>
+      <p>최초 설정만 마치면 이후로는 push만으로 모든 것이 자동화된다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Vercel·Netlify에 가입 (GitHub 계정으로)</div>
+            <div class="step-desc">별도 회원가입 없이 GitHub 계정으로 로그인하면 즉시 시작 가능</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">"Import Repository" 클릭</div>
+            <div class="step-desc">내 GitHub 저장소 목록이 뜨고, 배포할 프로젝트를 선택하면 끝</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">빌드 명령 자동 감지</div>
+            <div class="step-desc">Next.js·Vite·React 등 프레임워크를 자동 인식 — 보통 그대로 두면 된다</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Deploy 버튼 한 번</div>
+            <div class="step-desc">1~2분 후 <code>your-project.vercel.app</code> 같은 URL이 발급된다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 환경 변수 -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">🔑</div>
+      <h2>환경 변수 —<br/><span class="highlight">비밀을 안전하게</span></h2>
+      <p>API 키나 Firebase 설정값을 <span class="highlight-pink">코드에 그대로 박으면 안 된다</span> — GitHub에 올리는 순간 모두에게 공개된다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 위험한 방식</div>
+          <ul>
+            <li>API 키를 코드 파일에 하드코딩</li>
+            <li>git push 하면 전 세계가 본다</li>
+            <li>탈취되면 청구서가 폭탄</li>
+            <li>나중에 지워도 git 기록에 남음</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 환경 변수 사용</div>
+          <ul>
+            <li>Vercel·Netlify 대시보드에서 입력</li>
+            <li>코드는 <code>process.env.API_KEY</code>로 참조</li>
+            <li>Git에는 절대 노출되지 않음</li>
+            <li>환경별(개발/운영)로 다른 값 설정 가능</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. 프리뷰 배포 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <div class="big-emoji">👀</div>
+      <h2>프리뷰 배포 —<br/><span class="highlight-blue">머지 전에 미리 본다</span></h2>
+      <p>PR(Pull Request)을 만드는 순간, <span class="highlight">자동으로 임시 URL</span>이 생성된다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">기능 브랜치에서 작업</div>
+            <div class="step-desc">새 기능이나 디자인 변경을 별도 브랜치에서 진행</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">PR 생성 → 자동 빌드</div>
+            <div class="step-desc">Vercel/Netlify가 PR을 감지하고 별도의 임시 URL로 배포</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">팀·고객과 URL 공유</div>
+            <div class="step-desc">코드를 모르는 사람도 실제 동작하는 화면을 미리 확인 가능</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">검토 후 메인에 머지</div>
+            <div class="step-desc">문제없으면 메인 브랜치에 합치고 → 정식 URL에 자동 반영</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 커스텀 도메인 -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">🌐</div>
+      <h2>커스텀 도메인 —<br/><span class="highlight">내 이름으로 띄우기</span></h2>
+      <p><code>my-app.vercel.app</code> 대신 <span class="highlight-blue">mysite.com</span>을 쓰는 방법.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">도메인 구매</div>
+            <div class="step-desc">가비아·Namecheap·Cloudflare 등에서 원하는 주소 등록 (연 1~2만원)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Vercel에 도메인 추가</div>
+            <div class="step-desc">프로젝트 Settings → Domains에서 <code>mysite.com</code> 입력</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">DNS 레코드 설정</div>
+            <div class="step-desc">도메인 업체에서 알려주는 A 레코드 또는 CNAME을 입력 — 보통 5~30분 후 적용</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">HTTPS 자동 발급</div>
+            <div class="step-desc">Vercel/Netlify가 <span class="highlight">Let's Encrypt 인증서를 자동 발급·갱신</span> — 무료, 무설정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. 핵심 기능 한눈에 -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <h2>이 모든 게 <span class="highlight">자동</span>이다</h2>
+      <p>Vercel·Netlify가 push 한 번으로 처리해주는 일들.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔨</div>
+          <div class="feature-name">자동 빌드</div>
+          <div class="feature-sub">npm run build</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <div class="feature-name">글로벌 CDN</div>
+          <div class="feature-sub">전 세계 캐싱</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-name">HTTPS</div>
+          <div class="feature-sub">무료 자동 발급</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⏪</div>
+          <div class="feature-name">즉시 롤백</div>
+          <div class="feature-sub">한 번 클릭</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👀</div>
+          <div class="feature-name">프리뷰 URL</div>
+          <div class="feature-sub">PR마다 자동</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-name">접속 통계</div>
+          <div class="feature-sub">Analytics 내장</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-name">서버리스 함수</div>
+          <div class="feature-sub">API 엔드포인트</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📧</div>
+          <div class="feature-name">배포 알림</div>
+          <div class="feature-sub">Slack·이메일</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">📚</div>
+      <h2>Vercel은 <span class="highlight">출판사</span>다</h2>
+      <p>원고만 보내면 — 인쇄·제본·배송까지 출판사가 다 해준다. 글쓴이는 글에만 집중.</p>
+      <div class="analogy">
+        <div class="analogy-title">📚 출판사 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">원고 작성</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">코드 작성</span> — 내가 집중할 본업</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">원고 송부</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">git push</span> — 출판사에 원고 넘기기</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">교정·인쇄</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">자동 빌드</span> — npm run build 실행</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">전국 서점 배포</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">글로벌 CDN — 전 세계 데이터센터에 배포</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">시판본 발행</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">URL 발급</span> — 누구나 접속 가능한 주소</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">초판 미리 보기</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">프리뷰 배포 — PR마다 임시 URL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI와 대화 -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI에게 이렇게 물어요</span></h2>
+      <p>배포 흐름을 알면 막히는 지점을 정확하게 설명할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble">사이트가 안 떠요</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">어디서 어떻게 안 뜨는지 더 자세히 알려주실 수 있나요?</div>
+        </div>
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble" style="background:rgba(110,231,183,0.15);">Vercel에 Next.js 앱을 배포했는데 빌드는 성공인데 화면이 흰 페이지야. 환경 변수에 NEXT_PUBLIC_API_URL을 넣었는데 undefined로 찍혀. 어디를 확인해야 해?</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">NEXT_PUBLIC_ 접두사가 있는 변수는 빌드 타임에 주입되므로 환경 변수 추가 후 재배포가 필요합니다. Vercel 대시보드 → Settings → Environment Variables에서 값을 확인하고, Deployments에서 Redeploy를 눌러보세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">▲</div>
+          <div class="summary-label">Vercel · Netlify</div>
+          <div class="summary-desc">정적/풀스택 사이트를<br/>자동 배포하는 플랫폼</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔗</div>
+          <div class="summary-label">GitHub 연동</div>
+          <div class="summary-desc">push 한 번으로<br/>자동 빌드·배포</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔑</div>
+          <div class="summary-label">환경 변수</div>
+          <div class="summary-desc">API 키를 코드 대신<br/>대시보드에 안전 보관</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">👀</div>
+          <div class="summary-label">프리뷰 배포</div>
+          <div class="summary-desc">PR마다 임시 URL<br/>머지 전 미리 확인</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🌐</div>
+          <div class="summary-label">커스텀 도메인</div>
+          <div class="summary-desc">mysite.com 연결 +<br/>HTTPS 자동 발급</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚡</div>
+          <div class="summary-label">CI/CD</div>
+          <div class="summary-desc">Git이 곧 배포 트리거<br/>사람 개입 불필요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. 다음 -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 38 · AI란 무엇인가?</span></h2>
+      <p>
+        이제 도구 사용법은 충분히 익혔다 — <span class="highlight-blue">코드 작성, 배포, 운영</span>까지.<br/>
+        다음은 <span class="highlight-yellow">AI가 무엇이고 어떻게 동작하는지</span> 원리부터 살펴본다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> Vercel = 출판사. 원고(코드)만 보내면 인쇄·제본·배송이 다 자동.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

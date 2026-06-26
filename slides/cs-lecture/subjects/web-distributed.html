@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>웹 / 분산 시스템 · CS 4년 커리큘럼</title>
+  <meta name="description" content="웹 동작 원리·REST·DB 확장·캐싱·로드밸런싱·마이크로서비스·CAP를 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="web-distributed" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">4학년 심화 · 웹 / 분산 시스템</span>
+        <h1 class="page-title">웹 / 분산 시스템</h1>
+        <p class="page-lead">수백만 명이 동시에 써도 버티는 서비스는 <strong>여러 대의 컴퓨터로 일을 나눠서</strong> 만듭니다. 웹의 기본 동작부터 대규모 시스템의 설계 원리까지 살펴봅니다.</p>
+
+        <section class="anchor" id="how-web">
+          <h2>웹 동작 원리 (클라이언트-서버)</h2>
+          <p>웹은 <strong>요청을 보내는 쪽(클라이언트)</strong>과 <strong>응답을 돌려주는 쪽(서버)</strong>의 대화로 이루어집니다. 브라우저에 주소를 입력하면, 브라우저(클라이언트)가 서버에 "이 페이지 주세요"라고 <strong>HTTP 요청</strong>을 보내고, 서버는 HTML 등을 <strong>응답</strong>으로 돌려줍니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="클라이언트 서버 요청 응답">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="50" width="110" height="50" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="75" y="80" fill="#c9d1d9" text-anchor="middle">클라이언트</text>
+                <rect x="290" y="50" width="110" height="50" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="345" y="80" fill="#c9d1d9" text-anchor="middle">서버</text>
+                <line x1="130" y1="65" x2="288" y2="65" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahw)"/>
+                <text x="210" y="58" fill="#8b949e" text-anchor="middle">HTTP 요청 (GET /page)</text>
+                <line x1="290" y1="88" x2="132" y2="88" stroke="#3fb950" stroke-width="2" marker-end="url(#ahw)"/>
+                <text x="210" y="108" fill="#8b949e" text-anchor="middle">응답 (HTML/JSON)</text>
+              </g>
+              <defs><marker id="ahw" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">요청 → 처리 → 응답. 웹의 모든 상호작용은 이 한 사이클의 반복이다</div>
+          </div>
+          <p>HTTP 응답에는 <strong>상태 코드</strong>가 함께 옵니다. <code>200</code>은 성공, <code>404</code>는 못 찾음, <code>500</code>은 서버 오류 같은 식으로, 한눈에 결과를 알 수 있습니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">http_message.txt</span></div>
+            <pre><code class="language-http">GET /page HTTP/1.1          # ← 클라이언트가 보내는 요청
+Host: example.com
+
+HTTP/1.1 200 OK            # ← 서버가 돌려주는 응답 (200 = 성공)
+Content-Type: text/html
+
+&lt;html&gt;...페이지 내용...&lt;/html&gt;</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>웹 기본 동작 · REST API · DB 확장(복제·샤딩) · 캐싱과 로드밸런싱 · 마이크로서비스 · CAP 정리를 다룹니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="rest">
+          <h2>REST API</h2>
+          <p><strong>API</strong>는 프로그램끼리 약속된 방식으로 데이터를 주고받는 창구입니다. <strong>REST</strong>는 그 창구를 설계하는 가장 흔한 규칙으로, "자원(데이터)을 URL로 가리키고, HTTP 메서드로 행동을 표현"합니다.</p>
+          <table>
+            <thead><tr><th>메서드</th><th>의미</th><th>예시</th></tr></thead>
+            <tbody>
+              <tr><td><code>GET</code></td><td>조회</td><td>GET /users/42</td></tr>
+              <tr><td><code>POST</code></td><td>생성</td><td>POST /users</td></tr>
+              <tr><td><code>PUT</code></td><td>수정</td><td>PUT /users/42</td></tr>
+              <tr><td><code>DELETE</code></td><td>삭제</td><td>DELETE /users/42</td></tr>
+            </tbody>
+          </table>
+          <p>주고받는 데이터 형식으로는 사람이 읽기 쉬운 <strong>JSON</strong>이 널리 쓰입니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">rest_example.py</span></div>
+            <pre><code class="language-python"># 간단한 REST 서버 (Flask)
+from flask import Flask, jsonify, request
+app = Flask(__name__)
+
+@app.get("/users/<int:uid>")        # 자원: 사용자
+def get_user(uid):
+    return jsonify({"id": uid, "name": "Kim"})   # JSON 응답
+
+@app.post("/users")                 # 새 사용자 생성
+def create_user():
+    data = request.json
+    return jsonify({"created": data}), 201       # 201 = Created</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="db-scale">
+          <h2>데이터베이스 확장 (복제 · 샤딩)</h2>
+          <p>사용자가 늘면 DB 한 대로는 버겁습니다. 두 가지 확장 방법이 있습니다.</p>
+          <ul>
+            <li><strong>복제(Replication)</strong> — 같은 데이터를 여러 대에 <em>복사</em>해 둡니다. 보통 쓰기는 한 대(주, primary), 읽기는 여러 대(부, replica)가 나눠 처리해 읽기 부하를 분산합니다.</li>
+            <li><strong>샤딩(Sharding)</strong> — 데이터를 <em>쪼개서</em> 여러 대에 나눠 담습니다. 예: 사용자 ID 기준으로 1~100만은 1번 DB, 100만~200만은 2번 DB. 한 대가 담을 양 자체를 줄입니다.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="샤딩으로 데이터 분할">
+              <g font-family="monospace" font-size="11">
+                <rect x="160" y="20" width="100" height="34" rx="6" fill="#161b22" stroke="#58a6ff"/><text x="210" y="42" fill="#c9d1d9" text-anchor="middle">라우터</text>
+                <rect x="30" y="110" width="100" height="40" rx="6" fill="#1c232c" stroke="#3fb950"/><text x="80" y="128" fill="#c9d1d9" text-anchor="middle">샤드 1</text><text x="80" y="143" fill="#8b949e" text-anchor="middle">ID 1~100만</text>
+                <rect x="160" y="110" width="100" height="40" rx="6" fill="#1c232c" stroke="#3fb950"/><text x="210" y="128" fill="#c9d1d9" text-anchor="middle">샤드 2</text><text x="210" y="143" fill="#8b949e" text-anchor="middle">~200만</text>
+                <rect x="290" y="110" width="100" height="40" rx="6" fill="#1c232c" stroke="#3fb950"/><text x="340" y="128" fill="#c9d1d9" text-anchor="middle">샤드 3</text><text x="340" y="143" fill="#8b949e" text-anchor="middle">~300만</text>
+                <line x1="195" y1="54" x2="90" y2="108" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="210" y1="54" x2="210" y2="108" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="225" y1="54" x2="330" y2="108" stroke="#30363d" stroke-width="1.5"/>
+              </g>
+            </svg>
+            <div class="caption">라우터가 키를 보고 어느 샤드로 보낼지 결정 — 데이터를 나눠 담는다</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 복제 vs 샤딩</div>
+            <p>읽기가 많아 부담이면 <strong>복제</strong>, 데이터 양 자체가 너무 커지면 <strong>샤딩</strong>을 떠올리세요. 큰 서비스는 둘을 함께 씁니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="cache-lb">
+          <h2>캐싱과 로드밸런싱</h2>
+          <p><strong>캐싱(caching)</strong>은 자주 쓰는 결과를 <em>빠른 저장소</em>(예: 메모리, Redis)에 미리 담아 두어, 매번 DB까지 가지 않고 바로 돌려주는 기법입니다. DB 부담을 크게 줄이고 응답을 빠르게 합니다.</p>
+          <p><strong>로드밸런서(load balancer)</strong>는 들어오는 요청을 <em>여러 서버에 고르게 분배</em>하는 교통경찰입니다. 한 서버에 몰리는 것을 막고, 한 대가 죽어도 나머지가 받아 주어 가용성을 높입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="로드밸런서가 요청 분배">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="70" width="80" height="40" rx="6" fill="#161b22" stroke="#58a6ff"/><text x="60" y="94" fill="#c9d1d9" text-anchor="middle">사용자들</text>
+                <rect x="150" y="70" width="100" height="40" rx="6" fill="#1c232c" stroke="#d29922"/><text x="200" y="90" fill="#c9d1d9" text-anchor="middle">로드</text><text x="200" y="104" fill="#c9d1d9" text-anchor="middle">밸런서</text>
+                <rect x="320" y="20" width="80" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="360" y="40" fill="#c9d1d9" text-anchor="middle">서버 1</text>
+                <rect x="320" y="72" width="80" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="360" y="92" fill="#c9d1d9" text-anchor="middle">서버 2</text>
+                <rect x="320" y="124" width="80" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="360" y="144" fill="#c9d1d9" text-anchor="middle">서버 3</text>
+                <line x1="100" y1="90" x2="148" y2="90" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahl)"/>
+                <line x1="250" y1="85" x2="318" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahl)"/>
+                <line x1="250" y1="90" x2="318" y2="88" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahl)"/>
+                <line x1="250" y1="95" x2="318" y2="138" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahl)"/>
+              </g>
+              <defs><marker id="ahl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">로드밸런서가 요청을 여러 서버로 분산 — 부하 분산 + 장애 대비</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">cache_demo.py</span></div>
+            <pre><code class="language-python">import redis
+cache = redis.Redis()
+
+def get_user(uid):
+    key = f"user:{uid}"
+    cached = cache.get(key)
+    if cached:
+        return cached            # 캐시 적중: DB 안 거치고 바로 반환
+
+    user = db.query(uid)         # 캐시 미스: DB 조회
+    cache.set(key, user, ex=60)  # 60초간 캐시에 저장
+    return user</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="microservices">
+          <h2>마이크로서비스</h2>
+          <p>하나의 거대한 프로그램(모놀리식)에 모든 기능을 담는 대신, 기능별로 <strong>작고 독립적인 서비스로 쪼개는</strong> 방식이 마이크로서비스입니다. 예: 결제 서비스, 주문 서비스, 알림 서비스가 각각 따로 돌고 API로 협력합니다.</p>
+          <table>
+            <thead><tr><th>구분</th><th>모놀리식</th><th>마이크로서비스</th></tr></thead>
+            <tbody>
+              <tr><td>구조</td><td>한 덩어리</td><td>여러 작은 서비스</td></tr>
+              <tr><td>배포</td><td>전체를 한 번에</td><td>서비스별 개별 배포</td></tr>
+              <tr><td>장점</td><td>단순함</td><td>독립 확장·장애 격리</td></tr>
+              <tr><td>단점</td><td>커지면 무거움</td><td>운영·통신 복잡도 증가</td></tr>
+            </tbody>
+          </table>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 만능이 아니다</div>
+            <p>마이크로서비스는 서비스 간 통신·배포·모니터링이 복잡해집니다. 작은 프로젝트라면 모놀리식이 더 나은 경우가 많습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="cap">
+          <h2>CAP 정리와 일관성</h2>
+          <p>여러 대로 나뉜 분산 데이터베이스에는 유명한 원칙이 있습니다. <strong>CAP 정리</strong>는 다음 셋 중 <strong>동시에 셋 다는 보장할 수 없고, 둘만 택할 수 있다</strong>고 말합니다.</p>
+          <ul>
+            <li><strong>일관성(Consistency)</strong> — 어느 서버에 물어도 같은 최신 값을 본다.</li>
+            <li><strong>가용성(Availability)</strong> — 일부가 죽어도 요청에 응답한다.</li>
+            <li><strong>분단 내성(Partition tolerance)</strong> — 서버 간 통신이 끊겨도 동작한다.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CAP 삼각형">
+              <polygon points="160,30 40,190 280,190" fill="none" stroke="#30363d" stroke-width="1.5"/>
+              <circle cx="160" cy="30" r="6" fill="#58a6ff"/>
+              <circle cx="40" cy="190" r="6" fill="#3fb950"/>
+              <circle cx="280" cy="190" r="6" fill="#d29922"/>
+              <text x="160" y="20" fill="#58a6ff" font-size="13" text-anchor="middle">일관성 (C)</text>
+              <text x="40" y="210" fill="#3fb950" font-size="13" text-anchor="middle">가용성 (A)</text>
+              <text x="280" y="210" fill="#d29922" font-size="13" text-anchor="middle">분단내성 (P)</text>
+              <text x="160" y="130" fill="#8b949e" font-size="11" text-anchor="middle">셋 중 둘만</text>
+            </svg>
+            <div class="caption">네트워크 분단(P)은 현실에서 피할 수 없어, 보통 C와 A 사이에서 선택한다</div>
+          </div>
+          <p>현실에서는 통신 단절(P)을 가정할 수밖에 없으므로, 보통 <strong>C(일관성)와 A(가용성) 사이</strong>에서 무엇을 우선할지 고릅니다. 은행 잔고는 일관성을, SNS 좋아요 수는 가용성을 우선하는 식입니다. 그래서 "잠깐은 값이 달라도 결국 같아진다"는 <strong>최종 일관성(eventual consistency)</strong> 개념도 많이 쓰입니다.</p>
+        </section>
+
+        <section class="anchor" id="message-queue">
+          <h2>메시지 큐와 비동기 통신</h2>
+          <p>지금까지의 통신은 "요청을 보내고 응답을 기다리는" <strong>동기(synchronous)</strong> 방식이었습니다. 하지만 주문 후 영수증 이메일 보내기처럼 <em>당장 끝나지 않아도 되는 일</em>은, 따로 떼어 나중에 처리하는 게 낫습니다. 이때 <strong>메시지 큐(message queue)</strong>가 등장합니다.</p>
+          <p>메시지 큐는 <strong>생산자(producer)</strong>가 할 일을 큐에 넣어 두면, <strong>소비자(consumer)</strong>가 자기 속도에 맞춰 하나씩 꺼내 처리하는 중간 우편함입니다. 보내는 쪽은 큐에 넣자마자 다음 일을 할 수 있어(<strong>비동기</strong>) 응답이 빨라지고, 받는 쪽이 잠시 죽어도 메시지는 큐에 남아 있어 안전합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="메시지 큐 생산자 소비자">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="60" width="90" height="44" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="65" y="80" fill="#c9d1d9" text-anchor="middle">생산자</text><text x="65" y="95" fill="#8b949e" text-anchor="middle">(주문)</text>
+                <rect x="160" y="58" width="120" height="48" rx="6" fill="#1c232c" stroke="#d29922" stroke-width="2"/>
+                <text x="220" y="50" fill="#8b949e" text-anchor="middle">메시지 큐</text>
+                <rect x="170" y="70" width="22" height="24" fill="#161b22" stroke="#30363d"/><text x="181" y="87" fill="#c9d1d9" text-anchor="middle">3</text>
+                <rect x="194" y="70" width="22" height="24" fill="#161b22" stroke="#30363d"/><text x="205" y="87" fill="#c9d1d9" text-anchor="middle">2</text>
+                <rect x="218" y="70" width="22" height="24" fill="#161b22" stroke="#30363d"/><text x="229" y="87" fill="#c9d1d9" text-anchor="middle">1</text>
+                <rect x="330" y="60" width="90" height="44" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="375" y="80" fill="#c9d1d9" text-anchor="middle">소비자</text><text x="375" y="95" fill="#8b949e" text-anchor="middle">(이메일)</text>
+                <line x1="110" y1="82" x2="158" y2="82" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahmq)"/>
+                <line x1="282" y1="82" x2="328" y2="82" stroke="#3fb950" stroke-width="2" marker-end="url(#ahmq)"/>
+                <text x="135" y="74" fill="#8b949e" text-anchor="middle">넣기</text>
+                <text x="305" y="74" fill="#8b949e" text-anchor="middle">꺼내기</text>
+              </g>
+              <defs><marker id="ahmq" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">생산자는 큐에 넣고 바로 응답 → 소비자가 자기 속도로 처리(FIFO)</div>
+          </div>
+          <p>대표적인 메시지 큐로는 <strong>RabbitMQ</strong>, <strong>Apache Kafka</strong>, <strong>AWS SQS</strong> 등이 있습니다. 갑자기 요청이 몰려도 큐가 충격을 흡수해 주는 <em>완충 장치(buffer)</em> 역할도 합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">message_queue.py</span></div>
+            <pre><code class="language-python"># 생산자: 무거운 일을 직접 하지 않고 큐에 맡긴다
+def place_order(order):
+    save_to_db(order)                 # 빠른 일만 즉시 처리
+    queue.publish("send_email", order)  # 느린 일은 큐에 넣고
+    return {"status": "주문 완료"}      # 곧바로 응답 (안 기다림)
+
+# 소비자: 큐에서 하나씩 꺼내 천천히 처리
+def email_worker():
+    while True:
+        msg = queue.consume("send_email")  # 메시지 대기
+        send_email(msg.order)              # 실제 전송 (느려도 OK)
+        msg.ack()                          # 처리 완료 표시</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 언제 쓰나</div>
+            <p>이메일·알림 발송, 영상 인코딩, 대량 데이터 처리처럼 <strong>즉시 답할 필요 없는 무거운 작업</strong>을 떼어낼 때 씁니다. 사용자는 빠른 응답을 받고, 무거운 일은 뒤에서 차근차근 처리됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="event-driven">
+          <h2>이벤트 기반 아키텍처</h2>
+          <p>메시지 큐를 한 걸음 더 밀고 나가면 <strong>이벤트 기반 아키텍처(event-driven architecture)</strong>가 됩니다. 서비스끼리 직접 "이거 해 줘"라고 명령하는 대신, "<strong>이런 일이 일어났다</strong>"는 <em>이벤트</em>만 알리고, 관심 있는 서비스들이 알아서 반응합니다.</p>
+          <p>예를 들어 "주문 완료" 이벤트 하나가 발생하면, 결제 서비스·재고 서비스·알림 서비스가 <strong>각자 독립적으로</strong> 그 이벤트를 받아 처리합니다. 주문 서비스는 누가 듣고 있는지 신경 쓸 필요가 없습니다 — 이를 <strong>느슨한 결합(loose coupling)</strong>이라 합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="이벤트 발행 구독">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="70" width="100" height="40" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="70" y="88" fill="#c9d1d9" text-anchor="middle">주문 서비스</text><text x="70" y="102" fill="#8b949e" text-anchor="middle">이벤트 발행</text>
+                <rect x="160" y="72" width="90" height="36" rx="6" fill="#1c232c" stroke="#d29922" stroke-width="2"/><text x="205" y="88" fill="#c9d1d9" text-anchor="middle">이벤트 버스</text><text x="205" y="101" fill="#8b949e" text-anchor="middle">"주문완료"</text>
+                <rect x="320" y="20" width="100" height="34" rx="6" fill="#161b22" stroke="#3fb950"/><text x="370" y="41" fill="#c9d1d9" text-anchor="middle">결제 서비스</text>
+                <rect x="320" y="72" width="100" height="34" rx="6" fill="#161b22" stroke="#3fb950"/><text x="370" y="93" fill="#c9d1d9" text-anchor="middle">재고 서비스</text>
+                <rect x="320" y="124" width="100" height="34" rx="6" fill="#161b22" stroke="#3fb950"/><text x="370" y="145" fill="#c9d1d9" text-anchor="middle">알림 서비스</text>
+                <line x1="120" y1="90" x2="158" y2="90" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahev)"/>
+                <line x1="250" y1="85" x2="318" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahev)"/>
+                <line x1="250" y1="90" x2="318" y2="89" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahev)"/>
+                <line x1="250" y1="95" x2="318" y2="138" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahev)"/>
+              </g>
+              <defs><marker id="ahev" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">한 이벤트를 여러 구독자(subscriber)가 각자 받아 처리 — 발행/구독(pub/sub)</div>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>명령 기반 (직접 호출)</th><th>이벤트 기반</th></tr></thead>
+            <tbody>
+              <tr><td>결합도</td><td>강함 (누구를 부를지 알아야)</td><td>느슨함 (알릴 뿐)</td></tr>
+              <tr><td>확장</td><td>새 기능마다 코드 수정</td><td>구독자만 추가하면 끝</td></tr>
+              <tr><td>흐름 추적</td><td>쉬움 (직선적)</td><td>어려움 (흩어짐)</td></tr>
+            </tbody>
+          </table>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 디버깅이 어렵다</div>
+            <p>이벤트가 여기저기로 퍼지므로 "무슨 일이 어떤 순서로 일어났는지" 추적이 까다롭습니다. 그래서 뒤에서 배울 <strong>관측성(observability)</strong>이 특히 중요해집니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="consistency-models">
+          <h2>일관성 모델 상세 (강한 · 최종 일관성)</h2>
+          <p>CAP 정리에서 잠깐 본 <strong>일관성</strong>을 더 깊이 봅시다. 데이터가 여러 대에 복제돼 있을 때, "방금 쓴 값을 다른 서버에서 언제 볼 수 있는가"에 따라 일관성 모델이 갈립니다.</p>
+          <ul>
+            <li><strong>강한 일관성(strong consistency)</strong> — 쓰기가 끝나면 <em>모든</em> 서버가 즉시 같은 값을 보여 줍니다. 정확하지만, 모든 복제본이 동기화될 때까지 기다려야 해 느리고 가용성이 떨어집니다.</li>
+            <li><strong>최종 일관성(eventual consistency)</strong> — 잠깐은 서버마다 값이 다를 수 있지만, <em>시간이 지나면 결국</em> 같아집니다. 빠르고 잘 죽지 않지만, 방금 쓴 값이 곧바로 안 보일 수 있습니다.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="최종 일관성 전파">
+              <g font-family="monospace" font-size="11">
+                <text x="110" y="18" fill="#8b949e" text-anchor="middle">쓰기 직후 (t=0)</text>
+                <circle cx="60" cy="55" r="22" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="60" y="59" fill="#c9d1d9" text-anchor="middle">v2</text>
+                <circle cx="120" cy="55" r="22" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="120" y="59" fill="#c9d1d9" text-anchor="middle">v1</text>
+                <circle cx="160" cy="100" r="22" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="160" y="104" fill="#c9d1d9" text-anchor="middle">v1</text>
+                <text x="60" y="92" fill="#3fb950" text-anchor="middle">주(쓰기)</text>
+                <text x="330" y="18" fill="#8b949e" text-anchor="middle">잠시 후 (t=Δ)</text>
+                <circle cx="280" cy="55" r="22" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="280" y="59" fill="#c9d1d9" text-anchor="middle">v2</text>
+                <circle cx="340" cy="55" r="22" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="340" y="59" fill="#c9d1d9" text-anchor="middle">v2</text>
+                <circle cx="380" cy="100" r="22" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="380" y="104" fill="#c9d1d9" text-anchor="middle">v2</text>
+                <line x1="82" y1="55" x2="98" y2="55" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ahcm)"/>
+                <line x1="78" y1="68" x2="145" y2="92" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ahcm)"/>
+                <text x="200" y="100" fill="#d29922" text-anchor="middle">전파 →</text>
+                <line x1="225" y1="80" x2="262" y2="70" stroke="#d29922" stroke-width="1.5" marker-end="url(#ahcm)"/>
+              </g>
+              <defs><marker id="ahcm" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">최종 일관성: 처음엔 일부만 v2, 시간이 지나면 모두 v2로 수렴</div>
+          </div>
+          <table>
+            <thead><tr><th>모델</th><th>속도</th><th>정확성</th><th>어울리는 곳</th></tr></thead>
+            <tbody>
+              <tr><td>강한 일관성</td><td>느림</td><td>항상 최신</td><td>은행 잔고·재고 차감</td></tr>
+              <tr><td>최종 일관성</td><td>빠름</td><td>잠깐 옛값 가능</td><td>SNS 좋아요·조회수</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 일상 속 최종 일관성</div>
+            <p>유튜브 조회수가 잠시 멈춰 있다가 갑자기 확 오르는 것을 본 적 있나요? 여러 서버의 카운트를 나중에 모아 맞추는 <strong>최종 일관성</strong>의 흔적입니다. 정확한 실시간보다 빠른 응답을 택한 것이죠.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="consensus">
+          <h2>합의 알고리즘 (Raft · 리더 선출)</h2>
+          <p>여러 서버가 데이터를 복제할 때, "<strong>누구 말이 진짜인가</strong>"를 정해야 합니다. 모두가 동등하게 쓰기를 받으면 값이 충돌하니까요. 그래서 한 대를 <strong>리더(leader)</strong>로 뽑고, 나머지는 <strong>팔로워(follower)</strong>로서 리더를 따라갑니다. 이렇게 여러 대가 하나의 값에 동의하는 절차를 <strong>합의(consensus)</strong>라 하고, 대표적인 알고리즘이 <strong>Raft</strong>입니다.</p>
+          <p><strong>리더 선출(leader election)</strong>의 핵심 아이디어는 간단합니다. 팔로워는 리더로부터 주기적으로 "나 살아 있어"라는 신호(<em>하트비트</em>)를 받습니다. 일정 시간 신호가 없으면 "리더가 죽었나 보다" 하고 <strong>후보(candidate)</strong>가 되어 다른 서버들에게 표를 구합니다. <strong>과반수(majority)</strong>의 표를 얻으면 새 리더가 됩니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Raft 리더 선출">
+              <g font-family="monospace" font-size="11">
+                <text x="80" y="18" fill="#8b949e" text-anchor="middle">① 리더가 죽음</text>
+                <circle cx="80" cy="50" r="20" fill="#161b22" stroke="#f85149" stroke-width="2" stroke-dasharray="3 3"/><text x="80" y="54" fill="#f85149" text-anchor="middle">✕</text>
+                <circle cx="40" cy="105" r="18" fill="#161b22" stroke="#8b949e"/><text x="40" y="109" fill="#c9d1d9" text-anchor="middle">F</text>
+                <circle cx="120" cy="105" r="18" fill="#161b22" stroke="#8b949e"/><text x="120" y="109" fill="#c9d1d9" text-anchor="middle">F</text>
+                <text x="80" y="135" fill="#8b949e" text-anchor="middle">하트비트 끊김</text>
+
+                <text x="300" y="18" fill="#8b949e" text-anchor="middle">② 후보가 표를 모음</text>
+                <circle cx="300" cy="55" r="20" fill="#1c232c" stroke="#d29922" stroke-width="2"/><text x="300" y="59" fill="#c9d1d9" text-anchor="middle">C</text>
+                <text x="300" y="32" fill="#d29922" text-anchor="middle">후보</text>
+                <circle cx="250" cy="120" r="18" fill="#161b22" stroke="#3fb950"/><text x="250" y="124" fill="#c9d1d9" text-anchor="middle">F</text>
+                <circle cx="350" cy="120" r="18" fill="#161b22" stroke="#3fb950"/><text x="350" y="124" fill="#c9d1d9" text-anchor="middle">F</text>
+                <line x1="285" y1="70" x2="262" y2="104" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ahcs)"/>
+                <line x1="315" y1="70" x2="338" y2="104" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ahcs)"/>
+                <text x="255" y="98" fill="#3fb950" text-anchor="middle">표</text>
+                <text x="345" y="98" fill="#3fb950" text-anchor="middle">표</text>
+                <text x="300" y="160" fill="#3fb950" text-anchor="middle">과반수 → 새 리더!</text>
+              </g>
+              <defs><marker id="ahcs" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker></defs>
+            </svg>
+            <div class="caption">리더가 죽으면 → 후보가 등장 → 과반수 득표 → 새 리더 (F=팔로워, C=후보)</div>
+          </div>
+          <p>과반수를 요구하는 이유는, 두 명이 동시에 리더가 되는 <strong>분열(split-brain)</strong>을 막기 위해서입니다. 표는 한 표만 줄 수 있으므로 과반수를 동시에 둘이 받을 수는 없습니다. 그래서 보통 서버 수를 <strong>홀수(3·5대)</strong>로 둡니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 어디서 쓰이나</div>
+            <p>분산 시스템의 핵심 부품인 <strong>etcd</strong>(쿠버네티스의 두뇌), <strong>Consul</strong>, <strong>ZooKeeper</strong> 등이 이런 합의 알고리즘으로 "단 하나의 진실"을 유지합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="saga">
+          <h2>분산 트랜잭션과 사가(Saga) 패턴</h2>
+          <p>한 DB 안에서는 "전부 성공하거나 전부 취소"되는 <strong>트랜잭션</strong>이 쉽습니다. 하지만 주문·결제·배송이 <em>각각 다른 서비스의 다른 DB</em>에 있다면? 하나의 거대한 트랜잭션으로 묶기 어렵습니다. 이때 쓰는 패턴이 <strong>사가(Saga)</strong>입니다.</p>
+          <p>사가는 큰 작업을 <strong>여러 개의 작은 로컬 트랜잭션으로 쪼개</strong> 순서대로 실행합니다. 중간에 하나라도 실패하면, 이미 끝난 단계들을 <strong>거꾸로 되돌리는 보상 작업(compensating transaction)</strong>을 실행합니다. "취소는 환불로, 재고 차감은 재고 복구로" 되돌리는 식입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="사가 패턴 보상 트랜잭션">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="30" width="90" height="36" rx="6" fill="#1c232c" stroke="#3fb950"/><text x="65" y="52" fill="#c9d1d9" text-anchor="middle">① 주문 생성</text>
+                <rect x="150" y="30" width="90" height="36" rx="6" fill="#1c232c" stroke="#3fb950"/><text x="195" y="52" fill="#c9d1d9" text-anchor="middle">② 결제</text>
+                <rect x="280" y="30" width="90" height="36" rx="6" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="325" y="52" fill="#f85149" text-anchor="middle">③ 배송 ✕</text>
+                <line x1="110" y1="48" x2="148" y2="48" stroke="#3fb950" stroke-width="2" marker-end="url(#ahsg)"/>
+                <line x1="240" y1="48" x2="278" y2="48" stroke="#3fb950" stroke-width="2" marker-end="url(#ahsg)"/>
+                <text x="220" y="95" fill="#f85149" text-anchor="middle">실패! → 거꾸로 보상</text>
+                <rect x="150" y="120" width="90" height="36" rx="6" fill="#161b22" stroke="#d29922"/><text x="195" y="135" fill="#c9d1d9" text-anchor="middle">결제 취소</text><text x="195" y="149" fill="#8b949e" text-anchor="middle">(환불)</text>
+                <rect x="20" y="120" width="90" height="36" rx="6" fill="#161b22" stroke="#d29922"/><text x="65" y="135" fill="#c9d1d9" text-anchor="middle">주문 취소</text><text x="65" y="149" fill="#8b949e" text-anchor="middle">(복구)</text>
+                <line x1="290" y1="66" x2="215" y2="118" stroke="#d29922" stroke-width="1.5" marker-end="url(#ahsg)"/>
+                <line x1="148" y1="138" x2="112" y2="138" stroke="#d29922" stroke-width="2" marker-end="url(#ahsg)"/>
+              </g>
+              <defs><marker id="ahsg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">③에서 실패하면 ②·①을 역순으로 보상(취소)해 일관성을 회복한다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">saga.py</span></div>
+            <pre><code class="language-python">steps = [
+    (create_order,  cancel_order),    # (실행, 보상)
+    (charge_payment, refund_payment),
+    (ship_order,    cancel_shipping),
+]
+
+done = []
+try:
+    for do, undo in steps:
+        do()                 # 단계 실행
+        done.append(undo)    # 보상 작업을 기억해 둠
+except Exception:
+    for undo in reversed(done):   # 실패 시 역순으로
+        undo()                    # 이미 한 일을 되돌린다</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 완벽한 원자성은 아니다</div>
+            <p>사가는 보상으로 "결과적 일관성"을 맞출 뿐, 중간 단계가 잠깐 외부에 보일 수 있습니다. 그래서 보상 작업은 <strong>여러 번 실행해도 같은 결과가 되도록(멱등성, idempotent)</strong> 설계해야 안전합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="resilience">
+          <h2>장애 처리와 회복탄력성 (서킷 브레이커 · 재시도)</h2>
+          <p>분산 시스템에서 일부 서비스가 죽는 것은 <em>예외가 아니라 일상</em>입니다. 한 서비스의 장애가 도미노처럼 전체로 번지지 않게 막는 능력을 <strong>회복탄력성(resilience)</strong>이라 합니다. 대표 기법 둘을 봅시다.</p>
+          <ul>
+            <li><strong>재시도(retry)</strong> — 일시적 오류(네트워크 깜빡임 등)는 잠시 후 다시 시도하면 성공할 때가 많습니다. 단, 간격을 점점 늘리는 <strong>지수 백오프(exponential backoff)</strong>를 써서 죽어가는 서버를 더 때리지 않도록 합니다.</li>
+            <li><strong>서킷 브레이커(circuit breaker)</strong> — 두꺼비집(누전 차단기)처럼, 실패가 일정 수준을 넘으면 <strong>회로를 끊어</strong> 더 이상 요청을 보내지 않고 즉시 실패 처리합니다. 죽은 서비스에 헛된 요청을 퍼붓는 것을 막아, 시스템 전체를 보호합니다.</li>
+          </ul>
+          <p>서킷 브레이커는 세 가지 상태를 오갑니다. <strong>닫힘(Closed)</strong>은 정상 통과, <strong>열림(Open)</strong>은 차단(즉시 실패), 일정 시간 뒤 <strong>반열림(Half-Open)</strong>으로 살짝 풀어 시험 요청을 보내 봅니다. 성공하면 다시 닫고, 실패하면 다시 엽니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="서킷 브레이커 상태 전이">
+              <g font-family="monospace" font-size="11">
+                <circle cx="80" cy="90" r="38" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="80" y="86" fill="#c9d1d9" text-anchor="middle">닫힘</text><text x="80" y="100" fill="#8b949e" text-anchor="middle">정상 통과</text>
+                <circle cx="360" cy="90" r="38" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="360" y="86" fill="#c9d1d9" text-anchor="middle">열림</text><text x="360" y="100" fill="#8b949e" text-anchor="middle">즉시 실패</text>
+                <circle cx="220" cy="90" r="38" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="220" y="86" fill="#c9d1d9" text-anchor="middle">반열림</text><text x="220" y="100" fill="#8b949e" text-anchor="middle">시험 요청</text>
+                <path d="M115 75 Q160 50 250 65" stroke="#f85149" stroke-width="1.5" fill="none" marker-end="url(#ahcb)"/>
+                <text x="180" y="48" fill="#f85149" text-anchor="middle">실패 누적</text>
+                <line x1="258" y1="78" x2="322" y2="78" stroke="#f85149" stroke-width="1.5" marker-end="url(#ahcb)"/>
+                <path d="M322 105 Q280 135 188 112" stroke="#d29922" stroke-width="1.5" fill="none" marker-end="url(#ahcb)"/>
+                <text x="280" y="140" fill="#d29922" text-anchor="middle">시간 경과</text>
+                <path d="M185 105 Q140 135 110 118" stroke="#3fb950" stroke-width="1.5" fill="none" marker-end="url(#ahcb)"/>
+                <text x="150" y="138" fill="#3fb950" text-anchor="middle">성공</text>
+              </g>
+              <defs><marker id="ahcb" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">닫힘 →(실패 누적) 열림 →(시간 경과) 반열림 →(성공) 닫힘 / (실패) 열림</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">resilience.py</span></div>
+            <pre><code class="language-python">import time
+
+# 지수 백오프 재시도: 0.5s → 1s → 2s ...
+def call_with_retry(fn, attempts=4):
+    for i in range(attempts):
+        try:
+            return fn()
+        except TransientError:
+            if i == attempts - 1:
+                raise
+            time.sleep(0.5 * (2 ** i))   # 점점 길게 대기
+
+# 서킷 브레이커: 실패가 많으면 회로를 연다
+if breaker.is_open():
+    return fallback()        # 죽은 서비스에 안 보내고 즉시 대안
+result = breaker.call(payment_service)   # 성공/실패를 집계</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 함께 쓰는 친구들</div>
+            <p>재시도·서킷 브레이커 외에도 <strong>타임아웃</strong>(무한정 안 기다리기), <strong>폴백</strong>(대체 응답), <strong>벌크헤드</strong>(자원을 칸막이로 격리)를 함께 씁니다. 모두 "장애를 가두는" 같은 목표를 가집니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="observability">
+          <h2>모니터링과 관측성 (로그 · 메트릭 · 추적)</h2>
+          <p>서비스가 수십 개로 쪼개지면, "왜 느리지? 어디서 막혔지?"를 눈으로 보기 어렵습니다. 시스템 내부 상태를 밖에서 들여다볼 수 있게 하는 능력을 <strong>관측성(observability)</strong>이라 하며, 세 가지 기둥으로 이루어집니다.</p>
+          <table>
+            <thead><tr><th>기둥</th><th>무엇인가</th><th>답하는 질문</th></tr></thead>
+            <tbody>
+              <tr><td><strong>로그(Logs)</strong></td><td>시간순 사건 기록</td><td>"무슨 일이 있었나?"</td></tr>
+              <tr><td><strong>메트릭(Metrics)</strong></td><td>수치 지표(CPU·응답시간·요청수)</td><td>"얼마나 건강한가?"</td></tr>
+              <tr><td><strong>추적(Traces)</strong></td><td>요청이 거친 서비스 경로</td><td>"어디서 느려졌나?"</td></tr>
+            </tbody>
+          </table>
+          <p>특히 <strong>분산 추적(distributed tracing)</strong>은 하나의 요청에 <em>추적 ID</em>를 붙여, 그 요청이 게이트웨이 → 주문 → 결제 → DB를 거치며 각 단계에 얼마나 걸렸는지 한 줄로 이어 보여 줍니다. 병목을 찾는 데 결정적입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분산 추적 타임라인">
+              <g font-family="monospace" font-size="11">
+                <text x="20" y="20" fill="#8b949e">추적 ID: abc-123  (총 220ms)</text>
+                <text x="20" y="48" fill="#c9d1d9">게이트웨이</text>
+                <rect x="130" y="38" width="280" height="14" rx="3" fill="#1c232c" stroke="#58a6ff"/>
+                <text x="20" y="74" fill="#c9d1d9">주문 서비스</text>
+                <rect x="160" y="64" width="200" height="14" rx="3" fill="#1c232c" stroke="#3fb950"/>
+                <text x="20" y="100" fill="#c9d1d9">결제 서비스</text>
+                <rect x="200" y="90" width="120" height="14" rx="3" fill="#1c232c" stroke="#d29922"/>
+                <text x="20" y="126" fill="#c9d1d9">DB 조회</text>
+                <rect x="230" y="116" width="70" height="14" rx="3" fill="#161b22" stroke="#f85149"/>
+                <text x="265" y="127" fill="#f85149" text-anchor="middle" font-size="9">느림!</text>
+              </g>
+            </svg>
+            <div class="caption">한 요청의 구간별 소요 시간 — 막대가 긴 DB 조회가 병목임을 한눈에</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 대표 도구</div>
+            <p>메트릭/대시보드는 <strong>Prometheus + Grafana</strong>, 로그는 <strong>ELK(Elasticsearch·Logstash·Kibana)</strong>, 추적은 <strong>Jaeger·OpenTelemetry</strong>가 널리 쓰입니다. "모니터링"이 정해진 지표를 보는 것이라면, "관측성"은 예상 못한 문제까지 캐물을 수 있는 더 넓은 개념입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="orchestration-gateway">
+          <h2>컨테이너 오케스트레이션과 API 게이트웨이</h2>
+          <p>마이크로서비스를 실제로 굴리려면 두 가지 도구가 거의 필수입니다. 서비스 묶음을 <em>실행·관리</em>하는 <strong>오케스트레이션</strong>과, 외부 요청의 <em>단일 입구</em> 역할을 하는 <strong>API 게이트웨이</strong>입니다.</p>
+          <p><strong>컨테이너(container)</strong>는 앱과 그 실행 환경을 통째로 담은 가벼운 상자입니다(예: Docker). 서비스가 수십·수백 개로 늘면 이 컨테이너들을 일일이 손으로 관리할 수 없습니다. <strong>쿠버네티스(Kubernetes)</strong> 같은 <strong>오케스트레이션 도구</strong>가 자동으로 배치하고, 죽으면 다시 띄우고, 부하에 맞춰 수를 늘리거나 줄입니다(<em>오토스케일링</em>).</p>
+          <table>
+            <thead><tr><th>쿠버네티스가 자동으로</th><th>설명</th></tr></thead>
+            <tbody>
+              <tr><td>자가 치유(self-healing)</td><td>죽은 컨테이너를 감지해 다시 띄움</td></tr>
+              <tr><td>오토스케일링</td><td>트래픽에 따라 컨테이너 수를 조절</td></tr>
+              <tr><td>롤아웃/롤백</td><td>새 버전을 점진 배포, 문제 시 되돌림</td></tr>
+              <tr><td>서비스 디스커버리</td><td>서비스끼리 서로를 자동으로 찾게 함</td></tr>
+            </tbody>
+          </table>
+          <p>한편 <strong>API 게이트웨이</strong>는 모든 외부 요청이 가장 먼저 도착하는 <em>정문</em>입니다. 클라이언트는 내부에 서비스가 몇 개인지 몰라도, 게이트웨이 한 곳에만 요청하면 됩니다. 게이트웨이는 알맞은 서비스로 <strong>라우팅</strong>하고, 그 길목에서 <strong>인증·요청 제한(rate limiting)·로깅</strong> 같은 공통 작업을 한 번에 처리합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="API 게이트웨이 라우팅">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="72" width="80" height="40" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="60" y="96" fill="#c9d1d9" text-anchor="middle">클라이언트</text>
+                <rect x="150" y="60" width="100" height="64" rx="6" fill="#1c232c" stroke="#bc8cff" stroke-width="2"/><text x="200" y="86" fill="#c9d1d9" text-anchor="middle">API</text><text x="200" y="100" fill="#c9d1d9" text-anchor="middle">게이트웨이</text><text x="200" y="116" fill="#8b949e" text-anchor="middle">인증·라우팅</text>
+                <rect x="330" y="20" width="100" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="380" y="40" fill="#c9d1d9" text-anchor="middle">주문 서비스</text>
+                <rect x="330" y="72" width="100" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="380" y="92" fill="#c9d1d9" text-anchor="middle">결제 서비스</text>
+                <rect x="330" y="124" width="100" height="32" rx="6" fill="#161b22" stroke="#3fb950"/><text x="380" y="144" fill="#c9d1d9" text-anchor="middle">알림 서비스</text>
+                <line x1="100" y1="92" x2="148" y2="92" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahgw)"/>
+                <line x1="250" y1="85" x2="328" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahgw)"/>
+                <line x1="250" y1="92" x2="328" y2="88" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahgw)"/>
+                <line x1="250" y1="99" x2="328" y2="138" stroke="#30363d" stroke-width="1.5" marker-end="url(#ahgw)"/>
+              </g>
+              <defs><marker id="ahgw" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">클라이언트는 게이트웨이 한 곳만 알면 됨 — 정문에서 인증·라우팅을 일괄 처리</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 로드밸런서와 뭐가 다른가</div>
+            <p>로드밸런서가 "같은 서비스의 여러 복제본"에 부하를 <em>고르게 나누는</em> 데 집중한다면, API 게이트웨이는 "어떤 서비스로 보낼지" 판단하고 <strong>인증·변환·제한 같은 부가 기능</strong>까지 맡는 더 똑똑한 정문입니다. 둘은 함께 쓰입니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>웹은 클라이언트 요청과 서버 응답의 반복으로 동작한다.</li>
+            <li>REST는 자원을 URL로, 행동을 HTTP 메서드로 표현하는 API 설계 규칙이다.</li>
+            <li>읽기 부하는 복제로, 데이터 양은 샤딩으로 분산한다.</li>
+            <li>캐싱은 DB 부담을 줄이고, 로드밸런서는 요청을 여러 서버로 나눈다.</li>
+            <li>분산 시스템은 CAP 정리에 따라 일관성과 가용성 사이에서 선택한다.</li>
+            <li>메시지 큐는 무거운 일을 비동기로 떼어내 응답을 빠르게 하고 충격을 흡수한다.</li>
+            <li>이벤트 기반 아키텍처는 이벤트만 알려 서비스 간 결합을 느슨하게 한다.</li>
+            <li>강한 일관성은 항상 최신값, 최종 일관성은 시간이 지나면 같아진다.</li>
+            <li>합의 알고리즘(Raft)은 리더를 뽑아 과반수 동의로 하나의 진실을 유지한다.</li>
+            <li>사가 패턴은 분산 작업을 쪼개고, 실패하면 보상 작업으로 되돌린다.</li>
+            <li>서킷 브레이커와 재시도는 장애가 전체로 번지지 않게 가둔다.</li>
+            <li>관측성은 로그·메트릭·추적으로 시스템 내부를 밖에서 들여다본다.</li>
+            <li>쿠버네티스는 컨테이너를 자동 배치·치유·확장하고, API 게이트웨이는 단일 입구가 된다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>클라이언트 / 서버</dt><dd>요청하는 쪽과 응답하는 쪽. 웹 통신의 두 주체.</dd></dl>
+          <dl class="term"><dt>REST API</dt><dd>자원을 URL로, 행동을 HTTP 메서드로 표현하는 API 설계 방식.</dd></dl>
+          <dl class="term"><dt>샤딩(Sharding)</dt><dd>데이터를 쪼개 여러 DB에 나눠 담아 한 대의 부담을 줄이는 기법.</dd></dl>
+          <dl class="term"><dt>로드밸런서</dt><dd>들어오는 요청을 여러 서버에 고르게 분배하는 장치.</dd></dl>
+          <dl class="term"><dt>CAP 정리</dt><dd>분산 시스템에서 일관성·가용성·분단내성 중 둘만 보장 가능하다는 원칙.</dd></dl>
+          <dl class="term"><dt>메시지 큐</dt><dd>생산자가 넣은 일을 소비자가 자기 속도로 꺼내 처리하는 비동기 우편함.</dd></dl>
+          <dl class="term"><dt>이벤트 기반 아키텍처</dt><dd>명령 대신 "일어난 일(이벤트)"만 알려 서비스를 느슨하게 결합하는 구조.</dd></dl>
+          <dl class="term"><dt>최종 일관성</dt><dd>잠깐은 값이 다를 수 있으나 시간이 지나면 모든 복제본이 같아지는 모델.</dd></dl>
+          <dl class="term"><dt>합의 알고리즘 / Raft</dt><dd>여러 서버가 리더를 뽑아 과반수 동의로 하나의 값에 합의하는 방법.</dd></dl>
+          <dl class="term"><dt>사가(Saga) 패턴</dt><dd>분산 트랜잭션을 작은 단계로 쪼개고, 실패 시 보상 작업으로 되돌리는 패턴.</dd></dl>
+          <dl class="term"><dt>서킷 브레이커</dt><dd>실패가 누적되면 회로를 끊어 죽은 서비스로의 요청을 막는 장애 차단기.</dd></dl>
+          <dl class="term"><dt>관측성(Observability)</dt><dd>로그·메트릭·추적으로 시스템 내부 상태를 밖에서 파악하는 능력.</dd></dl>
+          <dl class="term"><dt>쿠버네티스</dt><dd>컨테이너를 자동으로 배치·치유·확장·롤아웃하는 오케스트레이션 도구.</dd></dl>
+          <dl class="term"><dt>API 게이트웨이</dt><dd>외부 요청의 단일 입구로, 라우팅·인증·요청 제한을 일괄 처리하는 정문.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

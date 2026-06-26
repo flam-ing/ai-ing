@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 19 - CSS와 Tailwind CSS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Code block */
+    .code-block {
+      margin-top: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 1rem;
+      color: #e0e0e0;
+      max-width: 900px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+    .code-block .c-tag { color: #f472b6; }
+    .code-block .c-attr { color: #fbbf24; }
+    .code-block .c-str { color: #6ee7b7; }
+    .code-block .c-com { color: #666; font-style: italic; }
+    .code-block .c-cls { color: #60a5fa; }
+
+    /* Box model visual */
+    .box-model {
+      margin-top: 2rem;
+      max-width: 700px;
+      padding: 2rem;
+      background: rgba(244,114,182,0.08);
+      border: 2px dashed rgba(244,114,182,0.4);
+      border-radius: 12px;
+      position: relative;
+    }
+    .box-model-label { position: absolute; top: -12px; left: 16px; background: #0f0f1a; padding: 0 8px; font-size: 0.85rem; color: #f472b6; font-weight: 700; }
+    .box-model .layer-border {
+      padding: 1.5rem;
+      background: rgba(251,191,36,0.08);
+      border: 2px solid rgba(251,191,36,0.5);
+      border-radius: 8px;
+      position: relative;
+    }
+    .layer-border-label { position: absolute; top: -12px; left: 16px; background: #0f0f1a; padding: 0 8px; font-size: 0.85rem; color: #fbbf24; font-weight: 700; }
+    .box-model .layer-padding {
+      padding: 1.5rem;
+      background: rgba(110,231,183,0.08);
+      border: 2px dashed rgba(110,231,183,0.5);
+      border-radius: 6px;
+      position: relative;
+    }
+    .layer-padding-label { position: absolute; top: -12px; left: 16px; background: #0f0f1a; padding: 0 8px; font-size: 0.85rem; color: #6ee7b7; font-weight: 700; }
+    .box-model .layer-content {
+      padding: 1.2rem;
+      background: rgba(96,165,250,0.15);
+      border: 1px solid rgba(96,165,250,0.4);
+      border-radius: 4px;
+      text-align: center;
+      color: #60a5fa;
+      font-weight: 700;
+    }
+
+    /* Tailwind class chip */
+    .tw-chips {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1.5rem;
+      max-width: 1000px;
+    }
+    .tw-chip {
+      padding: 0.5rem 0.9rem;
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.35);
+      border-radius: 8px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 0.95rem;
+      color: #60a5fa;
+      font-weight: 700;
+    }
+    .tw-chip.green { background: rgba(110,231,183,0.12); border-color: rgba(110,231,183,0.35); color: #6ee7b7; }
+    .tw-chip.yellow { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.35); color: #fbbf24; }
+    .tw-chip.pink { background: rgba(244,114,182,0.12); border-color: rgba(244,114,182,0.35); color: #f472b6; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 19 · Part 5 웹 개발</div>
+      <h1>CSS와<br/>Tailwind CSS</h1>
+      <h3>박스 모델 · Flexbox · Grid · 유틸리티 클래스 — 웹을 꾸미는 언어</h3>
+    </div>
+
+    <!-- 2. Why -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">🎨</div>
+      <h2>왜 <span class="highlight">CSS</span>가<br/>필요할까?</h2>
+      <p>
+        HTML만 쓴 페이지는 1990년대 디자인처럼 보인다.<br/>
+        <span class="highlight-blue">CSS</span>가 있어야 색상·여백·레이아웃이 살아난다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        그리고 <span class="highlight-yellow">Tailwind CSS</span>는 CSS를 더 빠르고 직관적으로 쓸 수 있게 해준다 — AI가 가장 잘 다루는 스타일링 방식이기도 하다.
+      </p>
+    </div>
+
+    <!-- 3. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">박스 모델</div>
+          <div class="card-desc">모든 요소가 박스라는 사실, content·padding·border·margin의 구조</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <div class="card-title">Flexbox & Grid</div>
+          <div class="card-desc">현대 CSS 레이아웃의 양대 축, 1차원과 2차원 정렬</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💨</div>
+          <div class="card-title">Tailwind CSS</div>
+          <div class="card-desc">유틸리티 클래스로 HTML 안에서 바로 스타일링하는 방식</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 박스 모델 -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <div class="big-emoji">📦</div>
+      <h2>박스 모델 —<br/><span class="highlight">모든 요소는 박스다</span></h2>
+      <p>HTML의 모든 요소는 네 겹의 박스로 둘러싸여 있다. 이 구조를 알면 <span class="highlight">여백 문제의 90%</span>가 풀린다.</p>
+      <div class="box-model">
+        <div class="box-model-label">margin · 외부 여백</div>
+        <div class="layer-border">
+          <div class="layer-border-label">border · 테두리</div>
+          <div class="layer-padding">
+            <div class="layer-padding-label">padding · 내부 여백</div>
+            <div class="layer-content">content · 실제 내용</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 박스 모델 상세 -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <h2>박스의 <span class="highlight-blue">네 겹</span>, 무엇이 다른가</h2>
+      <p>안쪽부터 바깥쪽으로 — 각 겹이 담당하는 역할이 다르다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-blue">content</span> — 실제 내용</div>
+            <div class="step-desc">텍스트나 이미지 등 보여주려는 본체. width, height로 크기 지정</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight">padding</span> — 내부 여백</div>
+            <div class="step-desc">내용과 테두리 사이 공간. 박스 내부에 숨 쉴 자리를 주는 역할</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-yellow">border</span> — 테두리</div>
+            <div class="step-desc">박스의 윤곽선. 두께·색·스타일을 지정 가능</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-pink">margin</span> — 외부 여백</div>
+            <div class="step-desc">박스와 다른 박스 사이의 간격. 옆 요소와의 거리를 만든다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Flexbox vs Grid -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <h2>Flexbox <span class="highlight">vs</span> Grid</h2>
+      <p>현대 CSS 레이아웃의 양대 축. <span class="highlight">차원의 수</span>가 결정적인 차이다.</p>
+      <div class="compare">
+        <div class="compare-box before" style="border-color: rgba(96,165,250,0.4);">
+          <div class="compare-title" style="color:#60a5fa;">📏 Flexbox · 1차원</div>
+          <div class="compare-item" style="color:#ccc;">한 줄(가로 또는 세로) 정렬</div>
+          <div class="compare-item" style="color:#ccc;">버튼들, 네비게이션 메뉴, 아이콘 정렬</div>
+          <div class="compare-item" style="color:#ccc;">가운데 정렬에 가장 강력</div>
+          <div class="compare-item" style="color:#ccc;">속성: justify-content, align-items</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">🔲 Grid · 2차원</div>
+          <div class="compare-item">행과 열의 격자 배치</div>
+          <div class="compare-item">대시보드, 갤러리, 복잡한 레이아웃</div>
+          <div class="compare-item">정확한 칸 단위 제어 가능</div>
+          <div class="compare-item">속성: grid-template-columns, gap</div>
+        </div>
+      </div>
+      <style>.compare-box.before .compare-item::before { content: '•'; color:#60a5fa; }</style>
+    </div>
+
+    <!-- 7. Tailwind 등장 -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">💨</div>
+      <h2>Tailwind CSS —<br/><span class="highlight">CSS 안 쓰고 CSS 쓰기</span></h2>
+      <p>전통적 CSS는 별도 파일에 스타일을 정의했다. Tailwind는 <span class="highlight-blue">미리 만들어둔 클래스</span>를 HTML에 직접 붙인다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">전통 CSS</div>
+          <ul>
+            <li>별도 .css 파일에 클래스 정의</li>
+            <li>클래스 이름 짓기에 시간 소비</li>
+            <li>HTML과 CSS 사이 왔다 갔다</li>
+            <li>안 쓰는 스타일이 점점 쌓임</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">Tailwind CSS</div>
+          <ul>
+            <li>HTML에 유틸리티 클래스만 조합</li>
+            <li>네이밍 고민 없이 즉시 작성</li>
+            <li>한 파일만 보면 디자인 파악 가능</li>
+            <li>실제 사용한 클래스만 빌드에 포함</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Tailwind 코드 예시 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <h2>실제 코드로 <span class="highlight-blue">비교</span></h2>
+      <p>같은 결과를 만드는 두 가지 방식 — 길이와 흐름이 완전히 다르다.</p>
+      <div class="code-block"><span class="c-com">/* 전통 CSS */</span>
+<span class="c-cls">.btn-primary</span> {
+  <span class="c-attr">background</span>: <span class="c-str">#3b82f6</span>;
+  <span class="c-attr">color</span>: <span class="c-str">white</span>;
+  <span class="c-attr">padding</span>: <span class="c-str">0.5rem 1rem</span>;
+  <span class="c-attr">border-radius</span>: <span class="c-str">0.375rem</span>;
+}
+<span class="c-tag">&lt;button</span> <span class="c-attr">class</span>=<span class="c-str">"btn-primary"</span><span class="c-tag">&gt;</span>저장<span class="c-tag">&lt;/button&gt;</span>
+
+<span class="c-com">/* Tailwind CSS */</span>
+<span class="c-tag">&lt;button</span> <span class="c-attr">class</span>=<span class="c-str">"bg-blue-500 text-white px-4 py-2 rounded-md"</span><span class="c-tag">&gt;</span>저장<span class="c-tag">&lt;/button&gt;</span></div>
+      <p style="margin-top:1.2rem; color:#888;">💡 Tailwind는 한 줄 — HTML만 봐도 이 버튼이 어떻게 생겼는지 즉시 알 수 있다.</p>
+    </div>
+
+    <!-- 9. 자주 쓰는 클래스 -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">🧰</div>
+      <h2>자주 쓰는 <span class="highlight">Tailwind 클래스</span></h2>
+      <p>이 정도만 익히면 AI가 만든 코드의 80%는 읽힌다.</p>
+      <div class="tw-chips">
+        <span class="tw-chip">flex</span>
+        <span class="tw-chip">grid</span>
+        <span class="tw-chip">items-center</span>
+        <span class="tw-chip">justify-between</span>
+        <span class="tw-chip green">p-4</span>
+        <span class="tw-chip green">px-6</span>
+        <span class="tw-chip green">py-2</span>
+        <span class="tw-chip green">m-2</span>
+        <span class="tw-chip yellow">text-lg</span>
+        <span class="tw-chip yellow">text-xl</span>
+        <span class="tw-chip yellow">font-bold</span>
+        <span class="tw-chip yellow">text-center</span>
+        <span class="tw-chip pink">bg-blue-500</span>
+        <span class="tw-chip pink">bg-gray-100</span>
+        <span class="tw-chip pink">text-white</span>
+        <span class="tw-chip">rounded-md</span>
+        <span class="tw-chip">rounded-full</span>
+        <span class="tw-chip">shadow-lg</span>
+        <span class="tw-chip">w-full</span>
+        <span class="tw-chip">h-screen</span>
+        <span class="tw-chip">hover:bg-blue-700</span>
+        <span class="tw-chip">md:flex</span>
+      </div>
+      <p style="margin-top:1.5rem; color:#888;">💡 패턴은 단순 — <span class="highlight">속성-값</span>이 하이픈으로 연결된다 (text-lg, bg-blue-500).</p>
+    </div>
+
+    <!-- 10. 클래스 패턴 -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <h2>Tailwind 클래스 <span class="highlight-blue">읽는 법</span></h2>
+      <p>이름의 구조를 알면 외울 필요 없이 <span class="highlight">조립</span>해서 쓸 수 있다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight">간격</span>: p-(padding), m-(margin)</div>
+            <div class="step-desc">p-4 = padding 1rem. p-2, p-4, p-6, p-8 ... 숫자가 크면 여백도 큼</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-blue">색상</span>: bg-(배경), text-(글자), border-(테두리)</div>
+            <div class="step-desc">bg-blue-500. 색이름 + 50~950 농도. 숫자 클수록 진함</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-yellow">상태</span>: hover:, focus:, active:</div>
+            <div class="step-desc">hover:bg-blue-700 = 마우스 올렸을 때 진한 파랑으로</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title"><span class="highlight-pink">반응형</span>: sm:, md:, lg:, xl:</div>
+            <div class="step-desc">md:flex = 중간 화면 이상에서만 flex. 모바일과 데스크톱 분기</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">🧱</div>
+      <h2>Tailwind는 <span class="highlight">레고 부품 카탈로그</span></h2>
+      <p>스타일을 직접 깎는 대신, 미리 만들어진 부품을 골라 조립한다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🧱 레고 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">전통 CSS</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">맞춤 조각</span> — 부품을 직접 깎고 색칠해 만든다</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">Tailwind</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">레고 카탈로그</span> — 표준 부품을 가져다 조립</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">bg-blue-500</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">파란 4x2 블록</span> — 이미 있는 부품 번호</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">p-4</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">여백 1cm 패드</span> — 사이즈가 정해진 부품</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI와 Tailwind -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">🤖</div>
+      <h2>AI가 <span class="highlight-blue">Tailwind를 사랑하는 이유</span></h2>
+      <p>Cursor·Claude·Copilot이 만드는 웹 코드의 대부분이 Tailwind인 데는 이유가 있다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📄</div>
+          <div class="card-title">한 파일에 다 있다</div>
+          <div class="card-desc">CSS와 HTML을 오갈 필요 없어 AI가 컨텍스트를 잃지 않음</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">정확한 결과</div>
+          <div class="card-desc">클래스 이름이 표준화되어 있어 AI가 의도한 대로 결과 나옴</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">즉시 미리보기</div>
+          <div class="card-desc">생성 즉시 화면 결과 확인. 수정 사이클이 매우 빠름</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888;">💡 Tailwind를 읽을 줄만 알면 AI 결과물을 검증하고 수정 요청할 수 있다.</p>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📦</div>
+          <div class="summary-label">박스 모델</div>
+          <div class="summary-desc">content + padding +<br/>border + margin</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📏</div>
+          <div class="summary-label">Flexbox</div>
+          <div class="summary-desc">1차원 정렬<br/>한 줄로 배치</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔲</div>
+          <div class="summary-label">Grid</div>
+          <div class="summary-desc">2차원 정렬<br/>행·열 격자</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">💨</div>
+          <div class="summary-label">Tailwind</div>
+          <div class="summary-desc">유틸리티 클래스<br/>HTML 안에서 스타일링</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧰</div>
+          <div class="summary-label">자주 쓰는 클래스</div>
+          <div class="summary-desc">flex, p-4, text-lg,<br/>bg-blue-500, hover:</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🤖</div>
+          <div class="summary-label">AI 친화적</div>
+          <div class="summary-desc">한 파일에 모든 정보<br/>AI 생성 코드의 표준</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. Next -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 20 · JavaScript 기초</span></h2>
+      <p>
+        HTML로 구조를, CSS·Tailwind로 디자인을 입혔다.<br/>
+        이제는 화면을 <span class="highlight-blue">동적으로 움직이게</span> 하는 언어 — JavaScript의 기초를 배운다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 모든 요소는 박스다. Tailwind는 그 박스들을 빠르게 조립하는 부품 카탈로그다.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

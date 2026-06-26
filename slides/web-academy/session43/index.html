@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 43 - AI의 종류와 현황</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 43 · Part 8 AI 이해와 활용</div>
+      <h1>AI의 종류와<br/>현황</h1>
+      <h3>생성형 AI · 멀티모달 · Foundation Model · AGI</h3>
+    </div>
+
+    <!-- 2. 왜 -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">AI 지도</span>를<br/>그려야 할까?</h2>
+      <p>
+        매주 새로운 AI가 쏟아진다. 분류가 없으면 <span class="highlight-blue">"이건 뭐고 저건 뭐지?"</span>의 혼돈에 빠진다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        지도가 있으면 <span class="highlight-yellow">"내 일에 어떤 AI가 적합한가"</span>를 빠르게 판단할 수 있다.
+      </p>
+    </div>
+
+    <!-- 3. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">생성형 AI 갈래</div>
+          <div class="card-desc">텍스트·이미지·코드·음성 — 4가지 주요 영역을 구분한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔀</div>
+          <div class="card-title">특화 vs 멀티모달</div>
+          <div class="card-desc">한 가지에 강한 AI와 여러 입력을 다루는 AI의 차이를 안다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌌</div>
+          <div class="card-title">AGI 현주소</div>
+          <div class="card-desc">범용 인공지능이 무엇이고, 지금 어디쯤 와 있는지 이해한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 생성형 AI 4갈래 -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <h2>생성형 AI <span class="highlight">4갈래</span></h2>
+      <p>새로운 콘텐츠를 만들어내는 AI는 크게 네 가지 영역에서 활약한다.</p>
+      <div class="card-grid four-col">
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <div class="card-title">텍스트</div>
+          <div class="card-desc">글·대화·번역·요약 생성</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">이미지</div>
+          <div class="card-desc">그림·일러스트·사진 생성</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <div class="card-title">코드</div>
+          <div class="card-desc">프로그래밍 자동완성·생성</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎵</div>
+          <div class="card-title">음성/음악</div>
+          <div class="card-desc">목소리·노래·효과음 생성</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 텍스트 AI -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <div class="big-emoji">📝</div>
+      <h2>텍스트 AI —<br/><span class="highlight">대화·창작의 도구</span></h2>
+      <p>가장 친숙한 영역. 우리가 매일 쓰는 그 친구들이다.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-name">GPT</div>
+          <div class="feature-sub">OpenAI</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🪶</div>
+          <div class="feature-name">Claude</div>
+          <div class="feature-sub">Anthropic</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <div class="feature-name">Gemini</div>
+          <div class="feature-sub">Google</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🦙</div>
+          <div class="feature-name">Llama</div>
+          <div class="feature-sub">Meta (오픈소스)</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;">대화, 글쓰기, 번역, 요약, 분석 — 텍스트로 가능한 거의 모든 일을 다룬다.</p>
+    </div>
+
+    <!-- 6. 이미지·코드·음성 AI -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <div class="big-emoji">🎨</div>
+      <h2>이미지·코드·음성<br/><span class="highlight-blue">생성 AI</span></h2>
+      <p>각 영역에서 가장 많이 쓰이는 도구들.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌅</div>
+          <div class="feature-name">Midjourney</div>
+          <div class="feature-sub">예술적 이미지</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🖼️</div>
+          <div class="feature-name">DALL·E</div>
+          <div class="feature-sub">OpenAI 이미지</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎭</div>
+          <div class="feature-name">Stable Diffusion</div>
+          <div class="feature-sub">오픈소스 이미지</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐙</div>
+          <div class="feature-name">GitHub Copilot</div>
+          <div class="feature-sub">코드 자동완성</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⌨️</div>
+          <div class="feature-name">Cursor</div>
+          <div class="feature-sub">AI IDE</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-name">Claude Code</div>
+          <div class="feature-sub">CLI 코딩 에이전트</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <div class="feature-name">ElevenLabs</div>
+          <div class="feature-sub">음성 합성</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎶</div>
+          <div class="feature-name">Suno</div>
+          <div class="feature-sub">노래 생성</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 특화 AI -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>특화 AI —<br/><span class="highlight">한 가지를 깊이</span></h2>
+      <p>범용은 아니지만, 한 영역에서는 사람을 능가하는 AI들.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">번역 AI</div>
+          <div class="card-desc">DeepL, Papago — 한 가지 언어쌍에 최적화</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏥</div>
+          <div class="card-title">의료 영상 진단</div>
+          <div class="card-desc">CT·X-ray에서 종양·골절 탐지 — 의사 보조</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚗</div>
+          <div class="card-title">자율주행</div>
+          <div class="card-desc">Tesla FSD, Waymo — 도로·차선·보행자 인식</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">특징:</span> 좁고 깊다 — 다른 일은 못하지만 그 일은 매우 잘한다.</p>
+    </div>
+
+    <!-- 8. 멀티모달 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <div class="big-emoji">🔀</div>
+      <h2>멀티모달 AI —<br/><span class="highlight-blue">여러 감각을 한 번에</span></h2>
+      <p>텍스트·이미지·음성을 <span class="highlight">동시에 입력하고 출력</span>할 수 있는 AI.</p>
+      <div class="flow">
+        <div class="flow-item">📝 텍스트<br/>"이 사진 설명해줘"</div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-item">📷 이미지<br/>업로드</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">🤖 멀티모달 AI<br/>(GPT-4o, Claude)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">📝 답변<br/>+ 🎵 음성</div>
+      </div>
+      <p style="margin-top:1.5rem;">대표 모델: <span class="highlight">GPT-4o</span>, <span class="highlight-blue">Claude</span>, <span class="highlight-yellow">Gemini</span> — 모두 멀티모달이다.</p>
+    </div>
+
+    <!-- 9. Foundation Model -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">🏛️</div>
+      <h2>Foundation Model —<br/><span class="highlight">기반 모델</span></h2>
+      <p>거대한 데이터로 사전 학습된 <span class="highlight-blue">범용 모델</span>. 다양한 작업에 응용할 수 있는 토대.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">사전 학습 (Pre-training)</div>
+            <div class="step-desc">인터넷 규모의 데이터로 일반적인 패턴 학습 — 막대한 비용·시간</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">파인튜닝 (Fine-tuning)</div>
+            <div class="step-desc">특정 분야(법률·의료·금융) 데이터로 추가 학습 — 작은 비용으로 전문화</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">활용</div>
+            <div class="step-desc">하나의 토대 모델 위에서 <span class="highlight">수많은 응용 서비스</span>가 만들어진다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. AGI -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <div class="big-emoji">🌌</div>
+      <h2>AGI —<br/><span class="highlight">범용 인공지능</span></h2>
+      <p>인간 수준으로 <span class="highlight-blue">모든 분야</span>를 학습·수행할 수 있는 AI.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">📍 현재 (Narrow AI)</div>
+          <ul>
+            <li>특정 작업에 강함 (글, 그림, 코딩)</li>
+            <li>새 작업은 학습이 필요</li>
+            <li>맥락·상식 한계 존재</li>
+            <li>환각(hallucination) 발생</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">🎯 목표 (AGI)</div>
+          <ul>
+            <li>인간처럼 모든 작업을 학습</li>
+            <li>새 영역에 스스로 적응</li>
+            <li>상식·추론·창의성 보유</li>
+            <li>아직 도달 전 — 활발한 연구 중</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">🍳</div>
+      <h2>AI 생태계 = <span class="highlight">요리 도구의 진화</span></h2>
+      <p>한 종류의 요리 → 다양한 요리 → 알아서 해주는 셰프.</p>
+      <div class="analogy">
+        <div class="analogy-title">🍴 요리 도구 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">전용 기계</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">특화 AI</span> — 토스터, 와플메이커 (한 가지만 매우 잘함)</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">만능 가전</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">Foundation Model</span> — 오븐 (다양한 요리 가능, 응용 폭 큼)</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">멀티 조리</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">멀티모달 AI</span> — 한 기기로 굽고·찌고·튀기고</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">전속 셰프</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">AGI</span> — 어떤 요리든 알아서 — 아직 미래의 일</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. 어떤 AI를 언제 -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">🧭</div>
+      <h2>언제 <span class="highlight">어떤 AI를</span> 쓸까?</h2>
+      <p>일에 맞는 도구를 골라 쓰는 감각이 가장 중요하다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <div class="card-title">글·기획 작업</div>
+          <div class="card-desc">Claude, GPT — 길고 깊은 대화에 강함</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <div class="card-title">코딩 작업</div>
+          <div class="card-desc">Cursor, Claude Code, Copilot — IDE 안에서 바로</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">디자인 시안</div>
+          <div class="card-desc">Midjourney, DALL·E — 빠른 컨셉 시각화</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">번역</div>
+          <div class="card-desc">DeepL — 정확도 우선 / Claude — 맥락·뉘앙스 우선</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎙️</div>
+          <div class="card-title">음성 콘텐츠</div>
+          <div class="card-desc">ElevenLabs — 더빙 / Suno — 음악 제작</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">데이터 분석</div>
+          <div class="card-desc">GPT-4 Code Interpreter, Claude — 파일 업로드 분석</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">🎨</div>
+          <div class="summary-label">생성형 AI</div>
+          <div class="summary-desc">텍스트·이미지·코드<br/>음성을 만든다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🎯</div>
+          <div class="summary-label">특화 AI</div>
+          <div class="summary-desc">번역·진단·자율주행<br/>한 영역에 깊이</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔀</div>
+          <div class="summary-label">멀티모달</div>
+          <div class="summary-desc">텍스트·이미지·음성을<br/>동시 입력/출력</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🏛️</div>
+          <div class="summary-label">Foundation</div>
+          <div class="summary-desc">거대 사전학습 모델<br/>위에 응용 서비스</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🌌</div>
+          <div class="summary-label">AGI</div>
+          <div class="summary-desc">인간 수준 범용 AI<br/>아직 도달 전</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧭</div>
+          <div class="summary-label">선택 감각</div>
+          <div class="summary-desc">일에 맞는 도구를<br/>고르는 게 핵심</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. 다음 -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 44 · 프롬프트 엔지니어링</span></h2>
+      <p>
+        AI 지도를 그렸으니, 이제 <span class="highlight-blue">잘 쓰는 법</span>이다.<br/>
+        같은 AI라도 어떻게 묻느냐에 따라 답이 완전히 달라진다.<br/>
+        <span class="highlight-yellow">프롬프트 한 줄</span>이 결과를 결정한다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 도구는 많다 — 일에 맞춰 고르는 감각이 진짜 실력.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

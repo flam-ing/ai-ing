@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CS 4년 커리큘럼 — 컴퓨터공학 핵심 강의</title>
+  <meta name="description" content="컴퓨터공학 4년 커리큘럼의 핵심을 입문자 눈높이로 정리한 강의 사이트." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-base="">
+  <!-- 헤더는 components.js가 주입 -->
+
+  <section class="hero">
+    <h1>컴퓨터공학 <span class="grad">4년 커리큘럼</span>의 핵심</h1>
+    <p>1학년부터 4학년까지, 꼭 알아야 할 과목을 입문자 눈높이로<br />설명 · 코드 · 그림과 함께 정리했습니다.</p>
+    <div class="stats">
+      <div><div class="num" id="stat-subjects">15</div><div class="lbl">핵심 과목</div></div>
+      <div><div class="num">4</div><div class="lbl">학년 로드맵</div></div>
+      <div><div class="num">0</div><div class="lbl">설치 · 빌드</div></div>
+    </div>
+  </section>
+
+  <main class="hub" id="hub"><!-- 카드 그리드는 아래 스크립트가 렌더 --></main>
+
+  <footer class="site-footer">
+    공유 디자인 시스템 위에 만든 정적 강의 사이트 · 브라우저로 바로 열림
+  </footer>
+
+  <script src="assets/js/curriculum.js"></script>
+  <script>
+    // 허브 카드 그리드 — 과목 추가 시 curriculum.js 만 고치면 자동 반영
+    (function () {
+      var C = window.CURRICULUM;
+      document.getElementById("stat-subjects").textContent = C.subjects.length;
+      var hub = document.getElementById("hub");
+      var html = "";
+      C.years.forEach(function (y) {
+        var items = C.subjects.filter(function (s) { return s.year === y.id; });
+        if (!items.length) return;
+        html += '<section class="year-block">' +
+                  '<div class="year-head">' +
+                    '<span class="badge ' + y.cls + '">' + y.badge + '</span>' +
+                    '<span class="desc">' + y.desc + '</span>' +
+                  '</div><div class="card-grid">';
+        items.forEach(function (s) {
+          html += '<a class="subject-card" href="subjects/' + s.slug + '.html">' +
+                    '<div class="ico">' + s.icon + '</div>' +
+                    '<div class="ttl">' + s.title + '</div>' +
+                    '<p class="sub">' + s.sub + '</p>' +
+                    '<span class="tag">학습 시작 →</span>' +
+                  '</a>';
+        });
+        html += "</div></section>";
+      });
+      hub.innerHTML = html;
+    })();
+  </script>
+  <script src="assets/js/components.js"></script>
+</body>
+</html>

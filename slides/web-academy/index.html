@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 시대의 웹/앱 개발 백과 — 전체 커리큘럼</title>
+  <meta name="description" content="컴퓨터 기초부터 AI 바이브코딩까지 — 비개발자를 위한 웹/앱 개발 사전지식 백과. 50개 세션, 8개 파트." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Decorative background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(110,231,183,0.10), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(96,165,250,0.10), transparent 40%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 8rem;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 5rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(110,231,183,0.1);
+      border: 1px solid rgba(110,231,183,0.3);
+      border-radius: 100px;
+      color: #6ee7b7;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    .hero-sub {
+      font-size: 1.25rem;
+      color: #999;
+      max-width: 720px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-meta-value {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #6ee7b7;
+      line-height: 1;
+    }
+    .hero-meta-label {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+    .cta {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 1rem 2.2rem;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(110,231,183,0.25);
+    }
+
+    /* Learning path */
+    .path {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 5rem;
+    }
+    .path-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.15em;
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    .path-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .path-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .path-step {
+      padding: 0.7rem 1.1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .path-step:hover {
+      border-color: rgba(110,231,183,0.5);
+      background: rgba(110,231,183,0.08);
+      color: #6ee7b7;
+    }
+    .path-arrow {
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Stats */
+    .stats {
+      margin-bottom: 5rem;
+    }
+    .stats-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.15em;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .stats-sub {
+      text-align: center;
+      color: #888;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      padding: 1.8rem 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      text-align: center;
+      transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    }
+    .stat-card:hover {
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+    }
+    .stat-value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-value .unit {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-left: 0.15rem;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: #888;
+      letter-spacing: 0.12em;
+      font-weight: 500;
+    }
+
+    .parts-wrap {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .parts-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .parts-table th,
+    .parts-table td {
+      padding: 0.95rem 1.1rem;
+      text-align: left;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .parts-table th {
+      background: rgba(110,231,183,0.06);
+      color: #6ee7b7;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+    }
+    .parts-table tbody tr:last-child td { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .parts-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
+    .parts-table .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .parts-table tfoot td {
+      background: rgba(110,231,183,0.06);
+      font-weight: 700;
+      color: #6ee7b7;
+      border-bottom: none;
+    }
+    .stats-note {
+      margin-top: 1rem;
+      color: #777;
+      font-size: 0.85rem;
+      text-align: right;
+    }
+
+    /* Parts */
+    .part {
+      margin-bottom: 4.5rem;
+    }
+    .part-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .part-num {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.2em;
+    }
+    .part-emoji {
+      font-size: 2.2rem;
+    }
+    .part-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #e0e0e0;
+    }
+    .part-sub {
+      color: #888;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .session-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.4rem 1.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .session-card::after {
+      content: '→';
+      position: absolute;
+      bottom: 1.2rem;
+      right: 1.5rem;
+      color: #6ee7b7;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      font-size: 1.2rem;
+    }
+    .session-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.06);
+    }
+    .session-card:hover::after {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+    .session-num {
+      font-size: 0.8rem;
+      color: #6ee7b7;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+    }
+    .session-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      padding-right: 1.5rem;
+    }
+    .session-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 6rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    footer strong { color: #6ee7b7; }
+
+    @media (max-width: 768px) {
+      .wrap { padding: 3rem 1.2rem 5rem; }
+      .hero { padding: 2rem 0 3rem; }
+      .hero h1 { font-size: 2.6rem; }
+      .hero-sub { font-size: 1rem; }
+      .hero-meta { gap: 1.5rem; }
+      .hero-meta-value { font-size: 1.6rem; }
+      .part-title { font-size: 1.5rem; }
+      .part-emoji { font-size: 1.7rem; }
+      .session-grid { grid-template-columns: 1fr; }
+      .path-flow { font-size: 0.85rem; }
+      .path-step { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-value { font-size: 1.8rem; }
+      .parts-table th,
+      .parts-table td { padding: 0.7rem 0.7rem; font-size: 0.82rem; }
+      .parts-table .hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge">AI TIME · WEB &amp; APP ACADEMY</div>
+      <h1>AI 시대의<br/>웹/앱 개발 백과</h1>
+      <p class="hero-sub">
+        컴퓨터를 켜는 것부터 시작해 AI 도구로 자신만의 웹/앱을 만드는 수준까지.<br/>
+        <strong style="color:#6ee7b7;">비개발자를 위한</strong> 사전지식 백과 — 개념 → 비유 → 실전 연결.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">50</div>
+          <div class="hero-meta-label">SESSIONS</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">8</div>
+          <div class="hero-meta-label">PARTS</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-value">0 → 1</div>
+          <div class="hero-meta-label">FROM SCRATCH</div>
+        </div>
+      </div>
+      <a class="cta" href="session01/index.html">Session 01 부터 시작하기 →</a>
+    </section>
+
+    <!-- LEARNING PATH -->
+    <section class="path">
+      <div class="path-title">🗺 학습 로드맵</div>
+      <div class="path-flow">
+        <div class="path-row">
+          <a href="#part1" class="path-step">컴퓨터 기초</a>
+          <span class="path-arrow">→</span>
+          <a href="#part2" class="path-step">개발자처럼 생각하기</a>
+          <span class="path-arrow">→</span>
+          <a href="#part3" class="path-step">운영체제 기초</a>
+          <span class="path-arrow">→</span>
+          <a href="#part4" class="path-step">개발 환경</a>
+        </div>
+        <div class="path-row">
+          <a href="#part5" class="path-step">웹 개발</a>
+          <span class="path-arrow">→</span>
+          <a href="#part6" class="path-step">서버 / DB</a>
+          <span class="path-arrow">→</span>
+          <a href="#part7" class="path-step">클라우드 / 배포</a>
+          <span class="path-arrow">→</span>
+          <a href="#part8" class="path-step">AI 이해와 활용</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+      <div class="stats-title">📊 커리큘럼 통계</div>
+      <p class="stats-sub">50강 콘텐츠와 슬라이드 산출물 한눈에 보기</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">50</div>
+          <div class="stat-label">SESSIONS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">8</div>
+          <div class="stat-label">PARTS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">732</div>
+          <div class="stat-label">SLIDES</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">14.6</div>
+          <div class="stat-label">AVG / SESSION</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1.69<span class="unit">MB</span></div>
+          <div class="stat-label">HTML 산출물 총 용량</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">100<span class="unit">%</span></div>
+          <div class="stat-label">한국어 콘텐츠</div>
+        </div>
+      </div>
+
+      <div class="parts-wrap">
+        <table class="parts-table">
+          <thead>
+            <tr>
+              <th>파트</th>
+              <th>주제</th>
+              <th class="hide-sm">세션 범위</th>
+              <th class="num">세션</th>
+              <th class="num">슬라이드</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Part 1</td><td>컴퓨터 기초</td><td class="hide-sm">01–04</td><td class="num">4</td><td class="num">58</td></tr>
+            <tr><td>Part 2</td><td>개발자처럼 생각하기</td><td class="hide-sm">05–08</td><td class="num">4</td><td class="num">60</td></tr>
+            <tr><td>Part 3</td><td>운영체제 기초</td><td class="hide-sm">09–11</td><td class="num">3</td><td class="num">44</td></tr>
+            <tr><td>Part 4</td><td>개발 환경</td><td class="hide-sm">12–17</td><td class="num">6</td><td class="num">89</td></tr>
+            <tr><td>Part 5</td><td>웹 개발</td><td class="hide-sm">18–26</td><td class="num">9</td><td class="num">132</td></tr>
+            <tr><td>Part 6</td><td>서버 / DB</td><td class="hide-sm">27–32</td><td class="num">6</td><td class="num">88</td></tr>
+            <tr><td>Part 7</td><td>클라우드 / 배포</td><td class="hide-sm">33–37</td><td class="num">5</td><td class="num">74</td></tr>
+            <tr><td>Part 8</td><td>AI 이해와 활용</td><td class="hide-sm">38–50</td><td class="num">13</td><td class="num">187</td></tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2">합계</td>
+              <td class="hide-sm"></td>
+              <td class="num">50</td>
+              <td class="num">732</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="stats-note">Part 8은 8-A. AI 원론(38–43, 84장) · 8-B. AI 실전 활용(44–50, 103장)으로 구성</p>
+    </section>
+
+    <!-- PART 1 -->
+    <section class="part" id="part1">
+      <div class="part-header">
+        <span class="part-emoji">🖥️</span>
+        <div>
+          <div class="part-num">PART 1</div>
+          <div class="part-title">컴퓨터 기초</div>
+        </div>
+      </div>
+      <p class="part-sub">컴퓨터와 인터넷의 첫 걸음 — 가장 기초적인 디지털 개념.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session01/index.html">
+          <div class="session-emoji">🏁</div>
+          <div class="session-num">SESSION 01</div>
+          <div class="session-title">컴퓨터란 무엇인가?</div>
+        </a>
+        <a class="session-card" href="session02/index.html">
+          <div class="session-emoji">🔩</div>
+          <div class="session-num">SESSION 02</div>
+          <div class="session-title">하드웨어 구조</div>
+        </a>
+        <a class="session-card" href="session03/index.html">
+          <div class="session-emoji">📁</div>
+          <div class="session-num">SESSION 03</div>
+          <div class="session-title">파일, 폴더와 저장소</div>
+        </a>
+        <a class="session-card" href="session04/index.html">
+          <div class="session-emoji">🌐</div>
+          <div class="session-num">SESSION 04</div>
+          <div class="session-title">네트워크와 인터넷</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 2 -->
+    <section class="part" id="part2">
+      <div class="part-header">
+        <span class="part-emoji">💡</span>
+        <div>
+          <div class="part-num">PART 2</div>
+          <div class="part-title">개발자처럼 생각하기</div>
+        </div>
+      </div>
+      <p class="part-sub">AI와 코드를 이해하기 위한 최소한의 사고법 — 실용적 CS 개념만.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session05/index.html">
+          <div class="session-emoji">🔤</div>
+          <div class="session-num">SESSION 05</div>
+          <div class="session-title">데이터의 표현</div>
+        </a>
+        <a class="session-card" href="session06/index.html">
+          <div class="session-emoji">🧮</div>
+          <div class="session-num">SESSION 06</div>
+          <div class="session-title">알고리즘과 문제해결 사고</div>
+        </a>
+        <a class="session-card" href="session07/index.html">
+          <div class="session-emoji">💡</div>
+          <div class="session-num">SESSION 07</div>
+          <div class="session-title">프로그래밍 개념</div>
+        </a>
+        <a class="session-card" href="session08/index.html">
+          <div class="session-emoji">🧩</div>
+          <div class="session-num">SESSION 08</div>
+          <div class="session-title">함수와 추상화</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 3 -->
+    <section class="part" id="part3">
+      <div class="part-header">
+        <span class="part-emoji">⚙️</span>
+        <div>
+          <div class="part-num">PART 3</div>
+          <div class="part-title">운영체제 기초</div>
+        </div>
+      </div>
+      <p class="part-sub">터미널을 두려워하지 않기 위한 최소한의 OS 지식.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session09/index.html">
+          <div class="session-emoji">🖥️</div>
+          <div class="session-num">SESSION 09</div>
+          <div class="session-title">운영체제란?</div>
+        </a>
+        <a class="session-card" href="session10/index.html">
+          <div class="session-emoji">🧠</div>
+          <div class="session-num">SESSION 10</div>
+          <div class="session-title">프로세스와 메모리 개념</div>
+        </a>
+        <a class="session-card" href="session11/index.html">
+          <div class="session-emoji">💻</div>
+          <div class="session-num">SESSION 11</div>
+          <div class="session-title">터미널과 쉘</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 4 -->
+    <section class="part" id="part4">
+      <div class="part-header">
+        <span class="part-emoji">🛠️</span>
+        <div>
+          <div class="part-num">PART 4</div>
+          <div class="part-title">개발 환경</div>
+        </div>
+      </div>
+      <p class="part-sub">코드를 쓰기 전 준비 — 언어·에디터·Git·패키지.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session12/index.html">
+          <div class="session-emoji">🗺️</div>
+          <div class="session-num">SESSION 12</div>
+          <div class="session-title">프로그래밍 언어 지형도</div>
+        </a>
+        <a class="session-card" href="session13/index.html">
+          <div class="session-emoji">🤖</div>
+          <div class="session-num">SESSION 13</div>
+          <div class="session-title">코드 에디터와 AI 코딩 도구</div>
+        </a>
+        <a class="session-card" href="session14/index.html">
+          <div class="session-emoji">🌳</div>
+          <div class="session-num">SESSION 14</div>
+          <div class="session-title">Git이란?</div>
+        </a>
+        <a class="session-card" href="session15/index.html">
+          <div class="session-emoji">🐙</div>
+          <div class="session-num">SESSION 15</div>
+          <div class="session-title">GitHub와 협업</div>
+        </a>
+        <a class="session-card" href="session16/index.html">
+          <div class="session-emoji">📦</div>
+          <div class="session-num">SESSION 16</div>
+          <div class="session-title">패키지 매니저</div>
+        </a>
+        <a class="session-card" href="session17/index.html">
+          <div class="session-emoji">🐞</div>
+          <div class="session-num">SESSION 17</div>
+          <div class="session-title">디버깅 기초</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 5 -->
+    <section class="part" id="part5">
+      <div class="part-header">
+        <span class="part-emoji">🌐</span>
+        <div>
+          <div class="part-num">PART 5</div>
+          <div class="part-title">웹 개발</div>
+        </div>
+      </div>
+      <p class="part-sub">브라우저에 보이는 모든 것 — HTML·CSS·JS·TypeScript·React까지.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session18/index.html">
+          <div class="session-emoji">📄</div>
+          <div class="session-num">SESSION 18</div>
+          <div class="session-title">HTML</div>
+        </a>
+        <a class="session-card" href="session19/index.html">
+          <div class="session-emoji">🎨</div>
+          <div class="session-num">SESSION 19</div>
+          <div class="session-title">CSS와 Tailwind CSS</div>
+        </a>
+        <a class="session-card" href="session20/index.html">
+          <div class="session-emoji">⚡</div>
+          <div class="session-num">SESSION 20</div>
+          <div class="session-title">JavaScript 기초</div>
+        </a>
+        <a class="session-card" href="session21/index.html">
+          <div class="session-emoji">🛡️</div>
+          <div class="session-num">SESSION 21</div>
+          <div class="session-title">TypeScript 입문</div>
+        </a>
+        <a class="session-card" href="session22/index.html">
+          <div class="session-emoji">🖱️</div>
+          <div class="session-num">SESSION 22</div>
+          <div class="session-title">DOM과 이벤트</div>
+        </a>
+        <a class="session-card" href="session23/index.html">
+          <div class="session-emoji">📡</div>
+          <div class="session-num">SESSION 23</div>
+          <div class="session-title">HTTP와 요청/응답</div>
+        </a>
+        <a class="session-card" href="session24/index.html">
+          <div class="session-emoji">📱</div>
+          <div class="session-num">SESSION 24</div>
+          <div class="session-title">반응형 웹 디자인</div>
+        </a>
+        <a class="session-card" href="session25/index.html">
+          <div class="session-emoji">⚛️</div>
+          <div class="session-num">SESSION 25</div>
+          <div class="session-title">React 기초</div>
+        </a>
+        <a class="session-card" href="session26/index.html">
+          <div class="session-emoji">🔧</div>
+          <div class="session-num">SESSION 26</div>
+          <div class="session-title">빌드 도구와 Vite</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 6 -->
+    <section class="part" id="part6">
+      <div class="part-header">
+        <span class="part-emoji">🗄️</span>
+        <div>
+          <div class="part-num">PART 6</div>
+          <div class="part-title">서버 / DB</div>
+        </div>
+      </div>
+      <p class="part-sub">데이터를 저장하고 API로 주고받는 법 — Firebase 중심의 입문 스택.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session27/index.html">
+          <div class="session-emoji">🖥️</div>
+          <div class="session-num">SESSION 27</div>
+          <div class="session-title">서버와 클라이언트</div>
+        </a>
+        <a class="session-card" href="session28/index.html">
+          <div class="session-emoji">🔗</div>
+          <div class="session-num">SESSION 28</div>
+          <div class="session-title">REST API와 데이터 교환</div>
+        </a>
+        <a class="session-card" href="session29/index.html">
+          <div class="session-emoji">🗃️</div>
+          <div class="session-num">SESSION 29</div>
+          <div class="session-title">관계형 데이터베이스 (SQL)</div>
+        </a>
+        <a class="session-card" href="session30/index.html">
+          <div class="session-emoji">🔥</div>
+          <div class="session-num">SESSION 30</div>
+          <div class="session-title">Firebase와 BaaS</div>
+        </a>
+        <a class="session-card" href="session31/index.html">
+          <div class="session-emoji">🔐</div>
+          <div class="session-num">SESSION 31</div>
+          <div class="session-title">인증과 보안 기초</div>
+        </a>
+        <a class="session-card" href="session32/index.html">
+          <div class="session-emoji">📋</div>
+          <div class="session-num">SESSION 32</div>
+          <div class="session-title">로깅과 에러 처리</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 7 -->
+    <section class="part" id="part7">
+      <div class="part-header">
+        <span class="part-emoji">☁️</span>
+        <div>
+          <div class="part-num">PART 7</div>
+          <div class="part-title">클라우드 / 배포</div>
+        </div>
+      </div>
+      <p class="part-sub">만든 서비스를 실제 URL로 세상에 내놓기.</p>
+      <div class="session-grid">
+        <a class="session-card" href="session33/index.html">
+          <div class="session-emoji">☁️</div>
+          <div class="session-num">SESSION 33</div>
+          <div class="session-title">클라우드 컴퓨팅 개요</div>
+        </a>
+        <a class="session-card" href="session34/index.html">
+          <div class="session-emoji">🌍</div>
+          <div class="session-num">SESSION 34</div>
+          <div class="session-title">도메인과 DNS</div>
+        </a>
+        <a class="session-card" href="session35/index.html">
+          <div class="session-emoji">🔒</div>
+          <div class="session-num">SESSION 35</div>
+          <div class="session-title">HTTPS와 보안 연결</div>
+        </a>
+        <a class="session-card" href="session36/index.html">
+          <div class="session-emoji">🔄</div>
+          <div class="session-num">SESSION 36</div>
+          <div class="session-title">CI/CD와 자동 배포</div>
+        </a>
+        <a class="session-card" href="session37/index.html">
+          <div class="session-emoji">🚀</div>
+          <div class="session-num">SESSION 37</div>
+          <div class="session-title">Vercel·Netlify 실전 배포</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PART 8 -->
+    <section class="part" id="part8">
+      <div class="part-header">
+        <span class="part-emoji">🤖</span>
+        <div>
+          <div class="part-num">PART 8</div>
+          <div class="part-title">AI 이해와 활용</div>
+        </div>
+      </div>
+      <p class="part-sub">AI를 '블랙박스'가 아닌 이해 가능한 도구로 — 원론부터 바이브코딩까지.</p>
+
+      <h3 style="color:#6ee7b7;font-size:1.1rem;font-weight:700;letter-spacing:0.15em;margin:1.5rem 0 1rem;">8-A. AI 원론</h3>
+      <div class="session-grid">
+        <a class="session-card" href="session38/index.html">
+          <div class="session-emoji">🧠</div>
+          <div class="session-num">SESSION 38</div>
+          <div class="session-title">AI란 무엇인가?</div>
+        </a>
+        <a class="session-card" href="session39/index.html">
+          <div class="session-emoji">🕰️</div>
+          <div class="session-num">SESSION 39</div>
+          <div class="session-title">AI의 발전과 역사</div>
+        </a>
+        <a class="session-card" href="session40/index.html">
+          <div class="session-emoji">📈</div>
+          <div class="session-num">SESSION 40</div>
+          <div class="session-title">머신러닝의 원리</div>
+        </a>
+        <a class="session-card" href="session41/index.html">
+          <div class="session-emoji">🕸️</div>
+          <div class="session-num">SESSION 41</div>
+          <div class="session-title">딥러닝과 신경망</div>
+        </a>
+        <a class="session-card" href="session42/index.html">
+          <div class="session-emoji">💬</div>
+          <div class="session-num">SESSION 42</div>
+          <div class="session-title">자연어 처리와 LLM</div>
+        </a>
+        <a class="session-card" href="session43/index.html">
+          <div class="session-emoji">🌈</div>
+          <div class="session-num">SESSION 43</div>
+          <div class="session-title">AI의 종류와 현황</div>
+        </a>
+      </div>
+
+      <h3 style="color:#6ee7b7;font-size:1.1rem;font-weight:700;letter-spacing:0.15em;margin:2.5rem 0 1rem;">8-B. AI 실전 활용</h3>
+      <div class="session-grid">
+        <a class="session-card" href="session44/index.html">
+          <div class="session-emoji">✏️</div>
+          <div class="session-num">SESSION 44</div>
+          <div class="session-title">프롬프트 엔지니어링</div>
+        </a>
+        <a class="session-card" href="session45/index.html">
+          <div class="session-emoji">🛠️</div>
+          <div class="session-num">SESSION 45</div>
+          <div class="session-title">AI 코딩 도구 활용</div>
+        </a>
+        <a class="session-card" href="session46/index.html">
+          <div class="session-emoji">🎵</div>
+          <div class="session-num">SESSION 46</div>
+          <div class="session-title">바이브코딩 워크플로</div>
+        </a>
+        <a class="session-card" href="session47/index.html">
+          <div class="session-emoji">🔍</div>
+          <div class="session-num">SESSION 47</div>
+          <div class="session-title">AI와 함께하는 디버깅·코드리뷰</div>
+        </a>
+        <a class="session-card" href="session48/index.html">
+          <div class="session-emoji">📝</div>
+          <div class="session-num">SESSION 48</div>
+          <div class="session-title">나만의 첫 프로젝트 기획</div>
+        </a>
+        <a class="session-card" href="session49/index.html">
+          <div class="session-emoji">🚢</div>
+          <div class="session-num">SESSION 49</div>
+          <div class="session-title">첫 웹/앱 프로젝트 완성과 배포</div>
+        </a>
+        <a class="session-card" href="session50/index.html">
+          <div class="session-emoji">🎉</div>
+          <div class="session-num">SESSION 50</div>
+          <div class="session-title">회고와 다음 단계</div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        <strong>AI 시대의 웹/앱 개발 백과</strong> · 비개발자를 위한 50개 세션
+      </p>
+      <p style="margin-top: 0.5rem;">
+        ← 방향키 · → 방향키 · Space 로 슬라이드 이동 · G 키로 슬라이드 목록
+      </p>
+    </footer>
+
+  </div>
+</body>
+</html>

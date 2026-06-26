@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>병렬 / 동시성 · CS 4년 커리큘럼</title>
+  <meta name="description" content="동시성과 병렬성, 경쟁 상태·락·교착상태·생산자-소비자까지 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="concurrency" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">4학년 심화 · 병렬 / 동시성</span>
+        <h1 class="page-title">병렬 / 동시성</h1>
+        <p class="page-lead">여러 일을 <strong>동시에 다루는</strong> 프로그램을 짜는 법입니다. 빠르지만 까다롭습니다 — 무엇이 왜 어긋나는지, 어떻게 안전하게 묶는지 배웁니다.</p>
+
+        <section class="anchor" id="what">
+          <h2>동시성 vs 병렬성</h2>
+          <p>둘은 비슷해 보이지만 다릅니다. <strong>동시성(concurrency)</strong>은 여러 작업을 <em>번갈아 가며 조금씩 진행</em>해 "동시에 진행되는 것처럼" 보이게 하는 구조입니다. <strong>병렬성(parallelism)</strong>은 여러 작업을 <em>물리적으로 같은 순간</em>에 실행하는 것입니다(여러 CPU 코어 필요).</p>
+          <p>요리사 한 명이 국을 끓이며 틈틈이 야채를 써는 게 동시성, 요리사 두 명이 각자 동시에 요리하는 게 병렬성입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="동시성과 병렬성 비교">
+              <g font-family="monospace" font-size="11">
+                <text x="100" y="18" fill="#8b949e" text-anchor="middle">동시성 (코어 1개, 번갈아)</text>
+                <rect x="20"  y="30" width="40" height="22" fill="#58a6ff"/><text x="40"  y="46" fill="#06121f" text-anchor="middle">A</text>
+                <rect x="60"  y="30" width="40" height="22" fill="#3fb950"/><text x="80"  y="46" fill="#06121f" text-anchor="middle">B</text>
+                <rect x="100" y="30" width="40" height="22" fill="#58a6ff"/><text x="120" y="46" fill="#06121f" text-anchor="middle">A</text>
+                <rect x="140" y="30" width="40" height="22" fill="#3fb950"/><text x="160" y="46" fill="#06121f" text-anchor="middle">B</text>
+                <text x="100" y="70" fill="#8b949e" text-anchor="middle">시간 →</text>
+
+                <text x="100" y="105" fill="#8b949e" text-anchor="middle">병렬성 (코어 2개, 동시)</text>
+                <rect x="20" y="118" width="160" height="22" fill="#58a6ff"/><text x="100" y="134" fill="#06121f" text-anchor="middle">A (코어1)</text>
+                <rect x="20" y="142" width="160" height="22" fill="#3fb950"/><text x="100" y="158" fill="#06121f" text-anchor="middle">B (코어2)</text>
+
+                <line x1="220" y1="20" x2="220" y2="165" stroke="#30363d" stroke-width="1"/>
+                <text x="320" y="60" fill="#c9d1d9" text-anchor="middle">동시성 = 구조</text>
+                <text x="320" y="80" fill="#c9d1d9" text-anchor="middle">(다루는 방식)</text>
+                <text x="320" y="115" fill="#c9d1d9" text-anchor="middle">병렬성 = 실행</text>
+                <text x="320" y="135" fill="#c9d1d9" text-anchor="middle">(진짜 동시에)</text>
+              </g>
+            </svg>
+            <div class="caption">동시성은 "번갈아", 병렬성은 "진짜 같은 순간에"</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>멀티코어의 필요성 · 프로세스와 스레드 · 경쟁 상태 · 임계구역과 락 · 세마포어 · 교착상태 · 생산자-소비자 · 원자성과 메모리 가시성 · 스레드풀과 비동기 · 액터 모델까지 다룹니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="why">
+          <h2>왜 필요한가 (멀티코어)</h2>
+          <p>예전엔 CPU 속도(클럭)가 매년 빨라졌지만, 발열과 전력 한계로 2000년대 중반부터 한 코어를 무작정 빠르게 만드는 게 멈췄습니다. 대신 <strong>코어 수를 늘리는</strong> 방향으로 갔습니다. 오늘날 노트북에도 코어가 8개씩 들어 있죠.</p>
+          <p>문제는, 코어가 8개라도 <strong>프로그램이 한 줄씩 순서대로만 실행</strong>되면 코어 7개는 놀게 됩니다. 그 성능을 끌어쓰려면 작업을 여러 갈래로 나눠 동시에 돌려야 합니다 — 그래서 동시성·병렬성이 필요합니다.</p>
+          <div class="callout tip">
+            <div class="callout-title">💡 암달의 법칙(Amdahl's Law)</div>
+            <p>프로그램에서 <strong>병렬화할 수 없는 부분</strong>이 전체 속도 향상의 상한을 정합니다. 10%가 순차적이면 코어를 무한히 늘려도 최대 10배까지밖에 못 빨라집니다. 무작정 코어만 늘린다고 비례해서 빨라지지 않습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="process-thread">
+          <h2>프로세스 vs 스레드</h2>
+          <p><strong>프로세스(process)</strong>는 실행 중인 프로그램 하나로, 자기만의 독립된 메모리 공간을 가집니다. <strong>스레드(thread)</strong>는 한 프로세스 안에서 실행되는 흐름의 갈래로, <em>같은 메모리를 공유</em>합니다.</p>
+          <p>메모리를 공유한다는 점이 스레드의 장점이자 위험입니다 — 데이터를 주고받기 쉽지만, 여럿이 같은 데이터를 동시에 건드리면 사고가 납니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="프로세스와 스레드">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="20" width="170" height="115" fill="#0b0f14" stroke="#58a6ff" rx="6"/>
+                <text x="105" y="38" fill="#58a6ff" text-anchor="middle">프로세스 A</text>
+                <rect x="35" y="48" width="140" height="26" fill="#1c232c" stroke="#30363d"/><text x="105" y="65" fill="#8b949e" text-anchor="middle">공유 메모리</text>
+                <rect x="35"  y="85" width="40" height="40" fill="#161b22" stroke="#3fb950"/><text x="55"  y="109" fill="#c9d1d9" text-anchor="middle">T1</text>
+                <rect x="85"  y="85" width="40" height="40" fill="#161b22" stroke="#3fb950"/><text x="105" y="109" fill="#c9d1d9" text-anchor="middle">T2</text>
+                <rect x="135" y="85" width="40" height="40" fill="#161b22" stroke="#3fb950"/><text x="155" y="109" fill="#c9d1d9" text-anchor="middle">T3</text>
+
+                <rect x="230" y="20" width="170" height="115" fill="#0b0f14" stroke="#bc8cff" rx="6"/>
+                <text x="315" y="38" fill="#bc8cff" text-anchor="middle">프로세스 B</text>
+                <rect x="245" y="48" width="140" height="26" fill="#1c232c" stroke="#30363d"/><text x="315" y="65" fill="#8b949e" text-anchor="middle">독립 메모리</text>
+                <rect x="285" y="85" width="60" height="40" fill="#161b22" stroke="#3fb950"/><text x="315" y="109" fill="#c9d1d9" text-anchor="middle">T1</text>
+              </g>
+            </svg>
+            <div class="caption">한 프로세스 안의 스레드들은 메모리를 공유 / 프로세스끼리는 격리됨</div>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>메모리</th><th>생성 비용</th><th>사고 위험</th></tr></thead>
+            <tbody>
+              <tr><td>프로세스</td><td>독립</td><td>큼</td><td>낮음(격리)</td></tr>
+              <tr><td>스레드</td><td>공유</td><td>작음</td><td>높음(공유 데이터)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="anchor" id="race">
+          <h2>경쟁 상태 (Race Condition)</h2>
+          <p>경쟁 상태는 <strong>둘 이상의 스레드가 같은 데이터를 동시에 바꾸려다, 실행 순서에 따라 결과가 달라지는</strong> 버그입니다. <code>count += 1</code> 한 줄도 사실은 "읽기 → 더하기 → 쓰기" 세 단계라, 그 사이에 다른 스레드가 끼어들 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="경쟁 상태 타임라인">
+              <g font-family="monospace" font-size="11">
+                <text x="90"  y="16" fill="#58a6ff" text-anchor="middle">스레드 1</text>
+                <text x="300" y="16" fill="#3fb950" text-anchor="middle">스레드 2</text>
+                <line x1="90"  y1="22" x2="90"  y2="165" stroke="#30363d" stroke-width="1"/>
+                <line x1="300" y1="22" x2="300" y2="165" stroke="#30363d" stroke-width="1"/>
+
+                <rect x="35" y="30" width="110" height="22" fill="#161b22" stroke="#58a6ff"/><text x="90" y="46" fill="#c9d1d9" text-anchor="middle">읽기 count=0</text>
+                <rect x="245" y="58" width="110" height="22" fill="#161b22" stroke="#3fb950"/><text x="300" y="74" fill="#c9d1d9" text-anchor="middle">읽기 count=0</text>
+                <rect x="35" y="86" width="110" height="22" fill="#161b22" stroke="#58a6ff"/><text x="90" y="102" fill="#c9d1d9" text-anchor="middle">쓰기 count=1</text>
+                <rect x="245" y="114" width="110" height="22" fill="#161b22" stroke="#3fb950"/><text x="300" y="130" fill="#c9d1d9" text-anchor="middle">쓰기 count=1</text>
+                <text x="210" y="158" fill="#f85149" text-anchor="middle">결과 count=1 (2여야 정상!)</text>
+              </g>
+            </svg>
+            <div class="caption">둘 다 0을 읽고 각자 1로 덮어씀 → 한 번의 증가가 사라짐(lost update)</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">race.py</span></div>
+            <pre><code class="language-python">import threading
+
+count = 0
+
+def worker():
+    global count
+    for _ in range(100_000):
+        count += 1          # 읽기→더하기→쓰기: 끼어들기 가능!
+
+threads = [threading.Thread(target=worker) for _ in range(2)]
+for t in threads: t.start()
+for t in threads: t.join()
+
+print(count)   # 200000 이 아니라 그보다 작게 나올 수 있음</code></pre>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚫 재현이 어렵다</div>
+            <p>경쟁 상태는 타이밍에 따라 <strong>가끔만</strong> 터집니다. 테스트에선 멀쩡하다가 운영에서 터지는 악질 버그라, 처음부터 공유 데이터를 보호하는 게 답입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="critical">
+          <h2>임계구역과 상호배제</h2>
+          <p><strong>임계구역(critical section)</strong>은 공유 데이터를 건드리는 코드 영역입니다. 여기서 사고가 나죠. <strong>상호배제(mutual exclusion)</strong>는 "임계구역에는 <em>한 번에 한 스레드만</em> 들어가게" 보장하는 원칙입니다.</p>
+          <p>화장실 한 칸에 비유하면 임계구역은 칸 안, 상호배제는 "한 명만 들어가고 문을 잠근다"는 규칙입니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 좋은 동기화의 조건</div>
+            <p>① 상호배제(한 명만), ② 진행(아무도 없으면 들어갈 수 있어야), ③ 한정 대기(무한정 기다리지 않아야). 세 가지를 모두 만족해야 안전합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="lock">
+          <h2>락 · 뮤텍스 (Lock / Mutex)</h2>
+          <p>상호배제를 구현하는 가장 기본 도구가 <strong>락(lock)</strong>입니다. 흔히 <strong>뮤텍스(mutex, mutual exclusion)</strong>라고도 부릅니다. 임계구역에 들어가기 전 <code>acquire()</code>로 잠그고, 나올 때 <code>release()</code>로 풀어, 그동안 다른 스레드는 기다리게 합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">lock.py</span></div>
+            <pre><code class="language-python">import threading
+
+count = 0
+lock = threading.Lock()
+
+def worker():
+    global count
+    for _ in range(100_000):
+        with lock:          # 잠그고 ~ 블록 끝나면 자동 해제
+            count += 1      # 이제 한 번에 한 스레드만 진입
+
+threads = [threading.Thread(target=worker) for _ in range(2)]
+for t in threads: t.start()
+for t in threads: t.join()
+
+print(count)   # 항상 200000 — 안전!</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 락의 비용</div>
+            <p>락을 잡은 동안 다른 스레드는 멈춰 기다립니다. 임계구역을 너무 넓게 잡으면 병렬성의 이점이 사라집니다. <strong>꼭 필요한 곳만 짧게</strong> 잠그세요. 항상 해제하는 것도 잊지 마세요(<code>with</code> 권장).</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="semaphore">
+          <h2>세마포어 (Semaphore)</h2>
+          <p>락이 "한 명만"이라면, <strong>세마포어</strong>는 "<em>N명까지</em>" 허용하는 신호등입니다. 내부에 카운터를 두고, 자원을 쓸 때마다 줄이고(<code>acquire</code>) 반납할 때 늘립니다(<code>release</code>). 카운터가 0이면 기다립니다.</p>
+          <p>주차장 입구의 "잔여 5대" 표시판과 같습니다. 차가 들어가면 줄고, 나오면 늘죠. 0이면 입구에서 대기합니다. (카운터가 1뿐인 세마포어가 사실상 락입니다.)</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">semaphore.py</span></div>
+            <pre><code class="language-python">import threading
+
+# 동시에 최대 3개 스레드만 DB에 접속하도록 제한
+db_slots = threading.Semaphore(3)
+
+def query(i):
+    with db_slots:          # 슬롯 하나 차지(없으면 대기)
+        print(f"{i}번 작업: DB 접속 중")
+        # ... 작업 ...
+    # 블록을 벗어나면 슬롯 반납
+
+for i in range(10):
+    threading.Thread(target=query, args=(i,)).start()</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="deadlock">
+          <h2>교착상태 (Deadlock)</h2>
+          <p>교착상태는 <strong>여러 스레드가 서로가 가진 자원을 기다리며 영원히 멈춰버리는</strong> 상황입니다. 좁은 다리에서 마주 온 두 차가 서로 비키길 기다리며 둘 다 못 가는 것과 같습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="교착상태 순환 대기">
+              <g font-family="monospace" font-size="12">
+                <circle cx="90"  cy="50"  r="28" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="90"  y="55" fill="#c9d1d9" text-anchor="middle">T1</text>
+                <circle cx="270" cy="50"  r="28" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="270" y="55" fill="#c9d1d9" text-anchor="middle">T2</text>
+                <rect x="64"  y="125" width="52" height="34" fill="#1c232c" stroke="#d29922"/><text x="90"  y="147" fill="#c9d1d9" text-anchor="middle">락 A</text>
+                <rect x="244" y="125" width="52" height="34" fill="#1c232c" stroke="#d29922"/><text x="270" y="147" fill="#c9d1d9" text-anchor="middle">락 B</text>
+
+                <line x1="90"  y1="78" x2="90"  y2="125" stroke="#8b949e" stroke-width="1.5"/><text x="60" y="105" fill="#8b949e">보유</text>
+                <line x1="270" y1="78" x2="270" y2="125" stroke="#8b949e" stroke-width="1.5"/><text x="278" y="105" fill="#8b949e">보유</text>
+                <line x1="118" y1="55" x2="244" y2="140" stroke="#f85149" stroke-width="1.5" marker-end="url(#dla)"/><text x="180" y="80" fill="#f85149">B 대기</text>
+                <line x1="242" y1="58" x2="116" y2="143" stroke="#f85149" stroke-width="1.5" marker-end="url(#dla)"/><text x="150" y="160" fill="#f85149">A 대기</text>
+              </g>
+              <defs><marker id="dla" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f85149"/></marker></defs>
+            </svg>
+            <div class="caption">T1은 A를 쥔 채 B를, T2는 B를 쥔 채 A를 기다림 → 순환 대기로 영원히 멈춤</div>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚫 교착상태의 4조건</div>
+            <p>① <strong>상호배제</strong>(자원을 한 명만), ② <strong>점유와 대기</strong>(쥔 채 더 기다림), ③ <strong>비선점</strong>(강제로 뺏을 수 없음), ④ <strong>순환 대기</strong>(서로 물고 물림). <em>네 가지가 모두</em> 성립할 때만 발생하므로, 하나만 깨도 예방됩니다(예: 항상 같은 순서로 락 잡기).</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="producer-consumer">
+          <h2>생산자-소비자 문제</h2>
+          <p>아주 흔한 동시성 패턴입니다. <strong>생산자(producer)</strong>가 데이터를 만들어 <em>공유 버퍼(큐)</em>에 넣고, <strong>소비자(consumer)</strong>가 꺼내 처리합니다. 버퍼가 가득 차면 생산자가 기다리고, 비면 소비자가 기다립니다 — 이 조율이 핵심입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="생산자 소비자">
+              <g font-family="monospace" font-size="11">
+                <rect x="15" y="45" width="80" height="40" fill="#161b22" stroke="#58a6ff"/><text x="55" y="69" fill="#c9d1d9" text-anchor="middle">생산자</text>
+                <rect x="160" y="40" width="110" height="50" fill="#0b0f14" stroke="#d29922"/>
+                <rect x="170" y="50" width="22" height="30" fill="#1c232c" stroke="#30363d"/>
+                <rect x="196" y="50" width="22" height="30" fill="#1c232c" stroke="#30363d"/>
+                <rect x="222" y="50" width="22" height="30" fill="#1c232c" stroke="#30363d"/>
+                <text x="215" y="108" fill="#8b949e" text-anchor="middle">버퍼(큐)</text>
+                <rect x="335" y="45" width="80" height="40" fill="#161b22" stroke="#3fb950"/><text x="375" y="69" fill="#c9d1d9" text-anchor="middle">소비자</text>
+                <line x1="95"  y1="65" x2="160" y2="65" stroke="#58a6ff" stroke-width="2" marker-end="url(#pca)"/><text x="127" y="55" fill="#58a6ff" text-anchor="middle">넣기</text>
+                <line x1="270" y1="65" x2="335" y2="65" stroke="#3fb950" stroke-width="2" marker-end="url(#pca2)"/><text x="302" y="55" fill="#3fb950" text-anchor="middle">꺼내기</text>
+              </g>
+              <defs>
+                <marker id="pca" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="pca2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">생산 속도와 소비 속도가 달라도 버퍼가 완충 — 가득/비면 서로 기다림</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">producer_consumer.py</span></div>
+            <pre><code class="language-python">import threading, queue, time
+
+buffer = queue.Queue(maxsize=5)   # 스레드 안전한 큐가 동기화를 대신 처리
+
+def producer():
+    for i in range(10):
+        buffer.put(i)              # 가득 차면 자동으로 대기
+        print(f"생산: {i}")
+
+def consumer():
+    while True:
+        item = buffer.get()        # 비어 있으면 자동으로 대기
+        print(f"소비: {item}")
+        buffer.task_done()
+
+threading.Thread(target=consumer, daemon=True).start()
+producer()
+buffer.join()</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 표준 큐를 쓰자</div>
+            <p>파이썬 <code>queue.Queue</code>, 자바 <code>BlockingQueue</code>는 락·대기 조율을 내부에서 처리합니다. 직접 락으로 짜기 전에 <strong>검증된 자료구조</strong>가 있는지 먼저 찾으세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="atomic">
+          <h2>원자적 연산과 메모리 가시성</h2>
+          <p><strong>원자적(atomic) 연산</strong>은 "쪼갤 수 없이 한 번에" 끝나는 연산입니다 — 중간에 다른 스레드가 끼어들 수 없죠. 앞서 본 <code>count += 1</code>은 원자적이지 <em>않아서</em> 문제였습니다.</p>
+          <p><strong>메모리 가시성(visibility)</strong>은 "한 스레드가 바꾼 값을 다른 스레드가 제때 보는가"입니다. CPU는 성능을 위해 값을 코어별 캐시에 들고 있어, 한쪽 변경이 다른 쪽에 곧바로 안 보일 수 있습니다. 그래서 락이나 <code>volatile</code>(자바)/원자 타입 같은 장치가 필요합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">Atomic.java</span></div>
+            <pre><code class="language-java">import java.util.concurrent.atomic.AtomicInteger;
+
+AtomicInteger count = new AtomicInteger(0);
+
+// 락 없이도 원자적으로 1 증가 — 하드웨어가 보장
+count.incrementAndGet();
+
+// volatile: 변경을 모든 스레드가 즉시 보도록(가시성 보장)
+volatile boolean running = true;</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="threadpool">
+          <h2>스레드풀과 비동기</h2>
+          <p>스레드를 매번 새로 만들고 없애는 건 비쌉니다. <strong>스레드풀(thread pool)</strong>은 미리 만들어 둔 스레드들을 <em>재사용</em>하며 작업만 갈아끼웁니다. 카페에서 손님마다 직원을 새로 뽑지 않고, 정해진 직원들이 주문을 처리하는 것과 같죠.</p>
+          <p><strong>비동기(async)</strong>는 "결과를 기다리지 않고 다음 일을 진행"하는 방식입니다. 특히 파일·네트워크처럼 기다리는 시간이 긴 작업(I/O)에서, 기다리는 동안 CPU가 다른 일을 하게 해 효율을 높입니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">pool.py</span></div>
+            <pre><code class="language-python">from concurrent.futures import ThreadPoolExecutor
+
+def fetch(url):
+    # ... 네트워크에서 가져오기(I/O 대기) ...
+    return f"{url} 완료"
+
+# 스레드 4개를 재사용하며 작업 분배
+with ThreadPoolExecutor(max_workers=4) as pool:
+    results = pool.map(fetch, ["a.com", "b.com", "c.com", "d.com"])
+
+for r in results:
+    print(r)</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 파이썬의 GIL</div>
+            <p>표준 파이썬(CPython)에는 <strong>GIL</strong>(전역 인터프리터 락)이 있어, 순수 계산 작업은 스레드를 여러 개 써도 동시에 진행되지 않습니다. 계산은 <code>multiprocessing</code>(여러 프로세스)으로, 네트워크·파일 대기는 스레드/비동기로 — 작업 성격에 맞게 고르세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="actor">
+          <h2>액터 · 메시지 패싱 모델</h2>
+          <p>공유 메모리에 락을 거는 방식은 까다롭고 실수가 잦습니다. <strong>액터(actor) 모델</strong>은 발상을 뒤집습니다 — <em>메모리를 공유하지 않고, 메시지를 주고받아</em> 협력합니다. 각 액터는 자기만의 데이터를 가지고, 한 번에 메시지 하나씩 처리하므로 경쟁 상태가 원천적으로 줄어듭니다.</p>
+          <p>"데이터를 공유해 소통하지 말고, 소통해서 데이터를 나누라"는 격언이 이 철학을 요약합니다. Erlang, Akka, Go의 채널(goroutine)이 대표 예입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="액터 메시지 패싱">
+              <g font-family="monospace" font-size="11">
+                <circle cx="70"  cy="60" r="34" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="70"  y="58" fill="#c9d1d9" text-anchor="middle">액터 A</text><text x="70" y="73" fill="#8b949e" text-anchor="middle" font-size="9">자기 데이터</text>
+                <circle cx="320" cy="60" r="34" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="320" y="58" fill="#c9d1d9" text-anchor="middle">액터 B</text><text x="320" y="73" fill="#8b949e" text-anchor="middle" font-size="9">자기 데이터</text>
+                <line x1="106" y1="50" x2="284" y2="50" stroke="#58a6ff" stroke-width="2" marker-end="url(#aca)"/><text x="195" y="42" fill="#58a6ff" text-anchor="middle">메시지 →</text>
+                <line x1="284" y1="72" x2="106" y2="72" stroke="#3fb950" stroke-width="2" marker-end="url(#aca2)"/><text x="195" y="92" fill="#3fb950" text-anchor="middle">← 응답</text>
+              </g>
+              <defs>
+                <marker id="aca" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="aca2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">공유 메모리 없이 메시지만 주고받음 → 락 없이도 안전</div>
+          </div>
+          <table>
+            <thead><tr><th>방식</th><th>핵심</th><th>위험</th></tr></thead>
+            <tbody>
+              <tr><td>공유 메모리 + 락</td><td>같은 데이터를 락으로 보호</td><td>경쟁 상태·교착상태</td></tr>
+              <tr><td>메시지 패싱(액터)</td><td>데이터 격리 + 메시지 교환</td><td>락 문제 적음, 설계 전환 필요</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>동시성은 "번갈아 다루는 구조", 병렬성은 "진짜 같은 순간에 실행".</li>
+            <li>스레드는 메모리를 공유해 빠르지만, 공유 데이터가 사고의 원인이다.</li>
+            <li>경쟁 상태는 실행 순서에 따라 결과가 달라지는, 재현 어려운 버그다.</li>
+            <li>임계구역은 락(뮤텍스)으로 한 번에 한 스레드만 들어가게 보호한다.</li>
+            <li>세마포어는 "N명까지" 허용하는 일반화된 락이다.</li>
+            <li>교착상태는 4조건이 모두 성립할 때만 발생 — 하나만 깨도 예방된다.</li>
+            <li>락이 까다로우면 메시지 패싱(액터)으로 데이터를 아예 공유하지 않는다.</li>
+            <li>작업 성격(계산 vs 대기)에 맞게 프로세스·스레드·비동기를 고르라.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>동시성 vs 병렬성</dt><dd>번갈아 진행하는 구조(동시성)와 같은 순간에 실행(병렬성)의 차이.</dd></dl>
+          <dl class="term"><dt>프로세스 / 스레드</dt><dd>독립 메모리의 실행 단위(프로세스)와 그 안에서 메모리를 공유하는 갈래(스레드).</dd></dl>
+          <dl class="term"><dt>경쟁 상태(Race Condition)</dt><dd>여러 스레드의 실행 순서에 따라 결과가 달라지는 버그.</dd></dl>
+          <dl class="term"><dt>임계구역(Critical Section)</dt><dd>공유 데이터를 다루는, 한 번에 한 스레드만 들어가야 하는 코드 영역.</dd></dl>
+          <dl class="term"><dt>락 / 뮤텍스</dt><dd>임계구역을 한 스레드만 쓰도록 잠그는 상호배제 도구.</dd></dl>
+          <dl class="term"><dt>세마포어(Semaphore)</dt><dd>동시에 접근 가능한 수를 N으로 제한하는 카운터 기반 동기화 장치.</dd></dl>
+          <dl class="term"><dt>교착상태(Deadlock)</dt><dd>서로의 자원을 기다리며 영원히 멈추는 상태. 4조건이 모두 필요.</dd></dl>
+          <dl class="term"><dt>원자적 연산 / 가시성</dt><dd>쪼갤 수 없는 연산(원자성)과 변경이 즉시 보이는 성질(가시성).</dd></dl>
+          <dl class="term"><dt>액터 모델</dt><dd>메모리를 공유하지 않고 메시지로 협력하는 동시성 모델.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

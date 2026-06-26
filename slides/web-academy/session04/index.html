@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 04 - 네트워크와 인터넷</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* URL breakdown */
+    .url-box {
+      margin-top: 2rem;
+      padding: 2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      max-width: 1000px;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    .url-line { font-size: 1.4rem; line-height: 1.5; word-break: break-all; }
+    .url-protocol { color: #6ee7b7; font-weight: 700; }
+    .url-domain { color: #60a5fa; font-weight: 700; }
+    .url-path { color: #fbbf24; font-weight: 700; }
+    .url-query { color: #f472b6; font-weight: 700; }
+    .url-legend {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.95rem;
+      color: #999;
+    }
+    .url-legend-item { display: flex; align-items: center; gap: 0.5rem; }
+    .url-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+      .url-line { font-size: 1rem; }
+      .url-legend { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 04 · Part 1 컴퓨터 기초</div>
+      <h1>네트워크와<br/>인터넷</h1>
+      <h3>전 세계 컴퓨터가 서로 대화하는 원리</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">IP와 도메인</div>
+          <div class="card-desc">IP 주소와 도메인의 관계를 설명할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">통신의 핵심 부품</div>
+          <div class="card-desc">패킷 · 라우터 · DNS의 역할을 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">URL 분해</div>
+          <div class="card-desc">URL의 각 부분이 무슨 의미인지 읽을 수 있다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">인터넷의 원리</span>를<br/>알아야 할까?</h2>
+      <p>
+        웹사이트가 안 열릴 때, API를 부를 때, 보안 문제가 생길 때<br/>
+        <span class="highlight-blue">"DNS 문제예요", "패킷이 막혔어요"</span>를 이해할 수 있어야 한다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        인터넷의 작동 방식을 알면 <span class="highlight-yellow">버튼 너머의 세상</span>이 보인다.
+      </p>
+    </div>
+
+    <!-- 4. IP 주소 -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <div class="big-emoji">📡</div>
+      <h2>IP 주소 — 기기의 <span class="highlight">고유 번호</span></h2>
+      <p>네트워크에서 컴퓨터를 식별하는 숫자 주소.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🏠</div>
+          <div class="card-title">IPv4</div>
+          <div class="card-desc">예: <span class="highlight-blue">192.168.0.1</span><br/>0~255 네 자리 — 약 43억 개</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <div class="card-title">IPv6</div>
+          <div class="card-desc">예: <span class="highlight-blue">2001:db8::1</span><br/>훨씬 긴 형식 — 사실상 무한</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">동적 IP</div>
+          <div class="card-desc">접속할 때마다 변할 수 있다.<br/>가정용 인터넷이 대표적</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 패킷과 라우터 -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <h2>패킷과 라우터 — <span class="highlight">택배 시스템</span></h2>
+      <p>큰 데이터를 작게 쪼갠 단위가 <span class="highlight">패킷</span>, 길을 안내하는 게 <span class="highlight-blue">라우터</span>.</p>
+      <div class="flow">
+        <div class="flow-item">📄 큰 데이터<br/>(영상·사진)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">📦 작은<br/>패킷들로 분할</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">📡 라우터들이<br/>경로 안내</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">🧩 목적지에서<br/>재조합</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">왜 쪼갤까?</span> 일부가 손실돼도 그 패킷만 다시 보내면 되고, 여러 경로로 나눠 보낼 수 있어 빠르다</p>
+    </div>
+
+    <!-- 6. 인터넷 vs WWW -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <h2>인터넷 <span class="highlight">vs</span> WWW</h2>
+      <p>흔히 같은 말로 쓰지만, <span class="highlight">완전히 다른 개념</span>이다.</p>
+      <div class="compare">
+        <div class="compare-box before" style="border-color: rgba(96,165,250,0.4);">
+          <div class="compare-title" style="color:#60a5fa;">🌐 인터넷 (Internet)</div>
+          <div class="compare-item" style="color:#ccc;">전 세계 컴퓨터를 잇는 인프라</div>
+          <div class="compare-item" style="color:#ccc;">물리적인 케이블·라우터·기지국</div>
+          <div class="compare-item" style="color:#ccc;">위에서 다양한 서비스가 동작</div>
+          <div class="compare-item" style="color:#ccc;">이메일, 게임, 화상통화 모두 인터넷 위</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">🕸️ WWW (Web)</div>
+          <div class="compare-item">인터넷 위에서 동작하는 한 가지 서비스</div>
+          <div class="compare-item">웹 브라우저로 보는 페이지들의 집합</div>
+          <div class="compare-item">HTTP 프로토콜과 HTML 문서 기반</div>
+          <div class="compare-item">1989년 팀 버너스리가 발명</div>
+        </div>
+      </div>
+      <style>
+        .compare-box.before .compare-item::before { content: ''; }
+      </style>
+    </div>
+
+    <!-- 7. DNS -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">📖</div>
+      <h2>DNS —<br/>인터넷의 <span class="highlight">전화번호부</span></h2>
+      <p>사람은 이름을 외우고, 컴퓨터는 숫자(IP)로 통신한다. 그 사이를 변환해주는 게 DNS.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">사용자가 google.com 입력</div>
+            <div class="step-desc">브라우저는 도메인 이름만 받았을 뿐, 실제 서버 위치는 모른다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">DNS 서버에 질의</div>
+            <div class="step-desc">"google.com의 IP가 뭐야?" → DNS 서버가 응답: <span class="highlight-blue">142.250.x.x</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">실제 IP로 접속</div>
+            <div class="step-desc">브라우저는 받은 IP로 서버에 연결해 페이지를 받아온다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">결과 표시</div>
+            <div class="step-desc">사용자는 도메인만 보고도 빠르게 사이트를 이용할 수 있다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. URL 구조 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <div class="big-emoji">🔗</div>
+      <h2>URL —<br/><span class="highlight-blue">한 줄에 담긴 정보</span></h2>
+      <p>주소 표시줄의 한 줄짜리 텍스트, 사실은 네 가지 정보가 담겨있다.</p>
+      <div class="url-box">
+        <div class="url-line">
+          <span class="url-protocol">https://</span><span class="url-domain">www.example.com</span><span class="url-path">/products/shoes</span><span class="url-query">?color=red&size=10</span>
+        </div>
+        <div class="url-legend">
+          <div class="url-legend-item">
+            <div class="url-dot" style="background:#6ee7b7;"></div>
+            <span><b style="color:#6ee7b7;">프로토콜</b> — 통신 방식 (https = 암호화)</span>
+          </div>
+          <div class="url-legend-item">
+            <div class="url-dot" style="background:#60a5fa;"></div>
+            <span><b style="color:#60a5fa;">도메인</b> — 서버의 이름 주소</span>
+          </div>
+          <div class="url-legend-item">
+            <div class="url-dot" style="background:#fbbf24;"></div>
+            <span><b style="color:#fbbf24;">경로</b> — 서버 안의 자원 위치</span>
+          </div>
+          <div class="url-legend-item">
+            <div class="url-dot" style="background:#f472b6;"></div>
+            <span><b style="color:#f472b6;">쿼리</b> — 추가 조건/필터 (? 이후)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 웹페이지 요청 흐름 -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">⚡</div>
+      <h2>웹페이지를 열면 —<br/><span class="highlight">실제로 무슨 일이?</span></h2>
+      <p>주소창에 URL을 치고 엔터를 누르는 순간, 이런 일들이 1초 안에 일어난다.</p>
+      <div class="flow">
+        <div class="flow-item">⌨️ URL 입력</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.08);">📖 DNS 조회<br/>(이름→IP)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">📦 패킷으로<br/>요청 송신</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">🖥️ 서버가<br/>응답 생성</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">🌐 브라우저가<br/>페이지 표시</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> 한 번의 클릭에도 도메인 변환 → 패킷 분할 → 라우터 경유 → 재조합 → 렌더링이 모두 일어난다</p>
+    </div>
+
+    <!-- 10. 비유 -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <div class="big-emoji">🛣️</div>
+      <h2>인터넷은 <span class="highlight">고속도로 시스템</span>이다</h2>
+      <p>네트워크 개념이 어려울 때, 이 비유 하나로 정리된다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🚗 고속도로 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">고속도로 망</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">인터넷</span> — 전 세계를 잇는 길</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">분기 표지판</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">라우터</span> — "이쪽으로 가세요" 안내</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">택배 상자들</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">패킷</span> — 잘게 쪼갠 데이터 단위</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">집 주소</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">IP 주소</span> — 정확한 목적지 좌표</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">전화번호부</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">DNS — 이름으로 주소를 찾아주는 장부</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. AI 도구 연결 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>네트워크 용어를 알면 트러블슈팅 질문이 훨씬 정확해진다.</p>
+      <div class="chat">
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble">사이트가 안 들어가져요</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">어떤 증상인가요? 에러 메시지나 상황을 알려주세요.</div>
+        </div>
+        <div class="chat-row user">
+          <div class="chat-avatar">👤</div>
+          <div class="chat-bubble" style="background:rgba(110,231,183,0.15);">naver.com은 되는데 우리 회사 사이트만 "DNS_PROBE_FINISHED" 에러가 떠요. 원인이 뭘까?</div>
+        </div>
+        <div class="chat-row ai">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">DNS 조회 실패입니다! 도메인은 정상인데 IP 변환에 문제가 있어요. (1) 다른 DNS(8.8.8.8) 사용 (2) DNS 캐시 초기화 (3) 회사 도메인 만료 확인 순으로 점검해보세요!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. 자주 하는 오해 -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 흔한 오해</div>
+          <ul>
+            <li>인터넷 = 웹(WWW)이다</li>
+            <li>IP 주소는 평생 같은 번호다</li>
+            <li>Wi-Fi가 곧 인터넷이다</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 실제로는</div>
+          <ul>
+            <li>웹은 인터넷 위 하나의 서비스. 이메일·게임도 인터넷 서비스다</li>
+            <li>가정용 IP는 동적이라 자주 바뀐다. 서버용은 고정 IP를 쓴다</li>
+            <li>Wi-Fi는 무선 연결 방식. 공유기가 인터넷에 연결돼야 인터넷이 된다</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📡</div>
+          <div class="summary-label">IP 주소</div>
+          <div class="summary-desc">기기의 고유 번호 —<br/>네트워크에서 위치 식별</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📦</div>
+          <div class="summary-label">패킷</div>
+          <div class="summary-desc">큰 데이터를 잘게 쪼갠<br/>전송 단위</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🛣️</div>
+          <div class="summary-label">라우터</div>
+          <div class="summary-desc">최적 경로로<br/>패킷을 안내하는 분기점</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📖</div>
+          <div class="summary-label">DNS</div>
+          <div class="summary-desc">도메인 → IP 변환<br/>인터넷의 전화번호부</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🌐</div>
+          <div class="summary-label">인터넷 vs 웹</div>
+          <div class="summary-desc">인터넷은 인프라,<br/>웹은 그 위 한 서비스</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔗</div>
+          <div class="summary-label">URL 구조</div>
+          <div class="summary-desc">프로토콜 · 도메인 ·<br/>경로 · 쿼리 4부분</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. 다음 -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 05 · 데이터의 표현</span></h2>
+      <p>
+        컴퓨터끼리 연결되는 길을 봤으니, 이제 <span class="highlight-blue">컴퓨터 안의 정보</span>를 들여다본다.<br/>
+        숫자, 글자, 이미지가 어떻게 <span class="highlight-yellow">0과 1</span>로 표현되는지 살펴보자.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 인터넷은 고속도로, 패킷은 택배, DNS는 전화번호부다.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

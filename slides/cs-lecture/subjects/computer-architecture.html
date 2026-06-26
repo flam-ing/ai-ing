@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컴퓨터 구조 · CS 4년 커리큘럼</title>
+  <meta name="description" content="이진수·논리게이트·CPU 구성·명령어 사이클·메모리 계층·파이프라이닝을 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="computer-architecture" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">2학년 핵심 · 컴퓨터 구조</span>
+        <h1 class="page-title">컴퓨터 구조</h1>
+        <p class="page-lead">우리가 짠 코드는 결국 <strong>0과 1</strong>이 되어 전기로 흐릅니다. 컴퓨터가 명령을 받아 계산하기까지, 그 속을 열어 봅니다.</p>
+
+        <section class="anchor">
+          <h2 id="overview">컴퓨터 구조 개요</h2>
+          <p>컴퓨터 구조(computer architecture)는 <strong>컴퓨터가 내부에서 어떻게 동작하는지</strong>를 다루는 분야입니다. 프로그래밍이 "무엇을 시킬지"라면, 컴퓨터 구조는 "그 명령이 하드웨어에서 어떻게 실행되는지"입니다.</p>
+          <p>가장 기본 골격은 <strong>폰 노이만 구조</strong>입니다. ① 계산하는 <strong>CPU</strong>, ② 데이터와 명령을 담는 <strong>메모리</strong>, ③ 바깥과 소통하는 <strong>입출력 장치</strong>가 하나의 통로(버스)로 연결됩니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="폰 노이만 구조">
+              <g font-family="monospace" font-size="12">
+                <rect x="40"  y="30" width="100" height="50" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="90"  y="60" fill="#c9d1d9" text-anchor="middle">CPU</text>
+                <rect x="280" y="30" width="100" height="50" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="330" y="60" fill="#c9d1d9" text-anchor="middle">메모리</text>
+                <rect x="160" y="110" width="100" height="40" fill="#161b22" stroke="#8b949e"/><text x="210" y="135" fill="#c9d1d9" text-anchor="middle">입출력</text>
+                <line x1="140" y1="55" x2="280" y2="55" stroke="#58a6ff" stroke-width="2" marker-end="url(#ca1)"/>
+                <line x1="280" y1="62" x2="140" y2="62" stroke="#3fb950" stroke-width="2" marker-end="url(#ca2)"/>
+                <line x1="210" y1="80" x2="210" y2="110" stroke="#8b949e" stroke-width="2"/>
+                <text x="210" y="22" fill="#8b949e" text-anchor="middle">버스(bus)</text>
+              </g>
+              <defs>
+                <marker id="ca1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="ca2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">CPU·메모리·입출력이 버스로 연결된 폰 노이만 구조</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>이진수와 2의 보수 → 논리 게이트 → CPU 구성(ALU·레지스터·제어장치) → 명령어 실행 사이클 → 메모리 계층 → 파이프라이닝까지, 하드웨어가 코드를 실행하는 흐름을 따라갑니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="binary">이진수와 2의 보수</h2>
+          <p>컴퓨터는 전기가 흐르거나(1) 흐르지 않는(0) 두 상태만 구분합니다. 그래서 모든 숫자를 <strong>이진수(binary)</strong>로 표현합니다. 각 자리는 2의 거듭제곱이며, 한 자리를 <strong>비트(bit)</strong>, 8비트 묶음을 <strong>바이트(byte)</strong>라 합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="이진수 자릿값">
+              <g font-family="monospace" font-size="13">
+                <rect x="40"  y="40" width="44" height="36" fill="#161b22" stroke="#58a6ff"/><text x="62"  y="63" fill="#c9d1d9" text-anchor="middle">1</text>
+                <rect x="88"  y="40" width="44" height="36" fill="#161b22" stroke="#30363d"/><text x="110" y="63" fill="#c9d1d9" text-anchor="middle">0</text>
+                <rect x="136" y="40" width="44" height="36" fill="#161b22" stroke="#58a6ff"/><text x="158" y="63" fill="#c9d1d9" text-anchor="middle">1</text>
+                <rect x="184" y="40" width="44" height="36" fill="#161b22" stroke="#30363d"/><text x="206" y="63" fill="#c9d1d9" text-anchor="middle">1</text>
+                <text x="62"  y="30" fill="#8b949e" text-anchor="middle">8</text>
+                <text x="110" y="30" fill="#8b949e" text-anchor="middle">4</text>
+                <text x="158" y="30" fill="#8b949e" text-anchor="middle">2</text>
+                <text x="206" y="30" fill="#8b949e" text-anchor="middle">1</text>
+                <text x="280" y="63" fill="#3fb950">= 8+2+1 = 11</text>
+              </g>
+            </svg>
+            <div class="caption">이진수 1011 = 8 + 0 + 2 + 1 = 십진수 11</div>
+          </div>
+          <p>음수는 어떻게 표현할까요? 가장 널리 쓰는 방식이 <strong>2의 보수(two's complement)</strong>입니다. 모든 비트를 뒤집고(0↔1) 1을 더하면 음수가 됩니다. 이 방식이면 뺄셈을 덧셈 회로로 그대로 처리할 수 있어 하드웨어가 단순해집니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">two_complement.c</span></div>
+            <pre><code class="language-c">// 8비트 기준: 5를 -5로 (2의 보수)
+//   5 = 0000 0101
+//   비트 반전     1111 1010
+//   +1            1111 1011  → 이게 -5
+
+#include &lt;stdio.h&gt;
+int main() {
+    char a = 5;          // 0000 0101
+    char b = -5;         // 1111 1011 (2의 보수)
+    printf("%d\n", a + b);   // 0 — 덧셈 회로로 뺄셈 처리
+    return 0;
+}</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 왜 2의 보수인가</div>
+            <p>0이 하나뿐이고(+0/-0 구분 없음), 덧셈·뺄셈을 같은 회로로 처리할 수 있습니다. 그래서 거의 모든 컴퓨터가 정수 음수를 2의 보수로 저장합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="gates">논리 게이트</h2>
+          <p>모든 계산은 결국 <strong>논리 게이트(logic gate)</strong>라는 작은 스위치들의 조합입니다. 게이트는 0/1 입력을 받아 0/1을 출력합니다. 기본은 AND(둘 다 1일 때만 1), OR(하나라도 1이면 1), NOT(뒤집기)입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="논리 게이트 기호">
+              <g font-family="monospace" font-size="12" fill="#c9d1d9">
+                <text x="55" y="20" fill="#8b949e" text-anchor="middle">AND</text>
+                <path d="M30 40 L60 40 A25 25 0 0 1 60 90 L30 90 Z" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+                <line x1="10" y1="52" x2="30" y2="52" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="10" y1="78" x2="30" y2="78" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="85" y1="65" x2="105" y2="65" stroke="#8b949e" stroke-width="1.5"/>
+
+                <text x="195" y="20" fill="#8b949e" text-anchor="middle">OR</text>
+                <path d="M165 40 Q190 65 165 90 Q205 90 225 65 Q205 40 165 40 Z" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+                <line x1="148" y1="52" x2="172" y2="52" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="148" y1="78" x2="172" y2="78" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="225" y1="65" x2="245" y2="65" stroke="#8b949e" stroke-width="1.5"/>
+
+                <text x="330" y="20" fill="#8b949e" text-anchor="middle">NOT</text>
+                <path d="M305 40 L305 90 L345 65 Z" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+                <circle cx="351" cy="65" r="6" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+                <line x1="285" y1="65" x2="305" y2="65" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="357" y1="65" x2="377" y2="65" stroke="#8b949e" stroke-width="1.5"/>
+              </g>
+            </svg>
+            <div class="caption">기본 게이트 — 이 작은 스위치들을 수억 개 모으면 CPU가 된다</div>
+          </div>
+          <table>
+            <thead><tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>NOT A</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+              <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            </tbody>
+          </table>
+          <p>이 게이트들을 조합하면 덧셈을 하는 <strong>가산기(adder)</strong>, 값을 기억하는 회로 등 더 큰 부품을 만들 수 있습니다. 컴퓨터의 모든 계산은 이 단순한 논리 연산의 거대한 누적입니다.</p>
+        </section>
+
+        <section class="anchor">
+          <h2 id="cpu">CPU 구성</h2>
+          <p>CPU(중앙처리장치)는 계산을 담당하는 컴퓨터의 두뇌입니다. 크게 세 부분으로 나뉩니다.</p>
+          <ul>
+            <li><strong>ALU(산술논리장치)</strong> — 실제 덧셈·뺄셈·AND·OR 같은 연산을 수행.</li>
+            <li><strong>레지스터(register)</strong> — CPU 안의 아주 빠른 초소형 저장 공간. 지금 다루는 값을 잠깐 둠.</li>
+            <li><strong>제어장치(Control Unit)</strong> — 명령어를 해석해 "이번엔 ALU에 덧셈을 시켜라" 같은 신호를 내보냄.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CPU 내부 구성">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="20" width="340" height="120" fill="none" stroke="#30363d" stroke-dasharray="4 3"/>
+                <text x="30" y="38" fill="#8b949e">CPU</text>
+                <rect x="50"  y="55" width="90" height="40" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="95"  y="80" fill="#c9d1d9" text-anchor="middle">ALU</text>
+                <rect x="160" y="55" width="90" height="40" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="205" y="80" fill="#c9d1d9" text-anchor="middle">레지스터</text>
+                <rect x="270" y="55" width="80" height="40" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="310" y="74" fill="#c9d1d9" text-anchor="middle">제어</text><text x="310" y="89" fill="#c9d1d9" text-anchor="middle">장치</text>
+                <line x1="140" y1="75" x2="160" y2="75" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="250" y1="75" x2="270" y2="75" stroke="#8b949e" stroke-width="1.5"/>
+                <text x="190" y="125" fill="#8b949e" text-anchor="middle">제어장치가 신호를 보내 ALU·레지스터를 지휘</text>
+              </g>
+            </svg>
+            <div class="caption">CPU = ALU(계산) + 레지스터(임시 저장) + 제어장치(지휘)</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">add.asm</span></div>
+            <pre><code class="language-x86asm">; C 코드:  c = a + b;  를 어셈블리로 본 모습
+mov  eax, [a]    ; 메모리의 a 값을 레지스터 eax 로
+add  eax, [b]    ; eax 에 b 를 더함  ← ALU가 수행
+mov  [c], eax    ; 결과를 메모리 c 에 저장</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="cycle">명령어 실행 사이클</h2>
+          <p>CPU는 한 명령을 처리할 때 늘 같은 세 단계를 반복합니다. 이를 <strong>fetch-decode-execute 사이클</strong>이라 합니다.</p>
+          <ol>
+            <li><strong>Fetch(인출)</strong> — 메모리에서 다음 명령어를 가져옴. (현재 위치는 PC 레지스터가 가리킴)</li>
+            <li><strong>Decode(해석)</strong> — 제어장치가 "이게 무슨 명령인지" 해독함.</li>
+            <li><strong>Execute(실행)</strong> — ALU 등이 실제 연산을 수행하고 결과를 저장함.</li>
+          </ol>
+          <div class="diagram">
+            <svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="fetch decode execute 사이클">
+              <g font-family="monospace" font-size="12">
+                <circle cx="100" cy="50"  r="34" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="100" y="48" fill="#c9d1d9" text-anchor="middle">Fetch</text><text x="100" y="63" fill="#8b949e" text-anchor="middle">인출</text>
+                <circle cx="260" cy="50"  r="34" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="260" y="48" fill="#c9d1d9" text-anchor="middle">Decode</text><text x="260" y="63" fill="#8b949e" text-anchor="middle">해석</text>
+                <circle cx="180" cy="150" r="34" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="180" y="148" fill="#c9d1d9" text-anchor="middle">Execute</text><text x="180" y="163" fill="#8b949e" text-anchor="middle">실행</text>
+                <line x1="138" y1="45" x2="222" y2="45" stroke="#58a6ff" stroke-width="2" marker-end="url(#cy1)"/>
+                <line x1="252" y1="83" x2="205" y2="120" stroke="#3fb950" stroke-width="2" marker-end="url(#cy2)"/>
+                <line x1="155" y1="120" x2="108" y2="83" stroke="#d29922" stroke-width="2" marker-end="url(#cy3)"/>
+              </g>
+              <defs>
+                <marker id="cy1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="cy2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+                <marker id="cy3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">이 사이클이 초당 수십억 번 돌면서 프로그램이 실행된다</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 클럭(clock)</div>
+            <p>이 사이클의 박자를 맞추는 것이 클럭입니다. 3GHz CPU는 1초에 30억 번의 클럭 신호를 내보냅니다 — 그만큼 빠르게 명령을 처리한다는 뜻입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="memory">메모리 계층</h2>
+          <p>빠른 저장 장치는 비싸고 작으며, 느린 장치는 싸고 큽니다. 그래서 컴퓨터는 여러 저장 장치를 <strong>계층(memory hierarchy)</strong>으로 쌓습니다. 위로 갈수록 빠르고 작고, 아래로 갈수록 느리고 큽니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="메모리 계층 피라미드">
+              <g font-family="monospace" font-size="11">
+                <polygon points="160,20 200,55 120,55" fill="#1c232c" stroke="#58a6ff" stroke-width="2"/><text x="160" y="48" fill="#c9d1d9" text-anchor="middle">레지스터</text>
+                <polygon points="120,57 200,57 230,95 90,95" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="160" y="82" fill="#c9d1d9" text-anchor="middle">캐시(L1/L2/L3)</text>
+                <polygon points="90,97 230,97 260,135 60,135" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="160" y="120" fill="#c9d1d9" text-anchor="middle">RAM (주기억장치)</text>
+                <polygon points="60,137 260,137 290,175 30,175" fill="#161b22" stroke="#8b949e" stroke-width="2"/><text x="160" y="160" fill="#c9d1d9" text-anchor="middle">SSD / 하드디스크</text>
+                <text x="305" y="40" fill="#58a6ff" font-size="10">빠름·작음·비쌈</text>
+                <text x="295" y="170" fill="#8b949e" font-size="10">느림·큼·쌈</text>
+              </g>
+            </svg>
+            <div class="caption">자주 쓰는 데이터일수록 위쪽(빠른 곳)에 둔다</div>
+          </div>
+          <p>핵심은 <strong>캐시(cache)</strong>입니다. CPU가 방금 쓴 데이터는 곧 또 쓸 가능성이 높습니다(지역성). 그래서 RAM보다 훨씬 빠른 캐시에 복사해 두고, 다음에 같은 데이터가 필요하면 RAM까지 가지 않고 캐시에서 바로 꺼냅니다.</p>
+          <table>
+            <thead><tr><th>장치</th><th>상대 속도</th><th>대략 용량</th></tr></thead>
+            <tbody>
+              <tr><td>레지스터</td><td>가장 빠름</td><td>수십~수백 바이트</td></tr>
+              <tr><td>캐시</td><td>매우 빠름</td><td>수 MB</td></tr>
+              <tr><td>RAM</td><td>빠름</td><td>수~수십 GB</td></tr>
+              <tr><td>SSD/HDD</td><td>느림</td><td>수백 GB~수 TB</td></tr>
+            </tbody>
+          </table>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 캐시 미스(cache miss)</div>
+            <p>필요한 데이터가 캐시에 없으면 느린 RAM까지 가야 합니다. 이를 캐시 미스라 하며, 자주 발생하면 프로그램이 눈에 띄게 느려집니다. 데이터를 연속적으로 접근하면 미스가 줄어듭니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="pipeline">파이프라이닝</h2>
+          <p>명령어 하나가 fetch→decode→execute를 모두 마칠 때까지 기다렸다 다음 명령을 시작하면 낭비가 큽니다. <strong>파이프라이닝(pipelining)</strong>은 공장의 컨베이어 벨트처럼, 한 명령이 decode 단계에 있을 때 다음 명령은 이미 fetch를 시작하게 해 <strong>여러 명령을 겹쳐 처리</strong>합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="파이프라이닝 단계 겹침">
+              <g font-family="monospace" font-size="11">
+                <text x="60" y="20" fill="#8b949e" text-anchor="end">명령1</text>
+                <rect x="70"  y="8"  width="55" height="22" fill="#161b22" stroke="#58a6ff"/><text x="97"  y="23" fill="#c9d1d9" text-anchor="middle">Fetch</text>
+                <rect x="128" y="8"  width="55" height="22" fill="#161b22" stroke="#3fb950"/><text x="155" y="23" fill="#c9d1d9" text-anchor="middle">Decode</text>
+                <rect x="186" y="8"  width="55" height="22" fill="#161b22" stroke="#d29922"/><text x="213" y="23" fill="#c9d1d9" text-anchor="middle">Exec</text>
+
+                <text x="60" y="52" fill="#8b949e" text-anchor="end">명령2</text>
+                <rect x="128" y="40" width="55" height="22" fill="#161b22" stroke="#58a6ff"/><text x="155" y="55" fill="#c9d1d9" text-anchor="middle">Fetch</text>
+                <rect x="186" y="40" width="55" height="22" fill="#161b22" stroke="#3fb950"/><text x="213" y="55" fill="#c9d1d9" text-anchor="middle">Decode</text>
+                <rect x="244" y="40" width="55" height="22" fill="#161b22" stroke="#d29922"/><text x="271" y="55" fill="#c9d1d9" text-anchor="middle">Exec</text>
+
+                <text x="60" y="84" fill="#8b949e" text-anchor="end">명령3</text>
+                <rect x="186" y="72" width="55" height="22" fill="#161b22" stroke="#58a6ff"/><text x="213" y="87" fill="#c9d1d9" text-anchor="middle">Fetch</text>
+                <rect x="244" y="72" width="55" height="22" fill="#161b22" stroke="#3fb950"/><text x="271" y="87" fill="#c9d1d9" text-anchor="middle">Decode</text>
+                <rect x="302" y="72" width="55" height="22" fill="#161b22" stroke="#d29922"/><text x="329" y="87" fill="#c9d1d9" text-anchor="middle">Exec</text>
+
+                <line x1="70" y1="110" x2="400" y2="110" stroke="#30363d" stroke-width="1.5"/>
+                <text x="235" y="130" fill="#8b949e" text-anchor="middle">시간 →  단계가 겹쳐 전체 처리량 증가</text>
+              </g>
+            </svg>
+            <div class="caption">파이프라이닝: 명령들을 겹쳐 흘려보내 같은 시간에 더 많이 처리</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 해저드(hazard)</div>
+            <p>다음 명령이 앞 명령의 결과를 필요로 하거나, 분기(if)로 어디로 갈지 모를 때 파이프라인이 멈출 수 있습니다. 이를 해저드라 하며, CPU는 분기 예측 등으로 이를 줄이려 노력합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="float">
+          <h2>부동소수점 표현 (IEEE 754)</h2>
+          <p>정수는 2의 보수로 깔끔하게 표현되지만, <code>3.14</code> 같은 <strong>실수</strong>는 어떻게 0과 1로 담을까요? 거의 모든 컴퓨터가 <strong>IEEE 754</strong> 표준을 씁니다. 과학적 표기법(예: 1.01 × 2³)처럼, 실수를 <strong>부호 · 지수 · 가수(尾數)</strong> 세 부분으로 쪼개 저장합니다.</p>
+          <p>32비트 단정밀도(float)는 부호 1비트, 지수 8비트, 가수 23비트로 나뉩니다. 값은 대략 <code>(-1)<sup>부호</sup> × 1.가수 × 2<sup>(지수-127)</sup></code>로 복원됩니다. 지수에 127을 빼는(바이어스) 이유는 음의 지수도 표현하기 위함입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IEEE 754 단정밀도 비트 필드">
+              <g font-family="monospace" font-size="12">
+                <rect x="20"  y="45" width="40" height="40" fill="#1c232c" stroke="#f85149" stroke-width="2"/><text x="40"  y="70" fill="#c9d1d9" text-anchor="middle">0</text>
+                <rect x="62"  y="45" width="130" height="40" fill="#1c232c" stroke="#58a6ff" stroke-width="2"/><text x="127" y="70" fill="#c9d1d9" text-anchor="middle">10000000</text>
+                <rect x="194" y="45" width="206" height="40" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="297" y="70" fill="#c9d1d9" text-anchor="middle">10010001111010111000011</text>
+                <text x="40"  y="35" fill="#f85149" text-anchor="middle">부호</text>
+                <text x="127" y="35" fill="#58a6ff" text-anchor="middle">지수(8)</text>
+                <text x="297" y="35" fill="#3fb950" text-anchor="middle">가수(23)</text>
+                <text x="40"  y="105" fill="#8b949e" text-anchor="middle">+</text>
+                <text x="127" y="105" fill="#8b949e" text-anchor="middle">128-127=1</text>
+                <text x="297" y="105" fill="#8b949e" text-anchor="middle">1.57 × 2¹ → 3.14</text>
+              </g>
+            </svg>
+            <div class="caption">π ≈ 3.14를 IEEE 754 float으로: 부호(0) · 지수(1) · 가수로 분해</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">float_repr.py</span></div>
+            <pre><code class="language-python">import struct
+
+x = 0.1 + 0.2
+print(x)              # 0.30000000000000004  ← 정확히 0.3이 아니다!
+print(x == 0.3)       # False
+
+# float을 32비트 비트열로 직접 보기
+bits = struct.pack(">f", 3.14)
+print("".join(f"{b:08b}" for b in bits))
+# 01000000010010001111010111000011  (부호1 지수8 가수23)</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 0.1 + 0.2 ≠ 0.3</div>
+            <p>0.1은 2진수로 무한 반복 소수라 정확히 저장할 수 없습니다. 그래서 부동소수점 계산엔 미세한 오차가 따릅니다. 돈 계산처럼 정확도가 중요하면 정수(센트 단위)나 십진 타입(<code>decimal</code>)을 쓰세요. 실수는 <code>abs(a-b) &lt; 1e-9</code>처럼 비교합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="cache">
+          <h2>캐시 동작과 지역성</h2>
+          <p>앞서 캐시가 빠른 임시 메모리라고 했습니다. 그 효과의 비밀은 <strong>지역성(locality)</strong>입니다. 프로그램은 ① 방금 쓴 데이터를 곧 또 쓰고(<strong>시간 지역성</strong>), ② 쓴 데이터의 바로 옆을 이어서 쓰는(<strong>공간 지역성</strong>) 경향이 있습니다. 캐시는 이 경향에 베팅합니다.</p>
+          <p>그래서 캐시는 한 바이트가 아니라 <strong>캐시 라인(보통 64바이트)</strong> 단위로 통째로 가져옵니다. 배열을 순서대로 훑으면 첫 접근(미스) 한 번에 옆 데이터까지 캐시에 올라와, 다음 수십 번은 빠른 적중(hit)이 됩니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="캐시 라인 적중과 미스">
+              <g font-family="monospace" font-size="11">
+                <text x="60" y="22" fill="#8b949e" text-anchor="middle">RAM (느림)</text>
+                <rect x="20" y="32" width="80" height="110" fill="#161b22" stroke="#8b949e"/>
+                <rect x="28" y="40" width="64" height="20" fill="#1c232c" stroke="#d29922"/><text x="60" y="55" fill="#c9d1d9" text-anchor="middle">64B 라인</text>
+                <text x="280" y="22" fill="#8b949e" text-anchor="middle">캐시 (빠름)</text>
+                <rect x="240" y="32" width="120" height="50" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="300" y="62" fill="#c9d1d9" text-anchor="middle">64B 라인 복사본</text>
+                <line x1="100" y1="50" x2="240" y2="55" stroke="#d29922" stroke-width="2" marker-end="url(#cf1)"/>
+                <text x="170" y="42" fill="#f85149" text-anchor="middle">미스: 통째로 적재</text>
+                <rect x="240" y="100" width="120" height="40" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+                <text x="300" y="118" fill="#3fb950" text-anchor="middle">이후 접근 = 적중</text>
+                <text x="300" y="133" fill="#8b949e" text-anchor="middle">RAM 안 감 (수십배 빠름)</text>
+              </g>
+              <defs><marker id="cf1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker></defs>
+            </svg>
+            <div class="caption">미스 한 번에 64바이트가 통째로 올라오고, 옆 데이터는 적중으로 빠르게 읽힌다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">locality.c</span></div>
+            <pre><code class="language-c">// 같은 2차원 배열을 두 순서로 합산 — 결과는 같지만 속도가 다르다
+int sum = 0;
+// (A) 행 우선: 메모리에 연속 접근 → 캐시 적중 多, 빠름
+for (int i = 0; i &lt; N; i++)
+    for (int j = 0; j &lt; N; j++)
+        sum += a[i][j];
+
+// (B) 열 우선: 멀리 건너뛰며 접근 → 캐시 미스 多, 느림
+for (int j = 0; j &lt; N; j++)
+    for (int i = 0; i &lt; N; i++)
+        sum += a[i][j];   // (A)보다 수 배 느릴 수 있다</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 적중률(hit rate)</div>
+            <p>적중률 = 적중 횟수 / 전체 접근. 평균 접근 시간 ≈ (적중률 × 캐시 속도) + (미스율 × RAM 속도)입니다. 미스 한 번이 적중의 수십~수백 배 느리므로, 적중률을 95%에서 99%로만 올려도 체감 속도가 크게 달라집니다. 데이터를 연속으로 배치하는 것만으로 공짜 성능을 얻습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="vm">
+          <h2>가상 메모리와 TLB</h2>
+          <p>프로그램은 자기가 메모리를 통째로 혼자 쓰는 것처럼 동작합니다. 하지만 실제로는 여러 프로그램이 RAM을 나눠 씁니다. 이 착각을 만들어 주는 것이 <strong>가상 메모리(virtual memory)</strong>입니다. 프로그램이 쓰는 <strong>가상 주소</strong>를 하드웨어가 실제 <strong>물리 주소</strong>로 바꿔 줍니다.</p>
+          <p>변환표를 <strong>페이지 테이블</strong>이라 하는데, 이를 매번 RAM에서 찾으면 느립니다. 그래서 CPU 안에 최근 변환 결과를 캐싱하는 작은 하드웨어 <strong>TLB(Translation Lookaside Buffer)</strong>를 둡니다. TLB에 있으면(적중) 즉시 변환되고, 없으면(미스) 페이지 테이블을 찾아 채웁니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="가상 주소에서 물리 주소로 TLB 변환">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="70" width="90" height="40" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="65" y="88" fill="#c9d1d9" text-anchor="middle">가상 주소</text><text x="65" y="103" fill="#8b949e" text-anchor="middle">(CPU)</text>
+                <rect x="160" y="70" width="90" height="40" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="205" y="94" fill="#c9d1d9" text-anchor="middle">TLB</text>
+                <rect x="300" y="20" width="100" height="40" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="350" y="44" fill="#c9d1d9" text-anchor="middle">물리 주소</text>
+                <rect x="300" y="120" width="100" height="40" fill="#161b22" stroke="#8b949e"/><text x="350" y="138" fill="#c9d1d9" text-anchor="middle">페이지 테이블</text><text x="350" y="152" fill="#8b949e" text-anchor="middle">(RAM, 느림)</text>
+                <line x1="110" y1="90" x2="160" y2="90" stroke="#58a6ff" stroke-width="2" marker-end="url(#vm1)"/>
+                <line x1="250" y1="80" x2="300" y2="50" stroke="#3fb950" stroke-width="2" marker-end="url(#vm2)"/>
+                <text x="278" y="60" fill="#3fb950" font-size="10">적중→즉시</text>
+                <line x1="250" y1="100" x2="300" y2="130" stroke="#8b949e" stroke-width="2" marker-end="url(#vm3)"/>
+                <text x="270" y="122" fill="#f85149" font-size="10">미스→조회</text>
+              </g>
+              <defs>
+                <marker id="vm1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="vm2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+                <marker id="vm3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">TLB에 변환이 있으면 즉시, 없으면 느린 페이지 테이블을 조회해 채운다</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 페이지와 페이지 폴트</div>
+            <p>메모리는 보통 4KB <strong>페이지</strong> 단위로 관리됩니다. 필요한 페이지가 RAM에 없고 디스크에 있으면 <strong>페이지 폴트</strong>가 발생해, OS가 디스크에서 RAM으로 불러옵니다. 가상 메모리 덕분에 RAM보다 큰 프로그램도 실행할 수 있고, 프로그램들이 서로의 메모리를 침범하지 못하게 격리됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="io">
+          <h2>입출력과 인터럽트</h2>
+          <p>키보드 입력이나 디스크 읽기는 CPU 속도에 비하면 까마득히 느립니다. CPU가 "데이터 왔니?"를 계속 물어보며 기다리면(<strong>폴링</strong>) 그동안 아무 일도 못 합니다. 그래서 현대 컴퓨터는 <strong>인터럽트(interrupt)</strong>를 씁니다.</p>
+          <p>CPU는 입출력을 시켜 놓고 다른 일을 합니다. 장치가 일을 끝내면 CPU에 "나 끝났어!" 하고 신호(인터럽트)를 보냅니다. CPU는 하던 일을 잠시 멈추고, 그 상태를 저장한 뒤 <strong>인터럽트 핸들러</strong>를 실행하고, 끝나면 멈췄던 곳으로 정확히 돌아옵니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="인터럽트 처리 흐름">
+              <g font-family="monospace" font-size="11">
+                <line x1="40" y1="40" x2="380" y2="40" stroke="#58a6ff" stroke-width="3"/>
+                <text x="40" y="28" fill="#58a6ff">CPU: 본래 작업 실행 중</text>
+                <line x1="200" y1="40" x2="200" y2="95" stroke="#f85149" stroke-width="2" marker-end="url(#io1)"/>
+                <text x="210" y="62" fill="#f85149">① 인터럽트 발생</text>
+                <text x="210" y="78" fill="#8b949e">(디스크 "다 읽었음")</text>
+                <line x1="120" y1="120" x2="290" y2="120" stroke="#d29922" stroke-width="3"/>
+                <text x="205" y="112" fill="#d29922" text-anchor="middle">② 상태 저장 → 핸들러 실행</text>
+                <line x1="290" y1="120" x2="320" y2="155" stroke="#3fb950" stroke-width="2" marker-end="url(#io2)"/>
+                <line x1="320" y1="160" x2="380" y2="160" stroke="#58a6ff" stroke-width="3"/>
+                <text x="200" y="172" fill="#3fb950">③ 멈췄던 곳으로 복귀해 본래 작업 계속</text>
+              </g>
+              <defs>
+                <marker id="io1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f85149"/></marker>
+                <marker id="io2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">인터럽트: 장치가 부를 때만 CPU가 잠깐 대응하고 곧 본래 일로 복귀</div>
+          </div>
+          <table>
+            <thead><tr><th>방식</th><th>동작</th><th>CPU 효율</th></tr></thead>
+            <tbody>
+              <tr><td>폴링(Polling)</td><td>CPU가 계속 물어봄</td><td>낮음 (계속 대기)</td></tr>
+              <tr><td>인터럽트</td><td>장치가 끝나면 알림</td><td>높음 (그동안 다른 일)</td></tr>
+              <tr><td>DMA</td><td>전용 장치가 메모리로 직접 전송</td><td>가장 높음 (CPU 거의 무관여)</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 DMA(직접 메모리 접근)</div>
+            <p>대용량 전송(예: 디스크→RAM)을 CPU가 한 바이트씩 옮기면 비효율적입니다. <strong>DMA 컨트롤러</strong>가 CPU를 거치지 않고 장치와 메모리 사이를 직접 옮긴 뒤, 다 끝나면 인터럽트 한 번으로 알립니다. CPU는 그동안 계산에 전념합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="parallel">
+          <h2>병렬성 (SIMD · 멀티코어)</h2>
+          <p>클럭 속도를 무한히 올릴 수는 없습니다(발열·전력 한계). 그래서 현대 CPU는 <strong>동시에 여러 일을 하는</strong> 방향으로 발전했습니다. 크게 두 갈래입니다.</p>
+          <ul>
+            <li><strong>SIMD</strong>(Single Instruction, Multiple Data) — 명령 하나로 여러 데이터를 한꺼번에 처리. 예: 4개의 숫자를 한 번의 덧셈 명령으로 동시에 더함. 영상·과학 계산에 강력.</li>
+            <li><strong>멀티코어</strong> — CPU 안에 독립된 코어를 여러 개 두어, 서로 다른 작업(스레드)을 진짜 동시에 실행.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="스칼라 연산과 SIMD 연산 비교">
+              <g font-family="monospace" font-size="11">
+                <text x="100" y="20" fill="#8b949e" text-anchor="middle">일반(스칼라): 4번 반복</text>
+                <rect x="40"  y="30" width="30" height="24" fill="#161b22" stroke="#8b949e"/><text x="55"  y="47" fill="#c9d1d9" text-anchor="middle">+</text>
+                <rect x="75"  y="30" width="30" height="24" fill="#161b22" stroke="#8b949e"/><text x="90"  y="47" fill="#c9d1d9" text-anchor="middle">+</text>
+                <rect x="110" y="30" width="30" height="24" fill="#161b22" stroke="#8b949e"/><text x="125" y="47" fill="#c9d1d9" text-anchor="middle">+</text>
+                <rect x="145" y="30" width="30" height="24" fill="#161b22" stroke="#8b949e"/><text x="160" y="47" fill="#c9d1d9" text-anchor="middle">+</text>
+                <text x="100" y="95" fill="#3fb950" text-anchor="middle">SIMD: 명령 하나로 4개 동시</text>
+                <rect x="40"  y="105" width="135" height="30" fill="#1c232c" stroke="#58a6ff" stroke-width="2"/><text x="107" y="124" fill="#c9d1d9" text-anchor="middle">+ + + +  (한 번에)</text>
+                <text x="300" y="20" fill="#8b949e" text-anchor="middle">멀티코어</text>
+                <rect x="250" y="35"  width="50" height="35" fill="#161b22" stroke="#bc8cff" stroke-width="2"/><text x="275" y="57" fill="#c9d1d9" text-anchor="middle">코어1</text>
+                <rect x="310" y="35"  width="50" height="35" fill="#161b22" stroke="#bc8cff" stroke-width="2"/><text x="335" y="57" fill="#c9d1d9" text-anchor="middle">코어2</text>
+                <rect x="250" y="78"  width="50" height="35" fill="#161b22" stroke="#bc8cff" stroke-width="2"/><text x="275" y="100" fill="#c9d1d9" text-anchor="middle">코어3</text>
+                <rect x="310" y="78"  width="50" height="35" fill="#161b22" stroke="#bc8cff" stroke-width="2"/><text x="335" y="100" fill="#c9d1d9" text-anchor="middle">코어4</text>
+                <text x="305" y="132" fill="#8b949e" text-anchor="middle">서로 다른 작업을 동시에</text>
+              </g>
+            </svg>
+            <div class="caption">SIMD는 데이터 병렬, 멀티코어는 작업 병렬 — 둘 다 "동시에 더 많이"</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 암달의 법칙</div>
+            <p>코어를 8개로 늘려도 8배 빨라지지 않습니다. 프로그램에는 순차적으로만 처리되는 부분이 남아 있기 때문입니다. 전체의 90%를 병렬화해도 나머지 10%가 발목을 잡아, 코어를 아무리 늘려도 최대 10배까지만 빨라집니다(암달의 법칙).</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="isa">
+          <h2>명령어 집합 (RISC vs CISC)</h2>
+          <p>CPU가 이해하는 명령어들의 약속이 <strong>명령어 집합 구조(ISA)</strong>입니다. 같은 C 코드라도 어떤 ISA냐에 따라 다른 기계어로 번역됩니다. 설계 철학은 크게 두 가지로 나뉩니다.</p>
+          <ul>
+            <li><strong>CISC</strong>(예: x86) — 명령이 많고 복잡. 한 명령이 "메모리에서 읽고 더해서 다시 쓰기"까지 한 번에 처리. 명령 수는 적지만 한 명령이 복잡.</li>
+            <li><strong>RISC</strong>(예: ARM, RISC-V) — 명령이 적고 단순·균일. 메모리 접근은 load/store 명령으로만. 명령 수는 늘지만 각 명령이 단순해 파이프라이닝·저전력에 유리.</li>
+          </ul>
+          <table>
+            <thead><tr><th>구분</th><th>CISC (x86)</th><th>RISC (ARM)</th></tr></thead>
+            <tbody>
+              <tr><td>명령어 수</td><td>많음·복잡</td><td>적음·단순</td></tr>
+              <tr><td>명령어 길이</td><td>가변 길이</td><td>고정 길이</td></tr>
+              <tr><td>메모리 접근</td><td>여러 명령이 직접</td><td>load/store만</td></tr>
+              <tr><td>대표 용도</td><td>PC·서버</td><td>스마트폰·임베디드</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">isa_compare.asm</span></div>
+            <pre><code class="language-x86asm">; 같은 작업 c = a + b 를 두 철학으로
+; --- CISC (x86): 메모리를 직접 다룸 ---
+mov  eax, [a]
+add  eax, [b]      ; 메모리 b를 바로 더함
+mov  [c], eax
+
+; --- RISC (ARM 스타일): load/store로 분리 ---
+ldr  r0, [a]       ; 먼저 레지스터로 적재
+ldr  r1, [b]
+add  r2, r0, r1    ; 연산은 레지스터끼리만
+str  r2, [c]       ; 결과를 다시 저장</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 경계는 흐려졌다</div>
+            <p>오늘날 x86 CPU도 내부에서는 복잡한 명령을 단순한 마이크로 연산(μops)으로 쪼개 RISC처럼 실행합니다. 순수한 구분은 약해졌지만, "단순·균일한 명령이 파이프라이닝과 저전력에 유리하다"는 RISC 철학이 모바일 시대에 ARM의 승리로 이어졌습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="endian">
+          <h2>엔디안 (Endianness)</h2>
+          <p>여러 바이트로 이루어진 수(예: 4바이트 정수)를 메모리에 저장할 때, <strong>어느 바이트를 먼저 둘 것인가</strong>의 약속이 <strong>엔디안</strong>입니다. 정답은 없고, 시스템마다 다른 관습입니다.</p>
+          <ul>
+            <li><strong>리틀 엔디안</strong> — 낮은 자리(LSB)를 낮은 주소에. x86·ARM 대부분. "거꾸로" 저장되는 것처럼 보임.</li>
+            <li><strong>빅 엔디안</strong> — 높은 자리(MSB)를 낮은 주소에. 사람이 쓰는 순서와 같음. 네트워크 전송 표준(network byte order).</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="리틀 엔디안과 빅 엔디안 바이트 배치">
+              <g font-family="monospace" font-size="11">
+                <text x="210" y="20" fill="#8b949e" text-anchor="middle">값 0x12345678 을 메모리에 저장</text>
+                <text x="20" y="60" fill="#3fb950">리틀</text>
+                <rect x="80"  y="42" width="60" height="28" fill="#161b22" stroke="#3fb950"/><text x="110" y="61" fill="#c9d1d9" text-anchor="middle">78</text>
+                <rect x="142" y="42" width="60" height="28" fill="#161b22" stroke="#3fb950"/><text x="172" y="61" fill="#c9d1d9" text-anchor="middle">56</text>
+                <rect x="204" y="42" width="60" height="28" fill="#161b22" stroke="#3fb950"/><text x="234" y="61" fill="#c9d1d9" text-anchor="middle">34</text>
+                <rect x="266" y="42" width="60" height="28" fill="#161b22" stroke="#3fb950"/><text x="296" y="61" fill="#c9d1d9" text-anchor="middle">12</text>
+                <text x="20" y="120" fill="#58a6ff">빅</text>
+                <rect x="80"  y="102" width="60" height="28" fill="#161b22" stroke="#58a6ff"/><text x="110" y="121" fill="#c9d1d9" text-anchor="middle">12</text>
+                <rect x="142" y="102" width="60" height="28" fill="#161b22" stroke="#58a6ff"/><text x="172" y="121" fill="#c9d1d9" text-anchor="middle">34</text>
+                <rect x="204" y="102" width="60" height="28" fill="#161b22" stroke="#58a6ff"/><text x="234" y="121" fill="#c9d1d9" text-anchor="middle">56</text>
+                <rect x="266" y="102" width="60" height="28" fill="#161b22" stroke="#58a6ff"/><text x="296" y="121" fill="#c9d1d9" text-anchor="middle">78</text>
+                <text x="110" y="88" fill="#8b949e" text-anchor="middle">주소 0</text>
+                <text x="296" y="88" fill="#8b949e" text-anchor="middle">주소 3</text>
+                <text x="296" y="148" fill="#8b949e" text-anchor="middle">주소 3</text>
+                <text x="110" y="148" fill="#8b949e" text-anchor="middle">주소 0</text>
+              </g>
+            </svg>
+            <div class="caption">같은 값도 바이트 순서가 정반대 — 시스템 간 데이터 교환 시 주의</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 왜 중요한가</div>
+            <p>엔디안이 다른 두 컴퓨터가 바이트를 그대로 주고받으면 숫자가 깨집니다. 그래서 네트워크 통신은 빅 엔디안으로 통일하고(<code>htonl</code> 등으로 변환), 파일 포맷도 엔디안을 명시합니다. 같은 기계 안에서만 도는 코드라면 신경 쓸 일이 거의 없습니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>컴퓨터는 CPU·메모리·입출력이 버스로 연결된 폰 노이만 구조다.</li>
+            <li>모든 데이터는 이진수이며, 음수는 2의 보수로 표현해 뺄셈을 덧셈 회로로 처리한다.</li>
+            <li>AND·OR·NOT 같은 논리 게이트의 조합이 CPU의 모든 계산을 이룬다.</li>
+            <li>CPU는 fetch-decode-execute 사이클을 초당 수십억 번 반복한다.</li>
+            <li>메모리는 속도-용량을 절충한 계층 구조이며, 파이프라이닝으로 명령을 겹쳐 처리해 속도를 높인다.</li>
+            <li>실수는 IEEE 754(부호·지수·가수)로 표현되며 미세한 오차가 생기므로 직접 등호 비교를 피한다.</li>
+            <li>캐시는 지역성에 베팅해 캐시 라인 단위로 적재하며, 연속 접근으로 적중률을 높이면 큰 성능 이득을 본다.</li>
+            <li>가상 메모리는 가상↔물리 주소를 변환해 격리·확장을 제공하고, TLB가 그 변환을 캐싱한다.</li>
+            <li>인터럽트는 느린 입출력을 기다리지 않게 하고, 병렬성(SIMD·멀티코어)은 동시에 더 많이 처리해 속도를 높인다.</li>
+            <li>ISA는 RISC(단순·균일)와 CISC(복잡·강력)로 나뉘고, 엔디안은 멀티바이트 값의 저장 순서 약속이다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>비트 / 바이트</dt><dd>비트는 0 또는 1 한 자리, 바이트는 8비트 묶음.</dd></dl>
+          <dl class="term"><dt>2의 보수</dt><dd>비트를 반전하고 1을 더해 음수를 표현하는 방식.</dd></dl>
+          <dl class="term"><dt>레지스터</dt><dd>CPU 내부의 가장 빠른 초소형 임시 저장 공간.</dd></dl>
+          <dl class="term"><dt>fetch-decode-execute</dt><dd>명령을 가져오고·해석하고·실행하는 CPU의 기본 반복 사이클.</dd></dl>
+          <dl class="term"><dt>캐시(Cache)</dt><dd>자주 쓰는 데이터를 CPU 가까이 두는 빠른 임시 메모리.</dd></dl>
+          <dl class="term"><dt>파이프라이닝</dt><dd>여러 명령의 처리 단계를 겹쳐 실행해 처리량을 높이는 기법.</dd></dl>
+          <dl class="term"><dt>IEEE 754</dt><dd>실수를 부호·지수·가수로 나눠 저장하는 부동소수점 표준.</dd></dl>
+          <dl class="term"><dt>지역성(Locality)</dt><dd>방금 쓴 데이터(시간)·그 옆 데이터(공간)를 곧 다시 쓰는 경향. 캐시 효과의 근거.</dd></dl>
+          <dl class="term"><dt>가상 메모리 / TLB</dt><dd>가상 주소를 물리 주소로 변환하는 체계와, 그 변환을 캐싱하는 CPU 내부 하드웨어.</dd></dl>
+          <dl class="term"><dt>인터럽트</dt><dd>장치가 작업 완료 등을 CPU에 알려, 하던 일을 잠시 멈추고 처리하게 하는 신호.</dd></dl>
+          <dl class="term"><dt>SIMD</dt><dd>명령 하나로 여러 데이터를 동시에 처리하는 데이터 병렬 방식.</dd></dl>
+          <dl class="term"><dt>RISC / CISC</dt><dd>각각 단순·균일한 명령(ARM)과 복잡·강력한 명령(x86)을 지향하는 ISA 설계 철학.</dd></dl>
+          <dl class="term"><dt>엔디안(Endianness)</dt><dd>멀티바이트 값을 메모리에 저장할 때의 바이트 순서 약속(리틀/빅).</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

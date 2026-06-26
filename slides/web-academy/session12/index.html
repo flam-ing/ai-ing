@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 12 - 프로그래밍 언어 지형도</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 12 · Part 4 개발 환경</div>
+      <h1>프로그래밍 언어<br/>지형도</h1>
+      <h3>수많은 언어, 무엇을 어떻게 고를 것인가</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <div class="card-title">언어별 강점</div>
+          <div class="card-desc">주요 프로그래밍 언어의 강점과 사용 분야를 말할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">컴파일 vs 인터프리터</div>
+          <div class="card-desc">두 실행 방식의 차이와 각각의 트레이드오프를 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧭</div>
+          <div class="card-title">나에게 맞는 언어</div>
+          <div class="card-desc">AI 시대에 비개발자가 배워두면 유용한 언어를 선택할 수 있다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">언어</span>가<br/>이렇게 많을까?</h2>
+      <p>
+        세상에는 수백 개의 프로그래밍 언어가 있다.<br/>
+        각 언어는 <span class="highlight-blue">특정 문제</span>를 더 잘 풀기 위해 만들어졌다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        <span class="highlight-yellow">전부 배울 필요는 없다.</span> 어떤 언어가 어디에 쓰이는지 지도를 그리는 것만으로도<br/>
+        AI에게 <span class="highlight">"이 작업은 Python으로 해줘"</span> 라고 정확히 지시할 수 있게 된다.
+      </p>
+    </div>
+
+    <!-- 4. 주요 언어 지형도 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>주요 언어 <span class="highlight">지형도</span></h2>
+      <p>각 언어는 고유한 <span class="highlight-blue">생태계</span>와 <span class="highlight-yellow">주 무대</span>가 있다.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🟨</div>
+          <div class="feature-name">JavaScript</div>
+          <div class="feature-sub">웹 프론트·백엔드</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐍</div>
+          <div class="feature-name">Python</div>
+          <div class="feature-sub">AI · 데이터 · 자동화</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔷</div>
+          <div class="feature-name">TypeScript</div>
+          <div class="feature-sub">대규모 JS 프로젝트</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">☕</div>
+          <div class="feature-name">Java</div>
+          <div class="feature-sub">엔터프라이즈 · 안드로이드</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <div class="feature-name">C / C++</div>
+          <div class="feature-sub">시스템 · 게임 엔진</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-name">Go</div>
+          <div class="feature-sub">서버 · 클라우드</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🦀</div>
+          <div class="feature-name">Rust</div>
+          <div class="feature-sub">고성능 · 안전성</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🍎</div>
+          <div class="feature-name">Swift</div>
+          <div class="feature-sub">iOS · macOS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 심화A: 언어가 만들어지는 이유 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">🔬</div>
+      <h2>언어 지형도 —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>프로그래밍 언어는 왜 이렇게 많을까? 각 언어는 특정 문제를 더 잘 풀기 위해 탄생했다.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">목적이 달라서 만들어진다</div><div class="step-desc">웹을 위해 JavaScript, 데이터 과학을 위해 Python, 시스템 성능을 위해 C/C++이 탄생했다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">생산성과 성능은 트레이드오프</div><div class="step-desc">Python은 쓰기 쉽지만 느리다. C는 빠르지만 복잡하다. 둘 다 필요하기에 둘 다 살아있다.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">생태계(라이브러리)가 언어를 키운다</div><div class="step-desc">Python이 AI의 표준이 된 건 TensorFlow·PyTorch 같은 강력한 라이브러리 덕분이다.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">언어는 진화한다</div><div class="step-desc">JavaScript → TypeScript처럼 기존 언어의 단점을 보완하며 새 언어가 등장하기도 한다.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 개념B: Top 3 언어 -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <div class="big-emoji">⭐</div>
+      <h2>비개발자에게 유용한<br/><span class="highlight">Top 3</span></h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🟨</div>
+          <div class="card-title">JavaScript</div>
+          <div class="card-desc">웹 브라우저의 유일한 언어. 프론트엔드·백엔드 모두 가능. <span class="highlight">진입 장벽이 가장 낮다.</span></div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🐍</div>
+          <div class="card-title">Python</div>
+          <div class="card-desc">문법이 간결해 읽기 쉽다. <span class="highlight-blue">데이터 분석·AI·자동화</span>에 강점. AI 도구와 연동이 많음.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔷</div>
+          <div class="card-title">TypeScript</div>
+          <div class="card-desc">JavaScript에 <span class="highlight-yellow">타입</span>을 추가. 실수 방지에 탁월하고 규모 있는 프로젝트에 필수.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 심화B: JavaScript가 브라우저에서 실행되는 과정 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🟨</div>
+      <h2>JavaScript —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>내가 버튼을 클릭하는 순간, 브라우저 안에서는 이런 일이 일어난다.</p>
+      <div class="flow">
+        <div class="flow-item">📝 JS 코드 작성</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🌐 브라우저가 다운로드</div><div class="flow-arrow">→</div>
+        <div class="flow-item">⚙️ V8 엔진이 파싱</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🖥️ 화면에 즉시 반영</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> JS는 별도 설치 없이 브라우저가 직접 실행 — 웹의 유일한 프론트엔드 언어</p>
+    </div>
+
+    <!-- 8. 개념C: 컴파일 vs 인터프리터 -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <h2>컴파일 <span class="highlight">vs</span> 인터프리터</h2>
+      <p>언어가 <span class="highlight-blue">코드를 실제 실행하는 방식</span>의 차이.</p>
+      <div class="compare">
+        <div class="compare-box before" style="border-color: rgba(251,191,36,0.4);">
+          <div class="compare-title" style="color:#fbbf24;">⚙️ 컴파일 언어</div>
+          <div class="compare-item" style="color:#ccc;">실행 전, 소스 전체를 기계어로 번역</div>
+          <div class="compare-item" style="color:#ccc;">실행 속도가 빠르다</div>
+          <div class="compare-item" style="color:#ccc;">예: C, C++, Go, Rust</div>
+          <div class="compare-item" style="color:#ccc;">배포 전 "빌드" 과정이 필요</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">📜 인터프리터 언어</div>
+          <div class="compare-item">줄 단위로 즉시 읽어 실행</div>
+          <div class="compare-item">즉시 피드백, 유연하게 실험 가능</div>
+          <div class="compare-item">예: Python, JavaScript, Ruby</div>
+          <div class="compare-item">런타임에 인터프리터가 필요</div>
+        </div>
+      </div>
+      <style>
+        .compare-box.before .compare-item::before { content: '•'; }
+      </style>
+    </div>
+
+    <!-- 9. 실생활 연결 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">🟨</div><div class="card-title">모든 웹사이트</div><div class="card-desc">버튼 클릭, 폼 제출, 애니메이션 — 전부 JavaScript가 동작시킨다</div></div>
+        <div class="card"><div class="card-icon">🐍</div><div class="card-title">ChatGPT · AI 서비스</div><div class="card-desc">AI 모델 학습과 서빙은 대부분 Python으로 구현된다</div></div>
+        <div class="card"><div class="card-icon">📱</div><div class="card-title">카카오톡 · iOS 앱</div><div class="card-desc">Swift(iOS), Kotlin(Android)로 만들어진 네이티브 앱</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 어떤 언어를 배워야 할지 모른 채 AI에게 막연하게 물어보게 된다</p>
+    </div>
+
+    <!-- 10. 오해 바로잡기 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 흔한 오해</div>
+          <ul><li>어려운 언어를 쓸수록 실력 있는 개발자다</li><li>Python은 쉽고 JavaScript는 어렵다</li><li>언어 하나 마스터하면 모든 걸 할 수 있다</li></ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 실제로는</div>
+          <ul><li>목적에 맞는 언어를 선택하는 것이 진짜 실력이다</li><li>둘 다 처음에는 어렵다. 목적에 따라 선택할 뿐</li><li>언어마다 강점이 달라 여러 언어를 함께 쓰는 것이 일반적</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">🎸</div>
+      <h2>언어 선택은 <span class="highlight">악기 선택</span>이다</h2>
+      <p>좋고 나쁨이 아니라, <span class="highlight-blue">목적에 맞는 도구</span>를 고르는 것.</p>
+      <div class="analogy">
+        <div class="analogy-title">🎼 악기 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">기타</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">JavaScript</span> — 어디서든 다용도, 대중적</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">피아노</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">Python</span> — 클래식(데이터·AI)에 강하다</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">오케스트라</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">Java / C++</span> — 대규모·정교한 합주</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">전자음악</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">Rust / Go</span> — 최신 기술, 고성능</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI 도구 연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">앱을 만들고 싶은데 어떤 언어를 배워야 하나요?</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">앱의 종류와 목적에 따라 달라집니다. 조금 더 알려주시면 추천해드릴 수 있어요.</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">iOS 앱을 3개월 안에 출시하고 싶어요. 개발 경험은 없고 AI 도움을 받을 계획이에요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">그렇다면 Swift를 추천합니다. Apple 공식 언어라 문서가 풍부하고, AI 코드 생성 도구와도 궁합이 좋습니다. 대안으로 React Native(JavaScript)도 있어 웹과 앱을 함께 개발할 수 있어요.</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 체크 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">JavaScript는 웹 프론트엔드의 표준 언어이며 브라우저가 직접 실행한다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">Python으로 iOS 앱을 만드는 것은 매우 제한적이며 일반적이지 않다</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">컴파일 언어는 실행 전 전체 번역으로 빠르고, 인터프리터는 줄 단위로 유연하다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">어려운 언어를 쓸수록 실력 있는 개발자라는 것은 오해다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 언어 지형도를 파악한 것만으로도 AI에게 훨씬 정확한 질문을 할 수 있습니다!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">🟨</div>
+          <div class="summary-label">JavaScript</div>
+          <div class="summary-desc">웹의 공용어 —<br/>브라우저·서버 모두</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🐍</div>
+          <div class="summary-label">Python</div>
+          <div class="summary-desc">AI·데이터의 표준 —<br/>문법이 간결</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔷</div>
+          <div class="summary-label">TypeScript</div>
+          <div class="summary-desc">JS + 타입 —<br/>대규모 프로젝트 필수</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚙️</div>
+          <div class="summary-label">컴파일</div>
+          <div class="summary-desc">실행 전 전체 번역 —<br/>빠르다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📜</div>
+          <div class="summary-label">인터프리터</div>
+          <div class="summary-desc">줄 단위 즉시 실행 —<br/>유연하다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧭</div>
+          <div class="summary-label">선택 기준</div>
+          <div class="summary-desc">목적에 맞는<br/>도구를 고르기</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 13 · 코드 에디터와 AI 코딩 도구</span></h2>
+      <p>
+        언어를 정했다면 이제 <span class="highlight-blue">코드를 작성할 환경</span>을 갖출 차례.<br/>
+        <span class="highlight-yellow">VS Code</span>와 <span class="highlight-pink">Cursor</span> — AI 시대의 새로운 에디터를 만나본다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 언어는 <strong>목적에 맞게</strong> 고르는 도구다.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

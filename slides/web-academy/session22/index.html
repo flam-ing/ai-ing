@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 22 - DOM과 이벤트</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #0f0f1a; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    .progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #6ee7b7, #60a5fa); z-index: 100; transition: width 0.4s ease; }
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide { position: absolute; inset: 0; padding: 5vh 8vw; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; overflow-y: auto; }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .slide.prev { transform: translateX(-50px); }
+    .slide-number { position: absolute; top: 4vh; right: 5vw; font-size: 0.9rem; font-weight: 500; color: #666; letter-spacing: 0.2em; }
+    h1 { font-size: 3.2rem; font-weight: 900; line-height: 1.3; background: linear-gradient(135deg, #6ee7b7, #60a5fa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    h2 { font-size: 2.4rem; font-weight: 700; color: #e0e0e0; line-height: 1.35; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.6rem; font-weight: 500; color: #aaa; margin-bottom: 2rem; }
+    p { font-size: 1.3rem; color: #ccc; line-height: 1.8; max-width: 900px; }
+    p + p { margin-top: 1rem; }
+    .subtitle { font-size: 1.1rem; color: #888; letter-spacing: 0.1em; margin-bottom: 1rem; font-weight: 500; }
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+    .big-emoji { font-size: 5rem; margin-bottom: 1rem; line-height: 1; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1.5rem; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(110,231,183,0.4); background: rgba(255,255,255,0.07); }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .analogy { margin-top: 2rem; padding: 2rem 2.5rem; background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12)); border: 1px solid rgba(110,231,183,0.25); border-radius: 16px; max-width: 1000px; }
+    .analogy-title { font-size: 1rem; font-weight: 700; color: #6ee7b7; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .analogy-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; font-size: 1.15rem; }
+    .analogy-row + .analogy-row { border-top: 1px dashed rgba(255,255,255,0.1); }
+    .analogy-label { min-width: 150px; color: #888; font-weight: 500; }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .flow-item { padding: 1rem 1.6rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; font-size: 1.1rem; font-weight: 500; color: #e0e0e0; }
+    .flow-arrow { font-size: 1.6rem; color: #6ee7b7; font-weight: 700; }
+    .step-list { margin-top: 2rem; max-width: 900px; }
+    .step { display: flex; gap: 1.2rem; padding: 1.1rem 0; align-items: flex-start; }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6ee7b7, #60a5fa); color: #0f0f1a; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .summary-card { padding: 1.8rem 1.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; text-align: center; }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-top: 2rem; max-width: 1100px; }
+    .feature-card { padding: 1rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; text-align: center; }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; max-width: 1100px; }
+    .compare-box { padding: 1.5rem; border-radius: 14px; background: rgba(255,255,255,0.04); }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item { display: flex; gap: 0.6rem; padding: 0.5rem 0; font-size: 1rem; color: #ccc; }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+    pre.code { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.2rem; font-family: 'Menlo', monospace; font-size: 0.95rem; color: #6ee7b7; overflow-x: auto; line-height: 1.6; max-width: 900px; margin-top: 1.2rem; }
+    /* DOM tree */
+    .tree { margin-top: 2rem; font-family: 'Menlo', monospace; color: #ccc; font-size: 1rem; line-height: 1.9; max-width: 700px; }
+    .tree-node { padding: 0.2rem 0.6rem; }
+    .tree-root { color: #6ee7b7; font-weight: 700; }
+    .tree-branch { color: #60a5fa; }
+    .tree-leaf { color: #fbbf24; }
+    .nav { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 0.6rem; z-index: 50; }
+    .nav button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,15,26,0.85); backdrop-filter: blur(10px); color: #e0e0e0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
+    .nav button:hover { background: rgba(110,231,183,0.15); border-color: #6ee7b7; color: #6ee7b7; }
+    .thumb-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); z-index: 200; display: none; flex-direction: column; padding: 2rem 3rem; overflow-y: auto; }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .thumb-header h3 { font-size: 1.3rem; color: #e0e0e0; margin-bottom: 0; }
+    .thumb-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e0e0e0; font-size: 1rem; cursor: pointer; }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .thumb-item { padding: 1.2rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 0.4rem; min-height: 140px; }
+    .thumb-item:hover { background: rgba(110,231,183,0.08); border-color: rgba(110,231,183,0.4); transform: translateY(-2px); }
+    .thumb-item.current { border-color: #6ee7b7; background: rgba(110,231,183,0.1); }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title { font-size: 1rem; font-weight: 700; color: #e0e0e0; line-height: 1.4; flex: 1; }
+    .thumb-num { font-size: 0.75rem; color: #666; letter-spacing: 0.2em; font-weight: 500; }
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+    /* Chat */
+    .chat { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; max-width: 900px; }
+    .chat-row { display: flex; gap: 0.8rem; align-items: flex-start; }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble { padding: 0.8rem 1.2rem; border-radius: 14px; max-width: 70%; background: rgba(255,255,255,0.06); color: #e0e0e0; font-size: 1rem; line-height: 1.6; }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+    @media (max-width: 768px) { .slide { padding: 5vh 6vw; } h1 { font-size: 2.2rem; } h2 { font-size: 1.7rem; } h3 { font-size: 1.2rem; } p { font-size: 1rem; } .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare { grid-template-columns: 1fr; } .card-grid.two-col { grid-template-columns: 1fr; } .big-emoji { font-size: 3.5rem; } }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 22 · Part 5 웹 개발</div>
+      <h1>DOM과 이벤트 —<br/>웹을 움직인다</h1>
+      <h3>요소를 찾고, 바꾸고, 반응하게 만드는 법</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌲</div>
+          <div class="card-title">DOM 트리</div>
+          <div class="card-desc">브라우저가 HTML을 객체로 만든 구조를 설명한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">요소 조작</div>
+          <div class="card-desc">querySelector로 요소를 찾고 내용을 바꾼다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">👆</div>
+          <div class="card-title">이벤트 리스너</div>
+          <div class="card-desc">사용자 행동에 반응하는 코드를 등록한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">DOM</span>을<br/>다뤄야 할까?</h2>
+      <p>
+        버튼을 누르면 색이 바뀌고, 카운터가 올라가고, 새 메시지가 뜬다 —<br/>
+        이 모든 <span class="highlight-blue">실시간 변화</span>는 JS가 DOM을 조작해 일어난다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        DOM을 알면 <span class="highlight-yellow">정적 페이지</span>를 <span class="highlight">동적 앱</span>으로 바꿀 수 있다.
+      </p>
+    </div>
+
+    <!-- 4. DOM 트리 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>DOM은 <span class="highlight">트리 구조</span>다</h2>
+      <p>브라우저는 HTML을 파싱해 계층적인 객체 트리로 만든다.</p>
+      <div class="tree">
+        <div class="tree-node tree-root">📄 document</div>
+        <div class="tree-node">└─ <span class="tree-branch">&lt;html&gt;</span></div>
+        <div class="tree-node">&nbsp;&nbsp;&nbsp;├─ <span class="tree-branch">&lt;head&gt;</span></div>
+        <div class="tree-node">&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└─ <span class="tree-leaf">&lt;title&gt;</span> "My Page"</div>
+        <div class="tree-node">&nbsp;&nbsp;&nbsp;└─ <span class="tree-branch">&lt;body&gt;</span></div>
+        <div class="tree-node">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ <span class="tree-leaf">&lt;h1&gt;</span> "Hello"</div>
+        <div class="tree-node">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ <span class="tree-leaf">&lt;button&gt;</span> "Click"</div>
+      </div>
+      <p style="margin-top:1.2rem;font-size:1.1rem;">
+        각 노드는 <span class="highlight">JavaScript 객체</span>로, 속성과 메서드를 가진다.
+      </p>
+    </div>
+
+    <!-- 5. 심화A: DOM 트리 구조와 요소 선택 방법 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">🌲</div>
+      <h2>DOM 트리와 요소 선택 —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>DOM은 단순한 HTML 복사본이 아니다 — JavaScript가 제어할 수 있는 살아있는 객체 구조다.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">getElementById — ID로 하나 선택</div><div class="step-desc">document.getElementById('myBtn') — 전체 문서에서 id="myBtn"인 단 하나의 요소. 가장 빠르다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">querySelector — CSS 선택자로 하나 선택</div><div class="step-desc">document.querySelector('.card:first-child') — CSS 선택자 문법 그대로 사용. 더 유연하다.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">querySelectorAll — 여러 개 선택</div><div class="step-desc">document.querySelectorAll('li') — 조건에 맞는 모든 요소를 NodeList로 반환. forEach로 순회 가능.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">부모·자식·형제 관계</div><div class="step-desc">element.parentElement, element.children, element.nextSibling — 트리를 탐색하며 이동 가능.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 요소 선택 & 조작 코드 -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <h2>요소를 <span class="highlight">찾고</span> <span class="highlight-blue">바꾸기</span></h2>
+      <p>CSS 선택자로 원하는 요소를 집고, 속성을 직접 수정한다.</p>
+      <pre class="code"><code>// 요소 선택
+const btn = document.querySelector('.btn');
+const items = document.querySelectorAll('li');
+
+// 내용 변경
+btn.textContent = "저장됨!";
+btn.style.background = "#6ee7b7";
+
+// 클래스 토글
+btn.classList.add('active');
+btn.classList.remove('disabled');
+btn.classList.toggle('highlight');</code></pre>
+    </div>
+
+    <!-- 7. 심화B: 이벤트 버블링 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🌊</div>
+      <h2>이벤트 버블링 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>자식 요소를 클릭하면 이벤트가 부모·조상 요소까지 차례로 전파된다.</p>
+      <div class="flow">
+        <div class="flow-item">🔘 버튼 클릭</div><div class="flow-arrow">→</div>
+        <div class="flow-item">📦 div 전파</div><div class="flow-arrow">→</div>
+        <div class="flow-item">📄 body 전파</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🌐 document 전파</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> 이 버블링 덕분에 부모 하나에 이벤트를 등록하면 자식 수십 개를 한 번에 처리할 수 있다 — 이것을 <span class="highlight">이벤트 위임(delegation)</span>이라고 한다.</p>
+    </div>
+
+    <!-- 8. 이벤트 흐름 코드 -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">👆</div>
+      <h2>이벤트 <span class="highlight">흐름</span></h2>
+      <p>사용자의 행동은 이벤트로 전달되고, 등록된 함수가 반응한다.</p>
+      <div class="flow">
+        <div class="flow-item">🖱️ 사용자 클릭</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.08);">📡 이벤트 발생</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.08);">🎧 리스너 호출</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">✨ DOM 변경</div>
+      </div>
+      <pre class="code"><code>const btn = document.querySelector('#saveBtn');
+
+btn.addEventListener('click', (event) =&gt; {
+  console.log('클릭됨!', event.target);
+  btn.textContent = '저장 완료';
+});</code></pre>
+    </div>
+
+    <!-- 9. 실생활 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 DOM 조작이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">❤️</div><div class="card-title">유튜브 좋아요 버튼</div><div class="card-desc">클릭 시 classList.toggle('liked')로 색이 바뀌고 숫자가 올라간다 — DOM 조작의 전형</div></div>
+        <div class="card"><div class="card-icon">📸</div><div class="card-title">인스타그램 무한스크롤</div><div class="card-desc">scroll 이벤트를 감지해 하단에 닿으면 새 콘텐츠를 불러와 DOM에 append한다</div></div>
+        <div class="card"><div class="card-icon">☰</div><div class="card-title">토글 메뉴</div><div class="card-desc">햄버거 버튼 클릭 시 nav.classList.toggle('open')으로 메뉴를 펼치고 닫는다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 모든 변화마다 서버에서 새 HTML 페이지를 받아야 해 웹이 느리고 불편해진다.</p>
+    </div>
+
+    <!-- 10. 오해 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before"><div class="compare-label">❌ 흔한 오해</div><ul><li>DOM과 HTML은 같은 것이다</li><li>이벤트는 클릭(click)밖에 없다</li><li>querySelector와 getElementById는 동일하다</li></ul></div>
+        <div class="compare-box after"><div class="compare-label">✓ 실제로는</div><ul><li>DOM은 HTML을 파싱한 후 만들어진 메모리 속 객체 트리 — 원본 파일과 다를 수 있다</li><li>click, input, scroll, keydown, mousemove, submit 등 수십 가지 이벤트가 있다</li><li>querySelector는 CSS 선택자 지원, getElementById는 ID 전용 — 용도가 다르다</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">🏗️</div>
+      <h2>DOM은 <span class="highlight">설계도의 디지털 복사본</span></h2>
+      <p>HTML은 종이 설계도, DOM은 자유롭게 수정 가능한 3D 모형이다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🏛️ 설계도 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">종이 설계도</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">HTML 파일</span> — 고정된 원본</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">3D 모형</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">DOM</span> — 메모리 속 조작 가능한 복사본</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">모형 수정 도구</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">JavaScript</span> — 요소를 자유롭게 변경</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">관람객 반응</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">이벤트</span> — 클릭/입력 등 신호 발생</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI 연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>DOM과 이벤트를 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">클릭하면 색이 바뀌는 버튼 만들어줘.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">어떤 색에서 어떤 색으로 바꾸실 건가요? 버튼 하나인가요, 여러 개인가요?</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">DOM API로 id="colorBtn" 버튼 클릭 시 배경색을 흰색과 초록색으로 토글하는 JavaScript 코드 작성해줘.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">btn.addEventListener('click', () =&gt; { btn.classList.toggle('green'); }); — CSS에 .green { background: #6ee7b7; }를 추가하면 완성됩니다!</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">DOM은 브라우저가 HTML을 파싱해 만든 객체 트리 구조다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">DOM을 수정하면 원본 HTML 파일도 함께 바뀐다 (메모리 속 객체만 변경된다)</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">이벤트 버블링으로 자식 이벤트가 부모까지 전파된다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">addEventListener는 이벤트 하나에 함수 하나만 등록할 수 있다 (여러 개 등록 가능)</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 DOM 조작과 이벤트를 이해했다면, 이제 진짜 인터랙티브 웹을 만들 수 있습니다!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">🌲</div>
+          <div class="summary-label">DOM</div>
+          <div class="summary-desc">HTML을 객체 트리로<br/>변환한 구조</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔍</div>
+          <div class="summary-label">querySelector</div>
+          <div class="summary-desc">CSS 선택자로<br/>요소 탐색</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">✏️</div>
+          <div class="summary-label">textContent</div>
+          <div class="summary-desc">요소의 텍스트를<br/>실시간 변경</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🎨</div>
+          <div class="summary-label">classList</div>
+          <div class="summary-desc">add / remove / toggle로<br/>스타일 전환</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">👆</div>
+          <div class="summary-label">이벤트 리스너</div>
+          <div class="summary-desc">addEventListener로<br/>행동에 반응</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🌊</div>
+          <div class="summary-label">버블링</div>
+          <div class="summary-desc">이벤트는 자식→부모로<br/>전파된다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 23 · HTTP와 요청/응답</span></h2>
+      <p>
+        URL 입력부터 화면 표시까지 — <span class="highlight-blue">브라우저 내부</span>에서 벌어지는 일을 파헤친다.<br/>
+        렌더링, 캐시, DevTools의 세계로 들어간다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 화면의 변화는 모두 <strong>DOM 조작</strong>에서 출발한다.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => { s.classList.remove('active', 'prev'); if (i === idx) s.classList.add('active'); else if (i < idx) s.classList.add('prev'); });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+    function toggleThumbs() { thumbOverlay.classList.toggle('open'); }
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `<div class="thumb-emoji">${emoji}</div><div class="thumb-title">${title}</div><div class="thumb-num">${num}</div>`;
+        item.addEventListener('click', () => { showSlide(i); toggleThumbs(); });
+        thumbGrid.appendChild(item);
+      });
+    }
+    function updateThumbCurrent() { thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => { el.classList.toggle('current', i === current); }); }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].screenX - touchStartX; if (Math.abs(dx) > 50) { if (dx < 0) nextSlide(); else prevSlide(); } });
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

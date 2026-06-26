@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 15 - GitHub와 협업</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 15 · Part 4 개발 환경</div>
+      <h1>GitHub</h1>
+      <h3>전 세계 개발자가 모이는 코드의 광장</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">Git과의 관계</div>
+          <div class="card-desc">Git은 도구, GitHub는 서비스 — 차이를 설명할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">☁️</div>
+          <div class="card-title">push · pull</div>
+          <div class="card-desc">원격 저장소와 로컬을 오가는 흐름을 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔀</div>
+          <div class="card-title">Pull Request</div>
+          <div class="card-desc">코드 리뷰 기반 협업의 기본기를 익힌다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">GitHub</span>를<br/>써야 할까?</h2>
+      <p>
+        Git은 내 PC 안에서만 돌아간다. 하지만 개발은 대부분 <span class="highlight">협업</span>이다.<br/>
+        <span class="highlight-blue">팀원과 코드를 공유하고, 리뷰하고, 합치는 공간</span>이 필요하다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        그래서 Git 저장소를 <span class="highlight-yellow">인터넷에 올려둔 플랫폼</span> — <span class="highlight-pink">GitHub</span>.<br/>
+        오늘날 <span class="highlight">1억 명 이상</span>의 개발자가 사용하는 표준.
+      </p>
+    </div>
+
+    <!-- 4. Git vs GitHub -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>Git <span class="highlight">vs</span> GitHub</h2>
+      <p>헷갈리기 쉽지만 <span class="highlight-blue">완전히 다른 것</span>이다.</p>
+      <div class="compare">
+        <div class="compare-box before" style="border-color: rgba(251,191,36,0.4);">
+          <div class="compare-title" style="color:#fbbf24;">🔧 Git</div>
+          <div class="compare-item" style="color:#ccc;">버전 관리 <span class="highlight-yellow">도구(소프트웨어)</span></div>
+          <div class="compare-item" style="color:#ccc;">내 PC에서 로컬로 동작</div>
+          <div class="compare-item" style="color:#ccc;">오픈소스, 무료</div>
+          <div class="compare-item" style="color:#ccc;">2005년 출시</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">☁️ GitHub</div>
+          <div class="compare-item">Git 저장소를 <span class="highlight">호스팅하는 서비스</span></div>
+          <div class="compare-item">웹에서 접근, 협업·리뷰 기능</div>
+          <div class="compare-item">Microsoft 소유 (2018년 인수)</div>
+          <div class="compare-item">GitLab, Bitbucket 같은 대안도 존재</div>
+        </div>
+      </div>
+      <style>
+        .compare-box.before .compare-item::before { content: '•'; }
+      </style>
+    </div>
+
+    <!-- 5. 심화A: Pull Request 흐름 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">🔀</div>
+      <h2>Pull Request —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>PR은 단순한 "코드 합치기"가 아니라, 팀이 코드 품질을 지키는 핵심 프로세스다.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">브랜치 생성 & 코드 작성</div><div class="step-desc">feature/login 같은 브랜치를 만들어 기능을 개발하고 여러 번 커밋한다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">원격 push & PR 생성</div><div class="step-desc">GitHub에 브랜치를 올리고 "이 변경을 main에 합쳐주세요"라는 리뷰 요청을 만든다.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">코드 리뷰</div><div class="step-desc">팀원이 코드를 읽고 댓글을 달거나 변경을 요청한다. 이 과정이 품질을 높인다.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">머지(Merge)</div><div class="step-desc">리뷰가 승인되면 main에 병합. 내 코드가 공식적으로 프로젝트의 일부가 된다.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 개념B: push / pull / clone / fork -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <div class="big-emoji">☁️</div>
+      <h2>핵심 <span class="highlight">명령어 4종</span></h2>
+      <div class="card-grid two-col">
+        <div class="card">
+          <div class="card-icon">⬆️</div>
+          <div class="card-title">push</div>
+          <div class="card-desc">내 로컬 커밋을 <span class="highlight">원격 저장소에 올리기</span>. 내가 한 작업을 공유.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⬇️</div>
+          <div class="card-title">pull</div>
+          <div class="card-desc">원격의 변경사항을 <span class="highlight-blue">내 로컬로 가져오기</span>. 팀원의 작업을 반영.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📥</div>
+          <div class="card-title">clone</div>
+          <div class="card-desc">원격 저장소를 <span class="highlight-yellow">통째로 내 PC에 다운로드</span>. 처음 한 번.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🍴</div>
+          <div class="card-title">fork</div>
+          <div class="card-desc">남의 저장소를 <span class="highlight-pink">내 계정으로 복사</span>. 오픈소스 기여의 시작점.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 심화B: GitHub Actions 자동 배포 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">⚡</div>
+      <h2>GitHub Actions —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>코드를 push하는 순간, 자동으로 테스트하고 배포까지 완료된다.</p>
+      <div class="flow">
+        <div class="flow-item">📝 코드 push</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🤖 Actions 실행</div><div class="flow-arrow">→</div>
+        <div class="flow-item">✅ 테스트 통과</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🚀 자동 배포</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> 사람이 수동으로 배포할 필요 없이 코드 변경만으로 전체 CI/CD 파이프라인이 동작한다</p>
+    </div>
+
+    <!-- 8. 개념C: Pull Request 상세 -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <h2>Pull Request — <span class="highlight-blue">협업의 꽃</span></h2>
+      <p>팀원이 리뷰하고 합치는 <span class="highlight">5단계 흐름</span>.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">브랜치 생성 & 작업</div>
+            <div class="step-desc"><code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#6ee7b7;">feature/login</code> 같은 브랜치에서 기능을 개발하고 커밋.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">원격에 push</div>
+            <div class="step-desc">내 브랜치를 GitHub 원격 저장소에 업로드한다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Pull Request 생성</div>
+            <div class="step-desc">"내 브랜치를 main에 합쳐주세요" 라는 <span class="highlight">리뷰 요청</span>을 만든다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">코드 리뷰 & 수정</div>
+            <div class="step-desc">팀원이 코멘트를 남기고, 요청에 맞춰 추가 커밋을 올린다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <div class="step-title">Merge — 최종 합류</div>
+            <div class="step-desc">리뷰 통과 시 <span class="highlight-blue">main 브랜치에 병합</span>. 내 기여가 프로젝트에 공식 합류.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 실생활 연결 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">🐙</div><div class="card-title">오픈소스 기여</div><div class="card-desc">React, Vue, Linux 등 오픈소스 프로젝트에 전 세계 개발자가 PR로 코드를 기여한다</div></div>
+        <div class="card"><div class="card-icon">🌐</div><div class="card-title">GitHub Pages 포트폴리오</div><div class="card-desc">내 코드를 push하면 자동으로 웹사이트가 만들어진다. 무료 호스팅으로 포트폴리오 공개</div></div>
+        <div class="card"><div class="card-icon">⚡</div><div class="card-title">자동 배포(Actions)</div><div class="card-desc">코드 merge 시 자동으로 테스트·빌드·배포까지 완료. 카카오, 네이버도 이 방식을 사용한다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 팀 개발은 이메일로 파일을 주고받는 혼란이 된다</p>
+    </div>
+
+    <!-- 10. 오해 바로잡기 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 흔한 오해</div>
+          <ul><li>GitHub=Git이다</li><li>GitHub에 올리면 누구나 볼 수 있다</li><li>GitHub의 Stars는 단순히 좋아요 버튼이다</li></ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 실제로는</div>
+          <ul><li>Git은 도구, GitHub는 Git 저장소를 호스팅하는 서비스다</li><li>private 저장소로 설정하면 초대된 사람만 볼 수 있다</li><li>Stars는 "관심 목록에 추가"에 가깝다. 개발자들이 나중에 참고하려고 저장하는 것</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">☁️</div>
+      <h2>GitHub는 <span class="highlight">코드용 구글 드라이브</span></h2>
+      <p>이미 알고 있는 공유 서비스에 <span class="highlight-blue">협업 기능</span>을 더했다고 생각하면 된다.</p>
+      <div class="analogy">
+        <div class="analogy-title">📂 드라이브 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">파일 업로드</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">push</span> — 내 로컬 커밋을 클라우드에</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">파일 다운로드</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">pull / clone</span> — 원격을 내 PC로</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">수정 요청</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">Pull Request</span> — "이거 합쳐주세요" 요청</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">공유 폴더</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">Repository</span> — 팀이 함께 쓰는 프로젝트 공간</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI 도구 연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">GitHub Pages로 내 포트폴리오 올리고 싶어요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">GitHub Pages는 무료로 정적 웹사이트를 호스팅할 수 있어요. 어떤 형식으로 만드셨나요?</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">HTML/CSS로 만든 포트폴리오 파일이 있어요. GitHub Pages로 배포하는 단계별 방법을 처음부터 알려줘.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">1) GitHub에서 [사용자명].github.io 이름으로 새 저장소 생성 → 2) HTML 파일을 push → 3) Settings > Pages에서 main 브랜치 선택 → 4) 몇 분 뒤 https://[사용자명].github.io 에서 확인하세요!</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 체크 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">GitHub는 Git 저장소를 온라인으로 관리하는 서비스이며, Git과는 별개다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">GitHub에 코드를 올리면 자동으로 실행된다 — push만으로는 실행되지 않고, 별도 설정이 필요하다</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">Pull Request는 코드 리뷰를 통해 팀 전체가 코드 품질을 함께 높이는 협업 도구다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">GitHub 저장소는 항상 공개다 — private 설정으로 비공개 유지가 가능하다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 GitHub를 이해하면 전 세계 개발자들과 같은 도구로 협업할 수 있습니다!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">☁️</div>
+          <div class="summary-label">GitHub</div>
+          <div class="summary-desc">Git 저장소의<br/>온라인 호스팅</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⬆️</div>
+          <div class="summary-label">push</div>
+          <div class="summary-desc">로컬 커밋을<br/>원격에 올리기</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⬇️</div>
+          <div class="summary-label">pull</div>
+          <div class="summary-desc">원격 변경사항을<br/>로컬로 받기</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📥</div>
+          <div class="summary-label">clone</div>
+          <div class="summary-desc">저장소를<br/>통째로 다운로드</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🍴</div>
+          <div class="summary-label">fork</div>
+          <div class="summary-desc">남의 저장소를<br/>내 계정으로 복사</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔀</div>
+          <div class="summary-label">Pull Request</div>
+          <div class="summary-desc">리뷰 기반<br/>협업 표준</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 16 · 패키지 매니저</span></h2>
+      <p>
+        프로젝트에서 쓸 <span class="highlight-blue">외부 라이브러리</span>는 어떻게 가져올까?<br/>
+        <span class="highlight-yellow">npm · pnpm · pip</span> — 개발자의 앱스토어를 탐험한다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> GitHub는 <strong>협업의 공통 언어</strong>다.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

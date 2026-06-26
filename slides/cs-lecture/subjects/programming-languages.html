@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>프로그래밍 언어론 · CS 4년 커리큘럼</title>
+  <meta name="description" content="문법과 의미론·컴파일·타입 시스템·스코프·패러다임·메모리 관리를 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="programming-languages" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">3학년 시스템 · 프로그래밍 언어론</span>
+        <h1 class="page-title">프로그래밍 언어론</h1>
+        <p class="page-lead">언어들은 <strong>왜 서로 다르게 생겼을까</strong>요? 문법·실행 방식·타입·메모리 관리를 비교하며 언어를 보는 눈을 기릅니다.</p>
+
+        <section class="anchor" id="what">
+          <h2>프로그래밍 언어론이란?</h2>
+          <p>프로그래밍 언어론(programming languages)은 <strong>언어를 만들고 비교하는 원리</strong>를 배우는 과목입니다. 특정 언어 하나를 더 잘 쓰는 법이 아니라, "왜 파이썬은 타입을 안 적어도 되고, C는 적어야 할까?" 같은 <strong>언어 설계의 선택과 결과</strong>를 다룹니다.</p>
+          <p>외국어를 여러 개 배우면 모국어가 다시 보이듯, 여러 언어의 공통 원리를 알면 새 언어도 빠르게 익히고, 상황에 맞는 언어를 고를 수 있게 됩니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>문법과 의미론 · 컴파일 vs 인터프리트 · 타입 시스템 · 변수 스코프와 바인딩 · 패러다임 · 메모리 관리(GC)까지, 언어를 가로지르는 핵심 개념을 다룹니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="syntax-semantics">
+          <h2>문법과 의미론</h2>
+          <p>언어를 이해하는 두 축은 <strong>문법(syntax)</strong>과 <strong>의미론(semantics)</strong>입니다.</p>
+          <ul>
+            <li><strong>문법</strong> — 코드가 "올바르게 생겼는가". 괄호·세미콜론·키워드 같은 형태 규칙. 비유하면 문장의 맞춤법·어순.</li>
+            <li><strong>의미론</strong> — 그 코드가 "무슨 뜻이고 어떻게 동작하는가". 비유하면 문장의 실제 의미.</li>
+          </ul>
+          <p>문법만 맞고 의미가 이상할 수 있습니다. <code>x = 1 / 0</code> 은 문법적으로는 완벽하지만, 실행하면 의미상 오류(0으로 나눔)가 납니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="문법과 의미론">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="40" width="110" height="44" fill="#161b22" stroke="#58a6ff"/><text x="75" y="60" fill="#c9d1d9" text-anchor="middle">소스 코드</text><text x="75" y="76" fill="#8b949e" text-anchor="middle">문자열</text>
+                <rect x="170" y="40" width="110" height="44" fill="#161b22" stroke="#3fb950"/><text x="225" y="60" fill="#c9d1d9" text-anchor="middle">문법 검사</text><text x="225" y="76" fill="#8b949e" text-anchor="middle">형태가 맞나?</text>
+                <rect x="320" y="40" width="90" height="44" fill="#161b22" stroke="#d29922"/><text x="365" y="60" fill="#c9d1d9" text-anchor="middle">의미</text><text x="365" y="76" fill="#8b949e" text-anchor="middle">무슨 뜻?</text>
+                <line x1="130" y1="62" x2="170" y2="62" stroke="#8b949e" stroke-width="2" marker-end="url(#ss)"/>
+                <line x1="280" y1="62" x2="320" y2="62" stroke="#8b949e" stroke-width="2" marker-end="url(#ss)"/>
+              </g>
+              <defs><marker id="ss" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">코드는 먼저 문법(형태)으로, 그다음 의미(동작)로 해석된다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">syntax.txt</span></div>
+            <pre><code class="language-python"># 같은 의미(1 더하기 2)를 서로 다른 문법으로 표현
+# Python
+result = 1 + 2
+
+# Lisp — 연산자가 앞에 오는 전위 표기 문법
+# (+ 1 2)
+
+# 문법은 달라도 의미(덧셈)는 동일하다</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="compile-interpret">
+          <h2>컴파일 vs 인터프리트</h2>
+          <p>사람이 쓴 코드를 컴퓨터가 실행하려면 기계어로 바꿔야 합니다. 그 방식이 두 갈래입니다.</p>
+          <ul>
+            <li><strong>컴파일(compile)</strong> — 실행 전에 <em>전체</em>를 기계어로 번역해 실행 파일을 만든다. 번역서를 미리 출판하는 것. (C, C++, Rust, Go)</li>
+            <li><strong>인터프리트(interpret)</strong> — 실행하는 순간 <em>한 줄씩</em> 읽어 바로 수행한다. 동시통역사. (Python, JavaScript, Ruby)</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="컴파일 대 인터프리트">
+              <g font-family="monospace" font-size="11">
+                <text x="110" y="18" fill="#58a6ff" text-anchor="middle">컴파일</text>
+                <rect x="40" y="28" width="60" height="28" fill="#161b22" stroke="#58a6ff"/><text x="70" y="46" fill="#c9d1d9" text-anchor="middle">코드</text>
+                <rect x="125" y="28" width="70" height="28" fill="#161b22" stroke="#58a6ff"/><text x="160" y="46" fill="#c9d1d9" text-anchor="middle">컴파일러</text>
+                <rect x="40" y="70" width="155" height="28" fill="#161b22" stroke="#3fb950"/><text x="117" y="88" fill="#3fb950" text-anchor="middle">실행 파일 → 빠른 실행</text>
+                <line x1="100" y1="42" x2="125" y2="42" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ci)"/>
+                <line x1="160" y1="56" x2="120" y2="70" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ci)"/>
+
+                <text x="320" y="18" fill="#d29922" text-anchor="middle">인터프리트</text>
+                <rect x="250" y="28" width="60" height="28" fill="#161b22" stroke="#d29922"/><text x="280" y="46" fill="#c9d1d9" text-anchor="middle">코드</text>
+                <rect x="335" y="28" width="70" height="28" fill="#161b22" stroke="#d29922"/><text x="370" y="46" fill="#c9d1d9" text-anchor="middle">인터프리터</text>
+                <rect x="250" y="70" width="155" height="28" fill="#161b22" stroke="#3fb950"/><text x="327" y="88" fill="#3fb950" text-anchor="middle">한 줄씩 즉시 실행</text>
+                <line x1="310" y1="42" x2="335" y2="42" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ci)"/>
+                <line x1="370" y1="56" x2="330" y2="70" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ci)"/>
+              </g>
+              <defs><marker id="ci" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">컴파일은 미리 한 번에, 인터프리트는 실행하며 그때그때</div>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>컴파일</th><th>인터프리트</th></tr></thead>
+            <tbody>
+              <tr><td>실행 속도</td><td>빠름</td><td>상대적으로 느림</td></tr>
+              <tr><td>오류 발견</td><td>실행 전(컴파일 시)</td><td>실행 중에야</td></tr>
+              <tr><td>개발 편의</td><td>빌드 단계 필요</td><td>바로 실행·실험</td></tr>
+              <tr><td>예시 언어</td><td>C, Rust, Go</td><td>Python, JavaScript</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 그 중간도 있다</div>
+            <p>Java나 C#은 <strong>바이트코드</strong>로 컴파일한 뒤 가상 머신(VM)이 실행합니다. JavaScript도 요즘은 실행 중 자주 쓰는 부분만 기계어로 바꾸는 <strong>JIT(Just-In-Time) 컴파일</strong>을 씁니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="type-system">
+          <h2>타입 시스템 (정적·동적)</h2>
+          <p>타입(type)은 값의 종류(정수·문자열·불린 등)입니다. 타입 시스템은 "어떤 연산이 어떤 값에 허용되는가"를 정하는 규칙이고, <strong>그 검사를 언제 하느냐</strong>로 두 갈래로 나뉩니다.</p>
+          <ul>
+            <li><strong>정적 타입(static)</strong> — 실행 <em>전</em>에 검사. 타입 오류를 미리 잡지만 타입을 적어야 함. (C, Java, TypeScript)</li>
+            <li><strong>동적 타입(dynamic)</strong> — 실행 <em>중</em>에 검사. 자유롭고 빠르게 작성하지만 오류가 런타임에 터질 수 있음. (Python, JavaScript)</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">types.txt</span></div>
+            <pre><code class="language-java">// Java — 정적 타입: 타입을 명시, 컴파일 때 검사
+int    age  = 20;
+String name = "철수";
+// age = "스무살";   ← 컴파일 오류! (int 자리에 String)</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">types.py</span></div>
+            <pre><code class="language-python"># Python — 동적 타입: 타입을 안 적음, 실행 중 검사
+age  = 20
+name = "철수"
+age  = "스무살"     # 허용됨 — 변수에 다른 타입 재할당 가능
+
+# 오류는 실행 중에야 드러난다
+# 1 + "둘"  →  TypeError (런타임에 발생)</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 트레이드오프</div>
+            <p>정적 타입은 <strong>안전성</strong>(오류를 일찍 발견)을, 동적 타입은 <strong>유연성·빠른 작성</strong>을 줍니다. 어느 쪽이 "더 낫다"기보다 프로젝트 규모와 목적에 따라 고릅니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="scope-binding">
+          <h2>변수 스코프와 바인딩</h2>
+          <p><strong>스코프(scope)</strong>는 변수가 <strong>보이는 범위</strong>입니다. 함수 안에서 만든 변수는 보통 그 함수 안에서만 통하죠. <strong>바인딩(binding)</strong>은 이름(변수명)이 실제 값·메모리와 묶이는 일을 말합니다.</p>
+          <p>대부분의 언어는 <strong>렉시컬 스코프(lexical scope)</strong>를 씁니다 — 변수가 어디서 "쓰였는가"가 아니라 어디에 "적혔는가"(코드 위치)로 범위가 정해집니다. 안쪽 블록은 바깥 변수를 볼 수 있지만, 바깥은 안쪽을 못 봅니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="중첩 스코프">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="20" width="340" height="120" fill="#161b22" stroke="#58a6ff" rx="4"/>
+                <text x="34" y="40" fill="#58a6ff">전역 스코프  (g 보임)</text>
+                <rect x="50" y="52" width="280" height="76" fill="#11161d" stroke="#3fb950" rx="4"/>
+                <text x="64" y="72" fill="#3fb950">함수 스코프  (g, f 보임)</text>
+                <rect x="80" y="84" width="220" height="36" fill="#161b22" stroke="#d29922" rx="4"/>
+                <text x="94" y="106" fill="#d29922">블록 스코프  (g, f, b 모두 보임)</text>
+              </g>
+            </svg>
+            <div class="caption">안쪽은 바깥 변수를 보지만, 바깥은 안쪽 변수를 못 본다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">scope.py</span></div>
+            <pre><code class="language-python">g = "전역"            # 전역 스코프
+
+def outer():
+    f = "함수 안"      # outer 안에서만 보임
+    print(g)          # OK — 바깥(전역)을 볼 수 있음
+    print(f)          # OK
+
+outer()
+# print(f)   ← NameError! f 는 outer 밖에서는 보이지 않음</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="paradigm">
+          <h2>패러다임 (명령형·함수형·객체지향)</h2>
+          <p>패러다임(paradigm)은 <strong>문제를 푸는 사고방식</strong>입니다. 같은 문제도 어떤 관점으로 보느냐에 따라 코드 모양이 완전히 달라집니다.</p>
+          <ul>
+            <li><strong>명령형(imperative)</strong> — "이렇게, 저렇게 해라"라고 <em>단계</em>를 나열. (C의 반복문)</li>
+            <li><strong>함수형(functional)</strong> — <em>함수의 조합</em>으로 표현, 상태 변경을 피함. (map/filter)</li>
+            <li><strong>객체지향(OOP)</strong> — 데이터와 동작을 <em>객체</em>로 묶음. (클래스)</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">paradigm.py</span></div>
+            <pre><code class="language-python">nums = [1, 2, 3, 4]
+
+# 명령형: 단계를 직접 나열
+total = 0
+for n in nums:
+    total += n * n
+
+# 함수형: 함수를 조합해 "무엇을" 원하는지 표현
+total = sum(map(lambda n: n * n, nums))
+
+# 객체지향: 데이터와 동작을 객체로 묶음
+class Counter:
+    def __init__(self):
+        self.value = 0
+    def add(self, n):
+        self.value += n</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 한 언어, 여러 패러다임</div>
+            <p>요즘 언어 대부분은 <strong>멀티 패러다임</strong>입니다. 파이썬·자바스크립트는 명령형·함수형·객체지향을 모두 지원하므로, 상황에 맞는 스타일을 섞어 쓸 수 있습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="memory">
+          <h2>메모리 관리 (GC)</h2>
+          <p>프로그램이 만든 데이터는 메모리를 차지합니다. 더 안 쓰는 메모리를 돌려주지 않으면 점점 쌓여(<strong>메모리 누수</strong>) 결국 프로그램이 죽습니다. 이 정리를 누가 하느냐가 언어마다 다릅니다.</p>
+          <ul>
+            <li><strong>수동 관리</strong> — 프로그래머가 직접 할당·해제. 빠르지만 실수하기 쉬움. (C의 <code>malloc</code>/<code>free</code>)</li>
+            <li><strong>가비지 컬렉션(GC)</strong> — 언어 런타임이 "더 이상 아무도 가리키지 않는" 데이터를 자동으로 청소. (Java, Python, Go)</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="가비지 컬렉션">
+              <g font-family="monospace" font-size="12">
+                <rect x="30" y="55" width="50" height="34" fill="#161b22" stroke="#58a6ff"/><text x="55" y="77" fill="#c9d1d9" text-anchor="middle">root</text>
+                <rect x="150" y="25" width="60" height="34" fill="#161b22" stroke="#3fb950"/><text x="180" y="47" fill="#c9d1d9" text-anchor="middle">살아있음</text>
+                <rect x="150" y="90" width="60" height="34" fill="#161b22" stroke="#f85149" stroke-dasharray="4 3"/><text x="180" y="112" fill="#f85149" text-anchor="middle">쓰레기</text>
+                <line x1="80" y1="68" x2="150" y2="44" stroke="#3fb950" stroke-width="2" marker-end="url(#gc)"/>
+                <text x="300" y="46" fill="#3fb950">참조됨 → 유지</text>
+                <text x="300" y="112" fill="#f85149">참조 없음 → 회수</text>
+              </g>
+              <defs><marker id="gc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker></defs>
+            </svg>
+            <div class="caption">GC: 루트에서 도달 못 하는 데이터를 "쓰레기"로 보고 자동 회수</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">memory.c</span></div>
+            <pre><code class="language-c">/* C — 수동 관리: 직접 해제해야 함 */
+int *p = malloc(sizeof(int) * 100);   /* 할당 */
+/* ... 사용 ... */
+free(p);   /* 해제를 잊으면 메모리 누수! */
+
+/* Python/Java — 자동(GC): free 가 없다.
+   참조가 사라지면 런타임이 알아서 회수한다. */</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ GC도 공짜는 아니다</div>
+            <p>GC는 편하지만, 청소하는 순간 프로그램이 잠깐 멈출 수 있습니다(<strong>GC 일시정지</strong>). 그래서 실시간성이 중요한 분야에선 Rust처럼 <strong>소유권(ownership)</strong>으로 GC 없이 안전하게 관리하는 방식을 쓰기도 합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="lambda-closure">
+          <h2>람다와 클로저</h2>
+          <p><strong>람다(lambda)</strong>는 <strong>이름 없는 함수</strong>입니다. 간단한 동작을 그 자리에서 만들어 값처럼 넘길 때 씁니다. <strong>클로저(closure)</strong>는 한 걸음 더 나아가, 람다가 <strong>자신이 만들어진 자리의 바깥 변수를 기억하는</strong> 현상입니다. 함수가 "환경을 봉투에 싸서(close over)" 들고 다닌다고 생각하면 됩니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="클로저: 함수가 바깥 변수를 기억">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="20" width="380" height="120" fill="#161b22" stroke="#58a6ff" rx="4"/>
+                <text x="34" y="42" fill="#58a6ff">make_counter() 환경</text>
+                <rect x="40" y="54" width="120" height="34" fill="#1c232c" stroke="#d29922" rx="4"/>
+                <text x="100" y="76" fill="#d29922" text-anchor="middle">count = 0</text>
+                <rect x="210" y="54" width="170" height="66" fill="#11161d" stroke="#3fb950" rx="4"/>
+                <text x="295" y="76" fill="#3fb950" text-anchor="middle">반환된 함수(클로저)</text>
+                <text x="295" y="98" fill="#8b949e" text-anchor="middle">count 를 계속 기억</text>
+                <line x1="160" y1="71" x2="210" y2="87" stroke="#bc8cff" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#cl)"/>
+              </g>
+              <defs><marker id="cl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#bc8cff"/></marker></defs>
+            </svg>
+            <div class="caption">바깥 함수가 끝나도, 반환된 클로저는 count 변수를 살려 들고 다닌다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">closure.txt</span></div>
+            <pre><code class="language-python"># Python — 람다(이름 없는 함수)
+square = lambda x: x * x
+print(square(5))            # 25
+
+# 클로저: 안쪽 함수가 바깥 변수(count)를 기억
+def make_counter():
+    count = 0
+    def inc():
+        nonlocal count
+        count += 1          # 바깥 변수를 계속 기억하고 갱신
+        return count
+    return inc
+
+c = make_counter()
+print(c(), c(), c())        # 1 2 3 — count 가 살아남음</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">closure.js</span></div>
+            <pre><code class="language-javascript">// JavaScript — 화살표 함수(람다) + 클로저
+const makeCounter = () => {
+  let count = 0;
+  return () => ++count;     // count 를 봉투에 싸서 기억
+};
+const c = makeCounter();
+console.log(c(), c(), c()); // 1 2 3</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 어디에 쓰나</div>
+            <p>클로저는 <strong>상태를 숨겨 캡슐화</strong>하거나, 콜백·이벤트 핸들러가 주변 값을 기억하게 할 때 핵심입니다. 함수형 프로그래밍의 토대이기도 합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="higher-order">
+          <h2>고차 함수</h2>
+          <p><strong>고차 함수(higher-order function)</strong>는 <strong>함수를 인자로 받거나, 함수를 결과로 돌려주는</strong> 함수입니다. 함수를 숫자나 문자열처럼 값으로 다룰 수 있는(<em>일급 함수</em>) 언어에서 가능합니다. 대표 삼총사가 <code>map</code>·<code>filter</code>·<code>reduce</code>입니다.</p>
+          <ul>
+            <li><strong>map</strong> — 모든 원소를 같은 규칙으로 <em>변환</em>.</li>
+            <li><strong>filter</strong> — 조건에 맞는 원소만 <em>골라냄</em>.</li>
+            <li><strong>reduce</strong> — 전체를 하나의 값으로 <em>접어 합침</em>.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="map filter reduce">
+              <g font-family="monospace" font-size="11">
+                <text x="40" y="20" fill="#8b949e">[1,2,3,4]</text>
+                <rect x="20" y="28" width="20" height="20" fill="#161b22" stroke="#58a6ff"/><text x="30" y="43" fill="#c9d1d9" text-anchor="middle">1</text>
+                <rect x="44" y="28" width="20" height="20" fill="#161b22" stroke="#58a6ff"/><text x="54" y="43" fill="#c9d1d9" text-anchor="middle">2</text>
+                <rect x="68" y="28" width="20" height="20" fill="#161b22" stroke="#58a6ff"/><text x="78" y="43" fill="#c9d1d9" text-anchor="middle">3</text>
+                <rect x="92" y="28" width="20" height="20" fill="#161b22" stroke="#58a6ff"/><text x="102" y="43" fill="#c9d1d9" text-anchor="middle">4</text>
+
+                <line x1="120" y1="38" x2="160" y2="38" stroke="#8b949e" marker-end="url(#hof)"/>
+                <text x="200" y="20" fill="#3fb950">map(×2)</text>
+                <rect x="168" y="28" width="20" height="20" fill="#1c232c" stroke="#3fb950"/><text x="178" y="43" fill="#c9d1d9" text-anchor="middle">2</text>
+                <rect x="192" y="28" width="20" height="20" fill="#1c232c" stroke="#3fb950"/><text x="202" y="43" fill="#c9d1d9" text-anchor="middle">4</text>
+                <rect x="216" y="28" width="20" height="20" fill="#1c232c" stroke="#3fb950"/><text x="226" y="43" fill="#c9d1d9" text-anchor="middle">6</text>
+                <rect x="240" y="28" width="20" height="20" fill="#1c232c" stroke="#3fb950"/><text x="250" y="43" fill="#c9d1d9" text-anchor="middle">8</text>
+
+                <text x="40" y="90" fill="#d29922">filter(짝수)</text>
+                <rect x="20" y="98" width="20" height="20" fill="#1c232c" stroke="#d29922"/><text x="30" y="113" fill="#c9d1d9" text-anchor="middle">2</text>
+                <rect x="44" y="98" width="20" height="20" fill="#1c232c" stroke="#d29922"/><text x="54" y="113" fill="#c9d1d9" text-anchor="middle">4</text>
+
+                <text x="200" y="90" fill="#bc8cff">reduce(+)</text>
+                <rect x="168" y="98" width="44" height="20" fill="#1c232c" stroke="#bc8cff"/><text x="190" y="113" fill="#c9d1d9" text-anchor="middle">10</text>
+              </g>
+              <defs><marker id="hof" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">map은 변환, filter는 선별, reduce는 하나로 접기</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">higher_order.txt</span></div>
+            <pre><code class="language-python"># Python
+nums = [1, 2, 3, 4]
+print(list(map(lambda x: x * 2, nums)))        # [2, 4, 6, 8]
+print(list(filter(lambda x: x % 2 == 0, nums)))# [2, 4]
+from functools import reduce
+print(reduce(lambda a, b: a + b, nums))        # 10</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">higher_order.js</span></div>
+            <pre><code class="language-javascript">// JavaScript — 메서드 체이닝으로 연결
+const nums = [1, 2, 3, 4];
+nums.map(x => x * 2)                  // [2,4,6,8]
+    .filter(x => x > 4)              // [6,8]
+    .reduce((a, b) => a + b, 0);     // 14</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="generics">
+          <h2>제네릭 (매개변수 다형성)</h2>
+          <p><strong>제네릭(generic)</strong>은 타입을 <strong>나중에 채울 빈칸으로 두고</strong> 코드를 작성하는 기법입니다. "정수 리스트", "문자열 리스트"를 따로 만들 필요 없이, "무언가의 리스트"를 한 번만 만들어 재사용합니다. 학술 용어로 <strong>매개변수 다형성(parametric polymorphism)</strong>이라 합니다.</p>
+          <p>제네릭이 없다면, 타입마다 거의 똑같은 코드를 복붙하거나(중복), 모든 타입을 받는 느슨한 타입을 써서 안전성을 잃어야 합니다. 제네릭은 <strong>재사용성과 타입 안전성을 동시에</strong> 잡습니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">generics.txt</span></div>
+            <pre><code class="language-java">// Java — <T> 가 "나중에 채울 타입" 빈칸
+class Box<T> {
+    private T value;
+    void set(T v) { value = v; }
+    T get() { return value; }
+}
+Box<String> b = new Box<>();
+b.set("철수");
+// b.set(123);  ← 컴파일 오류! String 자리에 int (타입 안전)</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">generics2.txt</span></div>
+            <pre><code class="language-typescript">// TypeScript — 함수도 제네릭으로
+function first<T>(arr: T[]): T {
+  return arr[0];
+}
+first<number>([1, 2, 3]);   // 반환 타입이 number 로 추론됨
+first(["a", "b"]);          // 반환 타입이 string</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 다형성의 갈래</div>
+            <p>같은 코드가 여러 타입에 작동하는 것을 다형성이라 합니다. 제네릭은 <strong>매개변수 다형성</strong>, 부모 타입으로 자식을 다루는 것은 <strong>서브타입 다형성</strong>, 같은 이름의 다른 함수는 <strong>오버로딩(애드혹 다형성)</strong>입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="exceptions">
+          <h2>예외 처리 모델</h2>
+          <p>프로그램은 늘 예상 못 한 일을 만납니다 — 파일이 없거나, 0으로 나누거나, 네트워크가 끊기거나. <strong>예외(exception)</strong>는 이런 비정상 상황을 정상 흐름과 분리해 다루는 장치입니다. 문제가 생긴 곳에서 예외를 <em>던지고(throw)</em>, 처리할 수 있는 바깥에서 <em>잡습니다(catch)</em>.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="예외 전파">
+              <g font-family="monospace" font-size="11">
+                <rect x="20" y="55" width="90" height="34" fill="#161b22" stroke="#f85149"/><text x="65" y="76" fill="#f85149" text-anchor="middle">throw 발생</text>
+                <rect x="150" y="55" width="90" height="34" fill="#161b22" stroke="#8b949e"/><text x="195" y="76" fill="#8b949e" text-anchor="middle">중간 함수</text>
+                <rect x="280" y="55" width="90" height="34" fill="#161b22" stroke="#3fb950"/><text x="325" y="76" fill="#3fb950" text-anchor="middle">try/catch</text>
+                <line x1="110" y1="72" x2="150" y2="72" stroke="#f85149" stroke-width="2" marker-end="url(#ex)"/>
+                <line x1="240" y1="72" x2="280" y2="72" stroke="#f85149" stroke-width="2" marker-end="url(#ex)"/>
+                <text x="195" y="115" fill="#8b949e" text-anchor="middle">처리 안 하면 호출 스택을 타고 위로 전파</text>
+              </g>
+              <defs><marker id="ex" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f85149"/></marker></defs>
+            </svg>
+            <div class="caption">예외는 잡힐 때까지 호출 스택을 거슬러 올라간다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exception.txt</span></div>
+            <pre><code class="language-python"># Python — try / except / finally
+try:
+    x = 10 / 0
+except ZeroDivisionError as e:     # 특정 예외만 잡기
+    print("0으로 나눌 수 없어요:", e)
+finally:
+    print("정리 작업은 항상 실행")   # 성공·실패 무관</code></pre>
+          </div>
+          <table>
+            <thead><tr><th>모델</th><th>방식</th><th>예시 언어</th></tr></thead>
+            <tbody>
+              <tr><td>예외(try/catch)</td><td>던지고 잡기</td><td>Java, Python, C++</td></tr>
+              <tr><td>오류값 반환</td><td>오류를 값으로 돌려줌</td><td>Go (<code>err</code>), C</td></tr>
+              <tr><td>Result/Option 타입</td><td>성공/실패를 타입으로</td><td>Rust, Haskell</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">errors_compare.txt</span></div>
+            <pre><code class="language-go">// Go — 예외 대신 오류를 값으로 반환
+f, err := os.Open("a.txt")
+if err != nil {            // 매번 명시적으로 확인
+    return err
+}</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 검사 vs 비검사 예외</div>
+            <p>Java는 반드시 처리하도록 강제하는 <strong>검사 예외(checked)</strong>가 있지만, 대부분의 언어는 강제하지 않는 <strong>비검사 예외</strong>만 씁니다. 강제는 안전하지만 코드가 장황해지는 트레이드오프가 있습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="concurrency-model">
+          <h2>언어의 동시성 모델</h2>
+          <p>여러 작업을 <strong>동시에</strong> 진행하는 방법은 언어마다 철학이 다릅니다. 데이터를 공유할 것인가 메시지로 주고받을 것인가, 무거운 스레드를 쓸 것인가 가벼운 단위를 쓸 것인가로 갈립니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="공유 메모리 vs 메시지 전달">
+              <g font-family="monospace" font-size="11">
+                <text x="110" y="18" fill="#f85149" text-anchor="middle">공유 메모리</text>
+                <rect x="80" y="30" width="60" height="26" fill="#1c232c" stroke="#d29922"/><text x="110" y="47" fill="#c9d1d9" text-anchor="middle">공유 데이터</text>
+                <rect x="40" y="90" width="60" height="26" fill="#161b22" stroke="#58a6ff"/><text x="70" y="107" fill="#c9d1d9" text-anchor="middle">스레드1</text>
+                <rect x="120" y="90" width="60" height="26" fill="#161b22" stroke="#58a6ff"/><text x="150" y="107" fill="#c9d1d9" text-anchor="middle">스레드2</text>
+                <line x1="70" y1="90" x2="100" y2="56" stroke="#f85149" stroke-width="1.5"/>
+                <line x1="150" y1="90" x2="120" y2="56" stroke="#f85149" stroke-width="1.5"/>
+                <text x="110" y="138" fill="#f85149" text-anchor="middle">🔒 락 필요(경쟁 조건 위험)</text>
+
+                <text x="330" y="18" fill="#3fb950" text-anchor="middle">메시지 전달</text>
+                <rect x="280" y="60" width="60" height="26" fill="#161b22" stroke="#3fb950"/><text x="310" y="77" fill="#c9d1d9" text-anchor="middle">작업1</text>
+                <rect x="380" y="60" width="60" height="26" fill="#161b22" stroke="#3fb950"/><text x="410" y="77" fill="#c9d1d9" text-anchor="middle">작업2</text>
+                <line x1="340" y1="73" x2="380" y2="73" stroke="#58a6ff" stroke-width="2" marker-end="url(#cm)"/>
+                <text x="360" y="55" fill="#58a6ff" text-anchor="middle">채널</text>
+                <text x="360" y="120" fill="#3fb950" text-anchor="middle">공유 없음(락 불필요)</text>
+              </g>
+              <defs><marker id="cm" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">데이터를 공유하면 락이 필요하고, 메시지로 주고받으면 충돌이 줄어든다</div>
+          </div>
+          <table>
+            <thead><tr><th>모델</th><th>핵심 아이디어</th><th>대표 언어</th></tr></thead>
+            <tbody>
+              <tr><td>스레드 + 락</td><td>메모리 공유, 락으로 보호</td><td>Java, C++</td></tr>
+              <tr><td>CSP(채널)</td><td>가벼운 단위가 채널로 통신</td><td>Go (goroutine)</td></tr>
+              <tr><td>액터 모델</td><td>독립 객체가 메시지 교환</td><td>Erlang, Akka</td></tr>
+              <tr><td>async/await</td><td>대기 중 다른 일 처리</td><td>JS, Python, Rust</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">concurrency.txt</span></div>
+            <pre><code class="language-go">// Go — goroutine + 채널(메시지 전달)
+ch := make(chan int)
+go func() { ch <- 42 }()   // 가벼운 동시 작업이 결과를 채널로
+fmt.Println(<-ch)          // 42 — 채널에서 받기</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">async.txt</span></div>
+            <pre><code class="language-javascript">// JavaScript — async/await (대기 중 멈추지 않음)
+async function load() {
+  const res = await fetch("/data");  // 기다리는 동안 다른 일 처리
+  return res.json();
+}</code></pre>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚨 경쟁 조건(Race Condition)</div>
+            <p>여러 스레드가 같은 데이터를 동시에 수정하면 결과가 실행 순서에 따라 달라져 버그가 됩니다. 공유 메모리 모델의 가장 흔한 함정으로, 락이나 불변 데이터로 막습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="metaprogramming">
+          <h2>메타프로그래밍과 리플렉션</h2>
+          <p><strong>메타프로그래밍(metaprogramming)</strong>은 <strong>코드가 코드를 다루는</strong> 기법입니다. 실행 중에 새 함수를 만들거나, 클래스 구조를 들여다보거나, 코드를 변형합니다. <strong>리플렉션(reflection)</strong>은 그중에서도 프로그램이 <strong>자기 자신의 구조(타입·메서드·속성)를 실행 중에 살펴보고 조작</strong>하는 능력입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="리플렉션: 실행 중 자기 구조 들여다보기">
+              <g font-family="monospace" font-size="11">
+                <rect x="40" y="40" width="120" height="50" fill="#161b22" stroke="#58a6ff" rx="4"/><text x="100" y="60" fill="#c9d1d9" text-anchor="middle">객체</text><text x="100" y="78" fill="#8b949e" text-anchor="middle">User 인스턴스</text>
+                <path d="M170 65 A40 25 0 1 1 169 64" stroke="#bc8cff" stroke-width="1.8" fill="none" marker-end="url(#rf)"/>
+                <text x="290" y="50" fill="#bc8cff" text-anchor="middle">실행 중 질문:</text>
+                <text x="290" y="70" fill="#c9d1d9" text-anchor="middle">"어떤 메서드가 있지?"</text>
+                <text x="290" y="90" fill="#c9d1d9" text-anchor="middle">"속성 이름은?"</text>
+              </g>
+              <defs><marker id="rf" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#bc8cff"/></marker></defs>
+            </svg>
+            <div class="caption">리플렉션: 프로그램이 거울을 보듯 자기 구조를 들여다본다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">reflection.txt</span></div>
+            <pre><code class="language-python"># Python — 실행 중에 객체의 구조를 들여다보기
+class User:
+    def __init__(self): self.name = "철수"
+    def greet(self): return "안녕"
+
+u = User()
+print(type(u).__name__)          # 'User' — 타입 이름
+print(hasattr(u, "greet"))       # True — 메서드 존재 확인
+print(getattr(u, "name"))        # '철수' — 이름으로 속성 읽기
+m = getattr(u, "greet")          # 메서드를 이름으로 꺼내 호출
+print(m())                       # '안녕'</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 강력하지만 위험하다</div>
+            <p>리플렉션은 ORM·테스트 프레임워크·직렬화 라이브러리의 마법을 가능하게 합니다. 하지만 <strong>컴파일러의 타입 검사를 우회</strong>하고 느리며 디버깅이 어렵습니다. 꼭 필요할 때만 절제해서 쓰세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="language-criteria">
+          <h2>언어 평가 기준</h2>
+          <p>"어떤 언어가 가장 좋은가?"에 정답은 없습니다. 대신 언어를 <strong>여러 잣대로 평가</strong>하고, 프로젝트 목적에 맞춰 고릅니다. 한 잣대를 높이면 다른 잣대가 낮아지는 <strong>트레이드오프</strong>가 흔합니다.</p>
+          <ul>
+            <li><strong>가독성(readability)</strong> — 코드를 읽고 이해하기 쉬운가. 유지보수 비용을 좌우.</li>
+            <li><strong>작성성(writability)</strong> — 생각을 코드로 빠르게 옮기는가.</li>
+            <li><strong>표현력(expressiveness)</strong> — 적은 코드로 많은 의미를 담는가.</li>
+            <li><strong>성능(performance)</strong> — 실행이 빠르고 자원을 적게 쓰는가.</li>
+            <li><strong>안전성(safety)</strong> — 오류를 일찍·자동으로 막는가.</li>
+            <li><strong>생태계</strong> — 라이브러리·도구·커뮤니티가 풍부한가.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="언어 평가 트레이드오프">
+              <g font-family="monospace" font-size="11">
+                <line x1="60" y1="120" x2="380" y2="120" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="60" y1="120" x2="60" y2="20" stroke="#30363d" stroke-width="1.5"/>
+                <text x="40" y="30" fill="#8b949e" text-anchor="end">성능</text>
+                <text x="375" y="138" fill="#8b949e" text-anchor="end">생산성/표현력 →</text>
+                <circle cx="100" cy="40" r="6" fill="#58a6ff"/><text x="112" y="44" fill="#58a6ff">C/Rust</text>
+                <circle cx="200" cy="75" r="6" fill="#3fb950"/><text x="212" y="79" fill="#3fb950">Java/Go</text>
+                <circle cx="320" cy="105" r="6" fill="#d29922"/><text x="332" y="109" fill="#d29922">Python/JS</text>
+              </g>
+            </svg>
+            <div class="caption">대체로 성능이 높은 언어는 작성 속도를, 표현력 높은 언어는 실행 속도를 양보한다</div>
+          </div>
+          <table>
+            <thead><tr><th>언어</th><th>강한 점</th><th>약한 점</th></tr></thead>
+            <tbody>
+              <tr><td>C</td><td>성능·하드웨어 제어</td><td>안전성·생산성 낮음</td></tr>
+              <tr><td>Rust</td><td>성능 + 메모리 안전</td><td>학습 곡선 가파름</td></tr>
+              <tr><td>Python</td><td>가독성·표현력·생태계</td><td>실행 속도 느림</td></tr>
+              <tr><td>Go</td><td>단순함·동시성</td><td>표현력 제한적</td></tr>
+              <tr><td>JavaScript</td><td>어디서나 실행·생태계</td><td>느슨한 타입의 함정</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 "올바른 도구"라는 사고</div>
+            <p>운영체제 커널은 C/Rust, 데이터 분석은 Python, 웹 프런트엔드는 JavaScript처럼, <strong>문제 영역에 맞는 언어</strong>를 고르는 안목이 언어론을 배우는 진짜 목적입니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>문법은 코드의 형태, 의미론은 코드의 동작 — 둘은 다른 층위다.</li>
+            <li>컴파일은 미리 한 번에 번역(빠름), 인터프리트는 실행하며 한 줄씩(유연).</li>
+            <li>정적 타입은 안전성을, 동적 타입은 유연성을 준다.</li>
+            <li>스코프는 변수가 보이는 범위 — 안쪽은 바깥을 보지만 바깥은 안쪽을 못 본다.</li>
+            <li>메모리는 수동(free)으로 정리하거나 GC가 자동으로 회수한다.</li>
+            <li>람다는 이름 없는 함수, 클로저는 바깥 변수를 기억하는 함수다.</li>
+            <li>고차 함수(map·filter·reduce)는 함수를 값으로 다뤄 코드를 간결하게 한다.</li>
+            <li>제네릭은 타입을 빈칸으로 둬 재사용성과 타입 안전성을 함께 얻는다.</li>
+            <li>예외는 비정상 상황을 정상 흐름과 분리해 던지고 잡는다(언어마다 모델이 다름).</li>
+            <li>동시성은 공유 메모리+락, 메시지 전달(채널·액터), async/await 등으로 다룬다.</li>
+            <li>메타프로그래밍·리플렉션은 코드가 코드(자기 구조)를 다루는 강력하지만 위험한 기법이다.</li>
+            <li>언어는 가독성·표현력·성능·안전성 등 여러 잣대의 트레이드오프로 평가한다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>문법 / 의미론</dt><dd>코드가 올바르게 생겼는가(형태) vs 무슨 뜻으로 동작하는가(의미).</dd></dl>
+          <dl class="term"><dt>컴파일러 / 인터프리터</dt><dd>전체를 미리 기계어로 번역하는 도구 vs 실행 중 한 줄씩 수행하는 도구.</dd></dl>
+          <dl class="term"><dt>정적 / 동적 타입</dt><dd>타입 검사를 실행 전에 하느냐(정적), 실행 중에 하느냐(동적).</dd></dl>
+          <dl class="term"><dt>스코프(Scope)</dt><dd>변수가 유효하게 보이는 코드상의 범위.</dd></dl>
+          <dl class="term"><dt>가비지 컬렉션(GC)</dt><dd>더 이상 참조되지 않는 메모리를 런타임이 자동으로 회수하는 기능.</dd></dl>
+          <dl class="term"><dt>람다 / 클로저</dt><dd>이름 없는 함수, 그리고 자신이 만들어진 자리의 바깥 변수를 기억하는 함수.</dd></dl>
+          <dl class="term"><dt>고차 함수</dt><dd>함수를 인자로 받거나 함수를 반환하는 함수(map·filter·reduce).</dd></dl>
+          <dl class="term"><dt>제네릭(Generic)</dt><dd>타입을 빈칸으로 두고 작성해 재사용성과 타입 안전성을 함께 얻는 기법(매개변수 다형성).</dd></dl>
+          <dl class="term"><dt>예외(Exception)</dt><dd>비정상 상황을 정상 흐름과 분리해 던지고(throw) 잡는(catch) 장치.</dd></dl>
+          <dl class="term"><dt>경쟁 조건</dt><dd>여러 스레드가 공유 데이터를 동시에 수정해 결과가 실행 순서에 따라 달라지는 버그.</dd></dl>
+          <dl class="term"><dt>리플렉션(Reflection)</dt><dd>프로그램이 실행 중에 자기 자신의 구조(타입·메서드)를 살펴보고 조작하는 능력.</dd></dl>
+          <dl class="term"><dt>다형성(Polymorphism)</dt><dd>같은 코드가 여러 타입에 작동하는 성질(매개변수·서브타입·애드혹).</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

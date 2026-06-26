@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>프로그래밍 기초 · CS 4년 커리큘럼</title>
+  <meta name="description" content="변수·자료형·연산자·조건문·반복문·함수·디버깅을 처음 배우는 사람 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="programming-basics" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">1학년 기초 · 프로그래밍 기초</span>
+        <h1 class="page-title">프로그래밍 기초</h1>
+        <p class="page-lead">프로그래밍은 <strong>컴퓨터에게 일을 시키는 글쓰기</strong>입니다. 컴퓨터가 알아듣는 문장 몇 가지만 익히면, 누구나 자기 생각을 코드로 옮길 수 있습니다.</p>
+
+        <section class="anchor">
+          <h2 id="what">프로그래밍이란?</h2>
+          <p>프로그래밍(programming)은 컴퓨터가 따라 할 <strong>순서가 정해진 명령 목록</strong>을 만드는 일입니다. 이 명령 목록을 프로그램이라 하고, 사람과 컴퓨터가 둘 다 알아볼 수 있게 약속한 언어를 <strong>프로그래밍 언어</strong>라고 합니다.</p>
+          <p>요리 레시피에 비유하면 쉽습니다. "물을 끓인다 → 면을 넣는다 → 3분 기다린다"처럼, 컴퓨터도 위에서 아래로 <strong>한 줄씩 차례대로</strong> 명령을 실행합니다. 컴퓨터는 똑똑하지 않고 시킨 그대로만 하므로, 빠뜨리거나 순서가 틀리면 엉뚱한 결과가 나옵니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="프로그램 실행 흐름">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="40" width="90" height="34" fill="#161b22" stroke="#58a6ff"/><text x="65" y="61" fill="#c9d1d9" text-anchor="middle">입력</text>
+                <rect x="165" y="40" width="90" height="34" fill="#161b22" stroke="#3fb950"/><text x="210" y="61" fill="#c9d1d9" text-anchor="middle">처리</text>
+                <rect x="310" y="40" width="90" height="34" fill="#161b22" stroke="#58a6ff"/><text x="355" y="61" fill="#c9d1d9" text-anchor="middle">출력</text>
+                <line x1="110" y1="57" x2="165" y2="57" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbah)"/>
+                <line x1="255" y1="57" x2="310" y2="57" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbah)"/>
+                <text x="210" y="22" fill="#8b949e" text-anchor="middle">모든 프로그램의 기본 골격</text>
+              </g>
+              <defs><marker id="pbah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">데이터를 받아(입력) → 가공하고(처리) → 결과를 보여줌(출력)</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>변수와 자료형 · 연산자와 입출력 · 조건문 · 반복문 · 함수, 그리고 오류를 잡는 <strong>디버깅</strong>까지 다룹니다. 예제는 입문용으로 가장 인기 있는 <strong>파이썬(Python)</strong>으로 보여줍니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="variables">변수와 자료형</h2>
+          <p><strong>변수(variable)</strong>는 값을 담아 두는 "이름표 붙은 상자"입니다. 상자에 이름을 붙여 두면, 나중에 그 이름으로 안의 값을 꺼내 쓰거나 새 값으로 바꿀 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="변수 상자">
+              <g font-family="monospace" font-size="13">
+                <rect x="40" y="35" width="90" height="40" fill="#161b22" stroke="#58a6ff"/><text x="85" y="60" fill="#c9d1d9" text-anchor="middle">29</text>
+                <text x="85" y="26" fill="#8b949e" text-anchor="middle">age</text>
+                <rect x="240" y="35" width="110" height="40" fill="#161b22" stroke="#3fb950"/><text x="295" y="60" fill="#c9d1d9" text-anchor="middle">"민수"</text>
+                <text x="295" y="26" fill="#8b949e" text-anchor="middle">name</text>
+              </g>
+            </svg>
+            <div class="caption">상자(변수) 위에 이름표, 안에는 값. age 상자엔 숫자, name 상자엔 글자</div>
+          </div>
+          <p><strong>자료형(data type)</strong>은 상자 안에 든 값의 <em>종류</em>입니다. 숫자인지 글자인지에 따라 컴퓨터가 다루는 방법이 달라집니다. 자주 쓰는 기본 자료형은 다음과 같습니다.</p>
+          <table>
+            <thead><tr><th>자료형</th><th>이름</th><th>예시 값</th></tr></thead>
+            <tbody>
+              <tr><td><code>int</code></td><td>정수</td><td>0, 29, -7</td></tr>
+              <tr><td><code>float</code></td><td>실수(소수)</td><td>3.14, -0.5</td></tr>
+              <tr><td><code>str</code></td><td>문자열(글자)</td><td>"안녕", "Python"</td></tr>
+              <tr><td><code>bool</code></td><td>참/거짓</td><td>True, False</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">variables.py</span></div>
+            <pre><code class="language-python">age = 29              # int  (정수)
+height = 175.5        # float(소수)
+name = "민수"          # str  (문자열)
+is_student = True     # bool (참/거짓)
+
+age = age + 1         # 상자의 값을 바꿔 다시 담기 → 30
+print(type(name))     # &lt;class 'str'&gt;  — 자료형 확인</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 팁</div>
+            <p>파이썬은 <code>age = 29</code>처럼 값을 넣으면 자료형을 <strong>알아서 판단</strong>합니다. 변수 이름은 <code>user_age</code>처럼 내용을 알 수 있게 짓는 습관이 중요합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="operators">연산자와 입출력</h2>
+          <p><strong>연산자(operator)</strong>는 값을 계산하거나 비교하는 기호입니다. 사칙연산은 물론, 두 값을 비교해 참/거짓을 만드는 비교 연산도 있습니다.</p>
+          <table>
+            <thead><tr><th>분류</th><th>연산자</th><th>의미</th></tr></thead>
+            <tbody>
+              <tr><td>산술</td><td><code>+ - * /</code></td><td>더하기·빼기·곱하기·나누기</td></tr>
+              <tr><td>산술</td><td><code>%</code>, <code>**</code></td><td>나머지, 거듭제곱</td></tr>
+              <tr><td>비교</td><td><code>== != &gt; &lt;</code></td><td>같다·다르다·크다·작다 (결과는 참/거짓)</td></tr>
+              <tr><td>논리</td><td><code>and or not</code></td><td>그리고·또는·아니다</td></tr>
+            </tbody>
+          </table>
+          <p><strong>입출력</strong>은 프로그램이 사람과 대화하는 통로입니다. <code>input()</code>으로 사용자에게 값을 받고, <code>print()</code>로 결과를 화면에 보여줍니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">io_calc.py</span></div>
+            <pre><code class="language-python">name = input("이름을 입력하세요: ")   # 사용자 입력 받기(항상 문자열)
+year = int(input("태어난 연도: "))    # 숫자로 쓰려면 int()로 변환
+
+age = 2026 - year
+print(name + "님은 올해", age, "살입니다.")
+print("내후년이면", age + 2, "살이 되겠네요!")</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 흔한 실수</div>
+            <p><code>input()</code>으로 받은 값은 항상 <strong>문자열</strong>입니다. 숫자 계산을 하려면 <code>int()</code>나 <code>float()</code>로 바꿔야 합니다. 안 그러면 <code>"3" + "4"</code>가 <code>34</code>(글자 붙이기)가 됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="if">조건문 (if)</h2>
+          <p><strong>조건문</strong>은 "만약 ~라면 이렇게, 아니면 저렇게" 하고 <strong>상황에 따라 다른 길로 가는</strong> 갈림길입니다. 비교 연산의 결과(참/거짓)에 따라 실행할 코드가 갈립니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="조건 분기 흐름도">
+              <g font-family="monospace" font-size="12">
+                <path d="M190 20 L260 55 L190 90 L120 55 Z" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                <text x="190" y="59" fill="#c9d1d9" text-anchor="middle">점수≥60?</text>
+                <line x1="120" y1="55" x2="60" y2="55" stroke="#3fb950" stroke-width="2"/>
+                <text x="90" y="46" fill="#3fb950" text-anchor="middle">참</text>
+                <line x1="260" y1="55" x2="320" y2="55" stroke="#f85149" stroke-width="2"/>
+                <text x="290" y="46" fill="#f85149" text-anchor="middle">거짓</text>
+                <rect x="15" y="115" width="90" height="34" fill="#161b22" stroke="#3fb950"/><text x="60" y="136" fill="#c9d1d9" text-anchor="middle">"합격"</text>
+                <rect x="275" y="115" width="90" height="34" fill="#161b22" stroke="#f85149"/><text x="320" y="136" fill="#c9d1d9" text-anchor="middle">"불합격"</text>
+                <line x1="60" y1="55" x2="60" y2="115" stroke="#3fb950" stroke-width="2"/>
+                <line x1="320" y1="55" x2="320" y2="115" stroke="#f85149" stroke-width="2"/>
+              </g>
+            </svg>
+            <div class="caption">조건이 참이면 왼쪽, 거짓이면 오른쪽 길로 — 둘 중 하나만 실행</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">grade.py</span></div>
+            <pre><code class="language-python">score = int(input("점수: "))
+
+if score &gt;= 90:
+    print("A 학점")
+elif score &gt;= 60:          # 위 조건이 거짓일 때만 검사
+    print("합격")
+else:                       # 어느 조건에도 안 맞으면
+    print("불합격")</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 들여쓰기가 곧 문법</div>
+            <p>파이썬은 <strong>들여쓰기(보통 띄어쓰기 4칸)</strong>로 "이 코드가 if에 속한다"를 표시합니다. 들여쓰기가 어긋나면 오류가 나거나 의도와 다르게 동작합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="loop">반복문 (for · while)</h2>
+          <p>같은 일을 여러 번 해야 할 때, 코드를 복사하지 않고 <strong>반복문</strong>으로 컴퓨터에게 "이만큼 반복해"라고 시킵니다.</p>
+          <ul>
+            <li><strong>for 문</strong> — 정해진 횟수나 목록을 하나씩 돌 때. "1번부터 10번까지" 같은 경우.</li>
+            <li><strong>while 문</strong> — 끝나는 횟수는 모르지만 <em>조건이 참인 동안</em> 계속 반복할 때.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="반복 흐름">
+              <g font-family="monospace" font-size="12">
+                <path d="M160 20 L220 50 L160 80 L100 50 Z" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+                <text x="160" y="54" fill="#c9d1d9" text-anchor="middle">조건 참?</text>
+                <rect x="110" y="105" width="100" height="34" fill="#161b22" stroke="#3fb950"/><text x="160" y="126" fill="#c9d1d9" text-anchor="middle">코드 실행</text>
+                <line x1="160" y1="80" x2="160" y2="105" stroke="#3fb950" stroke-width="2" marker-end="url(#pbloop)"/>
+                <text x="172" y="96" fill="#3fb950">참</text>
+                <path d="M210 122 C280 122 280 50 222 50" stroke="#58a6ff" stroke-width="2" fill="none" marker-end="url(#pbloop)"/>
+                <text x="285" y="90" fill="#8b949e" text-anchor="middle">다시</text>
+                <line x1="100" y1="50" x2="40" y2="50" stroke="#f85149" stroke-width="2" marker-end="url(#pbloop)"/>
+                <text x="60" y="42" fill="#f85149">거짓</text>
+                <text x="25" y="70" fill="#8b949e">종료</text>
+              </g>
+              <defs><marker id="pbloop" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">조건이 참인 동안 코드를 실행하고 다시 조건으로 — 거짓이 되면 빠져나감</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">loops.py</span></div>
+            <pre><code class="language-python"># for: 1부터 5까지 더하기
+total = 0
+for i in range(1, 6):     # i = 1, 2, 3, 4, 5
+    total += i            # total = total + i
+print(total)              # 15
+
+# while: 입력이 "끝"일 때까지 반복
+while True:
+    word = input("단어(끝내려면 '끝'): ")
+    if word == "끝":
+        break             # 반복문 즉시 탈출
+    print("입력한 단어:", word)</code></pre>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚨 무한 루프 주의</div>
+            <p>while 문의 조건이 <strong>영원히 참</strong>이면 프로그램이 멈추지 않습니다. 언젠가 조건이 거짓이 되도록(또는 <code>break</code>로 탈출하도록) 반드시 설계하세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="function">함수</h2>
+          <p><strong>함수(function)</strong>는 자주 쓰는 코드 묶음에 이름을 붙여, 필요할 때마다 그 이름만 불러 쓰는 기능입니다. "재료를 넣으면 결과가 나오는 기계"라고 생각하면 됩니다. 같은 코드를 반복해 쓰지 않게 해주고, 프로그램을 작은 단위로 나눠 이해하기 쉽게 만듭니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="함수 입출력">
+              <g font-family="monospace" font-size="12">
+                <text x="55" y="35" fill="#8b949e" text-anchor="middle">매개변수</text>
+                <rect x="20" y="42" width="70" height="32" fill="#161b22" stroke="#58a6ff"/><text x="55" y="63" fill="#c9d1d9" text-anchor="middle">3, 4</text>
+                <line x1="90" y1="58" x2="160" y2="58" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbfn)"/>
+                <rect x="160" y="35" width="110" height="46" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="215" y="63" fill="#c9d1d9" text-anchor="middle">add()</text>
+                <line x1="270" y1="58" x2="340" y2="58" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbfn)"/>
+                <text x="385" y="35" fill="#8b949e" text-anchor="middle">반환값</text>
+                <rect x="340" y="42" width="60" height="32" fill="#161b22" stroke="#58a6ff"/><text x="370" y="63" fill="#c9d1d9" text-anchor="middle">7</text>
+              </g>
+              <defs><marker id="pbfn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">값을 넣으면(매개변수) 함수가 처리해 결과를 돌려줌(반환값)</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">functions.py</span></div>
+            <pre><code class="language-python">def add(a, b):            # a, b 는 매개변수(받는 값)
+    result = a + b
+    return result         # 계산 결과를 돌려줌
+
+def greet(name):
+    print(f"안녕하세요, {name}님!")
+
+x = add(3, 4)             # 함수 호출 → x 에 7 이 담김
+print(x)                  # 7
+greet("민수")             # 안녕하세요, 민수님!</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 함수를 나누는 기준</div>
+            <p>하나의 함수는 <strong>하나의 일</strong>만 하도록 만드는 게 좋습니다. 이름만 봐도 무슨 일을 하는지 알 수 있으면 잘 지은 함수입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="debug">디버깅 기초</h2>
+          <p>코드가 처음부터 완벽하게 동작하는 일은 거의 없습니다. <strong>디버깅(debugging)</strong>은 프로그램의 오류(버그)를 찾아 고치는 과정으로, 프로그래밍의 절반을 차지하는 핵심 능력입니다.</p>
+          <p>오류는 크게 두 종류입니다.</p>
+          <table>
+            <thead><tr><th>오류 종류</th><th>언제</th><th>예시</th></tr></thead>
+            <tbody>
+              <tr><td>문법 오류</td><td>실행 전, 컴퓨터가 못 알아들을 때</td><td>괄호 빠짐, 들여쓰기 틀림</td></tr>
+              <tr><td>논리 오류</td><td>실행은 되지만 결과가 틀릴 때</td><td>+ 를 - 로 잘못 씀</td></tr>
+            </tbody>
+          </table>
+          <p>가장 쉽고 강력한 디버깅 방법은 <strong>중간 값을 <code>print()</code>로 찍어 보는 것</strong>입니다. 어디까지 제대로 왔는지, 변수에 무슨 값이 들었는지를 눈으로 확인하면 문제 지점이 보입니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">debug.py</span></div>
+            <pre><code class="language-python">def average(numbers):
+    total = sum(numbers)
+    print("DEBUG total =", total)   # 중간 값 확인용
+    print("DEBUG 개수 =", len(numbers))
+    return total / len(numbers)
+
+scores = [80, 90, 100]
+print(average(scores))   # DEBUG 출력으로 계산 과정을 눈으로 추적</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 오류 메시지는 친구다</div>
+            <p>빨간 오류 메시지는 무섭게 보이지만, <strong>맨 아래 줄</strong>에 "무엇이 몇 번째 줄에서 잘못됐는지"가 적혀 있습니다. 겁내지 말고 끝줄부터 읽어 보세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="string">문자열 다루기</h2>
+          <p><strong>문자열(string)</strong>은 글자들이 줄지어 늘어선 자료형입니다. 이름·주소·메시지처럼 사람이 읽는 정보는 거의 다 문자열입니다. 문자열은 각 글자마다 0부터 번호(인덱스)가 매겨져 있어, 원하는 부분만 잘라 쓰거나 이어 붙일 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="문자열 인덱스">
+              <g font-family="monospace" font-size="14">
+                <rect x="30"  y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="52"  y="55" fill="#c9d1d9" text-anchor="middle">P</text>
+                <rect x="74"  y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="96"  y="55" fill="#c9d1d9" text-anchor="middle">y</text>
+                <rect x="118" y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="140" y="55" fill="#c9d1d9" text-anchor="middle">t</text>
+                <rect x="162" y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="184" y="55" fill="#c9d1d9" text-anchor="middle">h</text>
+                <rect x="206" y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="228" y="55" fill="#c9d1d9" text-anchor="middle">o</text>
+                <rect x="250" y="30" width="44" height="38" fill="#161b22" stroke="#58a6ff"/><text x="272" y="55" fill="#c9d1d9" text-anchor="middle">n</text>
+                <text x="52"  y="22" fill="#8b949e" text-anchor="middle" font-size="11">0</text>
+                <text x="96"  y="22" fill="#8b949e" text-anchor="middle" font-size="11">1</text>
+                <text x="140" y="22" fill="#8b949e" text-anchor="middle" font-size="11">2</text>
+                <text x="184" y="22" fill="#8b949e" text-anchor="middle" font-size="11">3</text>
+                <text x="228" y="22" fill="#8b949e" text-anchor="middle" font-size="11">4</text>
+                <text x="272" y="22" fill="#8b949e" text-anchor="middle" font-size="11">5</text>
+              </g>
+            </svg>
+            <div class="caption">"Python" 의 각 글자엔 0부터 번호가 붙음 — s[0] = 'P', s[2] = 't'</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">strings.py</span></div>
+            <pre><code class="language-python">s = "Python"
+
+print(s[0])        # 'P'    — 첫 글자(인덱스 0)
+print(s[-1])       # 'n'    — 음수는 뒤에서부터
+print(s[0:3])      # 'Pyt'  — 슬라이싱: 0~2번 글자
+print(len(s))      # 6      — 글자 수
+
+print(s.upper())       # 'PYTHON'  — 대문자로
+print(s.replace("P", "J"))  # 'Jython'  — 바꾸기
+print("3" + "4")       # '34'   — 문자열 + 는 이어 붙이기
+
+name = "민수"
+print(f"안녕, {name}님!")   # f-문자열: 변수를 글 속에 끼워넣기</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 f-문자열을 쓰자</div>
+            <p>변수를 문장에 섞을 때는 <code>f"...{변수}..."</code> 형태의 <strong>f-문자열</strong>이 가장 읽기 쉽습니다. <code>+</code> 로 일일이 이어 붙이는 것보다 깔끔하고 실수도 적습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="collections">컬렉션: 리스트와 딕셔너리</h2>
+          <p>값 하나가 아니라 <strong>여러 값을 한 묶음으로</strong> 다뤄야 할 때 컬렉션을 씁니다. 가장 많이 쓰는 둘은 <strong>리스트</strong>와 <strong>딕셔너리</strong>입니다.</p>
+          <ul>
+            <li><strong>리스트(list)</strong> — 값을 <em>순서대로</em> 줄 세운 묶음. <code>[ ]</code> 로 만들고 번호로 꺼냅니다. 장바구니 목록 같은 것.</li>
+            <li><strong>딕셔너리(dict)</strong> — <em>이름표(키) ↔ 값</em>의 짝으로 저장. <code>{ }</code> 로 만들고 키로 꺼냅니다. 단어장(단어→뜻) 같은 것.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="리스트와 딕셔너리">
+              <g font-family="monospace" font-size="12">
+                <text x="80" y="20" fill="#8b949e" text-anchor="middle">리스트 (순서)</text>
+                <rect x="30" y="35" width="44" height="30" fill="#161b22" stroke="#58a6ff"/><text x="52" y="55" fill="#c9d1d9" text-anchor="middle">사과</text>
+                <rect x="74" y="35" width="44" height="30" fill="#161b22" stroke="#58a6ff"/><text x="96" y="55" fill="#c9d1d9" text-anchor="middle">배</text>
+                <rect x="118" y="35" width="44" height="30" fill="#161b22" stroke="#58a6ff"/><text x="140" y="55" fill="#c9d1d9" text-anchor="middle">감</text>
+                <text x="52" y="80" fill="#8b949e" text-anchor="middle" font-size="10">[0]</text>
+                <text x="96" y="80" fill="#8b949e" text-anchor="middle" font-size="10">[1]</text>
+                <text x="140" y="80" fill="#8b949e" text-anchor="middle" font-size="10">[2]</text>
+                <text x="320" y="20" fill="#8b949e" text-anchor="middle">딕셔너리 (키→값)</text>
+                <rect x="240" y="35" width="80" height="30" fill="#161b22" stroke="#3fb950"/><text x="280" y="55" fill="#c9d1d9" text-anchor="middle">"apple"</text>
+                <line x1="320" y1="50" x2="360" y2="50" stroke="#3fb950" stroke-width="2" marker-end="url(#pbcol)"/>
+                <rect x="360" y="35" width="50" height="30" fill="#1c232c" stroke="#3fb950"/><text x="385" y="55" fill="#c9d1d9" text-anchor="middle">1500</text>
+                <rect x="240" y="75" width="80" height="30" fill="#161b22" stroke="#3fb950"/><text x="280" y="95" fill="#c9d1d9" text-anchor="middle">"banana"</text>
+                <line x1="320" y1="90" x2="360" y2="90" stroke="#3fb950" stroke-width="2" marker-end="url(#pbcol)"/>
+                <rect x="360" y="75" width="50" height="30" fill="#1c232c" stroke="#3fb950"/><text x="385" y="95" fill="#c9d1d9" text-anchor="middle">900</text>
+              </g>
+              <defs><marker id="pbcol" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker></defs>
+            </svg>
+            <div class="caption">리스트는 번호로, 딕셔너리는 키(이름)로 값을 꺼냄</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">collections.py</span></div>
+            <pre><code class="language-python"># 리스트 — 순서가 있는 묶음
+fruits = ["사과", "배", "감"]
+print(fruits[0])      # '사과'
+fruits.append("귤")   # 맨 뒤에 추가
+print(len(fruits))    # 4
+
+for f in fruits:      # 하나씩 꺼내 반복
+    print(f)
+
+# 딕셔너리 — 키로 값을 꺼냄
+prices = {"apple": 1500, "banana": 900}
+print(prices["apple"])      # 1500
+prices["grape"] = 2000      # 새 짝 추가
+print("apple" in prices)    # True — 키 존재 확인
+
+for name, price in prices.items():
+    print(name, price)</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 어떤 걸 쓸까</div>
+            <p>"몇 번째"가 중요하면 <strong>리스트</strong>, "이름으로 바로 찾기"가 중요하면 <strong>딕셔너리</strong>입니다. 이 둘은 2학년 자료구조에서 배열·해시 테이블로 다시 만나게 됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="exception">예외 처리 (try-except)</h2>
+          <p>프로그램은 실행 도중 예상 못 한 일을 만납니다. 숫자를 0으로 나누거나, 사용자가 숫자 대신 글자를 입력하는 경우입니다. 이런 <strong>예외(exception)</strong>가 나면 프로그램은 그 자리에서 멈춰 버립니다. <strong>try-except</strong>는 "혹시 오류가 나면 멈추지 말고 이렇게 대처해"라고 미리 대비하는 안전망입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="예외 처리 흐름">
+              <g font-family="monospace" font-size="12">
+                <rect x="130" y="15" width="120" height="32" fill="#161b22" stroke="#58a6ff"/><text x="190" y="36" fill="#c9d1d9" text-anchor="middle">try: 시도</text>
+                <line x1="190" y1="47" x2="190" y2="70" stroke="#8b949e" stroke-width="1.5"/>
+                <path d="M190 70 L250 90 L190 110 L130 90 Z" fill="#161b22" stroke="#d29922"/><text x="190" y="94" fill="#c9d1d9" text-anchor="middle">오류?</text>
+                <line x1="130" y1="90" x2="60" y2="90" stroke="#f85149" stroke-width="2" marker-end="url(#pbexc)"/>
+                <text x="95" y="82" fill="#f85149" text-anchor="middle">예</text>
+                <rect x="0" y="105" width="120" height="30" fill="#161b22" stroke="#f85149"/><text x="60" y="125" fill="#c9d1d9" text-anchor="middle">except: 대처</text>
+                <line x1="250" y1="90" x2="320" y2="90" stroke="#3fb950" stroke-width="2" marker-end="url(#pbexc)"/>
+                <text x="285" y="82" fill="#3fb950" text-anchor="middle">아니오</text>
+                <rect x="270" y="105" width="105" height="30" fill="#161b22" stroke="#3fb950"/><text x="322" y="125" fill="#c9d1d9" text-anchor="middle">정상 진행</text>
+              </g>
+              <defs><marker id="pbexc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">try 안에서 오류가 나면 except로, 무사하면 그대로 진행 — 프로그램이 멈추지 않음</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">exception.py</span></div>
+            <pre><code class="language-python">try:
+    num = int(input("숫자를 입력하세요: "))
+    result = 100 / num
+    print("결과:", result)
+except ValueError:
+    print("숫자가 아니에요! 다시 시도하세요.")   # 글자를 넣었을 때
+except ZeroDivisionError:
+    print("0으로는 나눌 수 없어요.")              # 0을 넣었을 때
+finally:
+    print("계산을 끝냅니다.")   # 오류가 나든 안 나든 항상 실행</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 모든 오류를 그냥 무시하진 말기</div>
+            <p><code>except:</code> 만 덜렁 써서 모든 오류를 삼키면, 정작 진짜 버그를 놓칩니다. 어떤 오류를 잡을지(<code>ValueError</code> 등) <strong>구체적으로</strong> 적는 습관이 좋습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="file">파일 입출력</h2>
+          <p>지금까지 만든 값은 프로그램이 끝나면 사라졌습니다. <strong>파일</strong>에 저장하면 데이터를 <strong>오래 남길</strong> 수 있습니다. 파이썬에서는 파일을 "열고 → 읽거나 쓰고 → 닫는" 순서로 다룹니다. <code>with</code> 구문을 쓰면 닫기를 자동으로 해 주어 안전합니다.</p>
+          <table>
+            <thead><tr><th>모드</th><th>의미</th><th>주의</th></tr></thead>
+            <tbody>
+              <tr><td><code>"r"</code></td><td>읽기(read)</td><td>파일이 없으면 오류</td></tr>
+              <tr><td><code>"w"</code></td><td>쓰기(write)</td><td>기존 내용을 <strong>덮어씀</strong></td></tr>
+              <tr><td><code>"a"</code></td><td>이어쓰기(append)</td><td>뒤에 덧붙임</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">files.py</span></div>
+            <pre><code class="language-python"># 파일에 쓰기 — with 가 끝나면 자동으로 닫힘
+with open("memo.txt", "w", encoding="utf-8") as f:
+    f.write("첫 줄입니다.\n")
+    f.write("둘째 줄입니다.\n")
+
+# 파일에서 읽기
+with open("memo.txt", "r", encoding="utf-8") as f:
+    for line in f:                # 한 줄씩 읽기
+        print(line.strip())       # strip()으로 줄바꿈 제거</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 encoding="utf-8"</div>
+            <p>한글이 깨지지 않게 하려면 파일을 열 때 <code>encoding="utf-8"</code>을 붙이는 습관을 들이세요. 운영체제에 따라 기본값이 달라 한글이 깨지는 일을 막아 줍니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="module">모듈과 라이브러리 (import)</h2>
+          <p>세상의 모든 코드를 직접 짤 필요는 없습니다. 누군가 미리 만들어 둔 <strong>코드 묶음(모듈·라이브러리)</strong>을 <code>import</code> 한 줄로 가져다 쓸 수 있습니다. 수학 계산, 난수, 날짜, 인터넷 통신까지 — "바퀴를 다시 발명하지 않는" 것이 프로그래밍의 핵심 습관입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="모듈 import">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="40" width="110" height="34" fill="#1c232c" stroke="#3fb950" stroke-width="2"/><text x="75" y="61" fill="#c9d1d9" text-anchor="middle">내 코드</text>
+                <line x1="130" y1="57" x2="200" y2="57" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbmod)"/>
+                <text x="165" y="48" fill="#8b949e" text-anchor="middle" font-size="11">import</text>
+                <rect x="200" y="15" width="170" height="30" fill="#161b22" stroke="#58a6ff"/><text x="285" y="35" fill="#c9d1d9" text-anchor="middle">math (제곱근·π)</text>
+                <rect x="200" y="48" width="170" height="30" fill="#161b22" stroke="#58a6ff"/><text x="285" y="68" fill="#c9d1d9" text-anchor="middle">random (난수)</text>
+                <rect x="200" y="81" width="170" height="24" fill="#161b22" stroke="#58a6ff"/><text x="285" y="98" fill="#c9d1d9" text-anchor="middle">datetime (날짜)</text>
+                <line x1="130" y1="57" x2="200" y2="30" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#pbmod)"/>
+                <line x1="130" y1="57" x2="200" y2="92" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#pbmod)"/>
+              </g>
+              <defs><marker id="pbmod" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">import 한 줄로 남이 만든 기능을 내 프로그램에 연결</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">modules.py</span></div>
+            <pre><code class="language-python">import math                  # 모듈 전체 가져오기
+from random import randint    # 모듈에서 일부만 가져오기
+
+print(math.sqrt(16))     # 4.0  — 제곱근
+print(math.pi)           # 3.141592...
+print(randint(1, 6))     # 1~6 사이 주사위 한 번
+
+import datetime
+today = datetime.date.today()
+print(today)             # 오늘 날짜</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 표준 라이브러리와 외부 라이브러리</div>
+            <p>파이썬에 처음부터 들어 있는 것을 <strong>표준 라이브러리</strong>(math, random 등)라 하고, <code>pip install</code> 로 따로 설치하는 것을 <strong>외부 라이브러리</strong>(numpy, requests 등)라 합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="style">주석과 좋은 코드 스타일</h2>
+          <p>코드는 컴퓨터만 읽는 게 아니라 <strong>미래의 나와 동료</strong>도 읽습니다. 한 달 뒤의 나는 오늘 짠 코드를 기억하지 못합니다. 읽기 좋은 코드를 쓰는 것은 예의이자 실력입니다.</p>
+          <ul>
+            <li><strong>주석(comment)</strong> — <code>#</code> 뒤의 글은 실행되지 않습니다. "왜 이렇게 했는지"를 적습니다(무엇을 하는지는 코드가 이미 말해 줍니다).</li>
+            <li><strong>의미 있는 이름</strong> — <code>a</code>, <code>tmp</code> 보다 <code>total_price</code>, <code>user_age</code>.</li>
+            <li><strong>한 함수는 한 가지 일</strong> — 길어지면 작은 함수로 쪼갭니다.</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">style.py</span></div>
+            <pre><code class="language-python"># ❌ 나쁜 예: 이름만 봐선 무슨 값인지 모름
+def f(x, y):
+    return x * y * 0.9   # 0.9가 뭐지?
+
+# ✅ 좋은 예: 이름과 주석이 의도를 설명
+def calculate_discounted_price(price, quantity):
+    DISCOUNT_RATE = 0.9          # 10% 할인 적용
+    return price * quantity * DISCOUNT_RATE</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 좋은 주석 vs 나쁜 주석</div>
+            <p><code>x = x + 1  # x에 1을 더함</code> 같은 주석은 군더더기입니다. <code># 윤년이라 하루를 더 보정</code>처럼 <strong>코드만으론 알 수 없는 이유</strong>를 적는 게 좋은 주석입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor">
+          <h2 id="decompose">문제를 작은 단계로 쪼개기</h2>
+          <p>큰 문제 앞에서 막막한 건 당연합니다. 프로그래밍 실력의 핵심은 코드 암기가 아니라, <strong>큰 문제를 컴퓨터가 한 번에 할 수 있는 작은 단계들로 나누는 사고</strong>(알고리즘적 사고)입니다. 이것만 되면 코드는 한 줄씩 채우기만 하면 됩니다.</p>
+          <p>예를 들어 "성적표에서 합격자 명단 뽑기"는 이렇게 쪼갤 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="문제 분해 단계">
+              <g font-family="monospace" font-size="11">
+                <rect x="20"  y="20" width="380" height="26" fill="#1c232c" stroke="#bc8cff"/><text x="210" y="38" fill="#c9d1d9" text-anchor="middle">합격자 명단 뽑기 (큰 문제)</text>
+                <line x1="210" y1="46" x2="210" y2="60" stroke="#8b949e"/>
+                <rect x="20"  y="60" width="120" height="50" fill="#161b22" stroke="#58a6ff"/><text x="80"  y="82" fill="#c9d1d9" text-anchor="middle">1. 점수</text><text x="80" y="98" fill="#c9d1d9" text-anchor="middle">읽기</text>
+                <rect x="150" y="60" width="120" height="50" fill="#161b22" stroke="#3fb950"/><text x="210" y="82" fill="#c9d1d9" text-anchor="middle">2. 60점 이상</text><text x="210" y="98" fill="#c9d1d9" text-anchor="middle">걸러내기</text>
+                <rect x="280" y="60" width="120" height="50" fill="#161b22" stroke="#58a6ff"/><text x="340" y="82" fill="#c9d1d9" text-anchor="middle">3. 이름</text><text x="340" y="98" fill="#c9d1d9" text-anchor="middle">출력</text>
+                <line x1="140" y1="85" x2="150" y2="85" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbdec)"/>
+                <line x1="270" y1="85" x2="280" y2="85" stroke="#58a6ff" stroke-width="2" marker-end="url(#pbdec)"/>
+              </g>
+              <defs><marker id="pbdec" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">하나의 큰 문제를 차례대로 풀 수 있는 작은 단계 셋으로 분해</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">decompose.py</span></div>
+            <pre><code class="language-python"># 큰 문제를 위에서 나눈 3단계 그대로 코드로 옮기기
+students = [("민수", 80), ("영희", 45), ("철수", 92)]
+
+# 2. 60점 이상만 거르고  3. 이름만 모으기
+passed = []
+for name, score in students:        # 1. 한 명씩 읽기
+    if score >= 60:                 # 2. 합격 조건
+        passed.append(name)         # 3. 명단에 추가
+
+print("합격자:", passed)   # 합격자: ['민수', '철수']</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 막히면 "더 작게"</div>
+            <p>한 단계가 여전히 어렵다면, 그 단계를 다시 더 작게 쪼개세요. 종이에 한국어로 순서를 먼저 적고(의사코드), 그 다음 한 줄씩 코드로 바꾸면 훨씬 쉽습니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>프로그램은 입력 → 처리 → 출력의 흐름으로, 위에서 아래로 한 줄씩 실행된다.</li>
+            <li>변수는 값을 담는 이름표 붙은 상자이고, 자료형은 그 값의 종류다.</li>
+            <li>조건문(if)은 상황에 따라 길을 나누고, 반복문(for·while)은 같은 일을 되풀이한다.</li>
+            <li>함수는 코드 묶음에 이름을 붙여 재사용하게 해 준다.</li>
+            <li>디버깅은 print로 중간 값을 확인하고 오류 메시지를 읽는 데서 시작한다.</li>
+            <li>문자열은 인덱스·슬라이싱으로 자르고, 리스트는 순서로·딕셔너리는 키로 여러 값을 묶는다.</li>
+            <li>try-except로 오류에 대비하고, 파일 입출력으로 데이터를 오래 저장한다.</li>
+            <li>import로 남이 만든 라이브러리를 가져다 쓰고, 주석과 좋은 이름으로 읽기 쉬운 코드를 짠다.</li>
+            <li>실력의 핵심은 큰 문제를 작은 단계로 쪼개는 알고리즘적 사고다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>변수(Variable)</dt><dd>값을 담아 두고 이름으로 꺼내 쓰는 저장 공간.</dd></dl>
+          <dl class="term"><dt>자료형(Data Type)</dt><dd>정수·실수·문자열·불처럼 값의 종류를 구분하는 분류.</dd></dl>
+          <dl class="term"><dt>조건문(if)</dt><dd>참/거짓에 따라 실행할 코드를 갈라 주는 문장.</dd></dl>
+          <dl class="term"><dt>반복문(Loop)</dt><dd>같은 코드를 여러 번 실행하게 하는 for·while 문.</dd></dl>
+          <dl class="term"><dt>함수(Function)</dt><dd>이름 붙인 코드 묶음. 값을 받아 처리하고 결과를 돌려줌.</dd></dl>
+          <dl class="term"><dt>디버깅(Debugging)</dt><dd>프로그램의 오류(버그)를 찾아 고치는 과정.</dd></dl>
+          <dl class="term"><dt>문자열(String)</dt><dd>글자들이 순서대로 이어진 자료형. 인덱스·슬라이싱으로 다룸.</dd></dl>
+          <dl class="term"><dt>리스트(List)</dt><dd>여러 값을 순서대로 담는 컬렉션. 번호(인덱스)로 접근.</dd></dl>
+          <dl class="term"><dt>딕셔너리(Dict)</dt><dd>키와 값의 짝으로 저장하는 컬렉션. 키로 값을 꺼냄.</dd></dl>
+          <dl class="term"><dt>예외(Exception)</dt><dd>실행 중 생기는 오류. try-except로 미리 대비함.</dd></dl>
+          <dl class="term"><dt>모듈/라이브러리</dt><dd>미리 만들어진 코드 묶음. import로 가져다 씀.</dd></dl>
+          <dl class="term"><dt>주석(Comment)</dt><dd># 뒤에 적는, 실행되지 않는 설명문.</dd></dl>
+          <dl class="term"><dt>문제 분해(Decomposition)</dt><dd>큰 문제를 풀 수 있는 작은 단계들로 나누는 사고.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

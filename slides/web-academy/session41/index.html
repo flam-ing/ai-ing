@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 41 - 딥러닝과 신경망</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Neural network diagram */
+    .nn-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      max-width: 1100px;
+    }
+    .nn-layer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .nn-label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-bottom: 0.4rem;
+    }
+    .nn-node {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(110,231,183,0.3), rgba(96,165,250,0.3));
+      border: 2px solid rgba(110,231,183,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+    }
+    .nn-arrow {
+      font-size: 1.8rem;
+      color: #60a5fa;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+      .nn-node { width: 32px; height: 32px; font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 14</div>
+      <div class="subtitle">SESSION 41 · Part 8 AI 이해와 활용</div>
+      <h1>딥러닝과<br/>신경망</h1>
+      <h3>뉴런 · 레이어 · 가중치 — 오늘날 AI 폭발의 진짜 엔진</h3>
+    </div>
+
+    <!-- 2. Why -->
+    <div class="slide">
+      <div class="slide-number">02 / 14</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">신경망</span>을<br/>이해해야 할까?</h2>
+      <p>
+        ChatGPT·Stable Diffusion·자율주행 — 모두 <span class="highlight-blue">신경망</span>으로 동작한다.<br/>
+        "딥러닝"이라는 단어를 자주 듣지만 정작 무엇이 "깊은(deep)" 걸까?
+      </p>
+      <p style="margin-top: 1.5rem;">
+        구조를 알면 AI가 <span class="highlight-yellow">왜 그렇게 동작하는지</span>,<br/>
+        <span class="highlight">왜 GPU가 필요한지</span>까지 한 번에 이해된다.
+      </p>
+    </div>
+
+    <!-- 3. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">03 / 14</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🧬</div>
+          <div class="card-title">신경망의 기초</div>
+          <div class="card-desc">뉴런·레이어·가중치 — 신경망의 기본 구성 요소를 설명할 수 있다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏗️</div>
+          <div class="card-title">"딥"의 의미</div>
+          <div class="card-desc">딥러닝의 "deep"이 무엇을 뜻하는지 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">학습 메커니즘</div>
+          <div class="card-desc">신경망이 어떻게 가중치를 조정하며 배우는지 직관적으로 안다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 뉴런 → 퍼셉트론 -->
+    <div class="slide">
+      <div class="slide-number">04 / 14</div>
+      <div class="big-emoji">🧬</div>
+      <h2>뉴런 → <span class="highlight">퍼셉트론</span></h2>
+      <p>
+        생물학적 뉴런을 흉내 낸 가장 작은 수학적 단위 — <span class="highlight-blue">퍼셉트론</span>.<br/>
+        입력에 가중치를 곱해 합산 후, 출력으로 내보낸다.
+      </p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">입력(input)을 받음</div>
+            <div class="step-desc">x₁, x₂, x₃ … 여러 개의 신호가 들어옴</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">가중치(weight)를 곱함</div>
+            <div class="step-desc">각 입력의 중요도(w₁, w₂, w₃)를 곱해줌. 학습으로 조정되는 값</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">합산 후 활성화 함수 통과</div>
+            <div class="step-desc">모두 더한 뒤, 일정 임계값 넘으면 "켜짐(1)", 아니면 "꺼짐(0)"</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">출력(output) 전달</div>
+            <div class="step-desc">결과를 다음 뉴런에게 보냄 — 이것이 신경망 한 칸의 동작</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 신경망 구조 -->
+    <div class="slide">
+      <div class="slide-number">05 / 14</div>
+      <div class="big-emoji">🏗️</div>
+      <h2>신경망 구조 —<br/><span class="highlight">층층이 쌓는다</span></h2>
+      <p>퍼셉트론을 여러 개 모아 <span class="highlight-blue">층(layer)</span>으로 쌓은 것이 신경망.</p>
+      <div class="nn-diagram">
+        <div class="nn-layer">
+          <div class="nn-label">입력층</div>
+          <div class="nn-node">x₁</div>
+          <div class="nn-node">x₂</div>
+          <div class="nn-node">x₃</div>
+        </div>
+        <div class="nn-arrow">→</div>
+        <div class="nn-layer">
+          <div class="nn-label">은닉층</div>
+          <div class="nn-node">h₁</div>
+          <div class="nn-node">h₂</div>
+          <div class="nn-node">h₃</div>
+          <div class="nn-node">h₄</div>
+        </div>
+        <div class="nn-arrow">→</div>
+        <div class="nn-layer">
+          <div class="nn-label">은닉층</div>
+          <div class="nn-node">h₁</div>
+          <div class="nn-node">h₂</div>
+          <div class="nn-node">h₃</div>
+          <div class="nn-node">h₄</div>
+        </div>
+        <div class="nn-arrow">→</div>
+        <div class="nn-layer">
+          <div class="nn-label">출력층</div>
+          <div class="nn-node">y₁</div>
+          <div class="nn-node">y₂</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;">입력층(데이터) → 은닉층(처리) → 출력층(결과). 모든 노드가 다음 층의 모든 노드와 연결</p>
+    </div>
+
+    <!-- 6. "딥"의 의미 -->
+    <div class="slide">
+      <div class="slide-number">06 / 14</div>
+      <div class="big-emoji">⛰️</div>
+      <h2>딥러닝의 <span class="highlight">"딥"</span>이란?</h2>
+      <p>"deep"은 <span class="highlight-yellow">은닉층이 여러 개 깊게 쌓였다</span>는 뜻.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-title">📏 얕은 신경망 (Shallow)</div>
+          <div class="compare-item">은닉층 1~2개</div>
+          <div class="compare-item">단순한 패턴만 학습 가능</div>
+          <div class="compare-item">이미지·언어엔 부족</div>
+          <div class="compare-item">전통적 머신러닝의 한계</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">🏔️ 딥 신경망 (Deep)</div>
+          <div class="compare-item">은닉층 수십~수백 개</div>
+          <div class="compare-item">계층적으로 복잡한 특징 학습</div>
+          <div class="compare-item">선·형태·물체로 단계 추출</div>
+          <div class="compare-item">이미지·언어·음성 모두 가능</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight">계층적 학습:</span> 첫 층은 선·점, 중간 층은 형태, 마지막 층은 "고양이 얼굴" 같은 의미를 알아본다</p>
+    </div>
+
+    <!-- 7. 가중치 학습 -->
+    <div class="slide">
+      <div class="slide-number">07 / 14</div>
+      <div class="big-emoji">🎚️</div>
+      <h2>가중치 학습 —<br/><span class="highlight">조금씩 다이얼을 돌린다</span></h2>
+      <p>
+        "학습한다"는 것은 결국 <span class="highlight-blue">가중치(weight)</span>를 조정하는 것.<br/>
+        예측이 정답과 차이 나면, 그 차이(오차)를 줄이도록 가중치를 조금씩 움직인다.
+      </p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">예측(forward)</div>
+            <div class="step-desc">현재 가중치로 입력에 대한 출력 계산</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">오차(loss) 측정</div>
+            <div class="step-desc">예측값과 정답 사이의 차이를 숫자로 표현</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">가중치 업데이트</div>
+            <div class="step-desc">오차가 줄어드는 방향으로 모든 가중치를 살짝 조정</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">수만 번 반복</div>
+            <div class="step-desc">오차가 충분히 작아질 때까지 반복 — 이것이 학습</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. 활성화 함수 -->
+    <div class="slide">
+      <div class="slide-number">08 / 14</div>
+      <div class="big-emoji">⚡</div>
+      <h2>활성화 함수 —<br/><span class="highlight-blue">"켜고 끄는" 스위치</span></h2>
+      <p>
+        합산된 신호를 <span class="highlight">비선형으로 변형</span>해주는 함수.<br/>
+        이게 없으면 신경망은 그저 직선만 그릴 수 있다.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <div class="card-title">ReLU</div>
+          <div class="card-desc">음수는 0, 양수는 그대로. 가장 흔하고 빠른 활성화 함수</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Sigmoid</div>
+          <div class="card-desc">0~1 사이로 압축. 확률처럼 표현 가능. 출력층에서 자주 사용</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📉</div>
+          <div class="card-title">Tanh</div>
+          <div class="card-desc">-1~1 사이로 압축. 평균 0 중심이라 학습 안정적</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">왜 필요?</span> 비선형이 있어야 곡선·복잡한 경계를 학습할 수 있다 — 그래야 진짜 패턴 인식이 된다</p>
+    </div>
+
+    <!-- 9. 역전파 -->
+    <div class="slide">
+      <div class="slide-number">09 / 14</div>
+      <div class="big-emoji">🔁</div>
+      <h2>역전파 —<br/><span class="highlight">오차를 거꾸로 전달</span></h2>
+      <p>출력층에서 발생한 오차를 입력층 방향으로 <span class="highlight-blue">되돌려 보내며</span> 가중치를 갱신.</p>
+      <div class="flow">
+        <div class="flow-item">📥 입력</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">은닉층</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">은닉층</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">📤 출력 → 오차!</div>
+      </div>
+      <div class="flow" style="margin-top:1rem;">
+        <div class="flow-item" style="border-color: rgba(244,114,182,0.4); background: rgba(244,114,182,0.08);">📥 입력</div>
+        <div class="flow-arrow" style="color:#f472b6;">←</div>
+        <div class="flow-item" style="border-color: rgba(244,114,182,0.4); background: rgba(244,114,182,0.08);">은닉층 갱신</div>
+        <div class="flow-arrow" style="color:#f472b6;">←</div>
+        <div class="flow-item" style="border-color: rgba(244,114,182,0.4); background: rgba(244,114,182,0.08);">은닉층 갱신</div>
+        <div class="flow-arrow" style="color:#f472b6;">←</div>
+        <div class="flow-item" style="border-color: rgba(244,114,182,0.4); background: rgba(244,114,182,0.08);">📤 오차 시작</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight">핵심:</span> "어느 가중치가 얼마나 잘못했는가"를 역방향으로 계산해 모두 조금씩 조정</p>
+    </div>
+
+    <!-- 10. 비유 -->
+    <div class="slide">
+      <div class="slide-number">10 / 14</div>
+      <div class="big-emoji">🏭</div>
+      <h2>신경망은 <span class="highlight">공장 컨베이어 벨트</span>다</h2>
+      <p>구조와 학습 과정을 한 번에 정리해주는 비유.</p>
+      <div class="analogy">
+        <div class="analogy-title">🏭 공장 컨베이어 벨트 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">원자재 투입</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">입력층</span> — 데이터가 들어옴</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">각 작업자</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">뉴런</span> — 자기 역할만 정확히 수행</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">작업 단계</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">은닉층</span> — 단계가 깊을수록 정교한 가공</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">완성품</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">출력층 — 최종 예측 결과</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">불량품 발생</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">오차</span> — 정답과 다른 결과</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">거꾸로 추적·재교육</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">역전파</span> — 어느 작업자가 잘못했는지 찾아 가르침</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 딥러닝의 응용 -->
+    <div class="slide">
+      <div class="slide-number">11 / 14</div>
+      <div class="big-emoji">🌐</div>
+      <h2>딥러닝이<br/><span class="highlight-blue">바꾼 세상</span></h2>
+      <p>이 구조 하나로 거의 모든 AI 분야가 폭발적으로 발전했다.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🖼️</div>
+          <div class="feature-name">이미지 인식</div>
+          <div class="feature-sub">CNN</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <div class="feature-name">음성 인식</div>
+          <div class="feature-sub">RNN</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <div class="feature-name">자연어 처리</div>
+          <div class="feature-sub">Transformer</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <div class="feature-name">이미지 생성</div>
+          <div class="feature-sub">Diffusion</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚗</div>
+          <div class="feature-name">자율주행</div>
+          <div class="feature-sub">실시간 감지</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧬</div>
+          <div class="feature-name">단백질 예측</div>
+          <div class="feature-sub">AlphaFold</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏥</div>
+          <div class="feature-name">의료 영상</div>
+          <div class="feature-sub">진단 보조</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎮</div>
+          <div class="feature-name">게임 AI</div>
+          <div class="feature-sub">강화학습</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. 확인 체크 -->
+    <div class="slide">
+      <div class="slide-number">12 / 14</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color: rgba(110,231,183,0.4);">
+          <div class="card-icon">✅</div>
+          <div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div>
+          <div class="card-desc">신경망은 입력층 → 은닉층(여러 개) → 출력층 구조로 이루어진다</div>
+        </div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);">
+          <div class="card-icon">❌</div>
+          <div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div>
+          <div class="card-desc">"딥"은 모델이 똑똑하다는 뜻 (틀림! 은닉층이 깊게 쌓였다는 의미)</div>
+        </div>
+        <div class="card" style="border-color: rgba(110,231,183,0.4);">
+          <div class="card-icon">✅</div>
+          <div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div>
+          <div class="card-desc">학습 = 가중치를 오차가 줄어드는 방향으로 조정하는 과정</div>
+        </div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);">
+          <div class="card-icon">❌</div>
+          <div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div>
+          <div class="card-desc">신경망이 진짜 인간 뇌처럼 생각한다 (틀림! 수학적 모델일 뿐)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">13 / 14</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">🧬</div>
+          <div class="summary-label">퍼셉트론</div>
+          <div class="summary-desc">입력×가중치 합산 후<br/>출력하는 기본 단위</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🏗️</div>
+          <div class="summary-label">신경망 구조</div>
+          <div class="summary-desc">입력층 → 은닉층 →<br/>출력층</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⛰️</div>
+          <div class="summary-label">"딥"의 의미</div>
+          <div class="summary-desc">은닉층이 여러 개<br/>깊게 쌓인 신경망</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🎚️</div>
+          <div class="summary-label">가중치 학습</div>
+          <div class="summary-desc">오차를 줄이도록<br/>조금씩 조정</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚡</div>
+          <div class="summary-label">활성화 함수</div>
+          <div class="summary-desc">ReLU·Sigmoid —<br/>비선형성 부여</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔁</div>
+          <div class="summary-label">역전파</div>
+          <div class="summary-desc">오차를 출력→입력<br/>방향으로 전달</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. 다음 -->
+    <div class="slide">
+      <div class="slide-number">14 / 14</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 42 · 자연어 처리와 LLM</span></h2>
+      <p>
+        딥러닝이 <span class="highlight-blue">언어</span>라는 가장 어려운 영역을 어떻게 정복했을까?<br/>
+        토큰·임베딩·Transformer·LLM — ChatGPT의 진짜 정체를<br/>
+        <span class="highlight-yellow">다음 세션에서 풀어본다</span>.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 신경망 = 작업자(뉴런)들이 여러 단계로 가공하는 공장. 학습 = 가중치 조정.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

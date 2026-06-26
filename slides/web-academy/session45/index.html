@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 45 - AI 코딩 도구 활용</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 45 · Part 8 AI 이해와 활용</div>
+      <h1>AI 코딩<br/>도구</h1>
+      <h3>Cursor, Claude Code, GitHub Copilot — 각자의 자리와 쓰임</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🛠️</div>
+          <div class="card-title">도구별 차이</div>
+          <div class="card-desc">Cursor · Claude Code · Copilot의 장단을 설명한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">효과적 사용 패턴</div>
+          <div class="card-desc">각 상황에 맞는 도구 선택과 실전 워크플로우</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">코드 검증</div>
+          <div class="card-desc">AI가 생성한 코드를 그대로 믿지 않고 검토한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">AI 코딩 도구</span>를<br/>골라 써야 할까?</h2>
+      <p>
+        AI 코딩 도구는 이미 <span class="highlight-blue">개발의 기본값</span>이 됐다.<br/>
+        하지만 도구마다 <span class="highlight">성격</span>과 <span class="highlight-yellow">잘하는 일</span>이 다르다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        "가장 좋은 도구"는 없다 — 내 상황에 맞는 <span class="highlight-pink">조합</span>이 정답이다.
+      </p>
+    </div>
+
+    <!-- 4. 3대 도구 한눈에 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>3대 <span class="highlight">AI 코딩 도구</span></h2>
+      <p>각자 강점이 다르다. 실제 작업 단위(줄 → 파일 → 프로젝트)로 커진다.</p>
+      <div class="feature-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="feature-card" style="padding: 1.4rem; text-align:left;">
+          <div class="feature-icon">⌨️</div>
+          <div class="feature-name" style="font-size:1.2rem; margin-bottom:0.4rem;">GitHub Copilot</div>
+          <div class="feature-sub" style="line-height:1.7; color:#aaa; font-size:0.9rem;">
+            줄·블록 단위 자동완성.<br/>
+            VS Code / JetBrains 지원.<br/>
+            타이핑하면서 제안을 받는 방식.
+          </div>
+        </div>
+        <div class="feature-card" style="padding: 1.4rem; text-align:left; border-color: rgba(96,165,250,0.3);">
+          <div class="feature-icon">🖱️</div>
+          <div class="feature-name" style="font-size:1.2rem; margin-bottom:0.4rem;">Cursor</div>
+          <div class="feature-sub" style="line-height:1.7; color:#aaa; font-size:0.9rem;">
+            자연어로 파일 전체 수정.<br/>
+            Claude/GPT 모델 선택 가능.<br/>
+            채팅 + 에디터 통합 IDE.
+          </div>
+        </div>
+        <div class="feature-card" style="padding: 1.4rem; text-align:left; border-color: rgba(110,231,183,0.4);">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-name" style="font-size:1.2rem; margin-bottom:0.4rem;">Claude Code</div>
+          <div class="feature-sub" style="line-height:1.7; color:#aaa; font-size:0.9rem;">
+            터미널 기반 AI 에이전트.<br/>
+            프로젝트 전체 파악 · 파일 수정 ·<br/>명령 실행까지 자율 수행.
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 1.5rem; font-size:1.05rem; color:#888;">
+        <span class="highlight">작은 단위 → 큰 단위</span> 순 — 오른쪽으로 갈수록 더 많은 일을 AI에게 위임한다.
+      </p>
+    </div>
+
+    <!-- 5. 심화A: GitHub Copilot이 코드를 제안하는 방법 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">⌨️</div>
+      <h2>GitHub Copilot —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>Copilot이 어떻게 내 코드 맥락을 읽고 다음 줄을 제안하는지 그 과정을 살펴보자.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">코드 맥락 분석</div><div class="step-desc">현재 파일, 주변 함수, 변수명, 주석 등 열린 코드 전체를 맥락으로 읽는다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">LLM 추론</div><div class="step-desc">코드베이스에서 학습한 패턴을 바탕으로 "다음에 올 법한 코드"를 예측한다.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">후보 코드 생성</div><div class="step-desc">회색 텍스트(ghost text)로 제안이 나타난다. 여러 후보 중 가장 확률 높은 것을 먼저 보여준다.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">개발자 선택</div><div class="step-desc">Tab 키로 수락, Esc로 거절, Alt+]로 다른 제안 확인 — 최종 결정은 사람이 한다.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 언제 무엇을 쓰나 -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <h2>언제 <span class="highlight-blue">무엇을</span> 쓰나?</h2>
+      <p>한 가지만 쓰는 게 아니다 — 상황에 따라 <span class="highlight">갈아 탄다.</span></p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">⌨️</div>
+          <div class="step-body">
+            <div class="step-title">타이핑 중 빠른 보조 → Copilot</div>
+            <div class="step-desc">반복적인 패턴, 타입 선언, 짧은 함수 구현을 줄 단위로 빠르게 채워준다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">🖱️</div>
+          <div class="step-body">
+            <div class="step-title">파일·컴포넌트 단위 수정 → Cursor</div>
+            <div class="step-desc">"이 컴포넌트를 훅으로 리팩터" "이 함수에 테스트 추가" 같은 중간 크기 작업.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">🤖</div>
+          <div class="step-body">
+            <div class="step-title">여러 파일·실행·디버깅 → Claude Code</div>
+            <div class="step-desc">"이 기능 전체를 구현해줘, 서버도 띄워서 확인하고" — 프로젝트 전체를 보며 자율 실행.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">💬</div>
+          <div class="step-body">
+            <div class="step-title">아이디어 탐색·설명 → ChatGPT / Claude 웹</div>
+            <div class="step-desc">코드와 직접 연결되지 않은 개념 질문, 설계 비교, 학습 대화에 적합.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 심화B: AI 코딩 도구와 함께하는 개발 워크플로 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🔄</div>
+      <h2>AI 코딩 워크플로 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>AI 도구가 있다고 바로 쓰는 게 아니다. 효과적인 협업은 이 흐름을 따른다.</p>
+      <div class="flow">
+        <div class="flow-item">📋 요구사항 정리</div><div class="flow-arrow">→</div>
+        <div class="flow-item">🤖 AI에게 설명</div><div class="flow-arrow">→</div>
+        <div class="flow-item">📄 초안 생성</div><div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color: rgba(110,231,183,0.4);">🔍 검토·수정 → 테스트</div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> AI는 초안을 빠르게 만들어주지만, 검토와 수정은 사람의 몫이다. 이 협업 구조가 생산성의 핵심이다.</p>
+    </div>
+
+    <!-- 8. 검증 원칙 -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <h2>AI 코드, <span class="highlight-pink">그대로 쓰면</span> 위험하다</h2>
+      <p>AI는 자신 있게 틀린 답을 준다 — <span class="highlight">환각</span>. 검증은 선택이 아니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-title">❌ 피해야 할 습관</div>
+          <div class="compare-item">결과 복사해서 바로 커밋</div>
+          <div class="compare-item">에러가 사라졌다고 "다 됐다" 선언</div>
+          <div class="compare-item">존재하지 않는 라이브러리 무비판 사용</div>
+          <div class="compare-item">이해 못 한 코드를 프로덕션에 반영</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">✅ 좋은 습관</div>
+          <div class="compare-item">한 줄씩 읽고 이해한 뒤 수용</div>
+          <div class="compare-item">테스트 · 실행 · 로그로 결과 확인</div>
+          <div class="compare-item">의심 가는 API는 공식 문서 교차 확인</div>
+          <div class="compare-item">보안·비밀 키는 사람 눈으로 반드시 검토</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 실생활 연결 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 서비스 속에 AI 코딩 도구가 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">🐙</div><div class="card-title">GitHub Copilot</div><div class="card-desc">전 세계 개발자 수백만 명이 에디터 안에서 자동완성으로 반복 코드를 줄이고 있다.</div></div>
+        <div class="card"><div class="card-icon">🖱️</div><div class="card-title">Cursor</div><div class="card-desc">스타트업 개발자들이 파일 전체를 자연어로 수정하며 기능 구현 시간을 절반으로 줄이고 있다.</div></div>
+        <div class="card"><div class="card-icon">🎨</div><div class="card-title">v0 (Vercel)</div><div class="card-desc">디자이너가 프롬프트로 React UI 코드를 즉시 생성해 개발자에게 넘기는 새 워크플로가 생겼다.</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">AI 코딩 도구가 없다면</span> 같은 기능을 구현하는 데 몇 배의 시간이 걸린다.</p>
+    </div>
+
+    <!-- 10. 오해 바로잡기 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 흔한 오해</div>
+          <ul><li>AI가 코드를 다 짜준다</li><li>AI 코딩 도구 = 개발자 대체</li><li>AI가 짠 코드는 버그가 없다</li></ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 실제로는</div>
+          <ul><li>초안을 빠르게 만들어주지만 검토·수정이 필수다</li><li>생산성을 높이는 보조 도구 — 책임은 사람에게 있다</li><li>AI도 틀린다 — 반드시 테스트하고 실행해봐야 한다</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">👥</div>
+      <h2>AI 코딩 도구는 <span class="highlight">주니어 팀원</span>이다</h2>
+      <p>똑똑하고 빠르지만, 책임은 여전히 내 몫이다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🧑‍💻 팀원 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">빠른 초안 작성</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">지시하면 금방 가져온다</span> — 시간을 크게 아껴준다</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">가끔 틀린다</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">자신 있게 틀린 답</span>을 내민다 — 반드시 검토</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">최종 책임</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">내 이름으로 나가는 결과물</span> — 내가 이해하고 승인</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">성장의 촉매</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">코드를 읽으며 배운다</span> — "왜 이렇게 썼지?"가 학습이 된다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI 도구 연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>AI 코딩 도구 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">이 코드 에러가 뭔지 모르겠어요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">어떤 언어인가요? 에러 메시지와 코드를 함께 보여주시면 더 정확히 도울 수 있습니다.</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">[에러 메시지]와 [문제 코드]를 붙여넣으면서: "React 18 환경에서 이 에러가 왜 나는지 원인과 해결책 알려줘."</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">에러는 useEffect 의존성 배열 문제입니다. 3번째 줄의 fetchData를 의존성에 추가하거나 useCallback으로 감싸면 해결됩니다.</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 체크 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color: rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">AI 코딩 도구는 코드 작성을 보조하는 도구다</div></div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">AI 코딩 도구 = 개발자 완전 대체</div></div>
+        <div class="card" style="border-color: rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">AI가 짠 코드도 반드시 검토하고 테스트해야 한다</div></div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">AI 도구를 쓰면 프로그래밍을 몰라도 된다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 AI 도구를 잘 쓰는 개발자가 가장 생산적입니다. 하지만 코드를 이해하는 사람이 AI도 잘 씁니다!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">⌨️</div>
+          <div class="summary-label">Copilot</div>
+          <div class="summary-desc">줄 단위 자동완성 —<br/>에디터 내장 보조</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🖱️</div>
+          <div class="summary-label">Cursor</div>
+          <div class="summary-desc">파일 단위 자연어 수정 —<br/>채팅+에디터 IDE</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🤖</div>
+          <div class="summary-label">Claude Code</div>
+          <div class="summary-desc">터미널 자율 에이전트 —<br/>프로젝트 전체 수행</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧪</div>
+          <div class="summary-label">검증 필수</div>
+          <div class="summary-desc">한 줄씩 읽고 이해,<br/>테스트·실행으로 확인</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧰</div>
+          <div class="summary-label">조합해서 쓰기</div>
+          <div class="summary-desc">한 도구로 통일 X,<br/>상황에 맞춰 갈아타기</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🙋</div>
+          <div class="summary-label">책임은 사람</div>
+          <div class="summary-desc">AI는 주니어 팀원 —<br/>최종 승인은 내가</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 46 · 바이브코딩 워크플로</span></h2>
+      <p>
+        도구를 알았으니, 이제 <span class="highlight-blue">실제 흐름</span>을 엮어볼 차례다.<br/>
+        아이디어 → 명세 → AI 생성 → 테스트 → 피드백 — <span class="highlight">바이브코딩</span>의 반복 사이클을 배운다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> AI는 도구, 선택은 <strong>사람</strong>. 코드의 주인은 <strong>여전히 나</strong>.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컴퓨터 그래픽스 · CS 4년 커리큘럼</title>
+  <meta name="description" content="픽셀·좌표 변환·동차좌표·렌더링 파이프라인·Z-버퍼·셰이딩을 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="computer-graphics" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">4학년 심화 · 컴퓨터 그래픽스</span>
+        <h1 class="page-title">컴퓨터 그래픽스</h1>
+        <p class="page-lead">3D 세계를 화면 위 <strong>픽셀로 그려내는</strong> 수학과 알고리즘. 게임·영화·CAD의 화면 뒤에서 일어나는 일을 들여다봅니다.</p>
+
+        <section class="anchor" id="what">
+          <h2>컴퓨터 그래픽스란?</h2>
+          <p>컴퓨터 그래픽스(computer graphics)는 <strong>숫자로 표현된 도형·모델을 화면의 픽셀로 변환</strong>하는 기술입니다. 게임의 3D 캐릭터, 영화의 CG, 지도 앱의 건물, CAD 설계도 모두 같은 원리 위에 있습니다.</p>
+          <p>비유하자면 화가가 머릿속 장면을 캔버스에 옮기는 것과 같습니다. 다만 컴퓨터는 붓 대신 <strong>좌표·행렬·삼각형</strong>을 쓰고, 캔버스 대신 픽셀 격자를 씁니다. 이 페이지는 그 "디지털 회화"의 도구들을 차례로 배웁니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>픽셀과 색 → 2D/3D 좌표 변환과 행렬 → 투영 → 래스터화 → 렌더링 파이프라인 → Z-버퍼 → 조명·셰이딩·텍스처 → 셰이더와 GPU까지, 한 픽셀이 칠해지기까지의 여정을 따라갑니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="pixel-raster">
+          <h2>픽셀과 래스터 vs 벡터</h2>
+          <p>화면은 작은 점들의 격자입니다. 이 점 하나를 <strong>픽셀(pixel, picture element)</strong>이라 합니다. 이미지를 표현하는 방식은 크게 둘로 나뉩니다.</p>
+          <ul>
+            <li><strong>래스터(raster)</strong> — 픽셀 격자에 색을 직접 채움. 사진, PNG/JPG. 확대하면 계단처럼 깨짐.</li>
+            <li><strong>벡터(vector)</strong> — "여기서 저기로 선, 반지름 r 원" 같은 수식으로 도형을 정의. SVG, 폰트. 아무리 확대해도 매끈함.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="래스터와 벡터 비교">
+              <g font-family="monospace" font-size="12">
+                <text x="90" y="18" fill="#8b949e" text-anchor="middle">래스터 (픽셀 격자)</text>
+                <!-- pixel grid forming a diagonal -->
+                <g stroke="#30363d">
+                  <rect x="30" y="30" width="20" height="20" fill="#161b22"/>
+                  <rect x="50" y="30" width="20" height="20" fill="#161b22"/>
+                  <rect x="50" y="50" width="20" height="20" fill="#58a6ff"/>
+                  <rect x="70" y="50" width="20" height="20" fill="#58a6ff"/>
+                  <rect x="70" y="70" width="20" height="20" fill="#161b22"/>
+                  <rect x="90" y="70" width="20" height="20" fill="#58a6ff"/>
+                  <rect x="110" y="90" width="20" height="20" fill="#58a6ff"/>
+                  <rect x="30" y="50" width="20" height="20" fill="#161b22"/>
+                  <rect x="90" y="90" width="20" height="20" fill="#161b22"/>
+                  <rect x="110" y="70" width="20" height="20" fill="#161b22"/>
+                </g>
+                <text x="300" y="18" fill="#8b949e" text-anchor="middle">벡터 (수식)</text>
+                <line x1="240" y1="100" x2="350" y2="40" stroke="#3fb950" stroke-width="3"/>
+                <text x="295" y="125" fill="#8b949e" text-anchor="middle">line(240,100 → 350,40)</text>
+              </g>
+            </svg>
+            <div class="caption">래스터는 픽셀에 칠해 계단이 생기고, 벡터는 수식이라 무한 확대 가능</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 안티에일리어싱</div>
+            <p>래스터의 계단 현상(에일리어싱)은 경계 픽셀을 <strong>중간 색으로 부드럽게 섞어</strong> 눈속임합니다. 이를 안티에일리어싱(anti-aliasing)이라 하며, 글꼴과 게임 화면이 매끄러워 보이는 비결입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="color-rgb">
+          <h2>색 표현 (RGB)</h2>
+          <p>화면의 모든 색은 <strong>빨강(R)·초록(G)·파랑(B)</strong> 세 빛을 섞어 만듭니다. 빛은 섞을수록 밝아지는 <strong>가산 혼합</strong>이라, R+G+B를 최대로 켜면 흰색이 됩니다. 각 채널은 보통 0~255(8비트) 값을 가집니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="RGB 가산 혼합">
+              <g>
+                <circle cx="140" cy="70" r="50" fill="#f85149" fill-opacity="0.65"/>
+                <circle cx="200" cy="70" r="50" fill="#3fb950" fill-opacity="0.65"/>
+                <circle cx="170" cy="110" r="50" fill="#58a6ff" fill-opacity="0.65"/>
+                <text x="115" y="60" fill="#fff" font-family="monospace" font-size="12">R</text>
+                <text x="225" y="60" fill="#fff" font-family="monospace" font-size="12">G</text>
+                <text x="166" y="135" fill="#fff" font-family="monospace" font-size="12">B</text>
+                <text x="170" y="92" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">흰색</text>
+              </g>
+            </svg>
+            <div class="caption">빛의 삼원색 RGB — 셋을 모두 켜면(255,255,255) 흰색</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">color.js</span></div>
+            <pre><code class="language-javascript">// 색은 (R, G, B) 세 숫자. 0~255
+const red    = [255,   0,   0];   // 순수 빨강
+const yellow = [255, 255,   0];   // 빨강 + 초록 = 노랑
+const white  = [255, 255, 255];   // 셋 다 최대 = 흰색
+
+// 16진수 표기 (#RRGGBB): 웹에서 흔한 방식
+const accent = "#58a6ff";          // R=0x58, G=0xa6, B=0xff
+
+// 알파(투명도)를 더하면 RGBA
+const glass = "rgba(88, 166, 255, 0.5)";  // 반투명 파랑</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="transform-2d">
+          <h2>2D 좌표계와 변환</h2>
+          <p>도형을 움직이고 키우고 돌리는 것을 <strong>변환(transformation)</strong>이라 합니다. 기본 변환은 셋입니다.</p>
+          <ul>
+            <li><strong>이동(translation)</strong> — 좌표에 값을 더함. <code>x' = x + dx</code></li>
+            <li><strong>크기(scale)</strong> — 좌표에 값을 곱함. <code>x' = x · sx</code></li>
+            <li><strong>회전(rotation)</strong> — 각도 θ만큼 원점 둘레로 돌림(사인·코사인 사용).</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2D 변환 세 가지">
+              <g font-family="monospace" font-size="11">
+                <!-- translation -->
+                <text x="65" y="18" fill="#8b949e" text-anchor="middle">이동</text>
+                <rect x="20" y="90" width="30" height="30" fill="none" stroke="#8b949e" stroke-dasharray="3"/>
+                <rect x="60" y="60" width="30" height="30" fill="#161b22" stroke="#58a6ff"/>
+                <line x1="35" y1="105" x2="75" y2="75" stroke="#3fb950" stroke-width="1.5" marker-end="url(#tah)"/>
+                <!-- scale -->
+                <text x="210" y="18" fill="#8b949e" text-anchor="middle">크기</text>
+                <rect x="175" y="95" width="22" height="22" fill="none" stroke="#8b949e" stroke-dasharray="3"/>
+                <rect x="175" y="55" width="60" height="60" fill="#161b22" stroke="#d29922"/>
+                <!-- rotation -->
+                <text x="350" y="18" fill="#8b949e" text-anchor="middle">회전</text>
+                <rect x="320" y="70" width="40" height="40" fill="none" stroke="#8b949e" stroke-dasharray="3"/>
+                <g transform="rotate(30 340 90)"><rect x="320" y="70" width="40" height="40" fill="#161b22" stroke="#bc8cff"/></g>
+                <path d="M375 75 A30 30 0 0 1 385 100" stroke="#bc8cff" fill="none" stroke-width="1.5" marker-end="url(#tahp)"/>
+              </g>
+              <defs>
+                <marker id="tah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+                <marker id="tahp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#bc8cff"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">점선은 원래 위치, 실선은 변환 후 — 이동·크기·회전</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">transform2d.js</span></div>
+            <pre><code class="language-javascript">// 점 (x, y)에 적용하는 기본 2D 변환
+function translate(x, y, dx, dy) { return [x + dx, y + dy]; }
+function scale(x, y, sx, sy)     { return [x * sx, y * sy]; }
+
+function rotate(x, y, deg) {
+  const t = deg * Math.PI / 180;        // 각도 → 라디안
+  return [
+    x * Math.cos(t) - y * Math.sin(t),  // 회전 공식
+    x * Math.sin(t) + y * Math.cos(t),
+  ];
+}</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="matrix-homogeneous">
+          <h2>변환 행렬과 동차좌표</h2>
+          <p>변환을 매번 따로 계산하면 번거롭습니다. 그래서 그래픽스는 모든 변환을 <strong>행렬 곱셈</strong>으로 통일합니다. 점을 벡터로, 변환을 행렬로 두면, 변환 적용은 그냥 "행렬 × 벡터"가 됩니다. 여러 변환을 미리 곱해 하나의 행렬로 합칠 수도 있어 매우 효율적입니다.</p>
+          <p>문제는 이동입니다. 이동은 "더하기"라서 곱셈인 행렬로 표현이 안 됩니다. 이를 해결하는 트릭이 <strong>동차좌표(homogeneous coordinates)</strong>입니다. 2D 점 (x, y)에 가짜 차원 1을 붙여 <strong>(x, y, 1)</strong>로 다루면, 이동까지도 3×3 행렬 하나로 표현됩니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="동차좌표 이동 행렬">
+              <g font-family="monospace" font-size="13">
+                <text x="40" y="40" fill="#bc8cff">⎡ 1  0  dx ⎤</text>
+                <text x="40" y="62" fill="#bc8cff">⎢ 0  1  dy ⎥</text>
+                <text x="40" y="84" fill="#bc8cff">⎣ 0  0   1 ⎦</text>
+                <text x="200" y="62" fill="#8b949e">×</text>
+                <text x="225" y="40" fill="#58a6ff">⎡ x ⎤</text>
+                <text x="225" y="62" fill="#58a6ff">⎢ y ⎥</text>
+                <text x="225" y="84" fill="#58a6ff">⎣ 1 ⎦</text>
+                <text x="285" y="62" fill="#8b949e">=</text>
+                <text x="305" y="40" fill="#3fb950">⎡ x+dx ⎤</text>
+                <text x="305" y="62" fill="#3fb950">⎢ y+dy ⎥</text>
+                <text x="305" y="84" fill="#3fb950">⎣  1   ⎦</text>
+                <text x="210" y="120" fill="#8b949e" text-anchor="middle">동차좌표 덕분에 '이동'도 행렬 곱셈 하나로!</text>
+              </g>
+            </svg>
+            <div class="caption">3×3 행렬 한 번의 곱으로 이동 (x+dx, y+dy) 완성</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">matrix.js</span></div>
+            <pre><code class="language-javascript">// 동차좌표: 점은 [x, y, 1]
+// 여러 변환 행렬을 곱해 '하나의 행렬'로 합치면 한 번에 적용 가능
+function multiply(M, [x, y, w]) {
+  return [
+    M[0]*x + M[1]*y + M[2]*w,
+    M[3]*x + M[4]*y + M[5]*w,
+    M[6]*x + M[7]*y + M[8]*w,
+  ];
+}
+
+const translateM = [1, 0, 30,   0, 1, 50,   0, 0, 1];  // dx=30, dy=50
+const p = multiply(translateM, [10, 20, 1]);            // → [40, 70, 1]</code></pre>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 변환은 순서가 중요</div>
+            <p>행렬 곱은 교환법칙이 성립하지 않습니다. "회전 후 이동"과 "이동 후 회전"의 결과가 다릅니다. 합성 행렬을 만들 때 <strong>적용할 순서의 역순으로</strong> 곱한다는 점에 주의하세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="3d-projection">
+          <h2>3D 공간과 투영</h2>
+          <p>3D에서는 좌표가 (x, y, z)로 늘고, 동차좌표는 (x, y, z, 1), 변환 행렬은 4×4가 됩니다. 그런데 화면은 2D입니다. 3D 점을 2D 화면으로 납작하게 만드는 과정이 <strong>투영(projection)</strong>입니다.</p>
+          <ul>
+            <li><strong>원근 투영(perspective)</strong> — 멀리 있는 것은 작게. 사람 눈·카메라처럼 현실감 있음.</li>
+            <li><strong>직교 투영(orthographic)</strong> — 거리와 무관하게 크기 유지. CAD·설계도에 적합.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="원근 투영">
+              <g font-family="monospace" font-size="11">
+                <circle cx="40" cy="85" r="4" fill="#58a6ff"/>
+                <text x="40" y="108" fill="#8b949e" text-anchor="middle">눈</text>
+                <line x1="120" y1="20" x2="120" y2="150" stroke="#30363d" stroke-width="1.5"/>
+                <text x="120" y="166" fill="#8b949e" text-anchor="middle">화면(투영면)</text>
+                <!-- near object big -->
+                <rect x="160" y="55" width="50" height="50" fill="none" stroke="#3fb950"/>
+                <text x="185" y="48" fill="#3fb950" text-anchor="middle">가까운 물체</text>
+                <!-- far object small -->
+                <rect x="320" y="72" width="26" height="26" fill="none" stroke="#d29922"/>
+                <text x="333" y="68" fill="#d29922" text-anchor="middle" font-size="9">먼 물체</text>
+                <!-- projection lines -->
+                <line x1="40" y1="85" x2="346" y2="72" stroke="#8b949e" stroke-dasharray="3" stroke-width="1"/>
+                <line x1="40" y1="85" x2="346" y2="98" stroke="#8b949e" stroke-dasharray="3" stroke-width="1"/>
+              </g>
+            </svg>
+            <div class="caption">원근 투영: 눈에서 뻗은 선이 화면을 지나며, 멀수록 작게 맺힌다</div>
+          </div>
+          <table>
+            <thead><tr><th></th><th>원근 투영</th><th>직교 투영</th></tr></thead>
+            <tbody>
+              <tr><td>거리에 따른 크기</td><td>멀수록 작아짐</td><td>거리와 무관(일정)</td></tr>
+              <tr><td>현실감</td><td>높음(눈·카메라와 유사)</td><td>없음(왜곡 없음)</td></tr>
+              <tr><td>평행선</td><td>한 점(소실점)으로 모임</td><td>그대로 평행 유지</td></tr>
+              <tr><td>주 사용처</td><td>게임·영화·1인칭 시점</td><td>CAD·설계도·아이소메트릭</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 MVP 행렬</div>
+            <p>실전에서는 모델 변환(Model)·시점 변환(View)·투영(Projection) 세 행렬을 곱해 <strong>MVP 행렬</strong> 하나로 만듭니다. 정점마다 이 행렬 한 번 곱하면 3D 월드 좌표가 화면 좌표로 직행합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="rasterization">
+          <h2>선·삼각형 래스터화</h2>
+          <p>투영으로 2D 화면 좌표가 나오면, 이제 그 도형을 <strong>실제 픽셀로 채워야</strong> 합니다. 이것이 <strong>래스터화(rasterization)</strong>입니다. 3D 모델은 결국 수많은 <strong>삼각형</strong>으로 쪼개지므로, "삼각형 하나를 픽셀로 채우는 일"이 핵심입니다.</p>
+          <p>삼각형 래스터화의 기본 아이디어는 "각 픽셀의 중심이 삼각형 <strong>안</strong>에 있는가?"를 검사하는 것입니다. 안에 있는 픽셀만 칠합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="삼각형 래스터화">
+              <g>
+                <!-- pixel grid -->
+                <g stroke="#21262d">
+                  <rect x="40" y="20" width="220" height="120" fill="none"/>
+                  <line x1="62" y1="20" x2="62" y2="140"/><line x1="84" y1="20" x2="84" y2="140"/>
+                  <line x1="106" y1="20" x2="106" y2="140"/><line x1="128" y1="20" x2="128" y2="140"/>
+                  <line x1="150" y1="20" x2="150" y2="140"/><line x1="172" y1="20" x2="172" y2="140"/>
+                  <line x1="194" y1="20" x2="194" y2="140"/><line x1="216" y1="20" x2="216" y2="140"/>
+                  <line x1="238" y1="20" x2="238" y2="140"/>
+                  <line x1="40" y1="42" x2="260" y2="42"/><line x1="40" y1="64" x2="260" y2="64"/>
+                  <line x1="40" y1="86" x2="260" y2="86"/><line x1="40" y1="108" x2="260" y2="108"/>
+                </g>
+                <!-- filled pixels approx -->
+                <g fill="#58a6ff" fill-opacity="0.5">
+                  <rect x="128" y="42" width="22" height="22"/>
+                  <rect x="106" y="64" width="22" height="22"/><rect x="128" y="64" width="22" height="22"/><rect x="150" y="64" width="22" height="22"/>
+                  <rect x="84" y="86" width="22" height="22"/><rect x="106" y="86" width="22" height="22"/><rect x="128" y="86" width="22" height="22"/><rect x="150" y="86" width="22" height="22"/><rect x="172" y="86" width="22" height="22"/>
+                </g>
+                <!-- triangle outline -->
+                <polygon points="139,42 84,108 194,108" fill="none" stroke="#3fb950" stroke-width="2"/>
+              </g>
+            </svg>
+            <div class="caption">삼각형(초록 윤곽) 내부에 중심이 들어간 픽셀(파랑)만 칠한다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">rasterize.txt</span></div>
+            <pre><code class="language-text"># 삼각형 래스터화 의사코드 (경계 박스 + 내부 판정)
+삼각형 (A, B, C) 에 대해:
+  bbox = (A,B,C 를 모두 감싸는 최소 사각형)
+  for 각 픽셀 p in bbox:
+    if p 의 중심이 삼각형 ABC 안에 있으면:   # 무게중심 좌표로 판정
+       p 의 색을 칠한다
+       (세 꼭짓점의 색/깊이를 보간해 p 값 결정)</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="pipeline">
+          <h2>렌더링 파이프라인</h2>
+          <p>지금까지의 단계들이 일렬로 이어진 것이 <strong>렌더링 파이프라인(rendering pipeline)</strong>입니다. 정점 데이터가 들어가 화면 픽셀이 나오는 컨베이어 벨트라고 보면 됩니다. GPU는 이 단계들을 하드웨어로 초고속 처리합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="렌더링 파이프라인 단계">
+              <g font-family="monospace" font-size="10.5">
+                <rect x="20" y="30" width="80" height="44" rx="6" fill="#161b22" stroke="#58a6ff"/><text x="60" y="50" fill="#c9d1d9" text-anchor="middle">정점</text><text x="60" y="64" fill="#8b949e" text-anchor="middle" font-size="9">vertex</text>
+                <rect x="120" y="30" width="80" height="44" rx="6" fill="#161b22" stroke="#bc8cff"/><text x="160" y="48" fill="#c9d1d9" text-anchor="middle">정점 셰이더</text><text x="160" y="64" fill="#8b949e" text-anchor="middle" font-size="9">변환·투영</text>
+                <rect x="220" y="30" width="80" height="44" rx="6" fill="#161b22" stroke="#d29922"/><text x="260" y="50" fill="#c9d1d9" text-anchor="middle">래스터화</text><text x="260" y="64" fill="#8b949e" text-anchor="middle" font-size="9">→ 프래그먼트</text>
+                <rect x="320" y="30" width="100" height="44" rx="6" fill="#161b22" stroke="#3fb950"/><text x="370" y="48" fill="#c9d1d9" text-anchor="middle">프래그먼트 셰이더</text><text x="370" y="64" fill="#8b949e" text-anchor="middle" font-size="9">색·조명</text>
+                <rect x="170" y="110" width="100" height="44" rx="6" fill="#1c232c" stroke="#58a6ff"/><text x="220" y="128" fill="#c9d1d9" text-anchor="middle">출력 합성</text><text x="220" y="144" fill="#8b949e" text-anchor="middle" font-size="9">Z-버퍼·블렌딩</text>
+                <line x1="100" y1="52" x2="120" y2="52" stroke="#8b949e" marker-end="url(#plah2)"/>
+                <line x1="200" y1="52" x2="220" y2="52" stroke="#8b949e" marker-end="url(#plah2)"/>
+                <line x1="300" y1="52" x2="320" y2="52" stroke="#8b949e" marker-end="url(#plah2)"/>
+                <line x1="350" y1="74" x2="250" y2="108" stroke="#8b949e" marker-end="url(#plah2)"/>
+              </g>
+              <defs><marker id="plah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">정점 → 정점 셰이더(변환) → 래스터화 → 프래그먼트 셰이더(색) → 출력 합성</div>
+          </div>
+          <table>
+            <thead><tr><th>단계</th><th>입력 → 출력</th><th>하는 일</th></tr></thead>
+            <tbody>
+              <tr><td>정점 셰이더</td><td>정점 → 정점</td><td>MVP 행렬로 좌표 변환·투영</td></tr>
+              <tr><td>래스터화</td><td>삼각형 → 프래그먼트</td><td>도형을 픽셀 후보로 분해</td></tr>
+              <tr><td>프래그먼트 셰이더</td><td>프래그먼트 → 색</td><td>조명·텍스처로 최종 색 계산</td></tr>
+              <tr><td>출력 합성</td><td>색 → 화면</td><td>Z-버퍼 깊이 검사·블렌딩</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="anchor" id="zbuffer">
+          <h2>은면 제거 (Z-버퍼)</h2>
+          <p>3D 장면에서 앞 물체는 뒤 물체를 가립니다. 가려진 면(은면)을 그리지 않는 것이 <strong>은면 제거(hidden surface removal)</strong>입니다. 가장 널리 쓰는 방법이 <strong>Z-버퍼(z-buffer / depth buffer)</strong>입니다.</p>
+          <p>아이디어는 간단합니다. 화면 픽셀마다 "지금까지 그려진 것 중 가장 가까운 깊이(z)"를 따로 저장해 둡니다. 새 픽셀을 그릴 때, 그 깊이가 저장된 값보다 <strong>더 가까울 때만</strong> 색을 덮어씁니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Z-버퍼 깊이 검사">
+              <g font-family="monospace" font-size="11">
+                <!-- two overlapping quads -->
+                <rect x="60" y="50" width="90" height="70" fill="#3fb950" fill-opacity="0.7" stroke="#3fb950"/>
+                <text x="105" y="40" fill="#3fb950" text-anchor="middle">z=0.3 (가까움)</text>
+                <rect x="120" y="80" width="90" height="70" fill="#d29922" fill-opacity="0.5" stroke="#d29922"/>
+                <text x="200" y="142" fill="#d29922" text-anchor="middle" font-size="10">z=0.7 (멈)</text>
+                <text x="135" y="105" fill="#06121f" text-anchor="middle" font-size="10">앞이 이김</text>
+                <!-- z buffer table -->
+                <text x="320" y="40" fill="#8b949e" text-anchor="middle">Z-버퍼(깊이맵)</text>
+                <rect x="280" y="55" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="297" y="74" fill="#c9d1d9" text-anchor="middle">.3</text>
+                <rect x="315" y="55" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="332" y="74" fill="#c9d1d9" text-anchor="middle">.3</text>
+                <rect x="350" y="55" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="367" y="74" fill="#c9d1d9" text-anchor="middle">.7</text>
+                <rect x="280" y="85" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="297" y="104" fill="#c9d1d9" text-anchor="middle">.3</text>
+                <rect x="315" y="85" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="332" y="104" fill="#c9d1d9" text-anchor="middle">.3</text>
+                <rect x="350" y="85" width="35" height="30" fill="#161b22" stroke="#58a6ff"/><text x="367" y="104" fill="#c9d1d9" text-anchor="middle">.7</text>
+              </g>
+            </svg>
+            <div class="caption">픽셀마다 가장 가까운 z만 남긴다 → 더 가까운 초록이 노랑을 가린다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">zbuffer.js</span></div>
+            <pre><code class="language-javascript">// 픽셀 (x,y)를 깊이 z, 색 color 로 그리려 할 때
+function drawPixel(x, y, z, color) {
+  const i = y * width + x;
+  if (z < depthBuffer[i]) {     // 기존보다 더 가까우면
+    depthBuffer[i] = z;          //   깊이 갱신
+    colorBuffer[i] = color;      //   색 덮어쓰기
+  }
+  // 더 멀면 무시 → 뒤 물체가 앞 물체를 가리지 못함
+}</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="lighting-shading">
+          <h2>조명과 셰이딩</h2>
+          <p>색만 칠하면 평면처럼 밋밋합니다. <strong>빛(light)</strong>을 흉내 내야 입체감이 생깁니다. 고전적인 <strong>퐁(Phong) 조명 모델</strong>은 빛을 세 성분으로 나눕니다.</p>
+          <ul>
+            <li><strong>주변광(ambient)</strong> — 사방에서 오는 약한 기본 밝기. 완전한 그림자를 막음.</li>
+            <li><strong>난반사(diffuse)</strong> — 표면이 빛을 향한 정도에 따른 밝기. 입체감의 핵심.</li>
+            <li><strong>정반사(specular)</strong> — 매끈한 표면의 반짝이는 하이라이트.</li>
+          </ul>
+          <p>난반사의 핵심은 표면의 <strong>법선 벡터(normal)</strong>와 빛 방향의 각도입니다. 정면으로 받으면 밝고, 비스듬하면 어둡습니다(람베르트 법칙: 밝기 ∝ 코사인).</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="퐁 조명 성분">
+              <g font-family="monospace" font-size="11">
+                <!-- light -->
+                <circle cx="60" cy="35" r="10" fill="#d29922"/><text x="60" y="22" fill="#d29922" text-anchor="middle">빛</text>
+                <!-- sphere with gradient feel -->
+                <defs><radialGradient id="sg" cx="40%" cy="35%"><stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#58a6ff"/><stop offset="100%" stop-color="#0d1117"/></radialGradient></defs>
+                <circle cx="220" cy="90" r="50" fill="url(#sg)"/>
+                <line x1="70" y1="45" x2="195" y2="72" stroke="#d29922" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#lah)"/>
+                <text x="300" y="55" fill="#fff" font-size="10">정반사(하이라이트)</text>
+                <text x="300" y="90" fill="#58a6ff" font-size="10">난반사(입체감)</text>
+                <text x="300" y="125" fill="#8b949e" font-size="10">주변광(기본 밝기)</text>
+              </g>
+              <defs><marker id="lah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker></defs>
+            </svg>
+            <div class="caption">퐁 모델: 주변광 + 난반사 + 정반사를 합쳐 입체감 있는 구를 만든다</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 셰이딩 방식</div>
+            <p>조명 계산을 어디서 하느냐로 나뉩니다. <strong>플랫</strong>(면마다 하나), <strong>고러드</strong>(꼭짓점에서 계산 후 보간), <strong>퐁</strong>(픽셀마다 법선 보간 후 계산). 아래로 갈수록 부드럽지만 비용이 큽니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="texture">
+          <h2>텍스처 매핑</h2>
+          <p>모든 색을 일일이 계산하는 대신, <strong>이미지를 도형 표면에 붙이는</strong> 것이 텍스처 매핑(texture mapping)입니다. 벽돌·나무·얼굴 무늬를 단 한 장의 사진으로 표현합니다.</p>
+          <p>핵심은 <strong>UV 좌표</strong>입니다. 텍스처 이미지의 위치를 (u, v) (둘 다 0~1)로 표시하고, 3D 모델의 각 정점에 "이 정점은 텍스처의 어느 점에 대응한다"는 UV를 붙여 둡니다. 래스터화 때 이 UV를 보간해 픽셀마다 텍스처에서 색을 읽어옵니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="UV 텍스처 매핑">
+              <g font-family="monospace" font-size="11">
+                <!-- texture -->
+                <text x="70" y="20" fill="#8b949e" text-anchor="middle">텍스처 (UV)</text>
+                <rect x="25" y="30" width="90" height="90" fill="#161b22" stroke="#58a6ff"/>
+                <g stroke="#30363d"><line x1="55" y1="30" x2="55" y2="120"/><line x1="85" y1="30" x2="85" y2="120"/><line x1="25" y1="60" x2="115" y2="60"/><line x1="25" y1="90" x2="115" y2="90"/></g>
+                <text x="20" y="135" fill="#8b949e" font-size="9">(0,0)</text><text x="105" y="135" fill="#8b949e" font-size="9">(1,1)</text>
+                <!-- mapped -->
+                <text x="300" y="20" fill="#8b949e" text-anchor="middle">3D 면에 입힘</text>
+                <polygon points="230,40 380,55 350,130 250,120" fill="#1c232c" stroke="#3fb950"/>
+                <g stroke="#3fb950" stroke-opacity="0.5"><line x1="280" y1="44" x2="290" y2="124"/><line x1="320" y1="48" x2="320" y2="127"/></g>
+                <line x1="115" y1="70" x2="225" y2="80" stroke="#d29922" stroke-width="1.5" marker-end="url(#uvah)"/>
+                <text x="170" y="68" fill="#d29922" text-anchor="middle" font-size="10">UV로 대응</text>
+              </g>
+              <defs><marker id="uvah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker></defs>
+            </svg>
+            <div class="caption">UV 좌표로 텍스처의 어느 부분이 3D 면의 어디에 붙는지 정한다</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 텍스처 필터링</div>
+            <p>텍스처를 늘리거나 줄이면 픽셀이 깨지거나 어른거립니다. <strong>밉맵(mipmap)</strong>(축소판을 미리 만들어 둠)과 <strong>이중 선형 필터링</strong>으로 이를 완화합니다. 멀리 있는 텍스처가 지글거리지 않게 하는 필수 기법입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="shader-gpu">
+          <h2>셰이더와 GPU</h2>
+          <p>화면에는 수백만 픽셀이 있고, 그 각각을 매 프레임(보통 초당 60번) 계산해야 합니다. CPU 혼자서는 벅찹니다. 그래서 <strong>GPU</strong>(그래픽 처리 장치)가 등장합니다. GPU는 단순한 연산기를 수천 개 두고 <strong>모든 픽셀·정점을 동시에 병렬 처리</strong>합니다.</p>
+          <p>이 GPU 위에서 도는 작은 프로그램이 <strong>셰이더(shader)</strong>입니다. GLSL 같은 언어로 작성하며, "정점 하나를 어떻게 변환할지"(정점 셰이더), "픽셀 하나를 무슨 색으로 칠할지"(프래그먼트 셰이더)를 정의합니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">fragment.glsl</span></div>
+            <pre><code class="language-glsl">// 프래그먼트 셰이더: 픽셀 하나의 최종 색을 정한다 (GPU에서 병렬 실행)
+precision mediump float;
+
+varying vec3 vNormal;       // 보간된 법선 벡터
+uniform vec3 uLightDir;     // 빛의 방향
+
+void main() {
+  // 람베르트 난반사: 법선과 빛 방향의 코사인(내적)
+  float diff = max(dot(normalize(vNormal), normalize(uLightDir)), 0.0);
+  vec3 base = vec3(0.34, 0.65, 1.0);          // 기본 파랑
+  gl_FragColor = vec4(base * (0.2 + diff), 1.0);  // 주변광 0.2 + 난반사
+}</code></pre>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CPU와 GPU 병렬성 비교">
+              <g font-family="monospace" font-size="11">
+                <text x="80" y="20" fill="#8b949e" text-anchor="middle">CPU: 코어 몇 개</text>
+                <rect x="40" y="35" width="30" height="30" fill="#161b22" stroke="#58a6ff"/>
+                <rect x="80" y="35" width="30" height="30" fill="#161b22" stroke="#58a6ff"/>
+                <text x="320" y="20" fill="#8b949e" text-anchor="middle">GPU: 코어 수천 개</text>
+                <g fill="#161b22" stroke="#3fb950">
+                  <rect x="220" y="35" width="13" height="13"/><rect x="236" y="35" width="13" height="13"/><rect x="252" y="35" width="13" height="13"/><rect x="268" y="35" width="13" height="13"/><rect x="284" y="35" width="13" height="13"/><rect x="300" y="35" width="13" height="13"/><rect x="316" y="35" width="13" height="13"/><rect x="332" y="35" width="13" height="13"/><rect x="348" y="35" width="13" height="13"/><rect x="364" y="35" width="13" height="13"/>
+                  <rect x="220" y="51" width="13" height="13"/><rect x="236" y="51" width="13" height="13"/><rect x="252" y="51" width="13" height="13"/><rect x="268" y="51" width="13" height="13"/><rect x="284" y="51" width="13" height="13"/><rect x="300" y="51" width="13" height="13"/><rect x="316" y="51" width="13" height="13"/><rect x="332" y="51" width="13" height="13"/><rect x="348" y="51" width="13" height="13"/><rect x="364" y="51" width="13" height="13"/>
+                  <rect x="220" y="67" width="13" height="13"/><rect x="236" y="67" width="13" height="13"/><rect x="252" y="67" width="13" height="13"/><rect x="268" y="67" width="13" height="13"/><rect x="284" y="67" width="13" height="13"/><rect x="300" y="67" width="13" height="13"/><rect x="316" y="67" width="13" height="13"/><rect x="332" y="67" width="13" height="13"/><rect x="348" y="67" width="13" height="13"/><rect x="364" y="67" width="13" height="13"/>
+                </g>
+                <text x="200" y="105" fill="#8b949e" text-anchor="middle">같은 셰이더를 수천 픽셀에 동시에 → 그래서 빠르다</text>
+              </g>
+            </svg>
+            <div class="caption">GPU는 작은 코어를 대량으로 두고 픽셀·정점을 병렬 처리한다</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 한 픽셀의 여정 요약</div>
+            <p>정점 데이터 → (정점 셰이더) 변환·투영 → 래스터화로 픽셀 분해 → (프래그먼트 셰이더) 조명·텍스처로 색 결정 → Z-버퍼로 가림 판정 → 화면. 이 전체를 GPU가 초당 수십 번 반복하며 움직이는 화면을 만들어 냅니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>화면의 색은 RGB 빛의 가산 혼합이고, 이미지는 래스터(픽셀)와 벡터(수식)로 나뉜다.</li>
+            <li>이동·회전·크기 등 모든 변환은 행렬 곱셈으로 통일된다.</li>
+            <li>동차좌표(가짜 차원 1)를 쓰면 '이동'까지 행렬 하나로 표현된다.</li>
+            <li>3D를 2D 화면으로 납작하게 만드는 과정이 투영(원근/직교)이다.</li>
+            <li>3D 모델은 삼각형으로 쪼개지고, 래스터화가 이를 픽셀로 채운다.</li>
+            <li>Z-버퍼는 픽셀마다 가장 가까운 깊이만 남겨 앞 물체가 뒤를 가리게 한다.</li>
+            <li>퐁 조명(주변광+난반사+정반사)과 텍스처 매핑이 사실감을 만든다.</li>
+            <li>셰이더는 GPU에서 병렬 실행되는 작은 프로그램으로, 정점과 픽셀을 처리한다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>픽셀(Pixel)</dt><dd>화면을 이루는 색을 가진 최소 점 단위.</dd></dl>
+          <dl class="term"><dt>래스터 / 벡터</dt><dd>이미지를 픽셀 격자로 / 수식으로 표현하는 두 방식.</dd></dl>
+          <dl class="term"><dt>동차좌표</dt><dd>이동까지 행렬 곱으로 다루려고 차원 1을 덧붙인 좌표 표기.</dd></dl>
+          <dl class="term"><dt>투영(Projection)</dt><dd>3D 점을 2D 화면 좌표로 사상하는 변환(원근·직교).</dd></dl>
+          <dl class="term"><dt>래스터화</dt><dd>도형(삼각형)을 어떤 픽셀로 채울지 결정하는 과정.</dd></dl>
+          <dl class="term"><dt>Z-버퍼</dt><dd>픽셀별 깊이를 저장해 가려진 면을 제거하는 버퍼.</dd></dl>
+          <dl class="term"><dt>법선 벡터(Normal)</dt><dd>표면이 향하는 방향 벡터. 조명 밝기 계산의 기준.</dd></dl>
+          <dl class="term"><dt>UV 좌표</dt><dd>텍스처 이미지 위 위치를 0~1로 나타낸 좌표.</dd></dl>
+          <dl class="term"><dt>셰이더(Shader)</dt><dd>GPU에서 정점·픽셀을 처리하는 작은 프로그램.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

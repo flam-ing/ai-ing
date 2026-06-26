@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 50 - 회고와 다음 단계</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Progress */
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    /* Deck */
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    /* Big emoji */
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Analogy box */
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    /* Step list */
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    /* Summary grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    /* Compare */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Nav buttons */
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    /* Thumbnail overlay */
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Journey bar */
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 0.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .journey-cell {
+      padding: 1rem 0.6rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .journey-cell:hover {
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(110,231,183,0.08);
+    }
+    .journey-num { font-size: 0.7rem; color: #6ee7b7; letter-spacing: 0.2em; font-weight: 700; }
+    .journey-emoji { font-size: 1.6rem; margin: 0.3rem 0; }
+    .journey-name { font-size: 0.9rem; font-weight: 700; color: #e0e0e0; line-height: 1.3; }
+
+    /* Stamp / final */
+    .stamp {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border: 2px solid #6ee7b7;
+      color: #6ee7b7;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      transform: rotate(-2deg);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+      .journey { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 50 · Part 8 AI 이해와 활용 · FINAL</div>
+      <h1>회고와<br/>다음 단계</h1>
+      <h3>50개 세션의 끝, 그리고 새로운 시작</h3>
+      <div class="stamp">FINAL SESSION</div>
+    </div>
+
+    <!-- 2. 여기까지 오다 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎉</div>
+      <h2>여기까지 <span class="highlight">왔다</span></h2>
+      <p>
+        컴퓨터를 켜는 것부터 시작해 <span class="highlight-blue">작동하는 URL</span>을 세상에 내놓기까지 —<br/>
+        50개 세션을 함께 통과했다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        수많은 개념, 낯선 용어, 처음 보는 도구들.<br/>
+        그 모든 것을 넘어온 당신은 이제 <span class="highlight">완전히 다른 사람</span>이다.
+      </p>
+      <p style="margin-top: 1.5rem; color: #888; font-size: 1.1rem;">
+        잠깐 — 숨을 고르고, 지나온 길을 돌아보자.
+      </p>
+    </div>
+
+    <!-- 3. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 마지막 세션에서</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <div class="card-title">지도 정리</div>
+          <div class="card-desc">50개 세션을 통해 만든 나만의 학습 지도를 한 장으로 정리한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧭</div>
+          <div class="card-title">다음 방향</div>
+          <div class="card-desc">첫 프로젝트 이후 어디로 더 깊이 들어갈지 방향을 잡는다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔁</div>
+          <div class="card-title">학습 루틴</div>
+          <div class="card-desc">AI 시대에 계속 배우는 자세와 지속 가능한 학습 루틴을 설계한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 여정 회고 - 8개 파트 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <div class="big-emoji">🛣️</div>
+      <h2>지나온 <span class="highlight-blue">8개 파트</span>의 길</h2>
+      <p>가장 기초적인 하드웨어부터 AI 바이브코딩까지 — 끊김 없이 하나로 이어진다.</p>
+      <div class="journey">
+        <div class="journey-cell">
+          <div class="journey-num">PART 1</div>
+          <div class="journey-emoji">🖥️</div>
+          <div class="journey-name">컴퓨터<br/>기초</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 2</div>
+          <div class="journey-emoji">💡</div>
+          <div class="journey-name">개발자처럼<br/>생각하기</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 3</div>
+          <div class="journey-emoji">⚙️</div>
+          <div class="journey-name">운영체제<br/>기초</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 4</div>
+          <div class="journey-emoji">🛠️</div>
+          <div class="journey-name">개발<br/>환경</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 5</div>
+          <div class="journey-emoji">🌐</div>
+          <div class="journey-name">웹<br/>개발</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 6</div>
+          <div class="journey-emoji">🗄️</div>
+          <div class="journey-name">서버<br/>DB</div>
+        </div>
+        <div class="journey-cell">
+          <div class="journey-num">PART 7</div>
+          <div class="journey-emoji">☁️</div>
+          <div class="journey-name">클라우드<br/>배포</div>
+        </div>
+        <div class="journey-cell" style="border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08);">
+          <div class="journey-num">PART 8</div>
+          <div class="journey-emoji">🤖</div>
+          <div class="journey-name">AI 이해와<br/>활용</div>
+        </div>
+      </div>
+      <p style="margin-top: 1.5rem; color:#888; font-size:1rem;">이제 이 지도를 머릿속에 통째로 가진 사람이 됐다.</p>
+    </div>
+
+    <!-- 5. 스스로에게 질문 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">❓</div>
+      <h2>스스로에게 <span class="highlight-yellow">물어보자</span></h2>
+      <p>회고는 답을 내는 것이 아니라 <span class="highlight">질문을 멈추지 않는 것</span>이다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">😅</div>
+          <div class="card-title">가장 어려웠던 것</div>
+          <div class="card-desc">어느 세션이 제일 힘들었나? 왜 어려웠을까? 지금은 이해되는가?</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">😊</div>
+          <div class="card-title">가장 즐거웠던 것</div>
+          <div class="card-desc">어느 순간 "오, 이거 재미있다" 싶었나? 그 느낌이 다음 방향이다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💡</div>
+          <div class="card-title">가장 놀랐던 것</div>
+          <div class="card-desc">생각이 완전히 뒤집힌 개념은? 그 순간이 진짜 학습이다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 포트폴리오 정리 - 단계 -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <div class="big-emoji">📁</div>
+      <h2>포트폴리오 <span class="highlight">한 페이지로</span></h2>
+      <p>흩어진 결과물을 한 곳에 모으면, <span class="highlight-blue">자기 자신을 남에게 설명할 수 있는 페이지</span>가 된다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">첫 프로젝트 URL</div>
+            <div class="step-desc">Session 49에서 Vercel에 올린 <span class="highlight">라이브 URL</span> — 가장 먼저 들어가야 할 항목</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">GitHub 프로필</div>
+            <div class="step-desc">소스 코드 저장소 · 커밋 히스토리 · 프로필 README로 자기소개</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">학습 노트·블로그</div>
+            <div class="step-desc">50개 세션에서 배운 것 중 <span class="highlight-yellow">내 언어로 다시 쓴 글</span> 몇 편</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">연락 수단</div>
+            <div class="step-desc">이메일 · 링크드인 · 트위터 — 누군가가 나를 찾았을 때 연결될 통로</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 포트폴리오 구성 카드 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🎨</div>
+      <h2>포트폴리오에 꼭 <span class="highlight-blue">담을 3가지</span></h2>
+      <p>화려할 필요 없다. <span class="highlight">진짜 만들고 배웠다는 증거</span>면 충분하다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">작동하는 URL</div>
+          <div class="card-desc">클릭하면 열리는 실제 사이트. 한 줄의 자소서보다 강하다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📖</div>
+          <div class="card-title">README 스토리</div>
+          <div class="card-desc">왜 만들었는가 · 무엇을 배웠는가 · 무엇이 어려웠는가를 짧게</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📸</div>
+          <div class="card-title">스크린샷</div>
+          <div class="card-desc">모바일·데스크톱 화면 — 눈으로 바로 보이는 첫 인상</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. 다음 프로젝트 찾기 -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">🔍</div>
+      <h2>다음 프로젝트는 <span class="highlight-pink">어디서</span> 나올까?</h2>
+      <p>멀리서 찾지 말자 — <span class="highlight">일상의 불편함</span>이 가장 좋은 아이디어 저장소다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">일주일 관찰</div>
+            <div class="step-desc">내가 매일 하는 일 중 <span class="highlight-blue">불편하거나 반복되는 순간</span>을 메모</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">불편함 5개 목록</div>
+            <div class="step-desc">예: 가계부 · 운동 기록 · 책 메모 · 식재료 · 할 일 정리</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">MVP 1개 선택</div>
+            <div class="step-desc">가장 <span class="highlight-yellow">작게 만들어 내가 직접 쓸 것</span>부터 시작 — 완벽보다 완성</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Session 48 기획 프로세스</div>
+            <div class="step-desc">아이디어 → 기능 목록 → MVP 3개 → 화면 설계 → 스택 확정 — 다시 돌리기</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 계속 배우는 루틴 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">🔁</div>
+      <h2>계속 배우는 <span class="highlight">4가지 루틴</span></h2>
+      <p>벼락치기가 아니라 <span class="highlight-blue">매주 조금씩</span> — 이것이 진짜 개발자의 리듬이다.</p>
+      <div class="card-grid two-col">
+        <div class="card">
+          <div class="card-icon">🛠️</div>
+          <div class="card-title">주 1회 작은 것 만들기</div>
+          <div class="card-desc">버튼 하나라도, 컴포넌트 하나라도 — 손에서 코드가 떨어지지 않게</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">새 도구 1개 시도</div>
+          <div class="card-desc">한 달에 한 번 낯선 라이브러리·AI 도구·언어를 10분이라도</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">회고 메모 남기기</div>
+          <div class="card-desc">"이번 주에 새로 안 것 3줄" — 기록은 나중의 내게 주는 선물</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">👥</div>
+          <div class="card-title">다른 코드 읽기</div>
+          <div class="card-desc">GitHub 오픈 소스 · 동료 코드 — 내 것만 보면 성장이 멈춘다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. 커뮤니티 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">🤝</div>
+      <h2>혼자가 아닌 <span class="highlight">커뮤니티</span></h2>
+      <p>같은 길을 가는 사람들과 연결되면 <span class="highlight-blue">학습 속도가 몇 배</span>가 된다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🐙</div>
+          <div class="card-title">GitHub</div>
+          <div class="card-desc">좋아하는 프로젝트에 Star · Issue · 작은 PR 하나 — 진입 장벽 낮음</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <div class="card-title">디스코드·슬랙</div>
+          <div class="card-desc">Next.js·React 한국·바이브코딩 커뮤니티에서 초보 채널부터</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🐦</div>
+          <div class="card-title">트위터·링크드인</div>
+          <div class="card-desc">배운 것을 짧게 공유 — 매주 1개 트윗이 1년 뒤 50개 기록이 된다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📺</div>
+          <div class="card-title">유튜브·뉴스레터</div>
+          <div class="card-desc">Fireship · Theo · Vercel 블로그 — 10분 영상으로 트렌드 업데이트</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏢</div>
+          <div class="card-title">오프라인 모임</div>
+          <div class="card-desc">해커톤 · 스터디 · 밋업 — 한 번 얼굴을 본 사람은 쉽게 잊히지 않는다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">블로그 운영</div>
+          <div class="card-desc">벨로그 · 티스토리 · 개인 사이트 — 한 글이 누군가의 답이 된다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. AI 시대의 학습 (Compare) -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">🧠</div>
+      <h2>AI 시대의 <span class="highlight-yellow">학습 전략</span></h2>
+      <p>도구는 빠르게 바뀐다. <span class="highlight">기본 원리는 오래 남는다.</span></p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 이러지 말자</div>
+          <ul>
+            <li>유행하는 프레임워크만 쫓기</li>
+            <li>AI에게 받은 코드를 그대로 복붙</li>
+            <li>"왜"는 묻지 않고 "어떻게"만 외우기</li>
+            <li>튜토리얼만 반복 시청</li>
+            <li>남과 비교하며 조바심 내기</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 이렇게 하자</div>
+          <ul>
+            <li>기본 원리(이 50세션의 내용)를 반복해 되새기기</li>
+            <li>AI 코드를 한 줄씩 읽고 왜 그렇게 썼는지 묻기</li>
+            <li>모르는 건 그 자리에서 작은 예제로 확인</li>
+            <li>무언가를 직접 만들며 배우기</li>
+            <li>어제의 나보다 오늘 조금 더 나아졌는가만 보기</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. 비유 - 운전면허 학원 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🚗</div>
+      <h2>이 커리큘럼은 <span class="highlight">운전면허 학원</span>이었다</h2>
+      <p>도로 위(실제 프로젝트·커리어)는 이제부터다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🚦 면허 학원 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">이론 수업</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">Part 1~7 — <span class="highlight">컴퓨터·웹·서버·배포</span> 개념</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">기능 시험</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">Part 8 — <span class="highlight-blue">AI와 함께 직접 만들어 본</span> 첫 프로젝트</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">면허증 발급</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">Vercel URL</span> — 이제 출발해도 된다는 공식 증명</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">도로 주행</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">진짜 프로젝트 · 커리어 · 창업 — <span class="highlight-pink">지금부터가 본편</span></div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">베테랑 운전자</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value">매주 한 번이라도 <span class="highlight">핸들을 잡은 사람</span>만 된다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. 출발 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">🏁</div>
+      <h2>면허는 <span class="highlight-blue">끝이 아니라 시작</span></h2>
+      <p>
+        50세션을 마친 오늘, 당신은 <span class="highlight">면허 소지자</span>다.<br/>
+        그러나 도로 위의 실력은 <span class="highlight-yellow">면허증이 아니라 주행 시간</span>이 만든다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        완벽히 이해하지 못해도 괜찮다.<br/>
+        매주 한 번이라도 <span class="highlight">손에 코드를 쥐는 사람</span>만이 진짜 운전자가 된다.
+      </p>
+      <p style="margin-top: 1.5rem; color:#888; font-size:1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 잘 만든 것보다 <span class="highlight-blue">계속 만드는 것</span>이 훨씬 어렵고, 훨씬 귀하다.
+      </p>
+    </div>
+
+    <!-- 14. 핵심 정리 -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>이 마지막 세션의 <span class="highlight">핵심 정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">🗺️</div>
+          <div class="summary-label">여정 회고</div>
+          <div class="summary-desc">8개 파트 지도를<br/>내 언어로 되돌아본다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📁</div>
+          <div class="summary-label">포트폴리오</div>
+          <div class="summary-desc">URL · GitHub · 노트를<br/>한 페이지로 모은다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔍</div>
+          <div class="summary-label">다음 프로젝트</div>
+          <div class="summary-desc">일상의 불편함 5개 →<br/>가장 작은 MVP 1개</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔁</div>
+          <div class="summary-label">학습 루틴</div>
+          <div class="summary-desc">주 1회 만들기<br/>+ 회고 메모 습관</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🤝</div>
+          <div class="summary-label">커뮤니티</div>
+          <div class="summary-desc">GitHub · 디스코드 · 트위터<br/>연결된 사람이 더 멀리 간다</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🧠</div>
+          <div class="summary-label">AI 시대 학습</div>
+          <div class="summary-desc">도구는 바뀐다<br/>기본 원리는 남는다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 마지막 메시지 -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>그리고<br/><span class="highlight">진짜 시작</span>은 지금부터</h2>
+      <p>
+        이 커리큘럼은 여기서 마무리된다.<br/>
+        그러나 <span class="highlight-blue">학습은 첫 사용자에게 닿는 그 순간부터</span> 진짜로 시작된다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        만든 것을 누군가에게 보여주는 일,<br/>
+        <span class="highlight-yellow">그 첫 발걸음</span>을 응원한다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1rem;">
+        — 50개 세션, 8개 파트, 하나의 여정.<br/>
+        <span class="highlight">당신은 이제 AI 시대의 창작자다.</span>
+      </p>
+      <div class="stamp" style="margin-top: 1.5rem;">THANK YOU ✦ SEE YOU ON THE ROAD</div>
+    </div>
+
+  </div>
+
+  <!-- Thumbnail overlay -->
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

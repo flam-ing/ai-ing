@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 26 - 빌드 도구와 Vite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #0f0f1a; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    .progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #6ee7b7, #60a5fa); z-index: 100; transition: width 0.4s ease; }
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide { position: absolute; inset: 0; padding: 5vh 8vw; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; overflow-y: auto; }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .slide.prev { transform: translateX(-50px); }
+    .slide-number { position: absolute; top: 4vh; right: 5vw; font-size: 0.9rem; font-weight: 500; color: #666; letter-spacing: 0.2em; }
+    h1 { font-size: 3.2rem; font-weight: 900; line-height: 1.3; background: linear-gradient(135deg, #6ee7b7, #60a5fa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    h2 { font-size: 2.4rem; font-weight: 700; color: #e0e0e0; line-height: 1.35; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.6rem; font-weight: 500; color: #aaa; margin-bottom: 2rem; }
+    p { font-size: 1.3rem; color: #ccc; line-height: 1.8; max-width: 900px; }
+    p + p { margin-top: 1rem; }
+    .subtitle { font-size: 1.1rem; color: #888; letter-spacing: 0.1em; margin-bottom: 1rem; font-weight: 500; }
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+    .big-emoji { font-size: 5rem; margin-bottom: 1rem; line-height: 1; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1.5rem; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(110,231,183,0.4); background: rgba(255,255,255,0.07); }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .analogy { margin-top: 2rem; padding: 2rem 2.5rem; background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12)); border: 1px solid rgba(110,231,183,0.25); border-radius: 16px; max-width: 1000px; }
+    .analogy-title { font-size: 1rem; font-weight: 700; color: #6ee7b7; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .analogy-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; font-size: 1.15rem; }
+    .analogy-row + .analogy-row { border-top: 1px dashed rgba(255,255,255,0.1); }
+    .analogy-label { min-width: 160px; color: #888; font-weight: 500; }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .flow-item { padding: 1rem 1.6rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; font-size: 1.1rem; font-weight: 500; color: #e0e0e0; }
+    .flow-arrow { font-size: 1.6rem; color: #6ee7b7; font-weight: 700; }
+    pre.code { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.2rem; font-family: 'Menlo', monospace; font-size: 0.95rem; color: #6ee7b7; overflow-x: auto; line-height: 1.6; max-width: 900px; margin-top: 1.2rem; }
+    .step-list { margin-top: 2rem; max-width: 900px; }
+    .step { display: flex; gap: 1.2rem; padding: 1.1rem 0; align-items: flex-start; }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6ee7b7, #60a5fa); color: #0f0f1a; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+    .compare { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; max-width: 1000px; }
+    .compare-box { padding: 1.5rem; border-radius: 14px; background: rgba(255,255,255,0.04); }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .summary-card { padding: 1.8rem 1.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; text-align: center; }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .nav { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 0.6rem; z-index: 50; }
+    .nav button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,15,26,0.85); backdrop-filter: blur(10px); color: #e0e0e0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
+    .nav button:hover { background: rgba(110,231,183,0.15); border-color: #6ee7b7; color: #6ee7b7; }
+    .thumb-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); z-index: 200; display: none; flex-direction: column; padding: 2rem 3rem; overflow-y: auto; }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .thumb-header h3 { font-size: 1.3rem; color: #e0e0e0; margin-bottom: 0; }
+    .thumb-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e0e0e0; font-size: 1rem; cursor: pointer; }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .thumb-item { padding: 1.2rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 0.4rem; min-height: 140px; }
+    .thumb-item:hover { background: rgba(110,231,183,0.08); border-color: rgba(110,231,183,0.4); transform: translateY(-2px); }
+    .thumb-item.current { border-color: #6ee7b7; background: rgba(110,231,183,0.1); }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title { font-size: 1rem; font-weight: 700; color: #e0e0e0; line-height: 1.4; flex: 1; }
+    .thumb-num { font-size: 0.75rem; color: #666; letter-spacing: 0.2em; font-weight: 500; }
+    @media (max-width: 768px) { .slide { padding: 5vh 6vw; } h1 { font-size: 2.2rem; } h2 { font-size: 1.7rem; } h3 { font-size: 1.2rem; } p { font-size: 1rem; } .card-grid, .card-grid.two-col, .summary-grid, .compare { grid-template-columns: 1fr; } .big-emoji { font-size: 3.5rem; } }
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+    .chat { margin-top: 2rem; max-width: 900px; display: flex; flex-direction: column; gap: 1rem; }
+    .chat-row { display: flex; gap: 1rem; align-items: flex-start; }
+    .chat-row.ai { flex-direction: row-reverse; }
+    .chat-avatar { font-size: 1.8rem; flex-shrink: 0; }
+    .chat-bubble { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0.9rem 1.2rem; font-size: 1rem; color: #e0e0e0; line-height: 1.6; max-width: 75%; }
+    .chat-row.ai .chat-bubble { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.2); }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 26 · Part 5 웹 개발</div>
+      <h1>빌드 도구 —<br/>코드를 배포용으로 포장하기</h1>
+      <h3>번들링 · Vite · 트랜스파일 · HMR</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">번들링</div>
+          <div class="card-desc">수백 개의 JS/CSS 파일을 하나로 합쳐 왜 필요한지 이해</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <div class="card-title">Vite</div>
+          <div class="card-desc">초고속 개발 서버와 프로덕션 빌드의 역할과 장점</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">개발 vs 프로덕션</div>
+          <div class="card-desc">개발 서버(HMR)와 최적화된 배포 빌드의 차이</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 번들링이 필요한 이유 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">📦</div>
+      <h2>왜 <span class="highlight">번들링</span>이 필요한가?</h2>
+      <p>현대 웹 앱은 수백~수천 개의 파일로 이루어진다. <span class="highlight-blue">각 파일마다 HTTP 요청</span>이 발생하면 너무 느리다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">✕ 번들링 없음</div>
+          <ul>
+            <li>파일 300개 = 요청 300번</li>
+            <li>브라우저가 순서 맞춰 기다림</li>
+            <li>페이지 로딩이 매우 느림</li>
+            <li>배포 시 파일 관리 복잡</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 번들링 후</div>
+          <ul>
+            <li>파일 3개 = 요청 3번</li>
+            <li>최소한의 HTTP 요청</li>
+            <li>빠른 페이지 로딩</li>
+            <li>최적화된 배포 파일</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 번들링 과정 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>번들링 <span class="highlight">처리 과정</span></h2>
+      <div class="flow">
+        <div class="flow-item">소스 파일<br/>수백 개</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">트랜스파일<br/>(Babel)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">의존성 분석<br/>& 합치기</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">Minify<br/>압축</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">배포용<br/>최적 파일</div>
+      </div>
+      <div class="card-grid" style="margin-top: 2.5rem;">
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">트랜스파일</div>
+          <div class="card-desc">최신 JS 문법을 구형 브라우저도 이해할 수 있게 변환 (Babel)</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗜️</div>
+          <div class="card-title">Minify</div>
+          <div class="card-desc">공백·주석·긴 변수명 제거 → 파일 크기를 최소화</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✂️</div>
+          <div class="card-title">Tree Shaking</div>
+          <div class="card-desc">실제로 사용하지 않는 코드를 배포 파일에서 제거</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 심화A — Vite가 빠른 이유 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">⚡</div>
+      <h2>Vite —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>Vite가 기존 Webpack보다 개발 서버 시작이 10~100배 빠른 이유가 있다.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Webpack의 방식 — 전체 번들 후 시작</div><div class="step-desc">개발 서버를 켜기 전 수백 개의 파일을 모두 번들링해야 했다. 프로젝트가 커질수록 시작 시간이 수십 초로 늘어난다.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Vite의 방식 — 브라우저 Native ESM 활용</div><div class="step-desc">번들링 없이 브라우저가 직접 ES Module import를 처리하도록 맡긴다. 서버는 요청받은 파일만 변환해 돌려준다.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">사전 번들링 — node_modules만 미리</div><div class="step-desc">React·Lodash 같은 외부 라이브러리만 esbuild로 미리 번들. esbuild는 Go로 작성되어 Babel보다 100배 빠르다.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">HMR — 변경 파일만 교체</div><div class="step-desc">파일 저장 시 전체가 아닌 바뀐 모듈만 찾아 교체. 프로젝트 크기와 무관하게 HMR 속도가 일정하다.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. Vite (구 5번) -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <div class="big-emoji">⚡</div>
+      <h2><span class="highlight">Vite</span> — 초고속 빌드 도구</h2>
+      <p>개발 중 <span class="highlight">HMR(핫 모듈 교체)</span>, 배포 시 <span class="highlight-blue">Rollup</span>으로 최적화.</p>
+      <pre class="code"><code># Vite 프로젝트 생성
+npm create vite@latest my-app -- --template react
+
+# 개발 서버 시작 (HMR 포함)
+npm run dev
+
+# 배포용 빌드 생성
+npm run build</code></pre>
+      <div class="card-grid two-col" style="margin-top: 1.5rem;">
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <div class="card-title">개발 서버 (dev)</div>
+          <div class="card-desc">브라우저 Native ESM 활용으로 즉각 시작. HMR로 저장 즉시 반영</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">프로덕션 빌드 (build)</div>
+          <div class="card-desc">Rollup으로 최적화 번들 생성. Minify + Tree Shaking 적용</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 심화B — npm run build 과정 flow -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">📦</div>
+      <h2>빌드 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>npm run build를 실행하면 Vite(Rollup) 내부에서 이런 일들이 순서대로 벌어진다.</p>
+      <div class="flow">
+        <div class="flow-item">진입점 분석<br/><span style="font-size:0.85rem;color:#888;">main.jsx 시작</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">의존성 그래프<br/><span style="font-size:0.85rem;color:#888;">import 추적</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">트랜스파일+번들<br/><span style="font-size:0.85rem;color:#888;">JSX→JS, 파일 합치기</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">Minify+출력<br/><span style="font-size:0.85rem;color:#888;">dist/ 폴더 생성</span></div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> 결과물 dist/ 폴더의 JS·CSS 파일을 서버에 올리면 배포 완료. 소스 코드는 사라지지 않는다.</p>
+    </div>
+
+    <!-- 8. HMR (구 6번) -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">🔥</div>
+      <h2><span class="highlight">HMR</span> — 저장하면 바로 반영</h2>
+      <p>Hot Module Replacement: 페이지를 <span class="highlight-pink">새로고침 없이</span> 변경된 모듈만 교체.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">코드 수정 후 저장</div>
+            <div class="step-desc">편집기에서 파일을 저장한다</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">변경된 모듈 감지</div>
+            <div class="step-desc">Vite 개발 서버가 변경된 파일을 즉시 감지</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">해당 모듈만 교체</div>
+            <div class="step-desc">전체 페이지 새로고침 없이 변경된 컴포넌트만 교체</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">상태 유지</div>
+            <div class="step-desc">입력창 내용, 스크롤 위치 등 앱 상태가 사라지지 않음</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 실생활 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">⚡</div><div class="card-title">Vite 기반 React 프로젝트</div><div class="card-desc">국내외 대부분의 신규 React 프로젝트가 Vite를 채택. npm create vite 한 줄로 즉시 시작</div></div>
+        <div class="card"><div class="card-icon">📧</div><div class="card-title">Gmail</div><div class="card-desc">Webpack으로 번들된 대규모 SPA. 수천 개의 파일이 번들링을 거쳐 몇 개의 파일로 제공됨</div></div>
+        <div class="card"><div class="card-icon">🐌</div><div class="card-title">번들링 없이는</div><div class="card-desc">React 앱을 번들 없이 배포하면 수백 개의 네트워크 요청 → 수 초의 로딩 지연 발생</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 개발자가 파일을 직접 합치고 압축하는 수작업을 매번 반복해야 한다.</p>
+    </div>
+
+    <!-- 10. 오해 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before"><div class="compare-label">❌ 흔한 오해</div><ul><li>번들링은 선택사항이다</li><li>Vite = Webpack, 같은 것이다</li><li>npm run build를 하면 소스코드가 사라진다</li></ul></div>
+        <div class="compare-box after"><div class="compare-label">✓ 실제로는</div><ul><li>운영 환경에서 번들링은 필수 — 성능과 보안 모두 이유가 있다</li><li>Vite는 ESM+esbuild 방식, Webpack은 CommonJS+Babel — 접근법이 다르다</li><li>소스코드는 그대로, dist/ 폴더에 배포용 파일이 추가로 생성된다</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 (구 7번) -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">🧳</div>
+      <h2>번들링은<br/><span class="highlight">짐 꾸리기</span>와 같다</h2>
+      <p>여행 전 옷·책·도구를 각각 들고 다니는 대신 캐리어 하나에 담아 이동.</p>
+      <div class="analogy">
+        <div class="analogy-title">🧳 여행 짐 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">짐 하나하나</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">개별 JS/CSS 파일</span> — 따로 들고 다니면 불편</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">캐리어에 담기</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">번들링</span> — 하나로 압축해 효율적으로</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">필요 없는 짐 빼기</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">Tree Shaking</span> — 쓰지 않는 코드 제거</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">진공 압축 포장</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">Minify</span> — 파일 크기 최소화</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">Vite 프로젝트 처음 셋업하고 싶어요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">Vite 공식 사이트에 가이드가 있습니다. 어떤 프레임워크를 사용하실 건가요?</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">React + TypeScript + Vite 프로젝트 생성부터 첫 실행까지 단계별로 알려줘.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">1) npm create vite@latest my-app -- --template react-ts 실행 → 2) cd my-app && npm install → 3) npm run dev → localhost:5173 열기. 각 단계 설명과 폴더 구조도 함께 드릴게요.</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">HMR은 파일 저장 시 페이지 새로고침 없이 변경된 모듈만 교체해 반영한다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">빌드 도구는 코드를 자동으로 작성해주는 도구다</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">번들링은 수많은 파일을 몇 개로 합쳐 HTTP 요청 횟수를 줄이는 과정이다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">Vite와 Webpack은 동일한 방식으로 동작하며 성능 차이가 없다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 빌드 도구를 이해하면 프로젝트 설정 오류의 절반은 직접 해결할 수 있게 됩니다!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 (구 8번) -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📦</div>
+          <div class="summary-label">번들링</div>
+          <div class="summary-desc">여러 파일을 하나로<br/>HTTP 요청 최소화</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔄</div>
+          <div class="summary-label">트랜스파일</div>
+          <div class="summary-desc">최신 JS → 구형 브라우저<br/>호환 문법으로 변환</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🗜️</div>
+          <div class="summary-label">Minify</div>
+          <div class="summary-desc">공백·주석 제거<br/>파일 크기 최소화</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚡</div>
+          <div class="summary-label">Vite</div>
+          <div class="summary-desc">초고속 개발 서버<br/>Rollup 배포 번들</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔥</div>
+          <div class="summary-label">HMR</div>
+          <div class="summary-desc">저장 즉시 반영<br/>새로고침 불필요</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">✂️</div>
+          <div class="summary-label">Tree Shaking</div>
+          <div class="summary-desc">미사용 코드 제거<br/>번들 크기 최적화</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 (구 9번) -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 27 · 서버와 클라이언트</span></h2>
+      <p>
+        화면에 보이는 프론트엔드가 준비됐다면, 이제 데이터를 다루는 <span class="highlight-blue">백엔드</span>로 —<br/>
+        서버의 개념과 역할을 <span class="highlight">Part 6</span>에서 시작한다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 빌드 도구는 <strong>캐리어</strong> — 코드를 배포용으로 효율적으로 포장한다.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => { s.classList.remove('active', 'prev'); if (i === idx) s.classList.add('active'); else if (i < idx) s.classList.add('prev'); });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+    function toggleThumbs() { thumbOverlay.classList.toggle('open'); }
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `<div class="thumb-emoji">${emoji}</div><div class="thumb-title">${title}</div><div class="thumb-num">${num}</div>`;
+        item.addEventListener('click', () => { showSlide(i); toggleThumbs(); });
+        thumbGrid.appendChild(item);
+      });
+    }
+    function updateThumbCurrent() { thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => { el.classList.toggle('current', i === current); }); }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].screenX - touchStartX; if (Math.abs(dx) > 50) { if (dx < 0) nextSlide(); else prevSlide(); } });
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

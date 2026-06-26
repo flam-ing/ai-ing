@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 07 - 프로그래밍 개념</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      z-index: 100;
+      transition: width 0.4s ease;
+    }
+
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 5vh 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide.prev { transform: translateX(-50px); }
+
+    .slide-number {
+      position: absolute;
+      top: 4vh; right: 5vw;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #666;
+      letter-spacing: 0.2em;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.3rem;
+      color: #ccc;
+      line-height: 1.8;
+      max-width: 900px;
+    }
+    p + p { margin-top: 1rem; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+
+    .big-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,183,0.4);
+      background: rgba(255,255,255,0.07);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    .analogy {
+      margin-top: 2rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12));
+      border: 1px solid rgba(110,231,183,0.25);
+      border-radius: 16px;
+      max-width: 1000px;
+    }
+    .analogy-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .analogy-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      font-size: 1.15rem;
+    }
+    .analogy-row + .analogy-row {
+      border-top: 1px dashed rgba(255,255,255,0.1);
+    }
+    .analogy-label {
+      min-width: 150px;
+      color: #888;
+      font-weight: 500;
+    }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .flow-item {
+      padding: 1rem 1.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    .flow-arrow {
+      font-size: 1.6rem;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+
+    .step-list {
+      margin-top: 2rem;
+      max-width: 900px;
+    }
+    .step {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      align-items: flex-start;
+    }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6ee7b7, #60a5fa);
+      color: #0f0f1a;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .summary-card {
+      padding: 1.8rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .feature-card {
+      padding: 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      max-width: 1100px;
+    }
+    .compare-box {
+      padding: 1.5rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .compare-box.before .compare-title { color: #f472b6; }
+    .compare-box.after .compare-title { color: #6ee7b7; }
+    .compare-item {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    .compare-item + .compare-item { border-top: 1px dashed rgba(255,255,255,0.08); }
+    .compare-box.before .compare-item::before { content: '✕'; color: #f472b6; font-weight: 700; }
+    .compare-box.after .compare-item::before { content: '✓'; color: #6ee7b7; font-weight: 700; }
+
+    /* Code block */
+    .code-block {
+      margin-top: 1.5rem;
+      padding: 1.2rem 1.4rem;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 1rem;
+      color: #e0e0e0;
+      line-height: 1.7;
+      max-width: 900px;
+    }
+    .code-kw { color: #f472b6; font-weight: 700; }
+    .code-var { color: #60a5fa; }
+    .code-num { color: #fbbf24; }
+    .code-str { color: #6ee7b7; }
+    .code-comment { color: #666; font-style: italic; }
+
+    .nav {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      display: flex;
+      gap: 0.6rem;
+      z-index: 50;
+    }
+    .nav button {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav button:hover {
+      background: rgba(110,231,183,0.15);
+      border-color: #6ee7b7;
+      color: #6ee7b7;
+    }
+
+    .thumb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,15,26,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .thumb-header h3 {
+      font-size: 1.3rem;
+      color: #e0e0e0;
+      margin-bottom: 0;
+    }
+    .thumb-close {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #e0e0e0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .thumb-item {
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 140px;
+    }
+    .thumb-item:hover {
+      background: rgba(110,231,183,0.08);
+      border-color: rgba(110,231,183,0.4);
+      transform: translateY(-2px);
+    }
+    .thumb-item.current {
+      border-color: #6ee7b7;
+      background: rgba(110,231,183,0.1);
+    }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e0e0e0;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .thumb-num {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* Compare label */
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+
+    /* Chat */
+    .chat {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 900px;
+    }
+    .chat-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .chat-row.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .chat-row.user .chat-avatar { background: rgba(96,165,250,0.2); }
+    .chat-row.ai .chat-avatar { background: rgba(110,231,183,0.2); }
+    .chat-bubble {
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      max-width: 70%;
+      background: rgba(255,255,255,0.06);
+      color: #e0e0e0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .chat-row.user .chat-bubble { background: rgba(96,165,250,0.15); }
+    .chat-row.ai .chat-bubble { background: rgba(110,231,183,0.1); }
+
+    @media (max-width: 768px) {
+      .slide { padding: 5vh 6vw; }
+      h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.7rem; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .compare {
+        grid-template-columns: 1fr;
+      }
+      .card-grid.two-col { grid-template-columns: 1fr; }
+      .big-emoji { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 07 · Part 2 개발자처럼 생각하기</div>
+      <h1>프로그래밍<br/>개념</h1>
+      <h3>모든 코드의 뼈대 — 변수·조건문·반복문</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">변수</div>
+          <div class="card-desc">값을 저장하는 "이름 있는 상자"를 설명한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔀</div>
+          <div class="card-title">조건문 · 반복문</div>
+          <div class="card-desc">프로그램이 분기하고 반복하는 흐름을 이해한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🐞</div>
+          <div class="card-title">버그</div>
+          <div class="card-desc">문법·실행·논리 오류를 구분한다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">⚙️</div>
+      <h2>프로그램은 <span class="highlight">순서</span> · <span class="highlight-blue">조건</span> · <span class="highlight-yellow">반복</span>뿐</h2>
+      <p>
+        어떤 복잡한 앱도 결국 <span class="highlight">위에서 아래로 실행</span>되며,<br/>
+        중간중간 <span class="highlight-blue">"만약 ~라면"</span> 분기하고 <span class="highlight-yellow">"같은 일 100번"</span> 반복한다.
+      </p>
+      <p style="margin-top:1.5rem;">
+        이 세 가지만 익히면 <span class="highlight-pink">어떤 언어든</span> 금방 읽을 수 있다.
+      </p>
+    </div>
+
+    <!-- 4. 변수 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>변수 — <span class="highlight">이름 있는 상자</span></h2>
+      <p>데이터를 담아두고, 나중에 이름으로 꺼내 쓴다. 값은 언제든 바꿀 수 있다.</p>
+      <div class="code-block">
+<span class="code-comment"># 값을 저장</span><br/>
+<span class="code-var">age</span> = <span class="code-num">25</span><br/>
+<span class="code-var">name</span> = <span class="code-str">"홍길동"</span><br/>
+<br/>
+<span class="code-comment"># 값을 변경</span><br/>
+<span class="code-var">age</span> = <span class="code-var">age</span> + <span class="code-num">1</span>   <span class="code-comment"># 이제 26</span><br/>
+<br/>
+<span class="code-comment"># 꺼내서 사용</span><br/>
+<span class="code-kw">print</span>(<span class="code-var">name</span>, <span class="code-var">age</span>)   <span class="code-comment"># 홍길동 26</span>
+      </div>
+      <p style="margin-top:1.5rem;">
+        <span class="highlight-yellow">자료형:</span> 숫자(int), 문자열(str), 참/거짓(bool), 목록(list) 등 상자의 <span class="highlight">종류</span>도 다양하다.
+      </p>
+    </div>
+
+    <!-- 5. ★ 변수·조건·반복 심화 — 실제 프로그램 속에서 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">⚙️</div>
+      <h2>변수·조건·반복 —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>실제 앱을 만들 때 세 개념이 어떻게 함께 쓰이는지 로그인 처리를 예시로 보자.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">변수: 사용자가 입력한 값을 담는다</div>
+            <div class="step-desc">email = "user@example.com", password = "1234". 입력을 <span class="highlight">변수</span>에 담아야 다음 단계로 전달할 수 있다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">조건문: 맞는지 틀린지 분기한다</div>
+            <div class="step-desc">if email == DB_이메일 and password == DB_비밀번호: → 로그인 성공. else: → 오류 메시지. <span class="highlight-blue">분기</span>가 없으면 모든 입력을 같이 처리해야 한다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">반복문: 3회 실패 시 잠금 처리</div>
+            <div class="step-desc">fail_count를 변수로 두고, 실패할 때마다 +1. if fail_count &gt;= 3: 계정 잠금. <span class="highlight-yellow">반복</span> + 변수 + 조건이 함께 작동한다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">어떤 앱도 이 세 가지의 조합</div>
+            <div class="step-desc">카카오톡 메시지 전송, 쇼핑 장바구니, 지도 경로 — 복잡해 보여도 변수·조건·반복의 <span class="highlight-pink">조합</span>이다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 조건문 & 반복문 (기존 슬라이드 05) -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <h2>조건문 <span class="highlight">vs</span> 반복문</h2>
+      <p>흐름을 <span class="highlight-blue">갈라치거나</span>, <span class="highlight-yellow">같은 동작을 반복</span>시키는 두 무기.</p>
+      <div class="compare">
+        <div class="compare-box before" style="border-color: rgba(96,165,250,0.4);">
+          <div class="compare-title" style="color:#60a5fa;">🔀 조건문 if / else</div>
+          <div class="compare-item" style="color:#ccc;">"만약 ~라면 A, 아니면 B"</div>
+          <div class="compare-item" style="color:#ccc;">if age &gt;= 18: 성인 · else: 미성년</div>
+          <div class="compare-item" style="color:#ccc;">로그인 성공/실패 분기</div>
+          <div class="compare-item" style="color:#ccc;">사용자 권한 체크</div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title">🔁 반복문 for / while</div>
+          <div class="compare-item">같은 동작을 여러 번</div>
+          <div class="compare-item">for name in names: 인사하기</div>
+          <div class="compare-item">100명 이름을 일일이 안 써도 됨</div>
+          <div class="compare-item">목록·파일 한 줄씩 처리</div>
+        </div>
+      </div>
+      <style>
+        .compare-box.before .compare-item::before { content: '•'; color:#60a5fa; }
+      </style>
+    </div>
+
+    <!-- 7. ★ 함수의 역할 심화 -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">🛠️</div>
+      <h2>함수가 없을 때 vs 있을 때 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>결제 처리 코드를 3곳에서 쓸 때 함수의 차이가 극명하게 드러난다.</p>
+      <div class="flow">
+        <div class="flow-item" style="border-color:rgba(244,114,182,0.5);">코드 복붙 A<br/><span style="font-size:0.8rem;color:#888;">장바구니 결제</span></div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-item" style="border-color:rgba(244,114,182,0.5);">코드 복붙 B<br/><span style="font-size:0.8rem;color:#888;">정기구독 결제</span></div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-item" style="border-color:rgba(244,114,182,0.5);">코드 복붙 C<br/><span style="font-size:0.8rem;color:#888;">앱내결제</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item" style="border-color:rgba(110,231,183,0.5); background:rgba(110,231,183,0.08);">버그 발생 시<br/><span style="font-size:0.8rem;color:#888;">3곳 모두 수정!</span></div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> process_payment() 함수 하나로 만들면 수정은 한 곳만, 테스트도 한 번만 하면 된다.</p>
+    </div>
+
+    <!-- 8. 버그의 종류 (기존 슬라이드 06) -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">🐞</div>
+      <h2>버그의 <span class="highlight-pink">3가지</span> 얼굴</h2>
+      <p>코드가 예상대로 안 움직일 때, 원인은 보통 이 셋 중 하나다.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">문법 오류 (Syntax Error)</div>
+            <div class="step-desc"><span class="highlight-pink">실행 자체가 안 된다.</span> 괄호 안 닫음, 쉼표 빠짐 같은 문법 실수. 가장 찾기 쉽다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">실행 오류 (Runtime Error)</div>
+            <div class="step-desc"><span class="highlight-yellow">실행 중에 멈춘다.</span> 0으로 나누기, 없는 파일 읽기 — 상황에 따라 터진다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">논리 오류 (Logic Error)</div>
+            <div class="step-desc"><span class="highlight-blue">실행은 잘 된다. 결과가 틀릴 뿐.</span> 덧셈을 해야 할 곳에 곱셈 — 가장 찾기 어렵다.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">디버깅</div>
+            <div class="step-desc">오류 메시지 읽기 → print로 중간값 확인 → AI에게 코드 붙여넣기. 이 순서면 대부분 해결된다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. ★ 실생활 연결 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <div class="card-title">카카오톡 자동응답</div>
+          <div class="card-desc">if 메시지 == "안녕": "안녕하세요!" 응답. 조건문이 없으면 모든 메시지에 같은 응답만 가능하다.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📸</div>
+          <div class="card-title">인스타그램 피드 로딩</div>
+          <div class="card-desc">for post in posts: 각 게시물 화면에 그리기. 반복문 없이 500개 게시물을 코드로 직접 쓰는 건 불가능하다.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💳</div>
+          <div class="card-title">결제 처리</div>
+          <div class="card-desc">결제 함수 하나를 장바구니·정기구독·앱내결제 모두에서 호출. 함수 없이는 같은 코드를 10번 복붙해야 한다.</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 어떤 앱도 만들 수 없다 — 이게 프로그래밍의 핵심이다</p>
+    </div>
+
+    <!-- 10. ★ 오해 바로잡기 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before">
+          <div class="compare-label">❌ 흔한 오해</div>
+          <ul>
+            <li>프로그래밍 = 수학을 잘해야 한다</li>
+            <li>버그 = 오타 (코드를 잘못 친 것)</li>
+            <li>if문 없이는 프로그램을 못 만든다</li>
+          </ul>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-label">✓ 실제로는</div>
+          <ul>
+            <li>프로그래밍은 논리적 사고가 핵심. 사칙연산 이상의 수학은 특정 분야에서만 필요하다</li>
+            <li>버그는 논리 오류가 더 많다. 실행은 되지만 결과가 틀리는 경우가 가장 찾기 어렵다</li>
+            <li>조건 없이도 순서대로만 실행하는 스크립트는 충분히 유용하다</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 (기존 슬라이드 07) -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">🍳</div>
+      <h2>프로그램은 <span class="highlight">요리 레시피</span>다</h2>
+      <p>어려운 개념도 익숙한 것에 빗대면 쉬워진다.</p>
+      <div class="analogy">
+        <div class="analogy-title">📖 레시피 속 프로그래밍</div>
+        <div class="analogy-row">
+          <div class="analogy-label">재료</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">변수</span> — 양파 1개, 물 500ml</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">"간이 맞으면 불 끄기"</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">조건문</span> — if 조건: ...</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">"3분 동안 저어라"</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">반복문</span> — while 시간&lt;3분: 저음</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">음식이 탔다</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">버그</span> — 레시피대로 했는데 결과가 이상</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. ★ AI 도구 연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">로그인 기능 만들고 싶어요</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">어떤 언어로 만드실 건가요? 더 자세히 알려주세요.</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">JavaScript로 이메일과 비밀번호를 입력받아 유효성 검증하는 함수를 작성해줘. 비밀번호는 8자 이상이어야 해</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">function validateLogin(email, password) { if (!email.includes('@')) return '이메일 형식 오류'; if (password.length &lt; 8) return '비밀번호는 8자 이상'; return '검증 통과'; } — 이렇게 조건문과 함수를 결합하세요.</div></div>
+      </div>
+    </div>
+
+    <!-- 13. ★ 확인 체크 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color: rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">변수는 값을 담는 이름 있는 상자다. 언제든 값을 바꿀 수 있다.</div></div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">if문 없이는 프로그램을 만들 수 없다. (조건 없이도 유용한 스크립트를 만들 수 있다)</div></div>
+        <div class="card" style="border-color: rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">버그에는 문법·실행·논리 오류 세 종류가 있다. 논리 오류가 가장 찾기 어렵다.</div></div>
+        <div class="card" style="border-color: rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">프로그래밍을 잘하려면 수학을 잘해야 한다. (논리적 사고력이 훨씬 더 중요하다)</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 변수·조건·반복을 이해했다면 어떤 언어든 코드를 읽기 시작할 수 있어요!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 (기존 슬라이드 08) -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📦</div>
+          <div class="summary-label">변수</div>
+          <div class="summary-desc">이름 있는 상자 —<br/>값 저장 & 수정</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔀</div>
+          <div class="summary-label">조건문</div>
+          <div class="summary-desc">if / else —<br/>상황별 다른 실행</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔁</div>
+          <div class="summary-label">반복문</div>
+          <div class="summary-desc">for / while —<br/>같은 일을 반복</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">⚙️</div>
+          <div class="summary-label">실행 흐름</div>
+          <div class="summary-desc">위에서 아래로 +<br/>분기 + 반복</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🐞</div>
+          <div class="summary-label">버그</div>
+          <div class="summary-desc">문법·실행·논리 오류<br/>3가지 종류</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔧</div>
+          <div class="summary-label">디버깅</div>
+          <div class="summary-desc">메시지 읽기 → print →<br/>AI에게 묻기</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 (기존 슬라이드 09) -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 08 · 함수와 추상화</span></h2>
+      <p>
+        반복되는 코드를 묶어 <span class="highlight-blue">재사용</span>하는 방법.<br/>
+        <span class="highlight-yellow">함수</span>를 만들면 복잡한 내부를 숨기고 <span class="highlight">이름 하나로</span> 불러 쓸 수 있다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 어떤 복잡한 프로그램도 결국 <strong>변수 · 조건 · 반복</strong>의 조합이다.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === idx) s.classList.add('active');
+        else if (i < idx) s.classList.add('prev');
+      });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function toggleThumbs() {
+      thumbOverlay.classList.toggle('open');
+    }
+
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `
+          <div class="thumb-emoji">${emoji}</div>
+          <div class="thumb-title">${title}</div>
+          <div class="thumb-num">${num}</div>
+        `;
+        item.addEventListener('click', () => {
+          showSlide(i);
+          toggleThumbs();
+        });
+        thumbGrid.appendChild(item);
+      });
+    }
+
+    function updateThumbCurrent() {
+      thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => {
+        el.classList.toggle('current', i === current);
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

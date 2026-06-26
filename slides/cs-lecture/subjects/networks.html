@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컴퓨터 네트워크 · CS 4년 커리큘럼</title>
+  <meta name="description" content="OSI·TCP/IP 계층·IP 주소·TCP/UDP·HTTP·DNS·소켓 통신을 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="networks" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">3학년 시스템 · 컴퓨터 네트워크</span>
+        <h1 class="page-title">컴퓨터 네트워크</h1>
+        <p class="page-lead">멀리 떨어진 컴퓨터들이 <strong>어떻게 서로 대화하는가</strong>. 메시지 한 통이 지구 반대편 서버까지 닿는 여정을 따라갑니다.</p>
+
+        <section class="anchor" id="what">
+          <h2>네트워크란?</h2>
+          <p>컴퓨터 네트워크(network)는 여러 컴퓨터가 <strong>데이터를 주고받도록 연결된 시스템</strong>입니다. 집 안의 와이파이부터 전 세계를 잇는 인터넷까지 모두 네트워크입니다.</p>
+          <p>비유하면 네트워크는 <strong>우편 시스템</strong>입니다. 편지(데이터)를 봉투에 담아(패킷) 주소(IP)를 적으면, 여러 우체국(라우터)을 거쳐 받는 사람에게 배달됩니다. 도중에 길이 막히면 다른 경로로 돌아가기도 합니다.</p>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>OSI·TCP/IP 계층 모델 · IP 주소와 라우팅 · TCP와 UDP(3-way handshake) · HTTP와 DNS · 소켓 통신까지, 데이터가 흐르는 전 과정을 다룹니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="layers">
+          <h2>계층 모델: OSI와 TCP/IP</h2>
+          <p>네트워크는 복잡한 일을 <strong>계층(layer)</strong>으로 나눠 처리합니다. 각 층은 자기 일만 하고 위아래 층과 약속된 방식으로만 소통합니다. 덕분에 한 층을 바꿔도(예: 와이파이 → 이더넷) 다른 층은 그대로 둘 수 있습니다.</p>
+          <p>학문적 표준은 7계층 <strong>OSI 모델</strong>이고, 실제 인터넷이 쓰는 모델은 더 단순한 4계층 <strong>TCP/IP 모델</strong>입니다. 데이터는 보낼 때 위에서 아래로 내려가며 헤더가 붙고(캡슐화), 받을 때 아래에서 위로 올라가며 벗겨집니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TCP/IP 계층 스택">
+              <g font-family="monospace" font-size="12">
+                <rect x="60" y="20" width="240" height="40" fill="#161b22" stroke="#58a6ff"/><text x="180" y="44" fill="#c9d1d9" text-anchor="middle">응용 계층 (HTTP, DNS)</text>
+                <rect x="60" y="62" width="240" height="40" fill="#161b22" stroke="#3fb950"/><text x="180" y="86" fill="#c9d1d9" text-anchor="middle">전송 계층 (TCP, UDP)</text>
+                <rect x="60" y="104" width="240" height="40" fill="#161b22" stroke="#d29922"/><text x="180" y="128" fill="#c9d1d9" text-anchor="middle">인터넷 계층 (IP)</text>
+                <rect x="60" y="146" width="240" height="40" fill="#161b22" stroke="#bc8cff"/><text x="180" y="170" fill="#c9d1d9" text-anchor="middle">네트워크 접근 (이더넷)</text>
+                <line x1="180" y1="190" x2="180" y2="218" stroke="#8b949e" stroke-width="2" marker-end="url(#ahl)"/>
+                <text x="195" y="210" fill="#8b949e">전송(캡슐화)</text>
+                <line x1="30" y1="190" x2="30" y2="20" stroke="#8b949e" stroke-width="2" marker-end="url(#ahl)"/>
+                <text x="44" y="120" fill="#8b949e" transform="rotate(-90 44 120)">수신(역캡슐화)</text>
+              </g>
+              <defs><marker id="ahl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">TCP/IP 4계층 — 보낼 땐 아래로, 받을 땐 위로</div>
+          </div>
+          <table>
+            <thead><tr><th>계층</th><th>역할</th><th>대표 단위</th></tr></thead>
+            <tbody>
+              <tr><td>응용</td><td>실제 서비스(웹·메일)</td><td>메시지</td></tr>
+              <tr><td>전송</td><td>프로세스 간 신뢰성·순서</td><td>세그먼트</td></tr>
+              <tr><td>인터넷</td><td>주소 지정·경로 선택</td><td>패킷</td></tr>
+              <tr><td>네트워크 접근</td><td>물리 매체로 전송</td><td>프레임</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="anchor" id="ip">
+          <h2>IP 주소와 라우팅</h2>
+          <p><strong>IP 주소(IP address)</strong>는 네트워크상의 컴퓨터를 식별하는 주소입니다. 우편의 집 주소와 같습니다. 지금 널리 쓰는 IPv4는 <code>192.168.0.1</code>처럼 점으로 구분한 네 개의 숫자(각 0~255)로 이뤄집니다.</p>
+          <p><strong>라우팅(routing)</strong>은 출발지에서 목적지까지 패킷이 갈 <strong>경로를 찾는 과정</strong>입니다. 라우터(router)는 패킷의 목적지 IP를 보고 "다음으로 어느 우체국에 넘길지"를 결정하며, 여러 라우터를 거쳐(hop) 목적지에 도달합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="라우팅 경로">
+              <g font-family="monospace" font-size="11">
+                <rect x="15" y="50" width="70" height="34" fill="#161b22" stroke="#58a6ff"/><text x="50" y="71" fill="#c9d1d9" text-anchor="middle">내 PC</text>
+                <circle cx="160" cy="40" r="22" fill="#161b22" stroke="#d29922"/><text x="160" y="44" fill="#c9d1d9" text-anchor="middle">R1</text>
+                <circle cx="250" cy="90" r="22" fill="#161b22" stroke="#d29922"/><text x="250" y="94" fill="#c9d1d9" text-anchor="middle">R2</text>
+                <rect x="320" y="50" width="70" height="34" fill="#161b22" stroke="#3fb950"/><text x="355" y="71" fill="#c9d1d9" text-anchor="middle">서버</text>
+                <line x1="85" y1="62" x2="142" y2="48" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahi)"/>
+                <line x1="178" y1="52" x2="232" y2="80" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahi)"/>
+                <line x1="270" y1="80" x2="318" y2="65" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahi)"/>
+                <text x="200" y="120" fill="#8b949e" text-anchor="middle">패킷이 라우터를 거쳐(hop) 목적지로</text>
+              </g>
+              <defs><marker id="ahi" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">하나의 직선이 아니라 라우터들을 건너뛰며 목적지에 도달</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 IPv4와 IPv6</div>
+            <p>IPv4 주소는 약 43억 개뿐이라 고갈되고 있습니다. 그래서 사실상 무한대인 IPv6(<code>2001:db8::1</code>)가 도입되었고, 공인 IP 하나를 여러 기기가 나눠 쓰는 NAT 기술도 함께 쓰입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="tcp-udp">
+          <h2>TCP vs UDP</h2>
+          <p>전송 계층에는 성격이 다른 두 프로토콜이 있습니다. <strong>TCP</strong>는 신뢰성을, <strong>UDP</strong>는 속도를 우선합니다.</p>
+          <ul>
+            <li><strong>TCP(Transmission Control Protocol)</strong> — 연결을 먼저 맺고, 순서를 보장하며, 빠진 데이터는 다시 보냅니다. 등기 우편처럼 확실하지만 느립니다. 웹·메일·파일 전송에 사용.</li>
+            <li><strong>UDP(User Datagram Protocol)</strong> — 연결 없이 일단 보냅니다. 일부가 사라져도 신경 쓰지 않아 빠릅니다. 실시간 영상·게임·음성 통화에 사용.</li>
+          </ul>
+          <p>TCP는 데이터를 주고받기 전에 <strong>3-way handshake</strong>로 연결을 엽니다. 전화 걸기 전 "여보세요? — 네 들려요 — 좋아요 시작합시다" 하고 확인하는 것과 같습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TCP 3-way handshake">
+              <g font-family="monospace" font-size="12">
+                <text x="70" y="20" fill="#8b949e" text-anchor="middle">클라이언트</text>
+                <text x="290" y="20" fill="#8b949e" text-anchor="middle">서버</text>
+                <line x1="70" y1="28" x2="70" y2="165" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="290" y1="28" x2="290" y2="165" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="70" y1="50" x2="290" y2="70" stroke="#58a6ff" stroke-width="2" marker-end="url(#aht)"/>
+                <text x="180" y="48" fill="#58a6ff" text-anchor="middle">① SYN</text>
+                <line x1="290" y1="90" x2="70" y2="110" stroke="#3fb950" stroke-width="2" marker-end="url(#aht)"/>
+                <text x="180" y="92" fill="#3fb950" text-anchor="middle">② SYN + ACK</text>
+                <line x1="70" y1="130" x2="290" y2="150" stroke="#58a6ff" stroke-width="2" marker-end="url(#aht)"/>
+                <text x="180" y="130" fill="#58a6ff" text-anchor="middle">③ ACK</text>
+              </g>
+              <defs><marker id="aht" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c9d1d9"/></marker></defs>
+            </svg>
+            <div class="caption">SYN → SYN+ACK → ACK 세 번의 인사로 신뢰 연결을 수립</div>
+          </div>
+          <table>
+            <thead><tr><th>항목</th><th>TCP</th><th>UDP</th></tr></thead>
+            <tbody>
+              <tr><td>연결</td><td>연결형(handshake)</td><td>비연결형</td></tr>
+              <tr><td>신뢰성</td><td>보장(재전송)</td><td>보장 안 함</td></tr>
+              <tr><td>순서</td><td>순서 보장</td><td>순서 보장 안 함</td></tr>
+              <tr><td>속도</td><td>상대적으로 느림</td><td>빠름</td></tr>
+              <tr><td>용도</td><td>웹·메일·파일</td><td>스트리밍·게임</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="anchor" id="http-dns">
+          <h2>HTTP와 DNS</h2>
+          <p><strong>HTTP(HyperText Transfer Protocol)</strong>는 웹 브라우저와 서버가 대화하는 약속입니다. 클라이언트가 <strong>요청(request)</strong>을 보내면 서버가 <strong>응답(response)</strong>을 돌려주는 단순한 구조입니다.</p>
+          <p>그런데 우리는 <code>142.250.x.x</code> 같은 IP 대신 <code>google.com</code> 같은 이름을 씁니다. 이 이름을 IP로 바꿔주는 인터넷의 전화번호부가 <strong>DNS(Domain Name System)</strong>입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HTTP 요청-응답">
+              <g font-family="monospace" font-size="12">
+                <rect x="20" y="45" width="100" height="44" fill="#161b22" stroke="#58a6ff"/><text x="70" y="72" fill="#c9d1d9" text-anchor="middle">브라우저</text>
+                <rect x="280" y="45" width="100" height="44" fill="#161b22" stroke="#3fb950"/><text x="330" y="72" fill="#c9d1d9" text-anchor="middle">웹 서버</text>
+                <line x1="120" y1="58" x2="280" y2="58" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahh)"/>
+                <text x="200" y="50" fill="#58a6ff" text-anchor="middle">GET /index.html</text>
+                <line x1="280" y1="78" x2="120" y2="78" stroke="#3fb950" stroke-width="2" marker-end="url(#ahh)"/>
+                <text x="200" y="98" fill="#3fb950" text-anchor="middle">200 OK + HTML</text>
+              </g>
+              <defs><marker id="ahh" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c9d1d9"/></marker></defs>
+            </svg>
+            <div class="caption">브라우저가 요청을 보내면 서버가 상태 코드와 함께 응답</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">http_request.py</span></div>
+            <pre><code class="language-python">import urllib.request
+
+# 이름(URL)을 주면 내부적으로 DNS가 IP로 변환 → HTTP 요청
+with urllib.request.urlopen("https://example.com") as res:
+    print(res.status)          # 200  — 상태 코드
+    print(res.headers["Content-Type"])  # text/html
+    body = res.read()          # 응답 본문(HTML)</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ HTTP 상태 코드</div>
+            <p>응답 첫 줄의 숫자는 결과를 알려줍니다. <strong>2xx</strong>(성공), <strong>3xx</strong>(리다이렉트), <strong>4xx</strong>(클라이언트 잘못, 예: 404 없음), <strong>5xx</strong>(서버 잘못, 예: 500 오류). 디버깅의 첫 단서입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="socket">
+          <h2>소켓 통신</h2>
+          <p><strong>소켓(socket)</strong>은 프로그램이 네트워크로 데이터를 주고받기 위해 여는 <strong>통신 창구</strong>입니다. IP 주소(어느 컴퓨터)와 포트 번호(그 안의 어느 프로그램)를 합쳐 통신 상대를 특정합니다. 아파트로 치면 IP는 건물 주소, <strong>포트(port)</strong>는 호수입니다.</p>
+          <p>웹 서버, 채팅, 게임 서버 등 모든 네트워크 프로그램은 결국 소켓 위에서 동작합니다. 서버는 특정 포트에서 연결을 기다리고(listen), 클라이언트가 접속(connect)하면 데이터를 주고받습니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">tcp_server.py</span></div>
+            <pre><code class="language-python">import socket
+
+# TCP 소켓 생성 → 포트 9000에서 연결 대기
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(("0.0.0.0", 9000))   # IP + 포트에 묶음
+server.listen()                  # 연결 요청을 기다림
+
+conn, addr = server.accept()     # 클라이언트 접속 수락
+data = conn.recv(1024)           # 데이터 수신
+conn.sendall(b"received: " + data)  # 응답 전송
+conn.close()</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">tcp_client.py</span></div>
+            <pre><code class="language-python">import socket
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(("127.0.0.1", 9000))  # 서버 IP + 포트로 접속
+client.sendall(b"hello")             # 데이터 전송
+print(client.recv(1024))             # b"received: hello"
+client.close()</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 잘 알려진 포트</div>
+            <p>포트 번호 중 일부는 용도가 약속돼 있습니다. <strong>80</strong>(HTTP), <strong>443</strong>(HTTPS), <strong>22</strong>(SSH), <strong>53</strong>(DNS). 브라우저에서 주소만 쳐도 자동으로 80/443 포트로 접속합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="subnet">
+          <h2>서브넷과 CIDR</h2>
+          <p>IP 주소는 사실 두 부분으로 나뉩니다. <strong>네트워크 부분</strong>(어느 동네인가)과 <strong>호스트 부분</strong>(그 동네의 몇 번째 집인가)입니다. 큰 IP 덩어리를 작은 단위로 쪼개 관리하는 것이 <strong>서브넷팅(subnetting)</strong>이고, 어디까지가 네트워크 부분인지 알려주는 것이 <strong>서브넷 마스크</strong>입니다.</p>
+          <p><strong>CIDR 표기법</strong>은 <code>192.168.10.0/24</code>처럼 슬래시 뒤 숫자로 "앞에서부터 몇 비트가 네트워크 부분인지"를 적습니다. <code>/24</code>는 앞 24비트가 네트워크, 나머지 8비트가 호스트라는 뜻이라, 한 네트워크에 약 254개의 주소를 쓸 수 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="서브넷 마스크 비트 구조">
+              <g font-family="monospace" font-size="11">
+                <text x="220" y="18" fill="#8b949e" text-anchor="middle">192.168.10.42 /24</text>
+                <rect x="20" y="35" width="90" height="34" fill="#1c232c" stroke="#58a6ff"/><text x="65" y="56" fill="#c9d1d9" text-anchor="middle">192</text>
+                <rect x="110" y="35" width="90" height="34" fill="#1c232c" stroke="#58a6ff"/><text x="155" y="56" fill="#c9d1d9" text-anchor="middle">168</text>
+                <rect x="200" y="35" width="90" height="34" fill="#1c232c" stroke="#58a6ff"/><text x="245" y="56" fill="#c9d1d9" text-anchor="middle">10</text>
+                <rect x="290" y="35" width="90" height="34" fill="#161b22" stroke="#3fb950"/><text x="335" y="56" fill="#c9d1d9" text-anchor="middle">42</text>
+                <line x1="20" y1="80" x2="290" y2="80" stroke="#58a6ff" stroke-width="2"/>
+                <text x="155" y="98" fill="#58a6ff" text-anchor="middle">네트워크 부분 (24비트)</text>
+                <line x1="290" y1="80" x2="380" y2="80" stroke="#3fb950" stroke-width="2"/>
+                <text x="335" y="98" fill="#3fb950" text-anchor="middle">호스트 (8비트)</text>
+                <text x="220" y="128" fill="#8b949e" text-anchor="middle">마스크 255.255.255.0 → 같은 네트워크: 192.168.10.0 ~ .255</text>
+              </g>
+            </svg>
+            <div class="caption">/24 = 앞 3칸이 네트워크, 마지막 칸이 호스트. 같은 네트워크끼리는 라우터 없이 직접 통신</div>
+          </div>
+          <table>
+            <thead><tr><th>CIDR</th><th>서브넷 마스크</th><th>사용 가능 호스트 수</th></tr></thead>
+            <tbody>
+              <tr><td>/24</td><td>255.255.255.0</td><td>약 254개</td></tr>
+              <tr><td>/25</td><td>255.255.255.128</td><td>약 126개</td></tr>
+              <tr><td>/26</td><td>255.255.255.192</td><td>약 62개</td></tr>
+              <tr><td>/30</td><td>255.255.255.252</td><td>2개(라우터 연결용)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">subnet.py</span></div>
+            <pre><code class="language-python">import ipaddress
+
+net = ipaddress.ip_network("192.168.10.0/24")
+print(net.netmask)              # 255.255.255.0
+print(net.num_addresses)        # 256 (호스트는 254개 사용 가능)
+
+# 두 IP가 같은 네트워크에 속하는지 확인
+a = ipaddress.ip_address("192.168.10.42")
+b = ipaddress.ip_address("192.168.10.200")
+print(a in net and b in net)    # True — 같은 서브넷</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 비트 수가 작을수록 더 크다</div>
+            <p><code>/24</code>보다 <code>/16</code>이 더 큰 네트워크입니다. 네트워크 부분 비트가 적을수록 호스트에 줄 비트가 많아지기 때문입니다. <code>/16</code>은 약 6만 5천 개의 주소를 담습니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="nat">
+          <h2>NAT (네트워크 주소 변환)</h2>
+          <p>IPv4 주소는 부족한데 집·회사에는 기기가 수십 개입니다. <strong>NAT(Network Address Translation)</strong>는 이 문제를 해결합니다. 내부 기기들은 <strong>사설 IP</strong>(<code>192.168.x.x</code> 등)를 쓰고, 인터넷으로 나갈 때만 공유기(라우터)가 <strong>공인 IP 하나로 바꿔치기</strong>합니다. 회사 대표 전화번호 하나로 내선 여러 개를 운영하는 것과 같습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NAT 주소 변환">
+              <g font-family="monospace" font-size="10">
+                <rect x="15" y="30" width="95" height="26" fill="#161b22" stroke="#58a6ff"/><text x="62" y="47" fill="#c9d1d9" text-anchor="middle">PC 192.168.0.2</text>
+                <rect x="15" y="70" width="95" height="26" fill="#161b22" stroke="#58a6ff"/><text x="62" y="87" fill="#c9d1d9" text-anchor="middle">폰 192.168.0.3</text>
+                <rect x="15" y="110" width="95" height="26" fill="#161b22" stroke="#58a6ff"/><text x="62" y="127" fill="#c9d1d9" text-anchor="middle">TV 192.168.0.4</text>
+                <rect x="170" y="60" width="110" height="50" fill="#1c232c" stroke="#d29922"/><text x="225" y="80" fill="#c9d1d9" text-anchor="middle">공유기(NAT)</text><text x="225" y="98" fill="#8b949e" text-anchor="middle">공인 1.2.3.4</text>
+                <rect x="345" y="70" width="80" height="34" fill="#161b22" stroke="#3fb950"/><text x="385" y="91" fill="#c9d1d9" text-anchor="middle">인터넷</text>
+                <line x1="110" y1="43" x2="168" y2="72" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ahn)"/>
+                <line x1="110" y1="83" x2="168" y2="85" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ahn)"/>
+                <line x1="110" y1="123" x2="168" y2="98" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ahn)"/>
+                <line x1="280" y1="85" x2="343" y2="87" stroke="#3fb950" stroke-width="2" marker-end="url(#ahn)"/>
+                <text x="312" y="78" fill="#3fb950" text-anchor="middle">출발지=1.2.3.4</text>
+                <text x="225" y="135" fill="#8b949e" text-anchor="middle">사설 IP 여러 개 → 공인 IP 하나로</text>
+              </g>
+              <defs><marker id="ahn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">집안 기기들의 사설 IP를 공유기가 공인 IP 하나로 변환해 인터넷에 내보낸다</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 포트로 구분한다</div>
+            <p>여러 기기가 같은 공인 IP를 쓰면, 돌아온 응답을 누구에게 줄지 어떻게 알까요? NAT는 각 연결마다 <strong>포트 번호</strong>를 다르게 매핑해 표(NAT 테이블)에 적어 둡니다. 응답이 오면 그 포트를 보고 원래 기기로 정확히 되돌려 줍니다.</p>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 외부에서 먼저 접속하기 어렵다</div>
+            <p>NAT 안의 기기는 밖으로 나가긴 쉽지만, 외부에서 안으로 먼저 들어오긴 어렵습니다(사설 IP라 직접 지정 불가). 그래서 집에서 게임 서버를 열려면 <strong>포트 포워딩</strong> 설정이 필요합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="flow-congestion">
+          <h2>TCP 흐름 제어와 혼잡 제어</h2>
+          <p>TCP는 신뢰성만 챙기는 게 아니라 <strong>속도도 영리하게 조절</strong>합니다. 두 가지 제어를 구분해야 합니다. <strong>흐름 제어(flow control)</strong>는 받는 쪽이 감당할 만큼만 보내는 것(수신자 보호)이고, <strong>혼잡 제어(congestion control)</strong>는 네트워크 길이 막히지 않게 조절하는 것(네트워크 보호)입니다.</p>
+          <p>흐름 제어는 수신자가 "내 버퍼에 이만큼 여유 있어요"라고 알리는 <strong>윈도 크기(window size)</strong>로 이뤄집니다. 혼잡 제어는 처음엔 조금씩 보내다 문제없으면 점점 빠르게(느린 시작), 손실이 감지되면 확 줄이는 방식으로 동작합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="혼잡 제어 윈도 변화">
+              <line x1="40" y1="170" x2="420" y2="170" stroke="#30363d" stroke-width="1.5"/>
+              <line x1="40" y1="170" x2="40" y2="20" stroke="#30363d" stroke-width="1.5"/>
+              <text x="230" y="192" fill="#8b949e" font-size="11" text-anchor="middle">시간 →</text>
+              <text x="20" y="30" fill="#8b949e" font-size="11" transform="rotate(-90 20 95)">전송량(윈도)</text>
+              <path d="M40 168 C70 150 90 120 110 70" stroke="#3fb950" stroke-width="2.5" fill="none"/>
+              <text x="90" y="60" fill="#3fb950" font-size="10">느린 시작(지수↑)</text>
+              <path d="M110 70 L200 40" stroke="#58a6ff" stroke-width="2.5" fill="none"/>
+              <text x="160" y="32" fill="#58a6ff" font-size="10">혼잡 회피(선형↑)</text>
+              <circle cx="200" cy="40" r="4" fill="#f85149"/><text x="210" y="38" fill="#f85149" font-size="10">손실 감지!</text>
+              <path d="M200 40 L205 110" stroke="#f85149" stroke-width="2.5" fill="none"/>
+              <path d="M205 110 L300 75 L360 95" stroke="#58a6ff" stroke-width="2.5" fill="none"/>
+              <text x="250" y="135" fill="#f85149" font-size="10">윈도 확 줄임 → 다시 천천히</text>
+            </svg>
+            <div class="caption">처음엔 빠르게 늘리다가, 패킷 손실을 감지하면 전송량을 크게 줄여 길을 비운다</div>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>흐름 제어</th><th>혼잡 제어</th></tr></thead>
+            <tbody>
+              <tr><td>보호 대상</td><td>느린 수신자</td><td>혼잡한 네트워크</td></tr>
+              <tr><td>판단 근거</td><td>수신자 버퍼 여유(윈도)</td><td>패킷 손실·지연</td></tr>
+              <tr><td>대표 기법</td><td>슬라이딩 윈도</td><td>느린 시작·혼잡 회피</td></tr>
+            </tbody>
+          </table>
+          <div class="callout tip">
+            <div class="callout-title">💡 둘 다 "윈도"를 쓴다</div>
+            <p>실제 TCP는 매 순간 보낼 양을 "수신 윈도(흐름 제어)"와 "혼잡 윈도(혼잡 제어)" 중 <strong>더 작은 값</strong>으로 정합니다. 수신자도 여유 있고 네트워크도 한가할 때만 빠르게 보냅니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="cookie-session">
+          <h2>쿠키와 세션</h2>
+          <p>HTTP는 본래 <strong>상태가 없습니다(stateless)</strong>. 요청 하나가 끝나면 서버는 방금 누가 왔는지 잊어버립니다. 그런데 로그인 상태는 유지돼야 하죠. 이 모순을 <strong>쿠키(cookie)</strong>와 <strong>세션(session)</strong>이 해결합니다.</p>
+          <p><strong>쿠키</strong>는 서버가 발급해 <strong>브라우저에 저장</strong>하는 작은 메모지로, 이후 요청마다 자동으로 함께 보내집니다. <strong>세션</strong>은 실제 사용자 정보를 <strong>서버에 보관</strong>하고, 쿠키에는 그 보관함을 여는 열쇠(세션 ID)만 담는 방식입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="쿠키와 세션 흐름">
+              <g font-family="monospace" font-size="11">
+                <text x="80" y="20" fill="#8b949e" text-anchor="middle">브라우저</text>
+                <text x="360" y="20" fill="#8b949e" text-anchor="middle">서버</text>
+                <line x1="80" y1="28" x2="80" y2="165" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="360" y1="28" x2="360" y2="165" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="80" y1="45" x2="360" y2="55" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahcs)"/>
+                <text x="220" y="42" fill="#58a6ff" text-anchor="middle">① 로그인(ID/PW)</text>
+                <line x1="360" y1="75" x2="80" y2="90" stroke="#3fb950" stroke-width="2" marker-end="url(#ahcs)"/>
+                <text x="220" y="74" fill="#3fb950" text-anchor="middle">② Set-Cookie: session=abc123</text>
+                <line x1="80" y1="115" x2="360" y2="125" stroke="#58a6ff" stroke-width="2" marker-end="url(#ahcs)"/>
+                <text x="220" y="112" fill="#58a6ff" text-anchor="middle">③ 이후 요청 + Cookie: session=abc123</text>
+                <text x="220" y="155" fill="#8b949e" text-anchor="middle">서버는 abc123으로 "아, 그 사용자"라고 알아본다</text>
+              </g>
+              <defs><marker id="ahcs" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c9d1d9"/></marker></defs>
+            </svg>
+            <div class="caption">로그인하면 서버가 세션 ID를 쿠키로 내려주고, 이후 요청마다 그 쿠키로 사용자를 식별한다</div>
+          </div>
+          <table>
+            <thead><tr><th>구분</th><th>쿠키</th><th>세션</th></tr></thead>
+            <tbody>
+              <tr><td>저장 위치</td><td>브라우저(클라이언트)</td><td>서버</td></tr>
+              <tr><td>보안</td><td>탈취·변조 위험</td><td>상대적으로 안전(ID만 노출)</td></tr>
+              <tr><td>서버 부담</td><td>없음</td><td>사용자 수만큼 메모리 사용</td></tr>
+            </tbody>
+          </table>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 쿠키 보안 속성</div>
+            <p>중요한 쿠키에는 <strong>HttpOnly</strong>(자바스크립트 접근 차단 → XSS 방어), <strong>Secure</strong>(HTTPS에서만 전송), <strong>SameSite</strong>(다른 사이트 요청에 쿠키 첨부 제한 → CSRF 방어) 속성을 붙여야 합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="https-tls">
+          <h2>HTTPS와 TLS 상세</h2>
+          <p><strong>HTTPS</strong>는 HTTP에 <strong>TLS(Transport Layer Security)</strong>라는 암호화 계층을 입힌 것입니다. 덕분에 중간에 누가 패킷을 가로채도 내용을 읽지 못하고(기밀성), 내용이 변조되지 않았으며(무결성), 상대가 진짜 그 사이트가 맞는지(인증) 보장됩니다.</p>
+          <p>핵심 아이디어는 두 암호화의 결합입니다. 먼저 <strong>비대칭 키(공개키/개인키)</strong>로 안전하게 "대화용 비밀 열쇠"를 교환하고, 그 다음부터는 빠른 <strong>대칭 키</strong>로 실제 데이터를 암호화합니다. 느린 방식으로 열쇠만 안전하게 건네고, 빠른 방식으로 대화하는 셈입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TLS 핸드셰이크">
+              <g font-family="monospace" font-size="10">
+                <text x="80" y="18" fill="#8b949e" text-anchor="middle">클라이언트</text>
+                <text x="360" y="18" fill="#8b949e" text-anchor="middle">서버</text>
+                <line x1="80" y1="26" x2="80" y2="185" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="360" y1="26" x2="360" y2="185" stroke="#30363d" stroke-width="1.5"/>
+                <line x1="80" y1="42" x2="360" y2="52" stroke="#58a6ff" stroke-width="1.8" marker-end="url(#aht2)"/>
+                <text x="220" y="40" fill="#58a6ff" text-anchor="middle">① ClientHello(지원 암호 목록)</text>
+                <line x1="360" y1="72" x2="80" y2="82" stroke="#3fb950" stroke-width="1.8" marker-end="url(#aht2)"/>
+                <text x="220" y="70" fill="#3fb950" text-anchor="middle">② 인증서(공개키) 전달</text>
+                <text x="80" y="105" fill="#d29922" text-anchor="middle">③ 인증서 검증 ✓</text>
+                <line x1="80" y1="118" x2="360" y2="128" stroke="#58a6ff" stroke-width="1.8" marker-end="url(#aht2)"/>
+                <text x="220" y="116" fill="#58a6ff" text-anchor="middle">④ 공개키로 암호화한 비밀키 전송</text>
+                <line x1="80" y1="152" x2="360" y2="158" stroke="#bc8cff" stroke-width="2.2" marker-end="url(#aht2)"/>
+                <text x="220" y="150" fill="#bc8cff" text-anchor="middle">⑤ 이후 대칭키로 암호화 통신</text>
+                <text x="220" y="178" fill="#8b949e" text-anchor="middle">느린 비대칭키로 열쇠 교환 → 빠른 대칭키로 대화</text>
+              </g>
+              <defs><marker id="aht2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c9d1d9"/></marker></defs>
+            </svg>
+            <div class="caption">인증서로 서버를 검증하고 비밀 열쇠를 안전하게 교환한 뒤, 빠른 대칭키로 본 통신을 한다</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 인증서와 CA</div>
+            <p>서버의 공개키가 진짜인지는 <strong>CA(인증 기관)</strong>가 서명한 <strong>인증서</strong>로 보증합니다. 브라우저는 신뢰하는 CA 목록을 미리 갖고 있어, 인증서 서명을 확인해 가짜 사이트를 걸러냅니다. 주소창의 자물쇠 아이콘이 이 검증의 통과를 뜻합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="websocket">
+          <h2>웹소켓 (WebSocket)</h2>
+          <p>기본 HTTP는 <strong>클라이언트가 물어야만 서버가 답하는</strong> 단방향 구조입니다. 그래서 채팅처럼 서버가 먼저 말을 걸어야 하는 실시간 서비스엔 불편합니다. <strong>웹소켓(WebSocket)</strong>은 한 번 연결을 맺으면 <strong>양방향으로 자유롭게</strong> 메시지를 주고받는 지속 연결을 제공합니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HTTP 폴링 vs 웹소켓">
+              <g font-family="monospace" font-size="10">
+                <text x="110" y="18" fill="#f85149" text-anchor="middle">HTTP 반복 요청(폴링)</text>
+                <line x1="50" y1="26" x2="50" y2="170" stroke="#30363d"/>
+                <line x1="180" y1="26" x2="180" y2="170" stroke="#30363d"/>
+                <line x1="50" y1="40" x2="180" y2="48" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#ahw)"/>
+                <line x1="180" y1="56" x2="50" y2="64" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ahw)"/>
+                <line x1="50" y1="80" x2="180" y2="88" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#ahw)"/>
+                <line x1="180" y1="96" x2="50" y2="104" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ahw)"/>
+                <line x1="50" y1="120" x2="180" y2="128" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#ahw)"/>
+                <text x="110" y="160" fill="#f85149" text-anchor="middle">매번 새로 묻기 → 낭비·지연</text>
+
+                <text x="330" y="18" fill="#3fb950" text-anchor="middle">웹소켓(지속 연결)</text>
+                <line x1="270" y1="26" x2="270" y2="170" stroke="#30363d"/>
+                <line x1="400" y1="26" x2="400" y2="170" stroke="#30363d"/>
+                <line x1="270" y1="42" x2="400" y2="50" stroke="#d29922" stroke-width="1.8" marker-end="url(#ahw)"/>
+                <text x="335" y="38" fill="#d29922" text-anchor="middle">핸드셰이크(Upgrade)</text>
+                <line x1="270" y1="70" x2="400" y2="78" stroke="#58a6ff" stroke-width="1.8" marker-end="url(#ahw)"/>
+                <line x1="400" y1="95" x2="270" y2="103" stroke="#3fb950" stroke-width="1.8" marker-end="url(#ahw)"/>
+                <line x1="400" y1="118" x2="270" y2="126" stroke="#3fb950" stroke-width="1.8" marker-end="url(#ahw)"/>
+                <text x="335" y="160" fill="#3fb950" text-anchor="middle">서버가 먼저도 보냄 → 실시간</text>
+              </g>
+              <defs><marker id="ahw" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#c9d1d9"/></marker></defs>
+            </svg>
+            <div class="caption">폴링은 매번 새로 묻지만, 웹소켓은 한 번 연 통로로 양쪽이 자유롭게 메시지를 보낸다</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">websocket_client.js</span></div>
+            <pre><code class="language-javascript">// 브라우저에서 웹소켓 연결 열기
+const ws = new WebSocket("wss://example.com/chat");
+
+ws.onopen = () => ws.send("안녕하세요!");   // 연결되면 메시지 전송
+ws.onmessage = (e) => {                      // 서버가 보낸 메시지 수신
+  console.log("받음:", e.data);             // 서버가 먼저 말 걸 수 있음
+};
+ws.onclose = () => console.log("연결 종료");</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 ws:// 와 wss://</div>
+            <p>웹소켓 주소는 <code>ws://</code>(암호화 안 함)와 <code>wss://</code>(TLS 암호화)로 시작합니다. HTTP·HTTPS의 관계와 같으며, 실서비스에선 반드시 <code>wss://</code>를 씁니다. 처음 연결은 HTTP 요청에 <code>Upgrade</code> 헤더를 붙여 웹소켓으로 "승격"하는 방식으로 시작합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="cdn-caching">
+          <h2>CDN과 캐싱</h2>
+          <p>서울 사용자가 미국 서버의 이미지를 받으면 멀어서 느립니다. <strong>CDN(Content Delivery Network)</strong>은 콘텐츠 복사본을 <strong>전 세계 곳곳의 서버(엣지)</strong>에 미리 뿌려 두고, 사용자에게 <strong>가장 가까운 서버</strong>가 응답하게 합니다. 동네마다 편의점을 둬서 멀리 갈 필요를 없애는 것과 같습니다.</p>
+          <p>그 바탕에는 <strong>캐싱(caching)</strong>이 있습니다. 한 번 받은 데이터를 가까운 곳에 잠시 저장해 두고, 다음 요청은 원본까지 가지 않고 사본으로 빠르게 응답하는 기법입니다. 브라우저 캐시, CDN 캐시 등 여러 층에서 동시에 일어납니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CDN 엣지 분산">
+              <g font-family="monospace" font-size="10">
+                <rect x="180" y="20" width="90" height="30" fill="#161b22" stroke="#f85149"/><text x="225" y="40" fill="#c9d1d9" text-anchor="middle">원본 서버(미국)</text>
+                <rect x="40" y="90" width="80" height="26" fill="#1c232c" stroke="#3fb950"/><text x="80" y="107" fill="#c9d1d9" text-anchor="middle">엣지(서울)</text>
+                <rect x="180" y="90" width="80" height="26" fill="#1c232c" stroke="#3fb950"/><text x="220" y="107" fill="#c9d1d9" text-anchor="middle">엣지(런던)</text>
+                <rect x="320" y="90" width="80" height="26" fill="#1c232c" stroke="#3fb950"/><text x="360" y="107" fill="#c9d1d9" text-anchor="middle">엣지(도쿄)</text>
+                <line x1="200" y1="50" x2="90" y2="88" stroke="#8b949e" stroke-width="1.4" marker-end="url(#ahcd)"/>
+                <line x1="225" y1="50" x2="220" y2="88" stroke="#8b949e" stroke-width="1.4" marker-end="url(#ahcd)"/>
+                <line x1="250" y1="50" x2="350" y2="88" stroke="#8b949e" stroke-width="1.4" marker-end="url(#ahcd)"/>
+                <rect x="40" y="145" width="80" height="24" fill="#161b22" stroke="#58a6ff"/><text x="80" y="161" fill="#c9d1d9" text-anchor="middle">서울 사용자</text>
+                <line x1="80" y1="145" x2="80" y2="118" stroke="#3fb950" stroke-width="2" marker-end="url(#ahcd)"/>
+                <text x="80" y="135" fill="#3fb950" text-anchor="middle">가까운 곳에서 빠르게</text>
+              </g>
+              <defs><marker id="ahcd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">원본은 한 곳이지만 사본을 세계 곳곳 엣지에 두어, 사용자는 가장 가까운 서버에서 받는다</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 캐시 적중과 만료</div>
+            <p>요청한 데이터가 캐시에 있으면 <strong>캐시 적중(hit)</strong>, 없어서 원본까지 가면 <strong>캐시 미스(miss)</strong>입니다. 캐시는 <code>Cache-Control</code>, <code>ETag</code> 같은 HTTP 헤더로 "얼마나 오래 보관할지", "원본이 바뀌었는지"를 판단합니다.</p>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 오래된 캐시 문제</div>
+            <p>캐싱의 가장 큰 골칫거리는 "원본은 바뀌었는데 사용자는 옛날 사본을 본다"입니다. 그래서 파일 이름에 버전(<code>app.v2.js</code>)이나 해시를 붙여, 내용이 바뀌면 주소도 바뀌게 만들어 새 파일을 받도록 유도합니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>네트워크는 데이터를 패킷에 담아 라우터를 거쳐 전달하는 우편 시스템과 같다.</li>
+            <li>계층 모델은 복잡한 통신을 층으로 나눠 한 층만 바꿔도 나머지는 그대로 둔다.</li>
+            <li>IP 주소는 컴퓨터의 위치이고, 라우팅은 그곳까지의 경로를 찾는 과정이다.</li>
+            <li>TCP는 신뢰성(3-way handshake), UDP는 속도가 강점이다.</li>
+            <li>HTTP는 요청-응답 구조, DNS는 이름을 IP로 바꾸는 전화번호부, 소켓은 통신 창구다.</li>
+            <li>CIDR(/24 등)은 IP를 네트워크 부분과 호스트 부분으로 나눠 서브넷을 관리한다.</li>
+            <li>NAT는 사설 IP 여러 개를 공인 IP 하나로 변환해 주소 부족을 해결한다.</li>
+            <li>TCP의 흐름 제어는 느린 수신자를, 혼잡 제어는 막힌 네트워크를 보호한다.</li>
+            <li>쿠키는 브라우저에, 세션은 서버에 저장하며 둘이 함께 로그인 상태를 유지한다.</li>
+            <li>HTTPS는 TLS로 비대칭키로 열쇠를 교환한 뒤 빠른 대칭키로 암호화 통신한다.</li>
+            <li>웹소켓은 한 번 연 통로로 서버·클라이언트가 양방향 실시간 통신을 한다.</li>
+            <li>CDN과 캐싱은 사본을 가까운 곳에 두어 응답 속도를 높인다.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>패킷(Packet)</dt><dd>네트워크로 전송되는 데이터 조각. 헤더(주소 등)와 본문으로 구성.</dd></dl>
+          <dl class="term"><dt>IP 주소 / 포트</dt><dd>각각 컴퓨터의 위치와 그 안의 특정 프로그램을 가리키는 번호.</dd></dl>
+          <dl class="term"><dt>TCP / UDP</dt><dd>신뢰성을 보장하는 연결형 / 속도를 우선하는 비연결형 전송 프로토콜.</dd></dl>
+          <dl class="term"><dt>3-way handshake</dt><dd>SYN·SYN+ACK·ACK 세 단계로 TCP 연결을 맺는 절차.</dd></dl>
+          <dl class="term"><dt>DNS</dt><dd>도메인 이름을 IP 주소로 변환하는 인터넷의 전화번호부.</dd></dl>
+          <dl class="term"><dt>소켓(Socket)</dt><dd>프로그램이 네트워크 통신을 위해 여는 IP+포트 기반 창구.</dd></dl>
+          <dl class="term"><dt>서브넷 / CIDR</dt><dd>IP를 네트워크·호스트 부분으로 나눠 관리하는 기법과 /숫자 표기법.</dd></dl>
+          <dl class="term"><dt>NAT</dt><dd>사설 IP를 공인 IP로 변환해 여러 기기가 주소 하나를 공유하게 하는 기술.</dd></dl>
+          <dl class="term"><dt>흐름 제어 / 혼잡 제어</dt><dd>각각 느린 수신자와 막힌 네트워크를 보호하기 위한 TCP의 속도 조절.</dd></dl>
+          <dl class="term"><dt>쿠키 / 세션</dt><dd>상태 없는 HTTP에서 로그인 등을 유지하는, 브라우저 저장 / 서버 저장 방식.</dd></dl>
+          <dl class="term"><dt>TLS</dt><dd>HTTP를 암호화해 HTTPS로 만드는 보안 계층(비대칭키로 열쇠 교환).</dd></dl>
+          <dl class="term"><dt>웹소켓</dt><dd>한 번 연결하면 양방향으로 실시간 통신하는 지속 연결 프로토콜.</dd></dl>
+          <dl class="term"><dt>CDN / 캐싱</dt><dd>콘텐츠 사본을 가까운 엣지 서버에 두어 빠르게 응답하는 분산·저장 기법.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YVFQ9B3GX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1YVFQ9B3GX');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session 24 - 반응형 웹 디자인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #0f0f1a; color: #e0e0e0; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    .progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #6ee7b7, #60a5fa); z-index: 100; transition: width 0.4s ease; }
+    .slide-deck { position: relative; width: 100vw; height: 100vh; }
+    .slide { position: absolute; inset: 0; padding: 5vh 8vw; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; overflow-y: auto; }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .slide.prev { transform: translateX(-50px); }
+    .slide-number { position: absolute; top: 4vh; right: 5vw; font-size: 0.9rem; font-weight: 500; color: #666; letter-spacing: 0.2em; }
+    h1 { font-size: 3.2rem; font-weight: 900; line-height: 1.3; background: linear-gradient(135deg, #6ee7b7, #60a5fa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    h2 { font-size: 2.4rem; font-weight: 700; color: #e0e0e0; line-height: 1.35; margin-bottom: 1.5rem; }
+    h3 { font-size: 1.6rem; font-weight: 500; color: #aaa; margin-bottom: 2rem; }
+    p { font-size: 1.3rem; color: #ccc; line-height: 1.8; max-width: 900px; }
+    p + p { margin-top: 1rem; }
+    .subtitle { font-size: 1.1rem; color: #888; letter-spacing: 0.1em; margin-bottom: 1rem; font-weight: 500; }
+    .highlight { color: #6ee7b7; font-weight: 700; }
+    .highlight-blue { color: #60a5fa; font-weight: 700; }
+    .highlight-yellow { color: #fbbf24; font-weight: 700; }
+    .highlight-pink { color: #f472b6; font-weight: 700; }
+    .big-emoji { font-size: 5rem; margin-bottom: 1rem; line-height: 1; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .card-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 1.5rem; transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(110,231,183,0.4); background: rgba(255,255,255,0.07); }
+    .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .analogy { margin-top: 2rem; padding: 2rem 2.5rem; background: linear-gradient(135deg, rgba(110,231,183,0.12), rgba(96,165,250,0.12)); border: 1px solid rgba(110,231,183,0.25); border-radius: 16px; max-width: 1000px; }
+    .analogy-title { font-size: 1rem; font-weight: 700; color: #6ee7b7; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .analogy-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; font-size: 1.15rem; }
+    .analogy-row + .analogy-row { border-top: 1px dashed rgba(255,255,255,0.1); }
+    .analogy-label { min-width: 150px; color: #888; font-weight: 500; }
+    .analogy-value { color: #e0e0e0; font-weight: 500; }
+    .analogy-eq { color: #6ee7b7; font-weight: 700; }
+    .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    .flow-item { padding: 1rem 1.6rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; font-size: 1.1rem; font-weight: 500; color: #e0e0e0; }
+    .flow-arrow { font-size: 1.6rem; color: #6ee7b7; font-weight: 700; }
+    .step-list { margin-top: 2rem; max-width: 900px; }
+    .step { display: flex; gap: 1.2rem; padding: 1.1rem 0; align-items: flex-start; }
+    .step + .step { border-top: 1px solid rgba(255,255,255,0.08); }
+    .step-num { min-width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6ee7b7, #60a5fa); color: #0f0f1a; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .step-body { flex: 1; }
+    .step-title { font-size: 1.2rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.3rem; }
+    .step-desc { font-size: 1rem; color: #999; line-height: 1.7; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; max-width: 1100px; }
+    .summary-card { padding: 1.8rem 1.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; text-align: center; }
+    .summary-emoji { font-size: 2.4rem; margin-bottom: 0.5rem; }
+    .summary-label { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 0.3rem; }
+    .summary-desc { font-size: 0.95rem; color: #999; line-height: 1.6; }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-top: 2rem; max-width: 1100px; }
+    .feature-card { padding: 1rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; text-align: center; }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+    .feature-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .feature-sub { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+    pre.code { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1rem 1.2rem; font-family: 'Menlo', monospace; font-size: 0.95rem; color: #6ee7b7; overflow-x: auto; line-height: 1.6; max-width: 900px; margin-top: 1.2rem; }
+    .bp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-top: 2rem; max-width: 1100px; }
+    .bp-card { padding: 1.2rem; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+    .bp-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+    .bp-size { font-weight: 900; color: #6ee7b7; font-family: 'Menlo', monospace; font-size: 1.1rem; }
+    .bp-name { font-size: 0.95rem; color: #e0e0e0; margin: 0.2rem 0; }
+    .bp-desc { font-size: 0.8rem; color: #888; }
+    .nav { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 0.6rem; z-index: 50; }
+    .nav button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,15,26,0.85); backdrop-filter: blur(10px); color: #e0e0e0; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
+    .nav button:hover { background: rgba(110,231,183,0.15); border-color: #6ee7b7; color: #6ee7b7; }
+    .thumb-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); backdrop-filter: blur(20px); z-index: 200; display: none; flex-direction: column; padding: 2rem 3rem; overflow-y: auto; }
+    .thumb-overlay.open { display: flex; }
+    .thumb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .thumb-header h3 { font-size: 1.3rem; color: #e0e0e0; margin-bottom: 0; }
+    .thumb-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #e0e0e0; font-size: 1rem; cursor: pointer; }
+    .thumb-close:hover { border-color: #f472b6; color: #f472b6; }
+    .thumb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .thumb-item { padding: 1.2rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 0.4rem; min-height: 140px; }
+    .thumb-item:hover { background: rgba(110,231,183,0.08); border-color: rgba(110,231,183,0.4); transform: translateY(-2px); }
+    .thumb-item.current { border-color: #6ee7b7; background: rgba(110,231,183,0.1); }
+    .thumb-emoji { font-size: 1.8rem; }
+    .thumb-title { font-size: 1rem; font-weight: 700; color: #e0e0e0; line-height: 1.4; flex: 1; }
+    .thumb-num { font-size: 0.75rem; color: #666; letter-spacing: 0.2em; font-weight: 500; }
+    @media (max-width: 768px) { .slide { padding: 5vh 6vw; } h1 { font-size: 2.2rem; } h2 { font-size: 1.7rem; } h3 { font-size: 1.2rem; } p { font-size: 1rem; } .card-grid, .card-grid.four-col, .summary-grid, .feature-grid, .bp-grid { grid-template-columns: 1fr; } .card-grid.two-col { grid-template-columns: 1fr; } .big-emoji { font-size: 3.5rem; } }
+    .compare { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; max-width: 1000px; }
+    .compare-box { padding: 1.5rem; border-radius: 14px; background: rgba(255,255,255,0.04); }
+    .compare-box.before { border: 1px solid rgba(244,114,182,0.4); }
+    .compare-box.after { border: 1px solid rgba(110,231,183,0.4); }
+    .compare-label { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.8rem; }
+    .compare-box.before .compare-label { color: #f472b6; }
+    .compare-box.after .compare-label { color: #6ee7b7; }
+    .compare-box ul { list-style: none; }
+    .compare-box ul li { font-size: 1rem; color: #ccc; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-box ul li:last-child { border-bottom: none; }
+    .chat { margin-top: 2rem; max-width: 900px; display: flex; flex-direction: column; gap: 1rem; }
+    .chat-row { display: flex; gap: 1rem; align-items: flex-start; }
+    .chat-row.ai { flex-direction: row-reverse; }
+    .chat-avatar { font-size: 1.8rem; flex-shrink: 0; }
+    .chat-bubble { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0.9rem 1.2rem; font-size: 1rem; color: #e0e0e0; line-height: 1.6; max-width: 75%; }
+    .chat-row.ai .chat-bubble { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.2); }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-deck" id="deck">
+
+    <!-- 1. Title -->
+    <div class="slide">
+      <div class="slide-number">01 / 15</div>
+      <div class="subtitle">SESSION 24 · Part 5 웹 개발</div>
+      <h1>반응형 웹 —<br/>모든 화면에 맞추다</h1>
+      <h3>미디어 쿼리와 모바일 퍼스트로 유연하게</h3>
+    </div>
+
+    <!-- 2. 학습 목표 -->
+    <div class="slide">
+      <div class="slide-number">02 / 15</div>
+      <div class="big-emoji">🎯</div>
+      <h2>이 세션에서<br/>배우는 것</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <div class="card-title">미디어 쿼리</div>
+          <div class="card-desc">화면 크기별로 다른 스타일을 적용하는 문법을 익힌다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <div class="card-title">모바일 퍼스트</div>
+          <div class="card-desc">작은 화면부터 설계하는 방식의 이점을 설명한다</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">Tailwind CSS</div>
+          <div class="card-desc">유틸리티 프레임워크로 반응형을 빠르게 만든다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 왜 필요한가 -->
+    <div class="slide">
+      <div class="slide-number">03 / 15</div>
+      <div class="big-emoji">💭</div>
+      <h2>왜 <span class="highlight">반응형</span>이<br/>필요한가?</h2>
+      <p>
+        사람들은 <span class="highlight-blue">폰, 태블릿, 노트북, TV</span>로 같은 웹을 본다.<br/>
+        한 벌의 코드로 모든 기기를 지원하지 않으면, 사용자는 떠난다.
+      </p>
+      <p style="margin-top: 1.5rem;">
+        오늘날 <span class="highlight-yellow">모바일 트래픽</span>은 전체의 절반 이상.<br/>
+        반응형은 <span class="highlight-pink">선택이 아닌 기본</span>이다.
+      </p>
+    </div>
+
+    <!-- 4. 브레이크포인트 -->
+    <div class="slide">
+      <div class="slide-number">04 / 15</div>
+      <h2>주요 <span class="highlight">브레이크포인트</span></h2>
+      <p>업계 관행상 자주 쓰이는 화면 크기 기준점.</p>
+      <div class="bp-grid">
+        <div class="bp-card">
+          <div class="bp-icon">📱</div>
+          <div class="bp-size">&lt; 640px</div>
+          <div class="bp-name">Mobile</div>
+          <div class="bp-desc">폰 세로</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">📱</div>
+          <div class="bp-size">640 ~ 768</div>
+          <div class="bp-name">Small</div>
+          <div class="bp-desc">큰 폰</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">📲</div>
+          <div class="bp-size">768 ~ 1024</div>
+          <div class="bp-name">Tablet</div>
+          <div class="bp-desc">태블릿</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">💻</div>
+          <div class="bp-size">&gt; 1024px</div>
+          <div class="bp-name">Desktop</div>
+          <div class="bp-desc">노트북/PC</div>
+        </div>
+      </div>
+      <pre class="code"><code>/* 기본: 모바일 스타일 */
+.container { padding: 1rem; }
+
+/* 태블릿 이상 */
+@media (min-width: 768px) {
+  .container { padding: 2rem; }
+}
+
+/* 데스크탑 이상 */
+@media (min-width: 1024px) {
+  .container { padding: 3rem; max-width: 1200px; }
+}</code></pre>
+    </div>
+
+    <!-- 5. 심화A — 미디어 쿼리 더 깊게 -->
+    <div class="slide">
+      <div class="slide-number">05 / 15</div>
+      <div class="big-emoji">📐</div>
+      <h2>미디어 쿼리 —<br/><span class="highlight">더 깊게 이해하기</span></h2>
+      <p>min-width와 max-width의 차이를 알면 반응형 CSS가 훨씬 명확해진다.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">min-width — 이 크기 이상에서 적용</div><div class="step-desc">@media (min-width: 768px): 768px부터 더 큰 화면에 적용. 모바일 퍼스트에 사용.</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">max-width — 이 크기 이하에서 적용</div><div class="step-desc">@media (max-width: 767px): 767px 이하 화면에만 적용. 데스크탑 퍼스트에 사용.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">범위 조합 — 특정 구간만 선택</div><div class="step-desc">@media (min-width: 768px) and (max-width: 1023px): 태블릿 전용 스타일 지정 가능.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">기타 조건 — 해상도, 방향</div><div class="step-desc">@media (orientation: landscape): 가로 모드에서만, (min-resolution: 2dppx): Retina 화면에만.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 6. 모바일 퍼스트 (구 5번) -->
+    <div class="slide">
+      <div class="slide-number">06 / 15</div>
+      <h2>모바일 <span class="highlight">퍼스트</span> 설계</h2>
+      <p>작은 화면을 기본으로 잡고, 큰 화면에서 확장하는 방식.</p>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">가장 좁은 화면 먼저 설계</div>
+            <div class="step-desc">세로 폰 레이아웃부터 만든다 — 1열, 간단한 메뉴</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">점진적으로 확장</div>
+            <div class="step-desc">min-width 쿼리로 큰 화면에서 추가 레이아웃을 붙인다</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">콘텐츠 우선</div>
+            <div class="step-desc">좁은 화면에서 정말 중요한 것만 남긴다 → 자연스러운 우선순위</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">성능 이점</div>
+            <div class="step-desc">모바일 기기의 제약을 먼저 고려 → 가볍고 빠른 웹</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 심화B — 모바일 퍼스트 확장 flow -->
+    <div class="slide">
+      <div class="slide-number">07 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>모바일 퍼스트 —<br/><span class="highlight-blue">실제로는 어떻게?</span></h2>
+      <p>작은 화면에서 출발해 단계적으로 레이아웃을 확장하는 과정을 보자.</p>
+      <div class="flow">
+        <div class="flow-item">📱 기본 스타일<br/><span style="font-size:0.85rem;color:#888;">1열 세로 레이아웃</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">sm: 640px+<br/><span style="font-size:0.85rem;color:#888;">여백·글자 확대</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">md: 768px+<br/><span style="font-size:0.85rem;color:#888;">2열 그리드</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-item">lg: 1024px+<br/><span style="font-size:0.85rem;color:#888;">3열·사이드바</span></div>
+      </div>
+      <p style="margin-top:1.5rem;"><span class="highlight-yellow">핵심:</span> 모바일은 기본값, 큰 화면은 min-width로 덧붙인다. 코드 충돌 없이 점진 확장.</p>
+    </div>
+
+    <!-- 8. Tailwind CSS (구 6번) -->
+    <div class="slide">
+      <div class="slide-number">08 / 15</div>
+      <div class="big-emoji">🎨</div>
+      <h2><span class="highlight">Tailwind CSS</span> — 유틸리티 퍼스트</h2>
+      <p>클래스 이름으로 <span class="highlight-blue">반응형 스타일</span>을 바로 적용.</p>
+      <pre class="code"><code>&lt;!-- 모바일: 세로 / 태블릿 이상: 가로 --&gt;
+&lt;div class="flex flex-col md:flex-row gap-4"&gt;
+  &lt;div class="w-full md:w-1/2"&gt;왼쪽&lt;/div&gt;
+  &lt;div class="w-full md:w-1/2"&gt;오른쪽&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 반응형 글자 크기 --&gt;
+&lt;h1 class="text-lg md:text-2xl lg:text-4xl"&gt;
+  제목
+&lt;/h1&gt;</code></pre>
+      <p style="margin-top:1.2rem;font-size:1.05rem;">
+        <span class="highlight-yellow">sm:</span>, <span class="highlight-blue">md:</span>, <span class="highlight">lg:</span>, <span class="highlight-pink">xl:</span> 접두어로 브레이크포인트별 스타일을 지정한다.
+      </p>
+    </div>
+
+    <!-- 9. 실생활 -->
+    <div class="slide">
+      <div class="slide-number">09 / 15</div>
+      <div class="big-emoji">📱</div>
+      <h2>실생활에서<br/><span class="highlight">이렇게 쓰여요</span></h2>
+      <p>우리가 매일 사용하는 앱과 서비스 속에 이 개념이 녹아 있다.</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-icon">🛒</div><div class="card-title">쿠팡</div><div class="card-desc">모바일과 PC에서 동일한 URL, 화면 크기에 따라 상품 그리드가 1→3→4열로 자동 변환</div></div>
+        <div class="card"><div class="card-icon">📸</div><div class="card-title">인스타그램</div><div class="card-desc">모바일에서 1열 피드, 태블릿 이상에서 3열 그리드로 자동 전환되는 반응형 레이아웃</div></div>
+        <div class="card"><div class="card-icon">🔍</div><div class="card-title">네이버</div><div class="card-desc">모바일에서 햄버거 메뉴로 숨겨졌던 내비게이션이 PC에서 가로 메뉴로 펼쳐짐</div></div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:1.1rem;">💡 <span class="highlight">이 개념이 없다면</span> 모바일 사용자에게 PC 화면을 그대로 축소해 보여줄 수밖에 없다.</p>
+    </div>
+
+    <!-- 10. 오해 -->
+    <div class="slide">
+      <div class="slide-number">10 / 15</div>
+      <div class="big-emoji">💡</div>
+      <h2>자주 하는<br/><span class="highlight">오해 바로잡기</span></h2>
+      <p>이렇게 생각하기 쉽지만, 실제로는 조금 다릅니다.</p>
+      <div class="compare">
+        <div class="compare-box before"><div class="compare-label">❌ 흔한 오해</div><ul><li>반응형 웹 = 모바일 앱</li><li>768px이 항상 모바일/태블릿 경계</li><li>반응형이면 모든 기기에서 똑같아 보인다</li></ul></div>
+        <div class="compare-box after"><div class="compare-label">✓ 실제로는</div><ul><li>웹사이트가 기기 화면에 맞게 레이아웃을 바꾸는 것 (앱 ≠ 웹)</li><li>프로젝트마다 브레이크포인트 기준이 다름</li><li>기기마다 레이아웃이 다르게 보이는 것이 정상</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 11. 비유 (구 7번) -->
+    <div class="slide">
+      <div class="slide-number">11 / 15</div>
+      <div class="big-emoji">💧</div>
+      <h2>반응형은 <span class="highlight">물</span>이다</h2>
+      <p>담기는 그릇에 따라 자연스럽게 모양을 바꾼다.</p>
+      <div class="analogy">
+        <div class="analogy-title">🫗 물 비유</div>
+        <div class="analogy-row">
+          <div class="analogy-label">컵에 담은 물</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight">모바일</span> — 좁고 세로로 긴 모양</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">접시 위 물</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-blue">태블릿</span> — 중간 폭, 넓게 퍼짐</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">수영장 물</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-yellow">데스크탑</span> — 넓고 여유롭게</div>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-label">물의 성질</div>
+          <div class="analogy-eq">=</div>
+          <div class="analogy-value"><span class="highlight-pink">콘텐츠</span> — 그릇에 맞춰 형태를 바꾼다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. AI연결 -->
+    <div class="slide">
+      <div class="slide-number">12 / 15</div>
+      <div class="big-emoji">🤖</div>
+      <h2>이걸 알면<br/><span class="highlight">AI와 이렇게 대화해요</span></h2>
+      <p>이 개념을 이해하면 Claude나 ChatGPT를 훨씬 잘 활용할 수 있다.</p>
+      <div class="chat">
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble">모바일에서 메뉴가 깨져 보여요.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">어떤 화면 크기에서 깨지는지, 현재 CSS를 공유해주시면 확인해드릴게요.</div></div>
+        <div class="chat-row user"><div class="chat-avatar">👤</div><div class="chat-bubble" style="background:rgba(110,231,183,0.15);">CSS media query로 768px 이하에서 가로 메뉴를 세로로 바꾸는 코드 작성해줘.</div></div>
+        <div class="chat-row ai"><div class="chat-avatar">🤖</div><div class="chat-bubble">@media (max-width: 767px) { .nav { flex-direction: column; } } — 이 코드를 현재 CSS에 추가하면 됩니다. nav 클래스가 다르면 알려주세요!</div></div>
+      </div>
+    </div>
+
+    <!-- 13. 확인 -->
+    <div class="slide">
+      <div class="slide-number">13 / 15</div>
+      <div class="big-emoji">✅</div>
+      <h2>이렇게<br/><span class="highlight">이해하셨나요?</span></h2>
+      <div class="card-grid two-col">
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">미디어 쿼리는 화면 크기에 따라 다른 CSS를 적용한다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">반응형 웹과 모바일 앱은 같은 것이다</div></div>
+        <div class="card" style="border-color:rgba(110,231,183,0.4);"><div class="card-icon">✅</div><div class="card-title" style="color:#6ee7b7;">맞게 이해하셨어요</div><div class="card-desc">모바일 퍼스트는 작은 화면 스타일을 기본값으로 두고 min-width로 확장한다</div></div>
+        <div class="card" style="border-color:rgba(244,114,182,0.4);"><div class="card-icon">❌</div><div class="card-title" style="color:#f472b6;">이렇게는 아니에요</div><div class="card-desc">브레이크포인트 768px은 모든 프로젝트에서 동일한 기준이다</div></div>
+      </div>
+      <p style="margin-top:1.5rem; color:#888; font-size:1.05rem;">💪 반응형의 핵심은 규칙이 아닌 유연함 — 물처럼 흐르는 레이아웃을 만들어보세요!</p>
+    </div>
+
+    <!-- 14. 핵심 정리 (구 8번) -->
+    <div class="slide">
+      <div class="slide-number">14 / 15</div>
+      <div class="big-emoji">📌</div>
+      <h2>핵심 <span class="highlight">정리</span></h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-emoji">📐</div>
+          <div class="summary-label">미디어 쿼리</div>
+          <div class="summary-desc">@media (min-width: X)<br/>조건부 스타일</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🔖</div>
+          <div class="summary-label">브레이크포인트</div>
+          <div class="summary-desc">640 / 768 / 1024<br/>3단계 기준</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📱</div>
+          <div class="summary-label">모바일 퍼스트</div>
+          <div class="summary-desc">작은 화면 → 큰 화면<br/>점진적 확장</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">📏</div>
+          <div class="summary-label">viewport</div>
+          <div class="summary-desc">&lt;meta&gt; 태그로<br/>모바일 렌더링 설정</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">🎨</div>
+          <div class="summary-label">Tailwind</div>
+          <div class="summary-desc">md:/lg: 접두어로<br/>즉시 반응형</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-emoji">💧</div>
+          <div class="summary-label">유연성</div>
+          <div class="summary-desc">고정 px보다<br/>상대 단위 선호</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. 다음 (구 9번) -->
+    <div class="slide">
+      <div class="slide-number">15 / 15</div>
+      <div class="big-emoji">🚀</div>
+      <h2>다음 세션<br/><span class="highlight">Session 25 · React 기초</span></h2>
+      <p>
+        반복되는 UI를 체계적으로 관리하는 법 —<br/>
+        <span class="highlight-blue">React</span>, <span class="highlight-yellow">Vue</span>, <span class="highlight-pink">Svelte</span> 프런트엔드 프레임워크의 세계로 들어간다.
+      </p>
+      <p style="margin-top: 2rem; color:#888; font-size: 1.1rem;">
+        💡 <span class="highlight">기억할 것:</span> 한 벌의 코드로 <strong>모든 화면</strong>을 지원한다.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="thumb-overlay" id="thumbOverlay">
+    <div class="thumb-header">
+      <h3>슬라이드 목록</h3>
+      <button class="thumb-close" onclick="toggleThumbs()">&#10005;</button>
+    </div>
+    <div class="thumb-grid" id="thumbGrid"></div>
+  </div>
+
+  <div class="nav">
+    <button onclick="toggleThumbs()" title="목록">&#9783;</button>
+    <button onclick="prevSlide()" title="이전">&#8592;</button>
+    <button onclick="nextSlide()" title="다음">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const thumbOverlay = document.getElementById('thumbOverlay');
+    const thumbGrid = document.getElementById('thumbGrid');
+    let current = 0;
+    function showSlide(idx) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx));
+      slides.forEach((s, i) => { s.classList.remove('active', 'prev'); if (i === idx) s.classList.add('active'); else if (i < idx) s.classList.add('prev'); });
+      current = idx;
+      progress.style.width = ((idx + 1) / slides.length * 100) + '%';
+      updateThumbCurrent();
+    }
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+    function toggleThumbs() { thumbOverlay.classList.toggle('open'); }
+    function buildThumbs() {
+      slides.forEach((slide, i) => {
+        const emoji = slide.querySelector('.big-emoji')?.textContent || '📄';
+        const title = slide.querySelector('h1, h2')?.textContent || `슬라이드 ${i + 1}`;
+        const num = slide.querySelector('.slide-number')?.textContent || String(i + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className = 'thumb-item';
+        item.dataset.idx = i;
+        item.innerHTML = `<div class="thumb-emoji">${emoji}</div><div class="thumb-title">${title}</div><div class="thumb-num">${num}</div>`;
+        item.addEventListener('click', () => { showSlide(i); toggleThumbs(); });
+        thumbGrid.appendChild(item);
+      });
+    }
+    function updateThumbCurrent() { thumbGrid.querySelectorAll('.thumb-item').forEach((el, i) => { el.classList.toggle('current', i === current); }); }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      else if (e.key === 'g' || e.key === 'G') { toggleThumbs(); }
+      else if (e.key === 'Escape') { thumbOverlay.classList.remove('open'); }
+    });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].screenX - touchStartX; if (Math.abs(dx) > 50) { if (dx < 0) nextSlide(); else prevSlide(); } });
+    buildThumbs();
+    showSlide(0);
+  </script>
+</body>
+</html>

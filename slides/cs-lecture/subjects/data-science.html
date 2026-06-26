@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>데이터 과학 / 빅데이터 · CS 4년 커리큘럼</title>
+  <meta name="description" content="데이터 수집·정제·탐색·시각화부터 빅데이터 분산처리와 윤리까지 입문자 눈높이로." />
+  <link rel="stylesheet" href="../assets/vendor/github-dark.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-slug="data-science" data-base="../">
+  <div class="layout">
+    <aside class="sidebar"></aside>
+    <div class="content">
+      <article>
+        <span class="page-eyebrow">4학년 심화 · 데이터 과학 / 빅데이터</span>
+        <h1 class="page-title">데이터 과학 / 빅데이터</h1>
+        <p class="page-lead">데이터에서 <strong>쓸모 있는 사실을 끄집어내는</strong> 일입니다. 모으고, 닦고, 들여다보고, 그림으로 설명하는 전 과정을 입문자 눈높이로 따라갑니다.</p>
+
+        <section class="anchor" id="what">
+          <h2>데이터 과학이란?</h2>
+          <p>데이터 과학(data science)은 <strong>데이터에서 의미 있는 패턴과 결정을 끌어내는</strong> 학문입니다. 통계학, 프로그래밍, 그리고 문제가 되는 분야(도메인) 지식이 만나는 지점입니다.</p>
+          <p>요리에 비유하면, 데이터는 시장에서 사 온 재료입니다. 흙 묻은 채소를 씻고(정제), 맛을 보고(탐색), 손님에게 보기 좋게 담아내는(시각화) 전 과정이 데이터 과학입니다. 분석 결과를 자동으로 학습하게 만들면 그것이 머신러닝으로 이어집니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="데이터 과학 단계">
+              <g font-family="monospace" font-size="12">
+                <rect x="10"  y="30" width="70" height="32" fill="#161b22" stroke="#58a6ff"/><text x="45"  y="51" fill="#c9d1d9" text-anchor="middle">수집</text>
+                <rect x="100" y="30" width="70" height="32" fill="#161b22" stroke="#58a6ff"/><text x="135" y="51" fill="#c9d1d9" text-anchor="middle">정제</text>
+                <rect x="190" y="30" width="70" height="32" fill="#161b22" stroke="#3fb950"/><text x="225" y="51" fill="#c9d1d9" text-anchor="middle">탐색</text>
+                <rect x="280" y="30" width="70" height="32" fill="#161b22" stroke="#3fb950"/><text x="315" y="51" fill="#c9d1d9" text-anchor="middle">시각화</text>
+                <rect x="370" y="30" width="70" height="32" fill="#161b22" stroke="#bc8cff"/><text x="405" y="51" fill="#c9d1d9" text-anchor="middle">결정</text>
+                <line x1="80"  y1="46" x2="100" y2="46" stroke="#58a6ff" stroke-width="2" marker-end="url(#dsa)"/>
+                <line x1="170" y1="46" x2="190" y2="46" stroke="#58a6ff" stroke-width="2" marker-end="url(#dsa)"/>
+                <line x1="260" y1="46" x2="280" y2="46" stroke="#3fb950" stroke-width="2" marker-end="url(#dsa)"/>
+                <line x1="350" y1="46" x2="370" y2="46" stroke="#3fb950" stroke-width="2" marker-end="url(#dsa)"/>
+              </g>
+              <defs><marker id="dsa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+            </svg>
+            <div class="caption">데이터 과학의 큰 흐름 — 모으고 닦고 들여다보고 설명하기</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 이 페이지에서 배우는 것</div>
+            <p>데이터 종류 · 정제 · 탐색적 분석(EDA) · 기술통계 · 상관과 인과 · 시각화 원칙 · 특성 공학 · 빅데이터 분산처리(맵리듀스) · 파이프라인 · 윤리와 편향까지 다룹니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="data-types">
+          <h2>데이터의 종류와 수집</h2>
+          <p>데이터는 모양에 따라 다루는 방법이 다릅니다. 크게 <strong>정형(structured)</strong> 데이터는 표처럼 행과 열로 깔끔하게 정리된 것(엑셀, 데이터베이스), <strong>비정형(unstructured)</strong> 데이터는 텍스트·이미지·음성처럼 표로 담기 어려운 것입니다. 그 중간을 <strong>반정형</strong>(JSON, 로그)이라 합니다.</p>
+          <p>또한 값의 성격에 따라 <strong>수치형</strong>(키, 가격), <strong>범주형</strong>(성별, 등급)으로 나눕니다. 수집은 파일·데이터베이스·웹 API·크롤링·센서 등 다양한 출처에서 이뤄집니다.</p>
+          <table>
+            <thead><tr><th>구분</th><th>예시</th><th>저장 형태</th></tr></thead>
+            <tbody>
+              <tr><td>정형</td><td>판매 기록, 회원 명부</td><td>표(CSV·DB 테이블)</td></tr>
+              <tr><td>반정형</td><td>API 응답, 서버 로그</td><td>JSON·XML</td></tr>
+              <tr><td>비정형</td><td>리뷰 텍스트, 사진</td><td>파일·blob</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">load.py</span></div>
+            <pre><code class="language-python">import pandas as pd
+
+# CSV 파일을 표(DataFrame)로 읽어들임
+df = pd.read_csv("sales.csv")
+
+print(df.shape)        # (행 개수, 열 개수)
+print(df.dtypes)       # 각 열의 자료형(수치형/범주형) 확인
+print(df.head())       # 위에서 5행만 미리 보기</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="cleaning">
+          <h2>데이터 정제 (결측치·이상치)</h2>
+          <p>현실의 데이터는 거의 항상 지저분합니다. 빈칸(결측치), 말도 안 되는 값(이상치), 중복된 행이 섞여 있죠. <strong>"쓰레기를 넣으면 쓰레기가 나온다"(garbage in, garbage out)</strong>는 말처럼, 정제는 분석의 신뢰도를 좌우하는 가장 중요한 단계입니다.</p>
+          <ul>
+            <li><strong>결측치(missing value)</strong> — 값이 비어 있는 칸. 행을 지우거나, 평균·중앙값으로 채우는 <em>대치(imputation)</em>를 합니다.</li>
+            <li><strong>이상치(outlier)</strong> — 나이가 250살처럼 정상 범위를 크게 벗어난 값. 입력 오류일 수도, 진짜 특이 사례일 수도 있습니다.</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">clean.py</span></div>
+            <pre><code class="language-python"># 1) 결측치 확인 — 각 열에 빈칸이 몇 개인지
+print(df.isnull().sum())
+
+# 2) 나이 열의 결측치를 중앙값으로 채우기(대치)
+df["age"] = df["age"].fillna(df["age"].median())
+
+# 3) 중복 행 제거
+df = df.drop_duplicates()
+
+# 4) 이상치 걸러내기 — 나이가 0~120 범위 밖이면 제외
+df = df[(df["age"] >= 0) & (df["age"] <= 120)]</code></pre>
+          </div>
+          <div class="callout warning">
+            <div class="callout-title">⚠️ 평균으로 채우기의 함정</div>
+            <p>결측치를 무조건 평균으로 채우면 분포가 인위적으로 좁아져 분석이 왜곡될 수 있습니다. <strong>왜 비어 있는지</strong>를 먼저 생각하고, 중앙값·예측값 등 상황에 맞는 방법을 고르세요.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="eda">
+          <h2>탐색적 데이터 분석 (EDA)</h2>
+          <p>EDA(Exploratory Data Analysis)는 본격 분석 전에 데이터와 <strong>친해지는</strong> 단계입니다. 통계 요약과 간단한 그래프로 "이 데이터가 어떻게 생겼는지" 감을 잡습니다. 1977년 통계학자 존 튜키(John Tukey)가 강조한 접근으로, 가설을 세우기 전에 데이터가 말하게 두는 것이 핵심입니다.</p>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">eda.py</span></div>
+            <pre><code class="language-python"># 수치형 열들의 요약 통계 한 번에 보기
+print(df.describe())   # 개수·평균·표준편차·최소/최대·사분위수
+
+# 범주형 열의 값 분포 세기
+print(df["grade"].value_counts())
+
+# 두 열의 관계 한눈에 — 그룹별 평균
+print(df.groupby("grade")["score"].mean())</code></pre>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 EDA의 자세</div>
+            <p>"이 데이터로 뭘 증명하자"가 아니라 "이 데이터는 무엇을 말하고 있나"로 시작하세요. 의외의 패턴이나 잘못된 값은 대부분 EDA에서 처음 발견됩니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="stats">
+          <h2>기술통계 (평균·분산·분포)</h2>
+          <p>기술통계(descriptive statistics)는 많은 숫자를 <strong>몇 개의 대표값으로 요약</strong>하는 도구입니다.</p>
+          <ul>
+            <li><strong>평균(mean)</strong> — 모든 값을 더해 개수로 나눈 값. 이상치에 약합니다.</li>
+            <li><strong>중앙값(median)</strong> — 크기 순으로 줄 세웠을 때 한가운데 값. 이상치에 강합니다.</li>
+            <li><strong>분산(variance)·표준편차(std)</strong> — 값들이 평균에서 얼마나 흩어져 있는지.</li>
+          </ul>
+          <div class="diagram">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분포 히스토그램">
+              <line x1="40" y1="170" x2="380" y2="170" stroke="#30363d" stroke-width="1.5"/>
+              <line x1="40" y1="170" x2="40" y2="20" stroke="#30363d" stroke-width="1.5"/>
+              <g fill="#58a6ff" opacity="0.85">
+                <rect x="55"  y="150" width="34" height="20"/>
+                <rect x="93"  y="120" width="34" height="50"/>
+                <rect x="131" y="80"  width="34" height="90"/>
+                <rect x="169" y="55"  width="34" height="115"/>
+                <rect x="207" y="80"  width="34" height="90"/>
+                <rect x="245" y="120" width="34" height="50"/>
+                <rect x="283" y="148" width="34" height="22"/>
+                <rect x="321" y="160" width="34" height="10"/>
+              </g>
+              <line x1="186" y1="20" x2="186" y2="170" stroke="#f85149" stroke-width="2" stroke-dasharray="4 3"/>
+              <text x="186" y="15" fill="#f85149" font-size="11" text-anchor="middle">평균</text>
+              <text x="210" y="192" fill="#8b949e" font-size="12" text-anchor="middle">값의 크기 →</text>
+              <text x="20" y="95" fill="#8b949e" font-size="11" transform="rotate(-90 20 95)">빈도</text>
+            </svg>
+            <div class="caption">종 모양으로 가운데가 높은 분포(정규분포). 막대 = 구간별 데이터 개수</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 평균 vs 중앙값</div>
+            <p>연봉처럼 한쪽으로 치우친 데이터는 평균이 소수의 고액 연봉에 끌려 올라갑니다. 이럴 땐 <strong>중앙값</strong>이 "보통 사람"을 더 잘 대표합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="correlation">
+          <h2>상관관계 vs 인과관계</h2>
+          <p><strong>상관(correlation)</strong>은 "두 값이 함께 움직이는 경향"이고, <strong>인과(causation)</strong>는 "하나가 다른 하나의 원인"입니다. 둘은 전혀 다릅니다. 데이터 과학에서 가장 흔한 실수가 이 둘을 혼동하는 것입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="상관 산점도">
+              <line x1="40" y1="170" x2="380" y2="170" stroke="#30363d" stroke-width="1.5"/>
+              <line x1="40" y1="170" x2="40" y2="20" stroke="#30363d" stroke-width="1.5"/>
+              <g fill="#3fb950">
+                <circle cx="70"  cy="155" r="4"/><circle cx="95" cy="148" r="4"/>
+                <circle cx="120" cy="140" r="4"/><circle cx="150" cy="128" r="4"/>
+                <circle cx="175" cy="120" r="4"/><circle cx="200" cy="105" r="4"/>
+                <circle cx="225" cy="100" r="4"/><circle cx="255" cy="85" r="4"/>
+                <circle cx="280" cy="72" r="4"/><circle cx="310" cy="60" r="4"/>
+                <circle cx="340" cy="48" r="4"/>
+              </g>
+              <line x1="60" y1="160" x2="350" y2="45" stroke="#58a6ff" stroke-width="2" stroke-dasharray="5 3"/>
+              <text x="210" y="192" fill="#8b949e" font-size="12" text-anchor="middle">아이스크림 판매량 →</text>
+              <text x="20" y="100" fill="#8b949e" font-size="11" transform="rotate(-90 20 100)">익사 사고 →</text>
+            </svg>
+            <div class="caption">함께 늘어나지만(양의 상관) 서로의 원인은 아님 — 진짜 원인은 "여름 더위"</div>
+          </div>
+          <div class="callout danger">
+            <div class="callout-title">🚫 상관 ≠ 인과</div>
+            <p>아이스크림 판매와 익사 사고는 함께 늘지만, 아이스크림이 익사를 일으키진 않습니다. 둘 다 <strong>여름 더위</strong>라는 숨은 변수(교란변수)의 결과입니다. 인과를 주장하려면 보통 통제된 실험(A/B 테스트)이 필요합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="viz">
+          <h2>데이터 시각화 원칙</h2>
+          <p>좋은 그래프는 <strong>한 번에 핵심을 전달</strong>합니다. 시각화의 목적은 예쁘게 꾸미는 게 아니라 <em>정직하고 빠른 이해</em>입니다.</p>
+          <ul>
+            <li>목적에 맞는 차트 — 추세는 선그래프, 비교는 막대, 분포는 히스토그램, 관계는 산점도.</li>
+            <li>축은 0부터 — 막대그래프에서 축을 잘라내면 차이를 과장하게 됩니다.</li>
+            <li>잉크를 아껴라 — 불필요한 격자·3D·장식(차트정크)을 줄이세요.</li>
+          </ul>
+          <table>
+            <thead><tr><th>보여주려는 것</th><th>적절한 차트</th></tr></thead>
+            <tbody>
+              <tr><td>시간에 따른 변화</td><td>선그래프(line)</td></tr>
+              <tr><td>항목 간 크기 비교</td><td>막대그래프(bar)</td></tr>
+              <tr><td>값의 분포</td><td>히스토그램·박스플롯</td></tr>
+              <tr><td>두 변수의 관계</td><td>산점도(scatter)</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">plot.py</span></div>
+            <pre><code class="language-python">import matplotlib.pyplot as plt
+
+# 분포 살피기 — 히스토그램
+df["score"].plot(kind="hist", bins=20)
+plt.xlabel("점수"); plt.ylabel("빈도")
+plt.show()
+
+# 두 변수 관계 — 산점도
+df.plot(kind="scatter", x="study_hours", y="score")
+plt.show()</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="feature">
+          <h2>특성 공학 (Feature Engineering)</h2>
+          <p>특성(feature)이란 모델이 입력으로 쓰는 <strong>각 열(변수)</strong>입니다. 특성 공학은 원본 데이터를 가공해 <strong>더 쓸모 있는 입력을 만드는</strong> 작업입니다. 좋은 특성 하나가 복잡한 모델보다 성능을 크게 끌어올리기도 합니다.</p>
+          <ul>
+            <li><strong>인코딩</strong> — 범주형("서울","부산")을 숫자로 바꾸기(원-핫 인코딩).</li>
+            <li><strong>스케일링</strong> — 단위가 다른 값(키 cm, 몸무게 kg)을 같은 범위로 맞추기.</li>
+            <li><strong>파생 변수</strong> — 생년월일에서 "나이", 날짜에서 "요일"을 뽑아내기.</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">features.py</span></div>
+            <pre><code class="language-python"># 범주형 → 숫자 열들로(원-핫 인코딩)
+df = pd.get_dummies(df, columns=["city"])
+
+# 파생 변수: 생년에서 나이 계산
+df["age"] = 2026 - df["birth_year"]
+
+# 스케일링: 0~1 범위로 정규화
+col = df["income"]
+df["income_norm"] = (col - col.min()) / (col.max() - col.min())</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="bigdata">
+          <h2>빅데이터와 분산처리</h2>
+          <p>데이터가 한 컴퓨터의 메모리·디스크로 감당 못 할 만큼 커지면 <strong>빅데이터(big data)</strong>의 영역입니다. 흔히 <strong>3V</strong>로 설명합니다 — 양(Volume), 속도(Velocity), 다양성(Variety). 해법은 한 대를 키우는 게(수직 확장) 아니라 <strong>여러 대에 나눠 처리</strong>하는 것(수평 확장, 분산처리)입니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분산처리 클러스터">
+              <g font-family="monospace" font-size="11">
+                <rect x="170" y="15" width="90" height="32" fill="#161b22" stroke="#58a6ff"/><text x="215" y="36" fill="#c9d1d9" text-anchor="middle">마스터</text>
+                <rect x="40"  y="100" width="80" height="32" fill="#161b22" stroke="#3fb950"/><text x="80"  y="121" fill="#c9d1d9" text-anchor="middle">노드 1</text>
+                <rect x="175" y="100" width="80" height="32" fill="#161b22" stroke="#3fb950"/><text x="215" y="121" fill="#c9d1d9" text-anchor="middle">노드 2</text>
+                <rect x="310" y="100" width="80" height="32" fill="#161b22" stroke="#3fb950"/><text x="350" y="121" fill="#c9d1d9" text-anchor="middle">노드 3</text>
+                <line x1="200" y1="47" x2="80"  y2="100" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="215" y1="47" x2="215" y2="100" stroke="#8b949e" stroke-width="1.5"/>
+                <line x1="230" y1="47" x2="350" y2="100" stroke="#8b949e" stroke-width="1.5"/>
+              </g>
+            </svg>
+            <div class="caption">마스터가 일을 쪼개 여러 노드에 분배 — 평범한 컴퓨터 수십~수천 대로 처리</div>
+          </div>
+          <div class="callout">
+            <div class="callout-title">📌 수직 확장 vs 수평 확장</div>
+            <p>한 대를 더 강하게(수직)는 한계가 있고 비쌉니다. 평범한 컴퓨터를 여러 대 묶는(수평) 방식이 빅데이터의 표준입니다. 하둡(Hadoop)·스파크(Spark)가 대표 도구입니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="mapreduce">
+          <h2>맵리듀스 (MapReduce)</h2>
+          <p>맵리듀스는 큰 작업을 여러 노드에 나눠 처리하는 <strong>대표적인 분산 처리 모델</strong>입니다. 이름 그대로 두 단계입니다 — <strong>Map</strong>(각 조각을 (키, 값) 쌍으로 변환), <strong>Reduce</strong>(같은 키끼리 모아 합치기). 그 사이 같은 키를 한곳에 모으는 <em>셔플(shuffle)</em> 단계가 있습니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="맵리듀스 흐름">
+              <g font-family="monospace" font-size="11">
+                <text x="50"  y="18" fill="#8b949e" text-anchor="middle">입력</text>
+                <text x="160" y="18" fill="#58a6ff" text-anchor="middle">Map</text>
+                <text x="280" y="18" fill="#d29922" text-anchor="middle">Shuffle</text>
+                <text x="400" y="18" fill="#3fb950" text-anchor="middle">Reduce</text>
+
+                <rect x="20" y="35" width="60" height="26" fill="#161b22" stroke="#30363d"/><text x="50" y="52" fill="#c9d1d9" text-anchor="middle">cat dog</text>
+                <rect x="20" y="95" width="60" height="26" fill="#161b22" stroke="#30363d"/><text x="50" y="112" fill="#c9d1d9" text-anchor="middle">dog cat</text>
+
+                <rect x="125" y="35" width="70" height="26" fill="#161b22" stroke="#58a6ff"/><text x="160" y="52" fill="#c9d1d9" text-anchor="middle">cat:1 dog:1</text>
+                <rect x="125" y="95" width="70" height="26" fill="#161b22" stroke="#58a6ff"/><text x="160" y="112" fill="#c9d1d9" text-anchor="middle">dog:1 cat:1</text>
+
+                <rect x="240" y="35" width="80" height="26" fill="#161b22" stroke="#d29922"/><text x="280" y="52" fill="#c9d1d9" text-anchor="middle">cat:[1,1]</text>
+                <rect x="240" y="95" width="80" height="26" fill="#161b22" stroke="#d29922"/><text x="280" y="112" fill="#c9d1d9" text-anchor="middle">dog:[1,1]</text>
+
+                <rect x="360" y="35" width="70" height="26" fill="#1c232c" stroke="#3fb950"/><text x="395" y="52" fill="#c9d1d9" text-anchor="middle">cat:2</text>
+                <rect x="360" y="95" width="70" height="26" fill="#1c232c" stroke="#3fb950"/><text x="395" y="112" fill="#c9d1d9" text-anchor="middle">dog:2</text>
+
+                <line x1="80"  y1="48"  x2="125" y2="48"  stroke="#58a6ff" stroke-width="1.5" marker-end="url(#mra)"/>
+                <line x1="80"  y1="108" x2="125" y2="108" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#mra)"/>
+                <line x1="195" y1="48"  x2="240" y2="48"  stroke="#d29922" stroke-width="1.5" marker-end="url(#mra2)"/>
+                <line x1="195" y1="108" x2="240" y2="108" stroke="#d29922" stroke-width="1.5" marker-end="url(#mra2)"/>
+                <line x1="320" y1="48"  x2="360" y2="48"  stroke="#3fb950" stroke-width="1.5" marker-end="url(#mra3)"/>
+                <line x1="320" y1="108" x2="360" y2="108" stroke="#3fb950" stroke-width="1.5" marker-end="url(#mra3)"/>
+              </g>
+              <defs>
+                <marker id="mra" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+                <marker id="mra2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker>
+                <marker id="mra3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3fb950"/></marker>
+              </defs>
+            </svg>
+            <div class="caption">단어 세기 예: Map으로 (단어,1) 만들고 → 같은 단어 모아 → Reduce로 합산</div>
+          </div>
+          <div class="code-block">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">wordcount.py</span></div>
+            <pre><code class="language-python"># 맵리듀스 개념을 단순화한 단어 세기
+
+def map_phase(line):
+    # 각 줄을 (단어, 1) 쌍들로 변환
+    return [(word, 1) for word in line.split()]
+
+def reduce_phase(word, counts):
+    # 같은 단어로 모인 1들을 합산
+    return (word, sum(counts))
+
+# Map → Shuffle(같은 키 묶기) → Reduce 순으로 동작</code></pre>
+          </div>
+        </section>
+
+        <section class="anchor" id="pipeline">
+          <h2>데이터 파이프라인</h2>
+          <p>데이터 파이프라인은 데이터가 <strong>출처에서 분석 결과까지 흐르는 자동화된 통로</strong>입니다. 흔히 <strong>ETL</strong>(Extract 추출 → Transform 변환 → Load 적재)로 부릅니다. 매번 손으로 처리하는 대신, 정해진 순서대로 자동 실행되게 만듭니다.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 440 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ETL 파이프라인">
+              <g font-family="monospace" font-size="11">
+                <rect x="15"  y="40" width="80" height="34" fill="#161b22" stroke="#58a6ff"/><text x="55"  y="61" fill="#c9d1d9" text-anchor="middle">Extract</text>
+                <rect x="135" y="40" width="80" height="34" fill="#161b22" stroke="#d29922"/><text x="175" y="61" fill="#c9d1d9" text-anchor="middle">Transform</text>
+                <rect x="255" y="40" width="80" height="34" fill="#161b22" stroke="#3fb950"/><text x="295" y="61" fill="#c9d1d9" text-anchor="middle">Load</text>
+                <rect x="365" y="40" width="62" height="34" fill="#1c232c" stroke="#bc8cff"/><text x="396" y="61" fill="#c9d1d9" text-anchor="middle">분석</text>
+                <text x="55"  y="30" fill="#8b949e" text-anchor="middle">추출</text>
+                <text x="175" y="30" fill="#8b949e" text-anchor="middle">정제·가공</text>
+                <text x="295" y="30" fill="#8b949e" text-anchor="middle">저장소 적재</text>
+                <line x1="95"  y1="57" x2="135" y2="57" stroke="#8b949e" stroke-width="1.5" marker-end="url(#pla)"/>
+                <line x1="215" y1="57" x2="255" y2="57" stroke="#8b949e" stroke-width="1.5" marker-end="url(#pla)"/>
+                <line x1="335" y1="57" x2="365" y2="57" stroke="#8b949e" stroke-width="1.5" marker-end="url(#pla)"/>
+              </g>
+              <defs><marker id="pla" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+            </svg>
+            <div class="caption">ETL: 추출 → 변환 → 적재. 매일 자동으로 흐르도록 스케줄링</div>
+          </div>
+          <div class="callout tip">
+            <div class="callout-title">💡 재현 가능성</div>
+            <p>분석은 <strong>같은 입력이면 같은 결과</strong>가 나오도록 코드로 남기세요. 손으로 엑셀을 만지면 6개월 뒤 누구도 그 숫자를 재현하지 못합니다.</p>
+          </div>
+        </section>
+
+        <section class="anchor" id="ethics">
+          <h2>윤리와 편향</h2>
+          <p>데이터는 중립적이지 않습니다. <strong>과거의 편향이 데이터에 그대로 담겨</strong>, 분석과 모델이 차별을 학습하고 증폭할 수 있습니다. 채용·대출·치안 같은 영역에서 이는 실제 사람에게 피해를 줍니다.</p>
+          <ul>
+            <li><strong>표본 편향</strong> — 일부 집단만 과/소대표되면 결론이 왜곡됩니다.</li>
+            <li><strong>개인정보</strong> — 식별 가능한 데이터는 익명화·최소 수집 원칙을 지켜야 합니다.</li>
+            <li><strong>설명 가능성</strong> — 왜 그런 결정이 나왔는지 사람에게 설명할 수 있어야 합니다.</li>
+          </ul>
+          <div class="callout danger">
+            <div class="callout-title">🚫 데이터는 거울이다</div>
+            <p>편향된 과거 데이터로 학습하면 모델은 그 편향을 "정답"으로 받아들입니다. 데이터 출처와 수집 방식을 의심하는 것이 분석가의 첫 번째 책임입니다.</p>
+          </div>
+        </section>
+
+        <div class="key-points">
+          <div class="kp-title">🎯 핵심 정리</div>
+          <ul>
+            <li>데이터 과학은 수집 → 정제 → 탐색 → 시각화 → 결정으로 흐른다.</li>
+            <li>현실 데이터는 더럽다 — 정제가 분석 품질을 좌우한다(garbage in, garbage out).</li>
+            <li>EDA는 가설보다 먼저, 데이터가 스스로 말하게 두는 단계다.</li>
+            <li>평균은 이상치에 약하고, 한쪽으로 치우친 데이터엔 중앙값이 낫다.</li>
+            <li>상관은 인과가 아니다 — 숨은 변수를 항상 의심하라.</li>
+            <li>빅데이터는 한 대를 키우지 않고 여러 대에 나눠 처리한다(맵리듀스).</li>
+            <li>데이터는 과거의 편향을 담는다 — 윤리와 편향을 항상 점검하라.</li>
+          </ul>
+        </div>
+
+        <div class="term-list">
+          <dl class="term"><dt>결측치(Missing Value)</dt><dd>값이 비어 있는 칸. 삭제하거나 대표값으로 채워(대치) 처리한다.</dd></dl>
+          <dl class="term"><dt>이상치(Outlier)</dt><dd>정상 범위를 크게 벗어난 값. 오류일 수도, 진짜 특이 사례일 수도 있다.</dd></dl>
+          <dl class="term"><dt>EDA</dt><dd>탐색적 데이터 분석. 통계 요약과 그래프로 데이터의 생김새를 파악하는 단계.</dd></dl>
+          <dl class="term"><dt>분산·표준편차</dt><dd>값들이 평균에서 얼마나 흩어져 있는지를 나타내는 척도.</dd></dl>
+          <dl class="term"><dt>상관 vs 인과</dt><dd>함께 움직이는 경향(상관)과 원인-결과 관계(인과)는 다르다.</dd></dl>
+          <dl class="term"><dt>특성 공학</dt><dd>원본 데이터를 가공해 모델에 더 유용한 입력(특성)을 만드는 작업.</dd></dl>
+          <dl class="term"><dt>맵리듀스</dt><dd>큰 작업을 Map(변환)·Reduce(합치기)로 나눠 여러 노드에서 처리하는 분산 모델.</dd></dl>
+          <dl class="term"><dt>ETL</dt><dd>추출·변환·적재. 데이터를 출처에서 분석 저장소까지 옮기는 파이프라인 단계.</dd></dl>
+          <dl class="term"><dt>편향(Bias)</dt><dd>데이터·분석에 담긴 치우침. 차별과 왜곡된 결론의 원인이 된다.</dd></dl>
+        </div>
+
+        <nav data-page-nav></nav>
+      </article>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/highlight.min.js"></script>
+  <script src="../assets/js/curriculum.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>
