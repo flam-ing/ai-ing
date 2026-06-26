@@ -1564,8 +1564,48 @@ grid-template-columns: 1fr;
 .scroll-story {
   position: relative;
   height: 300vh;
-  background: #ffffff;
+  background: #030408; /* Very deep space black */
+  color: #ffffff;
+  overflow: hidden;
 }
+/* Aurora Background Elements */
+.scroll-story::before,
+.scroll-story::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+.scroll-story::before {
+  top: 10%;
+  left: -10%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #e61862 0%, transparent 80%);
+  animation: aurora-float-1 25s infinite alternate ease-in-out;
+}
+.scroll-story::after {
+  bottom: 10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #38bdf8 0%, transparent 80%);
+  animation: aurora-float-2 25s infinite alternate ease-in-out;
+}
+
+@keyframes aurora-float-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(80px, 50px) scale(1.15); }
+}
+@keyframes aurora-float-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-80px, -50px) scale(1.15); }
+}
+
 .scroll-story-sticky {
   position: sticky;
   top: 0;
@@ -1575,99 +1615,169 @@ grid-template-columns: 1fr;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
+
 .story-scene {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
+  padding: 0 24px;
   will-change: transform, opacity;
   pointer-events: none;
 }
+
 .story-card {
   position: relative;
   width: 100%;
-  height: 100%;
+  max-width: 900px;
+  min-height: 540px;
+  background: rgba(13, 17, 28, 0.45); /* Dark translucent background */
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  padding: 48px;
   display: flex;
-  flex-direction: column;
+  gap: 40px;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 80px 24px;
-  background: #ffffff;
-  text-align: center;
-  z-index: 1;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  overflow: hidden;
+  transition: transform 0.15s ease-out, border-color 0.3s;
+  pointer-events: auto; /* Allow cursor interactions */
+  z-index: 10;
 }
-.story-photo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.55;
-  will-change: transform;
-  pointer-events: none;
-}
-.story-card::after {
+
+/* Spotlight Background Glow */
+.story-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: rgba(255, 255, 255, 0.6);
+  background: radial-gradient(
+    350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+    rgba(230, 24, 98, 0.07),
+    transparent 80%
+  );
+  z-index: 0;
   pointer-events: none;
 }
-.story-card p,
-.story-card span,
-.story-card h3,
-.story-card ul {
-  position: relative;
-  z-index: 2;
+
+/* Spotlight Border Glow */
+.story-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 28px;
+  padding: 1px;
+  background: radial-gradient(
+    250px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+    rgba(255, 255, 255, 0.22),
+    transparent 80%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: 1;
+  pointer-events: none;
 }
-.story-content {
+
+.story-photo {
+  flex: 0 0 320px;
+  height: 440px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
   position: relative;
+  overflow: hidden;
   z-index: 2;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.story-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3, 4, 8, 0.4), transparent);
+}
+
+.story-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 16px;
-  width: 100%;
-  height: auto;
-  max-width: 800px;
+  text-align: left;
+  z-index: 2;
 }
+
 .story-kicker {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: normal;
-  color: rgba(12, 14, 20, 0.65);
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e61862;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
+
 .story-line {
   width: 40px;
   height: 2px;
   background: #e61862;
-  transform-origin: center;
-  will-change: transform;
+  transform-origin: left;
+  transition: transform 0.5s ease-out;
 }
+
 .story-title {
-  max-width: 760px;
-  font-size: clamp(26px, 4vw, 40px);
+  font-family: 'GmarketSans', sans-serif;
+  font-size: clamp(22px, 3.5vw, 28px);
   font-weight: 700;
-  letter-spacing: normal;
-  line-height: 1.2;
-  color: #0c0e14;
+  color: #ffffff;
+  line-height: 1.3;
 }
+
 .story-desc {
-  margin: 0;
-  max-width: 560px;
   font-size: 14.5px;
   font-weight: 400;
   line-height: 1.6;
-  color: #2d3748;
-  letter-spacing: normal;
+  color: rgba(255, 255, 255, 0.7);
 }
+
+.story-card ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13.5px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 10px;
+}
+
+.story-card li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.story-card li strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.story-card li span {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.story-card li span:first-child {
+  color: #e61862;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
 .story-progress {
   position: absolute;
   bottom: 36px;
@@ -1675,17 +1785,21 @@ grid-template-columns: 1fr;
   transform: translateX(-50%);
   display: flex;
   gap: 10px;
+  z-index: 10;
 }
+
 .story-progress span {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   transition: background-color 0.3s;
 }
+
 .story-progress span.on {
-  background: #000000;
+  background: #ffffff;
 }
+
 .brand-link span {
   white-space: nowrap !important;
 }
@@ -1702,8 +1816,29 @@ grid-template-columns: 1fr;
     display: flex !important;
   }
   .story-card {
-    padding: 48px 20px;
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 20px;
     min-height: auto;
+    border-radius: 20px;
+  }
+  .story-card::after {
+    border-radius: 20px;
+  }
+  .story-photo {
+    width: 100%;
+    height: 200px;
+    flex: none;
+  }
+  .story-content {
+    text-align: center;
+    align-items: center;
+  }
+  .story-line {
+    transform-origin: center;
+  }
+  .story-card ul {
+    text-align: left;
   }
 }
 @media (min-width: 769px) {
@@ -2329,7 +2464,7 @@ grid-template-columns: 1fr;
   </div>
 </section>
 
-  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;background:#ffffff;color:#0c0e14;scroll-margin-top:64px;display:none;">
+  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;scroll-margin-top:64px;display:none;">
     <div class="scroll-story-sticky">
       <!-- Scene 1 -->
       <div class="story-scene">
@@ -2340,7 +2475,7 @@ grid-template-columns: 1fr;
             <span class="story-line"></span>
             <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
             <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
@@ -2358,7 +2493,7 @@ grid-template-columns: 1fr;
             <span class="story-line"></span>
             <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
             <p class="story-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
@@ -2375,7 +2510,7 @@ grid-template-columns: 1fr;
             <span class="story-line"></span>
             <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
             <p class="story-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;color:rgba(12,14,20,0.85);margin-top:14px;">
+            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
@@ -2657,31 +2792,62 @@ grid-template-columns: 1fr;
       const total = story.offsetHeight - window.innerHeight;
       if (total <= 0) return;
       const raw = clamp01(-story.getBoundingClientRect().top / total);
-      const p = 0.5 + raw * (scenes.length - 1);
       
       scenes.forEach((scene, i) => {
-        const d = p - (i + 0.5);
-        const vis = clamp01(1 - Math.abs(d) * 2.4);
-        const eased = vis * vis * (3 - 2 * vis); // smoothstep
+        const target_raw = i / Math.max(1, scenes.length - 1);
+        const diff = raw - target_raw;
+        
+        let translateY_val = 0;
+        let scale_val = 1.0;
+        let opacity_val = 1.0;
         
         if (prefersReducedMotion) {
-          scene.style.opacity = Math.abs(d) < 0.5 ? '1' : '0';
+          scene.style.opacity = Math.abs(diff) < 0.25 ? '1' : '0';
+          scene.style.transform = 'none';
+          scene.style.pointerEvents = Math.abs(diff) < 0.25 ? 'auto' : 'none';
           return;
         }
-        
-        scene.style.opacity = String(eased);
-        scene.style.transform = `translateY(${d * -90}px) scale(${0.94 + eased * 0.06})`;
-        const photo = scene.querySelector('.story-photo');
-        if (photo) {
-          photo.style.transform = `translateY(${d * -28}px) scale(1.12)`;
+
+        if (diff < 0) {
+          // Card is coming up
+          const t = clamp01(1 + diff * 2.0); // animates in the 0.5 raw range before target
+          translateY_val = (1.0 - t) * 120 + i * 20; // 120vh down to stack offset i*20px
+          scale_val = 0.92 + t * 0.08;
+          opacity_val = t;
+          scene.style.pointerEvents = 'none';
+        } else {
+          // Card is stacked or being covered
+          const t = clamp01(diff * 2.0); // animates in the 0.5 raw range after target
+          translateY_val = i * 20 - t * 35; // moves up slightly from i*20px
+          scale_val = 1.0 - t * 0.06;
+          opacity_val = 1.0 - t * 0.45;
+          // Only the topmost card (or the card that has fully arrived and is not yet covered) should accept mouse events
+          scene.style.pointerEvents = t < 0.8 ? 'auto' : 'none';
         }
+        
+        scene.style.zIndex = String(10 + i);
+        scene.style.opacity = String(opacity_val);
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+          // Mobile stack: simpler transition
+          const mobileY = diff < 0 ? (1.0 - clamp01(1 + diff * 2.0)) * 250 + i * 15 : i * 15 - clamp01(diff * 2.0) * 20;
+          scene.style.transform = `translateY(${mobileY}px) scale(${scale_val})`;
+        } else {
+          // Desktop stacked layout: i*20px offset is fixed px, translateY_val * vh is proportional
+          const vhOffset = diff < 0 ? (1.0 - clamp01(1 + diff * 2.0)) * 120 : -clamp01(diff * 2.0) * 35;
+          const pxOffset = i * 20;
+          scene.style.transform = `translateY(calc(${vhOffset}vh + ${pxOffset}px)) scale(${scale_val})`;
+        }
+
         const line = scene.querySelector('.story-line');
         if (line) {
-          line.style.transform = `scaleX(${eased})`;
+          const lineScale = diff < 0 ? clamp01(1 + diff * 2.0) : 1.0;
+          line.style.transform = `scaleX(${lineScale})`;
         }
       });
 
-      const idx = Math.min(Math.round(p - 0.5), scenes.length - 1);
+      const idx = Math.min(Math.round(raw * (scenes.length - 1)), scenes.length - 1);
       dots.forEach((dot, i) => dot.classList.toggle('on', i <= idx));
       storyTicking = false;
     };
@@ -2695,7 +2861,7 @@ grid-template-columns: 1fr;
     
     window.addEventListener('resize', updateStory);
     
-    // Listen for tab changes (via class MutationObserver)
+    // Listen for tab changes
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
@@ -2706,6 +2872,35 @@ grid-template-columns: 1fr;
     observer.observe(story, { attributes: true });
     
     updateStory();
+    setupSpotlightAndTilt();
+  }
+
+  function setupSpotlightAndTilt() {
+    const cards = document.querySelectorAll('.story-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+        
+        if (window.innerWidth > 768) {
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
+          const rotateY = ((x - centerX) / centerX) * 6;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        }
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+        card.style.removeProperty('--mouse-x');
+        card.style.removeProperty('--mouse-y');
+      });
+    });
   }
 
   // Countup Animation
