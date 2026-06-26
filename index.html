@@ -1560,38 +1560,31 @@ grid-template-columns: 1fr;
 }
 } /* Close max-width 768px media query */
 
-/* ===== SERVICES FLOW TIMELINE (autoae.online style) ===== */
+/* ===== SERVICES STICKY SCROLL SECTION (autoae.online style) ===== */
 .scroll-story {
   position: relative;
   background: #030408;
   color: #ffffff;
   overflow: hidden;
   padding: 100px 0;
+  transition: background 0.8s ease;
 }
 /* Background Glows */
-.scroll-story::before,
-.scroll-story::after {
+.scroll-story::before {
   content: '';
   position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
-  filter: blur(160px);
-  opacity: 0.12;
+  background: radial-gradient(circle, #e61862 0%, transparent 70%);
+  filter: blur(150px);
+  opacity: 0.14;
   pointer-events: none;
   z-index: 0;
-}
-.scroll-story::before {
-  top: 5%;
-  left: 10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #e61862 0%, transparent 80%);
-}
-.scroll-story::after {
-  bottom: 5%;
-  right: 10%;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, #38bdf8 0%, transparent 80%);
+  transition: background 0.8s ease, top 0.8s ease, left 0.8s ease;
 }
 
 .services-container {
@@ -1604,7 +1597,7 @@ grid-template-columns: 1fr;
 
 .services-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 .services-kicker {
   font-family: 'GmarketSans', sans-serif;
@@ -1630,129 +1623,92 @@ grid-template-columns: 1fr;
   line-height: 1.6;
 }
 
-.services-flow {
+/* Desktop-only Sticky Scroll layout */
+.desktop-services-layout {
+  display: block;
   position: relative;
-  padding: 60px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 120px;
+  height: 240vh; /* 80vh per section, total 3 sections */
 }
-
-/* Timeline Central Line */
-.flow-line-bg {
-  position: absolute;
-  left: 50%;
+.sticky-inner-wrapper {
+  position: sticky;
   top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateX(-50%);
-}
-.flow-line-progress {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, #e61862, #38bdf8);
-  transform: translateX(-50%);
-  height: 0%; /* updated via JS */
-  will-change: height;
-}
-
-/* Flow Item */
-.flow-item {
+  height: 100vh;
   display: flex;
   align-items: center;
-  gap: 80px;
+  justify-content: space-between;
+  gap: 60px;
+  overflow: hidden;
+}
+.sticky-text-pane {
   position: relative;
+  width: 46%;
+  height: 500px; /* Same as mockup height */
 }
-.flow-item.reverse {
-  flex-direction: row-reverse;
-}
-.flow-content-col, .flow-media-col {
-  flex: 1;
-  width: 50%;
-}
-.flow-content-col {
+.sticky-text-item {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%) translateY(30px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
 }
-.flow-media-col {
-  display: flex;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-/* Active animation triggers */
-.flow-item.revealed .flow-content-col,
-.flow-item.revealed .flow-media-col {
+.sticky-text-item.active {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(-50%) translateY(0);
+  pointer-events: auto;
 }
 
-/* Flow Dot */
-.flow-dot-outer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #030408;
-  border: 2px solid rgba(255, 255, 255, 0.12);
+.sticky-mockup-pane {
+  width: 48%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 10;
-  transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
-  will-change: transform, border-color, box-shadow;
-}
-.flow-dot {
-  font-family: 'GmarketSans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.4);
-  transition: color 0.4s;
 }
 
-.flow-item.active .flow-dot-outer {
-  border-color: #e61862;
-  box-shadow: 0 0 20px rgba(230, 24, 98, 0.5);
-  transform: translate(-50%, -50%) scale(1.15);
+/* Mobile-only normal layout */
+.mobile-services-layout {
+  display: none;
 }
-.flow-item.active .flow-dot {
-  color: #ffffff;
+.mobile-flow-item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 32px 24px;
 }
 
-/* Content Details */
+/* Common Content Styles inside items */
 .item-kicker {
   font-family: 'GmarketSans', sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #e61862;
   letter-spacing: 0.15em;
+  margin: 0;
 }
 .item-title {
   font-family: 'GmarketSans', sans-serif;
-  font-size: clamp(20px, 3vw, 26px);
+  font-size: clamp(22px, 3vw, 28px);
   font-weight: 800;
   color: #ffffff;
+  margin: 0;
 }
 .item-desc {
   font-size: 14.5px;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
+  margin: 0;
 }
 .item-list {
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1775,21 +1731,21 @@ grid-template-columns: 1fr;
   flex-shrink: 0;
 }
 
-/* Mockup Window */
+/* Premium Browser Window Mockups */
 .mockup-window {
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #0f111a;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease-out;
 }
 .mockup-header {
-  height: 36px;
+  height: 38px;
   background: rgba(255, 255, 255, 0.02);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
@@ -1816,19 +1772,349 @@ grid-template-columns: 1fr;
   padding: 3px 0;
   font-family: monospace;
 }
+
+/* ===== premium mockup screen inside browser window ===== */
 .mockup-body {
-  height: 280px;
-  background-size: cover;
-  background-position: center;
+  height: 360px; /* Make it a bit taller to fit rich content */
   position: relative;
+  background: #0f111a;
+  overflow: hidden;
 }
-.mockup-body::after {
-  content: '';
+.mockup-screen {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(3, 4, 8, 0.2), transparent);
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  background: #0f111a;
+}
+.mockup-screen.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
+/* Screen 1: Agent Terminal */
+.screen-agent-flow {
+  display: flex;
+  height: 100%;
+  padding: 16px;
+  gap: 16px;
+}
+.agent-pipeline {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.pipeline-node {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+.pipeline-node.done {
+  border-color: rgba(39, 201, 63, 0.3);
+  color: #fff;
+}
+.pipeline-node.active {
+  border-color: rgba(230, 24, 98, 0.4);
+  background: rgba(230, 24, 98, 0.05);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(230,24,98,0.15);
+}
+.pipeline-node .badge {
+  font-weight: bold;
+}
+.pipeline-node.done .badge {
+  color: #27c93f;
+}
+.pipeline-connector {
+  width: 2px;
+  height: 12px;
+  background: rgba(255,255,255,0.08);
+  margin-left: 20px;
+}
+.pipeline-connector.done {
+  background: #27c93f;
+}
+.pipeline-connector.active {
+  background: linear-gradient(to bottom, #27c93f, #e61862);
+}
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #e61862;
+  border-radius: 50%;
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.agent-terminal {
+  width: 55%;
+  background: #07090e;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: monospace;
+}
+.terminal-bar {
+  background: rgba(255,255,255,0.03);
+  padding: 6px 12px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.terminal-content {
+  padding: 12px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.log-line.info { color: rgba(255,255,255,0.4); }
+.log-line.ai { color: #8c82ff; }
+.log-line.success { color: #27c93f; }
+.blink-cursor {
+  color: #e61862;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Screen 2: VS Code IDE */
+.screen-ide-layout {
+  display: flex;
+  height: 100%;
+  background: #11131c;
+}
+.ide-sidebar {
+  width: 25%;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  background: #0c0e14;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+}
+.sidebar-title {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.sidebar-item {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+.sidebar-item.active {
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+}
+.ide-editor {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+}
+.editor-tabs {
+  background: #0d0f16;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  height: 28px;
+  display: flex;
+}
+.editor-tabs .tab {
+  padding: 0 16px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  background: #11131c;
+}
+.editor-tabs .tab.active {
+  background: #11131c;
+  color: #fff;
+  border-bottom: 1px solid #e61862;
+}
+.editor-code {
+  padding: 16px 12px;
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #abb2bf;
+}
+.code-line.del {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  padding-left: 2px;
+}
+.code-line.add {
+  background: rgba(39, 201, 63, 0.15);
+  color: #4ade80;
+  padding-left: 2px;
+}
+.c-keyword { color: #c678dd; }
+.c-str { color: #98c379; }
+.c-fn { color: #61afef; }
+.c-obj { color: #d19a66; }
+.c-tag { color: #e06c75; }
+
+.ide-assistant {
+  width: 27%;
+  background: #0f111a;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.assistant-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: #8c82ff;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 6px;
+}
+.assistant-content {
+  font-size: 9.5px;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.7);
+}
+.chat-msg {
+  background: rgba(255,255,255,0.03);
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.chat-tag {
+  font-size: 9px;
+  color: #27c93f;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Screen 3: Classroom Presentation Dashboard */
+.screen-edu-dashboard {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.edu-slideshow {
+  background: #0c0e14;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 12px;
+  flex: 1;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.slide-header {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 4px;
+}
+.slide-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.diagram-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.flow-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #fff;
+}
+.flow-box.accent {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: #06b6d4;
+  color: #06b6d4;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+.flow-arrow {
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+}
+.slide-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+.edu-badges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.edu-badges .badge {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.badge.purple { background: rgba(140, 130, 255, 0.1); color: #8c82ff; border: 1px solid rgba(140,130,255,0.2); }
+.badge.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
+.badge.cyan { background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6,182,212,0.2); }
+.badge.pink { background: rgba(230, 24, 98, 0.1); color: #e61862; border: 1px solid rgba(230,24,98,0.2); }
+
+.edu-progress {
+  width: 100%;
+}
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #e61862);
+  border-radius: 3px;
+}
+
+/* Brand Link Wrap fixes */
 .brand-link span {
   white-space: nowrap !important;
 }
@@ -1846,26 +2132,20 @@ grid-template-columns: 1fr;
   }
 }
 @media (max-width: 992px) {
-  .flow-line-bg, .flow-line-progress, .flow-dot-outer {
-    left: 24px;
-    transform: none;
+  .desktop-services-layout {
+    display: none;
   }
-  .flow-dot-outer {
-    top: 0;
-    transform: translateY(-50%);
-  }
-  .flow-item.active .flow-dot-outer {
-    transform: scale(1.1) translateY(-45%);
-  }
-  .flow-item, .flow-item.reverse {
+  .mobile-services-layout {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
-    padding-left: 60px;
+    gap: 40px;
+    padding: 20px 0;
   }
-  .flow-content-col, .flow-media-col {
-    width: 100%;
-    flex: none;
+  .mobile-flow-item .mockup-window {
+    max-width: 100%;
+  }
+  .mobile-flow-item .mockup-body {
+    height: 280px;
   }
 }
 @media (min-width: 769px) {
@@ -2498,135 +2778,342 @@ grid-template-columns: 1fr;
         <h2 class="services-title">제공하는 전문 교육 &amp; 컨설팅 서비스</h2>
         <p class="services-lead">비개발자의 관점에서 가장 쉽고 빠르며, 최신 AI 도구를 융합하는 실무적인 가치를 전합니다.</p>
       </div>
-      
-      <div class="services-flow">
-        <!-- Central Line -->
-        <div class="flow-line-bg"></div>
-        <div class="flow-line-progress"></div>
-        
-        <!-- Item 1 -->
-        <div class="flow-item" id="service-item-1">
-          <div class="flow-dot-outer">
-            <div class="flow-dot">01</div>
+
+      <!-- DESKTOP STICKY SCROLL LAYOUT (Visible only on desktop > 992px) -->
+      <div class="desktop-services-layout">
+        <!-- Sticky Wrapper -->
+        <div class="sticky-inner-wrapper">
+          <!-- Left: Scrolling Content -->
+          <div class="sticky-text-pane">
+            
+            <!-- Step 1 Text -->
+            <div class="sticky-text-item active" data-step="1">
+              <p class="item-kicker">01 / B2B · AUTO</p>
+              <h3 class="item-title">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
+              <p class="item-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
+              <ul class="item-list">
+                <li><span class="arrow">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
+                <li><span class="arrow">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
+                <li><span class="arrow">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
+                <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
+              </ul>
+            </div>
+
+            <!-- Step 2 Text -->
+            <div class="sticky-text-item" data-step="2">
+              <p class="item-kicker">02 / 1:1 · MENTOR</p>
+              <h3 class="item-title">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
+              <p class="item-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
+              <ul class="item-list">
+                <li><span class="arrow">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
+                <li><span class="arrow">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
+                <li><span class="arrow">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
+              </ul>
+            </div>
+
+            <!-- Step 3 Text -->
+            <div class="sticky-text-item" data-step="3">
+              <p class="item-kicker">03 / 기관 · EDU</p>
+              <h3 class="item-title">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
+              <p class="item-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
+              <ul class="item-list">
+                <li><span class="arrow">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
+                <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
+                <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
+              </ul>
+            </div>
+
           </div>
-          <div class="flow-content-col">
-            <p class="item-kicker">01 / B2B · AUTO</p>
-            <h3 class="item-title">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
-            <p class="item-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
-            <ul class="item-list">
-              <li><span class="arrow">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
-              <li><span class="arrow">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
-              <li><span class="arrow">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
-              <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
-            </ul>
-          </div>
-          <div class="flow-media-col">
+
+          <!-- Right: Sticky Mockup -->
+          <div class="sticky-mockup-pane">
             <div class="mockup-window">
               <div class="mockup-header">
                 <span class="mockup-dot red"></span>
                 <span class="mockup-dot yellow"></span>
                 <span class="mockup-dot green"></span>
-                <div class="mockup-address">https://ai-ing.org/automation</div>
+                <div class="mockup-address" id="mockup-url">https://ai-ing.org/automation</div>
               </div>
-              <div class="mockup-body" style="background-image: url('img/story-1.jpg');"></div>
+              <div class="mockup-body">
+                <!-- Screen 1: Agent Terminal -->
+                <div class="mockup-screen active" data-screen="1">
+                  <div class="screen-agent-flow">
+                    <div class="agent-pipeline">
+                      <div class="pipeline-node done"><span class="badge">✓</span> 스크래핑/크롤링 진단</div>
+                      <div class="pipeline-connector done"></div>
+                      <div class="pipeline-node done"><span class="badge">✓</span> Claude PDF 분석</div>
+                      <div class="pipeline-connector active"></div>
+                      <div class="pipeline-node active"><span class="pulse-dot"></span> 노션 데이터베이스 싱크</div>
+                      <div class="pipeline-connector"></div>
+                      <div class="pipeline-node"><span class="badge"></span> 24h AI 비서 대기</div>
+                    </div>
+                    <div class="agent-terminal">
+                      <div class="terminal-bar">
+                        <span>bash - agent@ai-ing: ~</span>
+                      </div>
+                      <div class="terminal-content">
+                        <div class="log-line">$ python3 runner.py --task tax_invoice_sync</div>
+                        <div class="log-line info">[INFO] AX 업무 자동화 파이프라인 가동...</div>
+                        <div class="log-line info">[INFO] 세무 폴더 검사 중: PDF 파일 12개 발견.</div>
+                        <div class="log-line ai">[AI] Claude 3.5 Sonnet 연동 성공.</div>
+                        <div class="log-line ai">[AI] 영수증 내역 및 세부 세액 12개 파싱 완료.</div>
+                        <div class="log-line success">[SUCCESS] Notion DB '2026_지출결의서' 동기화 완료!</div>
+                        <div class="log-line info">[INFO] 로컬 임직원 기기 보안망 보호 조치 적용.</div>
+                        <div class="log-line blink-cursor">_</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Screen 2: VS Code AI Collaborative Coding -->
+                <div class="mockup-screen" data-screen="2">
+                  <div class="screen-ide-layout">
+                    <div class="ide-sidebar">
+                      <div class="sidebar-title">WORKSPACE</div>
+                      <div class="sidebar-item">├─ main.py</div>
+                      <div class="sidebar-item active">├─ App.tsx</div>
+                      <div class="sidebar-item">└─ schema.sql</div>
+                    </div>
+                    <div class="ide-editor">
+                      <div class="editor-tabs">
+                        <div class="tab active">App.tsx</div>
+                      </div>
+                      <div class="editor-code">
+                        <div class="code-line"><span class="c-keyword">import</span> React <span class="c-keyword">from</span> <span class="c-str">'react'</span>;</div>
+                        <div class="code-line"><span class="c-keyword">const</span> <span class="c-fn">UserQuery</span> = () => {</div>
+                        <div class="code-line del">-   <span class="c-keyword">const</span> users = <span class="c-keyword">await</span> db.query(<span class="c-str">'SELECT * FROM users'</span>);</div>
+                        <div class="code-line add">+   <span class="c-keyword">const</span> user = <span class="c-keyword">await</span> db.user.findUnique({ <span class="c-obj">where</span>: { id } });</div>
+                        <div class="code-line"><span class="c-keyword">return</span> &lt;<span class="c-tag">div</span>&gt;{user.name}&lt;/<span class="c-tag">div</span>&gt;;</div>
+                        <div class="code-line">};</div>
+                      </div>
+                    </div>
+                    <div class="ide-assistant">
+                      <div class="assistant-header">Claude AI Code (1:1 Mentoring)</div>
+                      <div class="assistant-content">
+                        <p class="chat-msg">기존의 전체 유저 로드 방식은 대용량 트래픽에서 N+1 쿼리 오버헤드가 있습니다. ORM 인덱스 컬럼을 타도록 수정 코드를 제안했습니다.</p>
+                        <div class="chat-tag">Optimized via Claude</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Screen 3: Slide Deck Presentation Dashboard -->
+                <div class="mockup-screen" data-screen="3">
+                  <div class="screen-edu-dashboard">
+                    <div class="edu-slideshow">
+                      <div class="slide-header">AX &amp; Full-Stack AI Course</div>
+                      <div class="slide-canvas">
+                        <div class="diagram-flow">
+                          <div class="flow-box">Prompt</div>
+                          <div class="flow-arrow">➔</div>
+                          <div class="flow-box accent">LLM Agent</div>
+                          <div class="flow-arrow">➔</div>
+                          <div class="flow-box">Service Deploy</div>
+                        </div>
+                        <div class="slide-title">12회차 실습: 생성형 AI 에이전트 웹 배포</div>
+                      </div>
+                    </div>
+                    <div class="edu-badges">
+                      <span class="badge purple">TypeScript</span>
+                      <span class="badge blue">Next.js</span>
+                      <span class="badge cyan">Python</span>
+                      <span class="badge pink">AI Integration</span>
+                    </div>
+                    <div class="edu-progress">
+                      <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:11px; color:rgba(255,255,255,0.4);">
+                        <span>강의 진행률</span>
+                        <span>85% (17/20회 완료)</span>
+                      </div>
+                      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
-        
-        <!-- Item 2 -->
-        <div class="flow-item reverse" id="service-item-2">
-          <div class="flow-dot-outer">
-            <div class="flow-dot">02</div>
-          </div>
-          <div class="flow-content-col">
-            <p class="item-kicker">02 / 1:1 · MENTOR</p>
-            <h3 class="item-title">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
-            <p class="item-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
-            <ul class="item-list">
-              <li><span class="arrow">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
-              <li><span class="arrow">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
-              <li><span class="arrow">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
-            </ul>
-          </div>
-          <div class="flow-media-col">
-            <div class="mockup-window">
-              <div class="mockup-header">
-                <span class="mockup-dot red"></span>
-                <span class="mockup-dot yellow"></span>
-                <span class="mockup-dot green"></span>
-                <div class="mockup-address">https://ai-ing.org/mentoring</div>
-              </div>
-              <div class="mockup-body" style="background-image: url('img/story-2.jpg');"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Item 3 -->
-        <div class="flow-item" id="service-item-3">
-          <div class="flow-dot-outer">
-            <div class="flow-dot">03</div>
-          </div>
-          <div class="flow-content-col">
-            <p class="item-kicker">03 / 기관 · EDU</p>
-            <h3 class="item-title">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
-            <p class="item-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
-            <ul class="item-list">
-              <li><span class="arrow">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
-              <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
-              <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
-            </ul>
-          </div>
-          <div class="flow-media-col">
-            <div class="mockup-window">
-              <div class="mockup-header">
-                <span class="mockup-dot red"></span>
-                <span class="mockup-dot yellow"></span>
-                <span class="mockup-dot green"></span>
-                <div class="mockup-address">https://ai-ing.org/education</div>
-              </div>
-              <div class="mockup-body" style="background-image: url('img/story-3.jpg');"></div>
-            </div>
-          </div>
-        </div>
-        
       </div>
+
+      <!-- MOBILE FLOW LAYOUT (Visible only on mobile/tablet <= 992px) -->
+      <div class="mobile-services-layout">
+        <!-- Item 1 -->
+        <div class="mobile-flow-item">
+          <p class="item-kicker">01 / B2B · AUTO</p>
+          <h3 class="item-title">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
+          <p class="item-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
+          <ul class="item-list" style="margin-bottom: 24px;">
+            <li><span class="arrow">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
+            <li><span class="arrow">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
+            <li><span class="arrow">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
+            <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
+          </ul>
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+              <div class="mockup-address">https://ai-ing.org/automation</div>
+            </div>
+            <div class="mockup-body" style="background-image: url('img/story-1.jpg');"></div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="mobile-flow-item" style="margin-top: 60px;">
+          <p class="item-kicker">02 / 1:1 · MENTOR</p>
+          <h3 class="item-title">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
+          <p class="item-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
+          <ul class="item-list" style="margin-bottom: 24px;">
+            <li><span class="arrow">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
+            <li><span class="arrow">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
+            <li><span class="arrow">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
+          </ul>
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+              <div class="mockup-address">https://ai-ing.org/mentoring</div>
+            </div>
+            <div class="mockup-body" style="background-image: url('img/story-2.jpg');"></div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="mobile-flow-item" style="margin-top: 60px;">
+          <p class="item-kicker">03 / 기관 · EDU</p>
+          <h3 class="item-title">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
+          <p class="item-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
+          <ul class="item-list" style="margin-bottom: 24px;">
+            <li><span class="arrow">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
+            <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
+            <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
+          </ul>
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+              <div class="mockup-address">https://ai-ing.org/education</div>
+            </div>
+            <div class="mockup-body" style="background-image: url('img/story-3.jpg');"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- ============ CONTACT ============ -->
   
   <!-- ============ PAYMENT ============ -->
-  <section id="payment" class="tab-content-section" style="background:#f8f9fa;padding:clamp(60px,7vw,100px) 0;border-top:1px solid #eef0f3;scroll-margin-top:64px;">
-    <div style="width:min(960px,92vw);margin:0 auto;text-align:center;">
+  <section id="payment" class="tab-content-section" style="background:#030408;padding:clamp(80px,9vw,130px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
+    <div style="width:min(1200px,92vw);margin:0 auto;text-align:center;">
 
+      <div class="payment-header" style="text-align:center; margin-bottom: 60px;">
+        <p class="payment-kicker" style="font-family:'GmarketSans',sans-serif; font-size:13px; font-weight:700; color:#e61862; letter-spacing:0.25em; text-transform:uppercase; margin-bottom:12px;">PAYMENT PLAN</p>
+        <h2 class="payment-title" style="font-family:'GmarketSans',sans-serif; font-size:clamp(28px, 4vw, 42px); font-weight:800; color:#ffffff; margin-bottom:20px;">합리적인 서비스 플랜 &amp; 결제 안내</h2>
+        <p class="payment-lead" style="font-size:16px; color:rgba(255, 255, 255, 0.6); max-width:600px; margin:0 auto; line-height:1.6;">신용카드 및 간편 결제(카카오페이)와 계좌이체 등 편리한 결제 방식을 통해 바로 서비스를 예약하실 수 있습니다.</p>
+      </div>
+
+      <!-- Pricing Tier Table / Variety -->
+      <div class="pricing-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:50px; text-align:left;">
+        <!-- Tier 1: AX Automation -->
+        <div data-reveal="up" class="pricing-card" style="border-radius:12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); padding:32px; display:flex; flex-direction:column; justify-content:space-between; transition:transform .3s, border-color .3s, box-shadow .3s; position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:#e61862;"></div>
+          <div>
+            <h4 style="font-family:'GmarketSans',sans-serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">AX 컨설팅 &amp; AI 업무 자동화</h4>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:20px;">반복 실무 제거 및 AI 비서 도입</p>
+            <div style="font-size:32px; font-weight:800; color:#fff; margin-bottom:24px; font-family:'Outfit',sans-serif;">맞춤 견적</div>
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; color:rgba(255,255,255,0.7); font-size:14px;">
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#e61862;">✓</span> 직무 프로세스 진단 &amp; 비효율 분석</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#e61862;">✓</span> 24시간 로컬 AI 에이전트 구축</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#e61862;">✓</span> 노션/메신저 자동 연동 가이드</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#e61862;">✓</span> 보안망 세팅 &amp; 데이터 유출 방지</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tier 2: 1:1 Mentoring -->
+        <div data-reveal="up" data-delay="100" class="pricing-card active" style="border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(230,24,98,0.3); padding:32px; display:flex; flex-direction:column; justify-content:space-between; transition:transform .3s, border-color .3s, box-shadow .3s; position:relative; overflow:hidden; box-shadow:0 10px 30px rgba(230,24,98,0.1);">
+          <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #e61862, #06b6d4);"></div>
+          <div style="position:absolute; top:12px; right:12px; background:#e61862; color:#fff; font-size:10px; font-weight:700; padding:3px 8px; border-radius:12px; text-transform:uppercase; font-family:'GmarketSans',sans-serif;">Most Popular</div>
+          <div>
+            <h4 style="font-family:'GmarketSans',sans-serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">1:1 AI 협업 코딩 &amp; 멘토링</h4>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:20px;">개발 입문자 및 전공자 맞춤 실무 교육</p>
+            <div style="font-size:32px; font-weight:800; color:#fff; margin-bottom:24px; font-family:'Outfit',sans-serif;">맞춤 설계</div>
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; color:rgba(255,255,255,0.7); font-size:14px;">
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 1:1 라이브 밀착 가이드 (Google Meet)</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> AI 에이전트 &amp; 웹 서비스 설계 실습</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 면접용 포트폴리오 피드백 &amp; 코드 리뷰</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 실무형 개발 워크플로우 전수</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tier 3: Corporate Lectures -->
+        <div data-reveal="up" data-delay="200" class="pricing-card" style="border-radius:12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); padding:32px; display:flex; flex-direction:column; justify-content:space-between; transition:transform .3s, border-color .3s, box-shadow .3s; position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:#06b6d4;"></div>
+          <div>
+            <h4 style="font-family:'GmarketSans',sans-serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">기업/기관 AI 특강 &amp; 교육</h4>
+            <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom:20px;">사내 AI 교육 및 디지털 융합 특강</p>
+            <div style="font-size:32px; font-weight:800; color:#fff; margin-bottom:24px; font-family:'Outfit',sans-serif;">맞춤 제안</div>
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; color:rgba(255,255,255,0.7); font-size:14px;">
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 전직원/학생 대상 트렌드 분석 세미나</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 실습 중심의 AI 리터러시 강화 특강</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 교육 기관 연계 AI 인재 육성 프로젝트</li>
+              <li style="display:flex; gap:8px; align-items:center;"><span style="color:#06b6d4;">✓</span> 맞춤형 강의자료 &amp; 커리큘럼 제공</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods Box -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:0px;">
         <!-- Card 1: Account Transfer -->
-        <div data-reveal="up" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #3b33a5;padding:32px;transition:transform .3s,box-shadow .3s;">
-          <div style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#3b33a5;margin-bottom:20px;text-transform:uppercase;">METHOD 01</div>
-          <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:12px;">무통장 입금 (계좌이체)</h3>
-          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">상담 진행 후 발행된 인보이스(청구서)에 따라 정해진 계좌로 송금합니다. 현금영수증 및 세금계산서 발행이 즉시 지원됩니다.</p>
-          <div style="background:#f4f5f7;padding:16px 20px;border-radius:2px;border:1px solid #e3e5ea;">
-            <div style="font-size:12px;color:#8b93a5;font-weight:500;margin-bottom:4px;">주거래 계좌 정보</div>
-            <div style="font-size:15px;font-weight:700;color:#0c0e14;margin-bottom:2px;">토스뱅크 1002-6334-1822</div>
-            <div style="font-size:13px;color:#5c6573;">예금주: 김민우(에이아잉)</div>
-          <div class="mobile-only-buttons" style="display:flex;gap:10px;margin-top:16px;">
-            <a href="http://aq.gy/f/iYQcx" target="_blank" rel="noopener noreferrer" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#3b33a5;color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;text-align:center;" class="btn-gradient-hover">송금하기</a>
-            <button type="button" onclick="copyAccount()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:transparent;color:#3b33a5;border:1px solid #3b33a5;font-size:14px;font-weight:700;transition:background 0.2s,color 0.2s;cursor:pointer;" class="btn-outline-hover">계좌번호 복사</button>
+        <div data-reveal="up" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #3b33a5;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#8c82ff;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 01</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">무통장 입금 (계좌이체)</h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">상담 진행 후 발행된 인보이스(청구서)에 따라 정해진 계좌로 송금합니다. 현금영수증 및 세금계산서 발행이 즉시 지원됩니다.</p>
+            
+            <div style="background:rgba(255,255,255,0.03);padding:16px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);margin-bottom:20px;">
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:500;margin-bottom:6px;">주거래 계좌 정보</div>
+              <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">토스뱅크 1002-6334-1822</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.6);">예금주: 김민우(에이아잉)</div>
+            </div>
           </div>
-          <div class="pc-only-qr" style="margin-top:20px;text-align:center;display:none;">
-            <div style="font-size:12px;color:#8b93a5;margin-bottom:8px;font-weight:500;">계좌 송금 서비스 QR</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http%3A%2F%2Faq.gy%2Ff%2FiYQcx" alt="Toss Remittance QR" style="width:130px;height:130px;border:1px solid #e3e5ea;border-radius:4px;padding:4px;background:#fff;display:inline-block;">
-          </div>
+          
+          <div>
+            <div class="mobile-only-buttons" style="display:flex;gap:10px;">
+              <a href="http://aq.gy/f/iYQcx" target="_blank" rel="noopener noreferrer" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:6px;background:#3b33a5;color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;text-align:center;" class="btn-gradient-hover">송금하기</a>
+              <button type="button" onclick="copyAccount()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:6px;background:transparent;color:#8c82ff;border:1px solid #3b33a5;font-size:14px;font-weight:700;transition:background 0.2s,color 0.2s;cursor:pointer;" class="btn-outline-hover">계좌번호 복사</button>
+            </div>
+            
+            <div class="pc-only-qr" style="margin-top:10px;text-align:center;display:none;">
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;font-weight:500;">계좌 송금 서비스 QR</div>
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http%3A%2F%2Faq.gy%2Ff%2FiYQcx" alt="Toss Remittance QR" style="width:130px;height:130px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px;background:#fff;display:inline-block;">
+            </div>
           </div>
         </div>
 
         <!-- Card 2: Card / PG Payment -->
-        <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:3px;background:#fff;border:1px solid #e3e5ea;border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;">
-          <div style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;margin-bottom:20px;text-transform:uppercase;">METHOD 02</div>
-          <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:12px;">신용카드 및 간편 결제</h3>
-          <p style="color:#5c6573;font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이 및 국내 주요 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 원하시는 결제 수단을 선택하세요.<br><span style="font-size:13px;color:#e61862;font-weight:700;">(서비스 제공 기간: 비실물 상품으로 결제 완료 후 즉시 사용 및 예약 가능하며, 구매일로부터 최대 1년 이내에 제공 완료됩니다.)</span></p>
-          <div style="display:flex;gap:10px;margin-top:16px;">
-            <button type="button" onclick="openPaymentModal()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:4px;background:#e61862;color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제</button>
+        <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#ff5e9c;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 02</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">신용카드 및 간편 결제</h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 토스페이 등 국내 주요 간편결제 및 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 결제 수단을 선택하세요.</p>
+            
+            <div style="background:rgba(230,24,98,0.05);border:1px solid rgba(230,24,98,0.15);padding:16px;border-radius:8px;margin-bottom:20px;">
+              <span style="font-size:13px;color:#ff5e9c;font-weight:500;display:block;line-height:1.5;">
+                <strong>서비스 제공 기간 안내:</strong> 비실물 온라인 상품으로 결제 완료 시 즉시 예약되거나 컨설팅이 배정되며, 구매일로부터 최대 1년 이내에 최종 완료됩니다.
+              </span>
+            </div>
+          </div>
+          
+          <div>
+            <button type="button" onclick="openPaymentModal()" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:14px;border-radius:6px;background:#e61862;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제창 열기</button>
           </div>
         </div>
 
@@ -2680,7 +3167,9 @@ grid-template-columns: 1fr;
         상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
         사업장 주소: 서울특별시 서초구 신반포로33길 15, 동아아파트 102동 1002호<br>
         연락처: 010-7646-3634 &nbsp;|&nbsp; 이메일: rlaalsdn456456@naver.com<br>
-        사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자) &nbsp;|&nbsp; 호스팅 서비스: Cloudflare / 에이아잉 &nbsp;|&nbsp; 서비스 제공 기간: 비실물 상품으로 결제 즉시 사용 가능 (구매일로부터 최대 1년 이내 제공)
+        사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
+        호스팅 서비스: Cloudflare / 에이아잉<br>
+        서비스 제공 기간: 비실물 상품으로 결제 즉시 사용 가능 (구매일로부터 최대 1년 이내 제공)
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);">
         <span style="font-size:13px;font-weight:300;color:#4f5666;">© 2026 에이아잉(AI-ing). All rights reserved.</span>
@@ -2843,51 +3332,71 @@ grid-template-columns: 1fr;
     els.forEach((el) => io.observe(el));
   }
 
-  // Scroll Story for Services (autoae.online style timeline)
+  // Scroll Story for Services (autoae.online / ReactBits style Sticky Scroll Reveal)
   function setupScrollStory() {
     const story = document.getElementById('services');
     if (!story) return;
     
-    const flowContainer = story.querySelector('.services-flow');
-    const progressLine = story.querySelector('.flow-line-progress');
-    const items = Array.from(story.querySelectorAll('.flow-item'));
-    if (!flowContainer || !progressLine || items.length === 0) return;
+    const desktopLayout = story.querySelector('.desktop-services-layout');
+    const textItems = Array.from(story.querySelectorAll('.sticky-text-item'));
+    const screens = Array.from(story.querySelectorAll('.mockup-screen'));
+    const urlBar = story.querySelector('#mockup-url');
+    if (!desktopLayout || textItems.length === 0 || screens.length === 0) return;
     
     let storyTicking = false;
 
+    // Background glows configs
+    const glows = [
+      'radial-gradient(circle, #e61862 0%, transparent 70%)',
+      'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
+      'radial-gradient(circle, #3b82f6 0%, transparent 70%)'
+    ];
+    const glowTops = ['30%', '50%', '70%'];
+    const urls = [
+      'https://ai-ing.org/automation',
+      'https://ai-ing.org/mentoring',
+      'https://ai-ing.org/education'
+    ];
+
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
+      if (window.innerWidth <= 992) return; // Disable sticky scroll logic on mobile
+
+      const rect = desktopLayout.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) return;
+
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(0.999, scrolled / total));
       
-      const rect = flowContainer.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      // Determine active index (0, 1, 2)
+      const activeIdx = Math.floor(progress * 3);
       
-      // Calculate scroll progress percentage (using center/60% of viewport as reference trigger)
-      const triggerPoint = viewportHeight * 0.6;
-      const scrolled = triggerPoint - rect.top;
-      const progress = Math.max(0, Math.min(100, (scrolled / rect.height) * 100));
-      progressLine.style.height = `${progress}%`;
-      
-      // Update each item (reveal fade-in and active dot state)
-      items.forEach((item) => {
-        const itemRect = item.getBoundingClientRect();
-        
-        // 1. Reveal item content/media when it enters the lower part of the viewport
-        if (itemRect.top <= viewportHeight * 0.85) {
-          item.classList.add('revealed');
-        }
-        
-        // 2. Activate dot highlight when the timeline progress line reaches it
-        const dotOuter = item.querySelector('.flow-dot-outer');
-        if (dotOuter) {
-          const dotRect = dotOuter.getBoundingClientRect();
-          if (dotRect.top <= triggerPoint) {
-            item.classList.add('active');
-          } else {
-            item.classList.remove('active');
-          }
-        }
+      // Update active classes for texts, mockup screens, url bar, and background glows
+      textItems.forEach((item, i) => {
+        item.classList.toggle('active', i === activeIdx);
       });
+      screens.forEach((screen, i) => {
+        screen.classList.toggle('active', i === activeIdx);
+      });
+      if (urlBar) {
+        urlBar.textContent = urls[activeIdx];
+      }
+
+      // Update background glow using style sheets rule or inline variables
+      const style = document.createElement('style');
+      style.id = 'services-dynamic-glow-style';
+      const oldStyle = document.getElementById('services-dynamic-glow-style');
+      if (oldStyle) oldStyle.remove();
       
+      style.innerHTML = `
+        .scroll-story::before {
+          background: ${glows[activeIdx]} !important;
+          top: ${glowTops[activeIdx]} !important;
+        }
+      `;
+      document.head.appendChild(style);
+
       storyTicking = false;
     };
 
@@ -2904,7 +3413,6 @@ grid-template-columns: 1fr;
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
-          // Small delay to let the DOM display update and yield correct bounding rects
           setTimeout(updateStory, 50);
         }
       });
