@@ -1583,8 +1583,37 @@ grid-template-columns: 1fr;
   filter: blur(150px);
   opacity: 0.14;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   transition: background 0.8s ease, top 0.8s ease, left 0.8s ease;
+}
+
+/* Background Illustrations Layer */
+.services-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.services-bg-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, #030408 95%),
+              linear-gradient(to bottom, #030408 0%, transparent 15%, transparent 85%, #030408 100%);
+  z-index: 1;
+}
+.service-bg-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: brightness(0.18) contrast(1.1) saturate(0.7) blur(2px);
+  z-index: 0;
+}
+.service-bg-img.active {
+  opacity: 0.25;
 }
 
 .services-container {
@@ -1592,7 +1621,7 @@ grid-template-columns: 1fr;
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .services-header {
@@ -1681,6 +1710,11 @@ grid-template-columns: 1fr;
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px;
   padding: 32px 24px;
+}
+.mobile-flow-item .mockup-body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Common Content Styles inside items */
@@ -2772,6 +2806,13 @@ grid-template-columns: 1fr;
 </section>
 
   <section id="services" class="tab-content-section scroll-story" style="position:relative;scroll-margin-top:64px;display:none;">
+    <!-- Background Illustrations/Pictures Layer -->
+    <div class="services-bg-layer">
+      <div class="service-bg-img active" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
+      <div class="service-bg-img" data-bg="2" style="background-image:url('img/story-2.jpg');"></div>
+      <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-3.jpg');"></div>
+    </div>
+
     <div class="services-container">
       <div class="services-header">
         <p class="services-kicker">SERVICES</p>
@@ -3340,6 +3381,7 @@ grid-template-columns: 1fr;
     const desktopLayout = story.querySelector('.desktop-services-layout');
     const textItems = Array.from(story.querySelectorAll('.sticky-text-item'));
     const screens = Array.from(story.querySelectorAll('.mockup-screen'));
+    const bgImages = Array.from(story.querySelectorAll('.service-bg-img'));
     const urlBar = story.querySelector('#mockup-url');
     if (!desktopLayout || textItems.length === 0 || screens.length === 0) return;
     
@@ -3372,12 +3414,15 @@ grid-template-columns: 1fr;
       // Determine active index (0, 1, 2)
       const activeIdx = Math.floor(progress * 3);
       
-      // Update active classes for texts, mockup screens, url bar, and background glows
+      // Update active classes for texts, mockup screens, url bar, background images, and background glows
       textItems.forEach((item, i) => {
         item.classList.toggle('active', i === activeIdx);
       });
       screens.forEach((screen, i) => {
         screen.classList.toggle('active', i === activeIdx);
+      });
+      bgImages.forEach((img, i) => {
+        img.classList.toggle('active', i === activeIdx);
       });
       if (urlBar) {
         urlBar.textContent = urls[activeIdx];
