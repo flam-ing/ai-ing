@@ -1560,192 +1560,197 @@ grid-template-columns: 1fr;
 }
 } /* Close max-width 768px media query */
 
-/* ===== GLOBAL SCROLL STORY ===== */
+/* ===== SERVICES FLOW TIMELINE (autoae.online style) ===== */
 .scroll-story {
   position: relative;
-  height: 300vh;
-  background: #030408; /* Very deep space black */
+  background: #030408;
   color: #ffffff;
   overflow: hidden;
+  padding: 100px 0;
 }
-/* Aurora Background Elements */
+/* Background Glows */
 .scroll-story::before,
 .scroll-story::after {
   content: '';
   position: absolute;
   border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.18;
+  filter: blur(160px);
+  opacity: 0.12;
   pointer-events: none;
   z-index: 0;
-  will-change: transform;
 }
 .scroll-story::before {
-  top: 10%;
-  left: -10%;
-  width: 450px;
-  height: 450px;
+  top: 5%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
   background: radial-gradient(circle, #e61862 0%, transparent 80%);
-  animation: aurora-float-1 25s infinite alternate ease-in-out;
 }
 .scroll-story::after {
-  bottom: 10%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
+  bottom: 5%;
+  right: 10%;
+  width: 450px;
+  height: 450px;
   background: radial-gradient(circle, #38bdf8 0%, transparent 80%);
-  animation: aurora-float-2 25s infinite alternate ease-in-out;
 }
 
-@keyframes aurora-float-1 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(80px, 50px) scale(1.15); }
-}
-@keyframes aurora-float-2 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-80px, -50px) scale(1.15); }
-}
-
-.scroll-story-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.story-scene {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 24px;
-  will-change: transform, opacity;
-  pointer-events: none;
-}
-
-.story-card {
   position: relative;
-  width: 100%;
-  max-width: 900px;
-  min-height: 540px;
-  background: rgba(13, 17, 28, 0.45); /* Dark translucent background */
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 28px;
-  padding: 48px;
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  overflow: hidden;
-  transition: transform 0.15s ease-out, border-color 0.3s;
-  pointer-events: auto; /* Allow cursor interactions */
-  z-index: 10;
-}
-
-/* Spotlight Background Glow */
-.story-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
-    rgba(230, 24, 98, 0.07),
-    transparent 80%
-  );
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Spotlight Border Glow */
-.story-card::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 28px;
-  padding: 1px;
-  background: radial-gradient(
-    250px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
-    rgba(255, 255, 255, 0.22),
-    transparent 80%
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
   z-index: 1;
-  pointer-events: none;
 }
 
-.story-photo {
-  flex: 0 0 320px;
-  height: 440px;
-  border-radius: 20px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+.services-header {
+  text-align: center;
+  margin-bottom: 80px;
 }
-
-.story-photo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(3, 4, 8, 0.4), transparent);
-}
-
-.story-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  text-align: left;
-  z-index: 2;
-}
-
-.story-kicker {
+.services-kicker {
   font-family: 'GmarketSans', sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #e61862;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
+  margin-bottom: 12px;
 }
-
-.story-line {
-  width: 40px;
-  height: 2px;
-  background: #e61862;
-  transform-origin: left;
-  transition: transform 0.5s ease-out;
-}
-
-.story-title {
+.services-title {
   font-family: 'GmarketSans', sans-serif;
-  font-size: clamp(22px, 3.5vw, 28px);
-  font-weight: 700;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
   color: #ffffff;
-  line-height: 1.3;
+  margin-bottom: 20px;
 }
-
-.story-desc {
-  font-size: 14.5px;
-  font-weight: 400;
+.services-lead {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 600px;
+  margin: 0 auto;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.7);
 }
 
-.story-card ul {
+.services-flow {
+  position: relative;
+  padding: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* Timeline Central Line */
+.flow-line-bg {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(-50%);
+}
+.flow-line-progress {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #e61862, #38bdf8);
+  transform: translateX(-50%);
+  height: 0%; /* updated via JS */
+  will-change: height;
+}
+
+/* Flow Item */
+.flow-item {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  position: relative;
+}
+.flow-item.reverse {
+  flex-direction: row-reverse;
+}
+.flow-content-col, .flow-media-col {
+  flex: 1;
+  width: 50%;
+}
+.flow-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.flow-media-col {
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Active animation triggers */
+.flow-item.revealed .flow-content-col,
+.flow-item.revealed .flow-media-col {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Flow Dot */
+.flow-dot-outer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #030408;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s;
+  will-change: transform, border-color, box-shadow;
+}
+.flow-dot {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.4s;
+}
+
+.flow-item.active .flow-dot-outer {
+  border-color: #e61862;
+  box-shadow: 0 0 20px rgba(230, 24, 98, 0.5);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+.flow-item.active .flow-dot {
+  color: #ffffff;
+}
+
+/* Content Details */
+.item-kicker {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e61862;
+  letter-spacing: 0.15em;
+}
+.item-title {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 800;
+  color: #ffffff;
+}
+.item-desc {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+.item-list {
   list-style: none;
   padding: 0;
   display: flex;
@@ -1754,50 +1759,74 @@ grid-template-columns: 1fr;
   font-size: 13.5px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.85);
-  margin-top: 10px;
 }
-
-.story-card li {
+.item-list li {
   display: flex;
   gap: 10px;
   align-items: flex-start;
 }
-
-.story-card li strong {
+.item-list li strong {
   color: #ffffff;
   font-weight: 500;
 }
-
-.story-card li span {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.story-card li span:first-child {
+.item-list li span.arrow {
   color: #e61862;
   font-weight: 700;
   flex-shrink: 0;
 }
 
-.story-progress {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
+/* Mockup Window */
+.mockup-window {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0f111a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
   display: flex;
-  gap: 10px;
-  z-index: 10;
+  flex-direction: column;
+  transition: transform 0.2s ease-out;
 }
-
-.story-progress span {
-  width: 8px;
-  height: 8px;
+.mockup-header {
+  height: 36px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+}
+.mockup-dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transition: background-color 0.3s;
 }
-
-.story-progress span.on {
-  background: #ffffff;
+.mockup-dot.red { background: #ff5f56; }
+.mockup-dot.yellow { background: #ffbd2e; }
+.mockup-dot.green { background: #27c93f; }
+.mockup-address {
+  margin-left: 20px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 3px 0;
+  font-family: monospace;
+}
+.mockup-body {
+  height: 280px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.mockup-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3, 4, 8, 0.2), transparent);
 }
 
 .brand-link span {
@@ -1815,30 +1844,28 @@ grid-template-columns: 1fr;
   .mobile-only-buttons {
     display: flex !important;
   }
-  .story-card {
+}
+@media (max-width: 992px) {
+  .flow-line-bg, .flow-line-progress, .flow-dot-outer {
+    left: 24px;
+    transform: none;
+  }
+  .flow-dot-outer {
+    top: 0;
+    transform: translateY(-50%);
+  }
+  .flow-item.active .flow-dot-outer {
+    transform: scale(1.1) translateY(-45%);
+  }
+  .flow-item, .flow-item.reverse {
     flex-direction: column;
-    padding: 30px 20px;
-    gap: 20px;
-    min-height: auto;
-    border-radius: 20px;
+    align-items: flex-start;
+    gap: 30px;
+    padding-left: 60px;
   }
-  .story-card::after {
-    border-radius: 20px;
-  }
-  .story-photo {
+  .flow-content-col, .flow-media-col {
     width: 100%;
-    height: 200px;
     flex: none;
-  }
-  .story-content {
-    text-align: center;
-    align-items: center;
-  }
-  .story-line {
-    transform-origin: center;
-  }
-  .story-card ul {
-    text-align: left;
   }
 }
 @media (min-width: 769px) {
@@ -2464,65 +2491,104 @@ grid-template-columns: 1fr;
   </div>
 </section>
 
-  <section id="services" class="tab-content-section scroll-story" style="position:relative;height:300vh;scroll-margin-top:64px;display:none;">
-    <div class="scroll-story-sticky">
-      <!-- Scene 1 -->
-      <div class="story-scene">
-        <div class="story-card">
-          <div class="story-photo" style="background-image:url('img/story-1.jpg');"></div>
-          <div class="story-content">
-            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">01 / B2B · AUTO</p>
-            <span class="story-line"></span>
-            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
-            <p class="story-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
+  <section id="services" class="tab-content-section scroll-story" style="position:relative;scroll-margin-top:64px;display:none;">
+    <div class="services-container">
+      <div class="services-header">
+        <p class="services-kicker">SERVICES</p>
+        <h2 class="services-title">제공하는 전문 교육 &amp; 컨설팅 서비스</h2>
+        <p class="services-lead">비개발자의 관점에서 가장 쉽고 빠르며, 최신 AI 도구를 융합하는 실무적인 가치를 전합니다.</p>
+      </div>
+      
+      <div class="services-flow">
+        <!-- Central Line -->
+        <div class="flow-line-bg"></div>
+        <div class="flow-line-progress"></div>
+        
+        <!-- Item 1 -->
+        <div class="flow-item" id="service-item-1">
+          <div class="flow-dot-outer">
+            <div class="flow-dot">01</div>
+          </div>
+          <div class="flow-content-col">
+            <p class="item-kicker">01 / B2B · AUTO</p>
+            <h3 class="item-title">실무자 대상 AX 컨설팅 &amp; AI 업무 자동화</h3>
+            <p class="item-desc"><strong>대상:</strong> 회사 대표, 세무사, 상담사, 1인 창업가, 반복 업무에 지친 실무 담당자</p>
+            <ul class="item-list">
+              <li><span class="arrow">→</span><span><strong>직무 프로세스 진단 및 업무 자동화</strong> — 반복적인 상담 응대, 서류 정리 등의 직무 분석을 통한 맞춤형 자동화 도입 설계 및 스크래핑·크롤링 전수</span></li>
+              <li><span class="arrow">→</span><span><strong>AI Agent 비용 예측 및 인프라 기획</strong> — AI 에이전트 도입에 따른 트래픽 추정 및 인프라 비용 분석, 적정 규모의 도입 타당성 검증</span></li>
+              <li><span class="arrow">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
+              <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
             </ul>
           </div>
-        </div>
-      </div>
-      <!-- Scene 2 -->
-      <div class="story-scene">
-        <div class="story-card">
-          <div class="story-photo" style="background-image:url('img/story-2.jpg');"></div>
-          <div class="story-content">
-            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">02 / 1:1 · MENTOR</p>
-            <span class="story-line"></span>
-            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
-            <p class="story-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
-            </ul>
+          <div class="flow-media-col">
+            <div class="mockup-window">
+              <div class="mockup-header">
+                <span class="mockup-dot red"></span>
+                <span class="mockup-dot yellow"></span>
+                <span class="mockup-dot green"></span>
+                <div class="mockup-address">https://ai-ing.org/automation</div>
+              </div>
+              <div class="mockup-body" style="background-image: url('img/story-1.jpg');"></div>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Scene 3 -->
-      <div class="story-scene">
-        <div class="story-card">
-          <div class="story-photo" style="background-image:url('img/story-3.jpg');"></div>
-          <div class="story-content">
-            <p class="story-kicker" style="font-family:'GmarketSans',sans-serif;font-size:13px;font-weight:700;color:#e61862;letter-spacing:0.18em;text-transform:uppercase;">03 / 기관 · EDU</p>
-            <span class="story-line"></span>
-            <h3 class="story-title" style="font-family:'GmarketSans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
-            <p class="story-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
-            <ul style="list-style:none;padding:0;max-width:640px;text-align:left;display:flex;flex-direction:column;gap:12px;font-size:14.5px;font-weight:300;margin-top:14px;">
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#e61862;font-weight:700;flex-shrink:0;">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
+        
+        <!-- Item 2 -->
+        <div class="flow-item reverse" id="service-item-2">
+          <div class="flow-dot-outer">
+            <div class="flow-dot">02</div>
+          </div>
+          <div class="flow-content-col">
+            <p class="item-kicker">02 / 1:1 · MENTOR</p>
+            <h3 class="item-title">1:1 맞춤형 AI 협업 코딩 &amp; 프로젝트 멘토링</h3>
+            <p class="item-desc"><strong>대상:</strong> AI 도구를 활용해 생산성을 높이려는 입문자 및 전공자, 실무형 프로젝트를 빌드하는 취업 준비생</p>
+            <ul class="item-list">
+              <li><span class="arrow">→</span><span><strong>AI 협업 생산성 극대화</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 라이브 (총 12명 지도, 다수 커리어 전환)</span></li>
+              <li><span class="arrow">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
+              <li><span class="arrow">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
             </ul>
           </div>
+          <div class="flow-media-col">
+            <div class="mockup-window">
+              <div class="mockup-header">
+                <span class="mockup-dot red"></span>
+                <span class="mockup-dot yellow"></span>
+                <span class="mockup-dot green"></span>
+                <div class="mockup-address">https://ai-ing.org/mentoring</div>
+              </div>
+              <div class="mockup-body" style="background-image: url('img/story-2.jpg');"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- Progress dots -->
-      <div class="story-progress">
-        <span class="on"></span>
-        <span></span>
-        <span></span>
+        
+        <!-- Item 3 -->
+        <div class="flow-item" id="service-item-3">
+          <div class="flow-dot-outer">
+            <div class="flow-dot">03</div>
+          </div>
+          <div class="flow-content-col">
+            <p class="item-kicker">03 / 기관 · EDU</p>
+            <h3 class="item-title">기관/기업 대상 AX 컨설팅 및 AI 디지털 융합 교육</h3>
+            <p class="item-desc"><strong>대상:</strong> 임직원 AI 역량을 강화하려는 기업, AI 시대 창의적 코딩 교육이 필요한 교육 기관</p>
+            <ul class="item-list">
+              <li><span class="arrow">→</span><span><strong>사내 AI 세미나 및 AX 컨설팅</strong> — 전직원 대상 생성형 AI 업무 자동화 및 AI 에이전트 구축(보안 및 비용 최적화) 세미나 기획/발표 4회 진행</span></li>
+              <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
+              <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
+            </ul>
+          </div>
+          <div class="flow-media-col">
+            <div class="mockup-window">
+              <div class="mockup-header">
+                <span class="mockup-dot red"></span>
+                <span class="mockup-dot yellow"></span>
+                <span class="mockup-dot green"></span>
+                <div class="mockup-address">https://ai-ing.org/education</div>
+              </div>
+              <div class="mockup-body" style="background-image: url('img/story-3.jpg');"></div>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </div>
   </section>
@@ -2777,78 +2843,51 @@ grid-template-columns: 1fr;
     els.forEach((el) => io.observe(el));
   }
 
-  // Scroll Story for Services
+  // Scroll Story for Services (autoae.online style timeline)
   function setupScrollStory() {
     const story = document.getElementById('services');
     if (!story) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const scenes = Array.from(story.querySelectorAll('.story-scene'));
-    const dots = Array.from(story.querySelectorAll('.story-progress span'));
-    const clamp01 = v => Math.min(Math.max(v, 0), 1);
+    
+    const flowContainer = story.querySelector('.services-flow');
+    const progressLine = story.querySelector('.flow-line-progress');
+    const items = Array.from(story.querySelectorAll('.flow-item'));
+    if (!flowContainer || !progressLine || items.length === 0) return;
+    
     let storyTicking = false;
 
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
-      const total = story.offsetHeight - window.innerHeight;
-      if (total <= 0) return;
-      const raw = clamp01(-story.getBoundingClientRect().top / total);
       
-      scenes.forEach((scene, i) => {
-        const target_raw = i / Math.max(1, scenes.length - 1);
-        const diff = raw - target_raw;
+      const rect = flowContainer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate scroll progress percentage (using center/60% of viewport as reference trigger)
+      const triggerPoint = viewportHeight * 0.6;
+      const scrolled = triggerPoint - rect.top;
+      const progress = Math.max(0, Math.min(100, (scrolled / rect.height) * 100));
+      progressLine.style.height = `${progress}%`;
+      
+      // Update each item (reveal fade-in and active dot state)
+      items.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
         
-        let translateY_val = 0;
-        let scale_val = 1.0;
-        let opacity_val = 1.0;
-        
-        if (prefersReducedMotion) {
-          scene.style.opacity = Math.abs(diff) < 0.25 ? '1' : '0';
-          scene.style.transform = 'none';
-          scene.style.pointerEvents = Math.abs(diff) < 0.25 ? 'auto' : 'none';
-          return;
-        }
-
-        if (diff < 0) {
-          // Card is coming up
-          const t = clamp01(1 + diff * 2.0); // animates in the 0.5 raw range before target
-          translateY_val = (1.0 - t) * 120 + i * 20; // 120vh down to stack offset i*20px
-          scale_val = 0.92 + t * 0.08;
-          opacity_val = t;
-          scene.style.pointerEvents = 'none';
-        } else {
-          // Card is stacked or being covered
-          const t = clamp01(diff * 2.0); // animates in the 0.5 raw range after target
-          translateY_val = i * 20 - t * 35; // moves up slightly from i*20px
-          scale_val = 1.0 - t * 0.06;
-          opacity_val = 1.0 - t * 0.45;
-          // Only the topmost card (or the card that has fully arrived and is not yet covered) should accept mouse events
-          scene.style.pointerEvents = t < 0.8 ? 'auto' : 'none';
+        // 1. Reveal item content/media when it enters the lower part of the viewport
+        if (itemRect.top <= viewportHeight * 0.85) {
+          item.classList.add('revealed');
         }
         
-        scene.style.zIndex = String(10 + i);
-        scene.style.opacity = String(opacity_val);
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile) {
-          // Mobile stack: simpler transition
-          const mobileY = diff < 0 ? (1.0 - clamp01(1 + diff * 2.0)) * 250 + i * 15 : i * 15 - clamp01(diff * 2.0) * 20;
-          scene.style.transform = `translateY(${mobileY}px) scale(${scale_val})`;
-        } else {
-          // Desktop stacked layout: i*20px offset is fixed px, translateY_val * vh is proportional
-          const vhOffset = diff < 0 ? (1.0 - clamp01(1 + diff * 2.0)) * 120 : -clamp01(diff * 2.0) * 35;
-          const pxOffset = i * 20;
-          scene.style.transform = `translateY(calc(${vhOffset}vh + ${pxOffset}px)) scale(${scale_val})`;
-        }
-
-        const line = scene.querySelector('.story-line');
-        if (line) {
-          const lineScale = diff < 0 ? clamp01(1 + diff * 2.0) : 1.0;
-          line.style.transform = `scaleX(${lineScale})`;
+        // 2. Activate dot highlight when the timeline progress line reaches it
+        const dotOuter = item.querySelector('.flow-dot-outer');
+        if (dotOuter) {
+          const dotRect = dotOuter.getBoundingClientRect();
+          if (dotRect.top <= triggerPoint) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
         }
       });
-
-      const idx = Math.min(Math.round(raw * (scenes.length - 1)), scenes.length - 1);
-      dots.forEach((dot, i) => dot.classList.toggle('on', i <= idx));
+      
       storyTicking = false;
     };
 
@@ -2861,44 +2900,43 @@ grid-template-columns: 1fr;
     
     window.addEventListener('resize', updateStory);
     
-    // Listen for tab changes
+    // Listen for tab changes so we update immediately when services becomes active
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
-          updateStory();
+          // Small delay to let the DOM display update and yield correct bounding rects
+          setTimeout(updateStory, 50);
         }
       });
     });
     observer.observe(story, { attributes: true });
     
     updateStory();
-    setupSpotlightAndTilt();
+    setupMockupTilt();
   }
 
-  function setupSpotlightAndTilt() {
-    const cards = document.querySelectorAll('.story-card');
-    cards.forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
+  // Premium 3D Tilt Hover Effect for Browser Mockups
+  function setupMockupTilt() {
+    const mockups = document.querySelectorAll('.mockup-window');
+    mockups.forEach(mockup => {
+      mockup.addEventListener('mousemove', e => {
+        if (window.innerWidth <= 992) return; // Disable tilt on mobile/tablet
+        
+        const rect = mockup.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        // Mild premium 3D tilt (max 8 degrees)
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
         
-        if (window.innerWidth > 768) {
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
-          const rotateY = ((x - centerX) / centerX) * 6;
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-        }
+        mockup.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
       });
       
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-        card.style.removeProperty('--mouse-x');
-        card.style.removeProperty('--mouse-y');
+      mockup.addEventListener('mouseleave', () => {
+        mockup.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)';
       });
     });
   }
