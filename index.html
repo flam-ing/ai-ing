@@ -2259,6 +2259,71 @@ grid-template-columns: 1fr;
   border-radius: 3px;
 }
 
+/* ===== Realistic product-screenshot mockups (rs-*) ===== */
+.rs {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Outfit', 'GmarketSans', sans-serif;
+  color: #e8eaf2;
+  background: linear-gradient(160deg, #0d0f17 0%, #090a11 100%);
+}
+.rs-topbar { display: flex; align-items: center; justify-content: space-between; }
+.rs-app { font-size: 12.5px; font-weight: 700; color: #fff; }
+.rs-period { font-size: 10px; color: rgba(255,255,255,0.4); }
+
+.rs-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.rs-kpi { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 10px 12px; }
+.rs-kpi-num { font-size: 22px; font-weight: 800; color: #fff; line-height: 1; }
+.rs-kpi-num span { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); margin-left: 2px; }
+.rs-kpi-label { font-size: 9.5px; color: rgba(255,255,255,0.45); margin-top: 5px; }
+.rs-kpi.accent { background: rgba(230,24,98,0.08); border-color: rgba(230,24,98,0.3); }
+.rs-kpi.accent .rs-kpi-num { background: linear-gradient(120deg, #ff7eb0, #fff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+.rs-table { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+.rs-tr { display: grid; grid-template-columns: 42px 1fr 86px 64px; gap: 6px; padding: 7px 12px; font-size: 10px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.rs-tr span:nth-child(3) { text-align: right; color: rgba(255,255,255,0.7); }
+.rs-tr span:nth-child(4) { text-align: right; }
+.rs-th { color: rgba(255,255,255,0.35); font-weight: 700; text-transform: uppercase; font-size: 9px; background: rgba(255,255,255,0.02); }
+.rs-tr:not(.rs-th) span:nth-child(2) { color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rs-ok { color: #27c93f; font-weight: 600; }
+.rs-run { color: #ffbd2e; font-weight: 600; }
+.rs-foot { display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: rgba(255,255,255,0.4); }
+.rs-live { color: #27c93f; font-weight: 600; }
+
+/* Deploy / mentoring screen */
+.rs-deploy { flex-direction: row; gap: 10px; }
+.rs-code { width: 57%; display: flex; flex-direction: column; background: #0a0c12; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden; }
+.rs-code-bar { display: flex; align-items: center; gap: 5px; padding: 7px 10px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.rs-code-bar .d { width: 7px; height: 7px; border-radius: 50%; }
+.rs-code-bar .d.r { background: #ff5f56; }
+.rs-code-bar .d.y { background: #ffbd2e; }
+.rs-code-bar .d.g { background: #27c93f; }
+.rs-file { font-size: 9.5px; color: rgba(255,255,255,0.5); margin-left: 4px; font-family: monospace; }
+.rs-pre { margin: 0; padding: 11px; font-family: monospace; font-size: 9.5px; line-height: 1.6; flex: 1; color: #9aa0ad; overflow: hidden; white-space: pre; }
+.rs-deploy-bar { padding: 7px 10px; font-size: 9px; color: #4ade80; background: rgba(39,201,63,0.08); border-top: 1px solid rgba(39,201,63,0.2); font-weight: 600; }
+.rs-preview { width: 43%; display: flex; flex-direction: column; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden; }
+.rs-prev-head { font-size: 9px; color: rgba(255,255,255,0.4); padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); text-transform: uppercase; letter-spacing: 0.04em; }
+.rs-prev-body { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 9px; }
+.rs-prev-title { font-size: 11px; font-weight: 700; color: #fff; }
+.rs-prev-row { display: flex; align-items: center; gap: 8px; font-size: 9.5px; color: rgba(255,255,255,0.7); }
+.rs-prev-row span { width: 52px; flex-shrink: 0; }
+.rs-prev-row i { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #8c82ff, #e61862); display: block; }
+.rs-prev-tag { margin-top: auto; font-size: 9px; color: #8c82ff; font-weight: 600; }
+
+/* Education analytics screen */
+.rs-edu-body { flex: 1; display: flex; gap: 10px; }
+.rs-chart { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px 12px 10px; display: flex; align-items: flex-end; gap: 6px; }
+.rs-chart i { flex: 1; background: linear-gradient(to top, #e61862, #8c82ff); border-radius: 3px 3px 0 0; min-height: 6px; opacity: 0.9; }
+.rs-edu-stats { width: 36%; display: flex; flex-direction: column; gap: 7px; }
+.rs-edu-stats > div { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 11px; display: flex; flex-direction: column; justify-content: center; }
+.rs-edu-stats b { font-size: 19px; color: #fff; line-height: 1.1; }
+.rs-edu-stats span { font-size: 9px; color: rgba(255,255,255,0.45); }
+.rs-badges i { font-style: normal; font-size: 9px; padding: 2px 7px; border-radius: 4px; background: rgba(140,130,255,0.12); color: #b3aaff; margin-right: 4px; }
+
 /* Brand Link Wrap fixes */
 .brand-link span {
   white-space: nowrap !important;
@@ -3004,61 +3069,49 @@ grid-template-columns: 1fr;
               <div class="mockup-body">
                 <!-- Screen 1: Agent Terminal -->
                 <div class="mockup-screen active" data-screen="1">
-                  <div class="screen-agent-flow">
-                    <div class="agent-pipeline">
-                      <div class="pipeline-node done"><span class="badge">✓</span> 스크래핑/크롤링 진단</div>
-                      <div class="pipeline-connector done"></div>
-                      <div class="pipeline-node done"><span class="badge">✓</span> Claude PDF 분석</div>
-                      <div class="pipeline-connector active"></div>
-                      <div class="pipeline-node active"><span class="pulse-dot"></span> 노션 데이터베이스 싱크</div>
-                      <div class="pipeline-connector"></div>
-                      <div class="pipeline-node"><span class="badge"></span> 24h AI 비서 대기</div>
+                  <div class="rs rs-dash">
+                    <div class="rs-topbar">
+                      <span class="rs-app">⚡ 업무 자동화 리포트</span>
+                      <span class="rs-period">2026.06 · 실시간</span>
                     </div>
-                    <div class="agent-terminal">
-                      <div class="terminal-bar">
-                        <span>bash - agent@ai-ing: ~</span>
-                      </div>
-                      <div class="terminal-content">
-                        <div class="log-line">$ python3 runner.py --task tax_invoice_sync</div>
-                        <div class="log-line info">[INFO] AX 업무 자동화 파이프라인 가동...</div>
-                        <div class="log-line info">[INFO] 세무 폴더 검사 중: PDF 파일 12개 발견.</div>
-                        <div class="log-line ai">[AI] Claude 3.5 Sonnet 연동 성공.</div>
-                        <div class="log-line ai">[AI] 영수증 내역 및 세부 세액 12개 파싱 완료.</div>
-                        <div class="log-line success">[SUCCESS] Notion DB '2026_지출결의서' 동기화 완료!</div>
-                        <div class="log-line info">[INFO] 로컬 임직원 기기 보안망 보호 조치 적용.</div>
-                        <div class="log-line blink-cursor">_</div>
-                      </div>
+                    <div class="rs-kpis">
+                      <div class="rs-kpi"><div class="rs-kpi-num">312<span>건</span></div><div class="rs-kpi-label">자동 처리 문서</div></div>
+                      <div class="rs-kpi"><div class="rs-kpi-num">47<span>h</span></div><div class="rs-kpi-label">월 절감 시간</div></div>
+                      <div class="rs-kpi accent"><div class="rs-kpi-num">92<span>%</span></div><div class="rs-kpi-label">자동화율</div></div>
                     </div>
+                    <div class="rs-table">
+                      <div class="rs-tr rs-th"><span>날짜</span><span>항목</span><span>금액</span><span>상태</span></div>
+                      <div class="rs-tr"><span>06.18</span><span>세금계산서 #2026-0312</span><span>₩1,240,000</span><span class="rs-ok">✓ 동기화</span></div>
+                      <div class="rs-tr"><span>06.18</span><span>법인카드 지출결의서</span><span>₩86,500</span><span class="rs-ok">✓ 동기화</span></div>
+                      <div class="rs-tr"><span>06.17</span><span>거래명세서 일괄 12건</span><span>₩4,310,000</span><span class="rs-ok">✓ 동기화</span></div>
+                      <div class="rs-tr"><span>06.17</span><span>영수증 OCR 파싱</span><span>—</span><span class="rs-run">● 처리중</span></div>
+                    </div>
+                    <div class="rs-foot"><span class="rs-live">● Notion DB 연동 활성</span><span>Claude · 마지막 동기화 2분 전</span></div>
                   </div>
                 </div>
 
                 <!-- Screen 2: VS Code AI Collaborative Coding -->
                 <div class="mockup-screen" data-screen="2">
-                  <div class="screen-ide-layout">
-                    <div class="ide-sidebar">
-                      <div class="sidebar-title">WORKSPACE</div>
-                      <div class="sidebar-item">├─ main.py</div>
-                      <div class="sidebar-item active">├─ App.tsx</div>
-                      <div class="sidebar-item">└─ schema.sql</div>
+                  <div class="rs rs-deploy">
+                    <div class="rs-code">
+                      <div class="rs-code-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="rs-file">api/recommend.ts</span></div>
+                      <pre class="rs-pre"><span class="c-keyword">export async function</span> <span class="c-fn">POST</span>(req) {
+  <span class="c-keyword">const</span> { query } = <span class="c-keyword">await</span> req.json();
+  <span class="c-keyword">const</span> hits = <span class="c-keyword">await</span> vector.<span class="c-fn">search</span>(query, {
+    <span class="c-obj">topK</span>: <span class="c-str">8</span>, <span class="c-obj">model</span>: <span class="c-str">'claude'</span>,
+  });
+  <span class="c-keyword">return</span> Response.<span class="c-fn">json</span>(hits);
+}</pre>
+                      <div class="rs-deploy-bar">✓ Vercel 배포 성공 · build 2.3s · 200 OK</div>
                     </div>
-                    <div class="ide-editor">
-                      <div class="editor-tabs">
-                        <div class="tab active">App.tsx</div>
-                      </div>
-                      <div class="editor-code">
-                        <div class="code-line"><span class="c-keyword">import</span> React <span class="c-keyword">from</span> <span class="c-str">'react'</span>;</div>
-                        <div class="code-line"><span class="c-keyword">const</span> <span class="c-fn">UserQuery</span> = () => {</div>
-                        <div class="code-line del">-   <span class="c-keyword">const</span> users = <span class="c-keyword">await</span> db.query(<span class="c-str">'SELECT * FROM users'</span>);</div>
-                        <div class="code-line add">+   <span class="c-keyword">const</span> user = <span class="c-keyword">await</span> db.user.findUnique({ <span class="c-obj">where</span>: { id } });</div>
-                        <div class="code-line"><span class="c-keyword">return</span> &lt;<span class="c-tag">div</span>&gt;{user.name}&lt;/<span class="c-tag">div</span>&gt;;</div>
-                        <div class="code-line">};</div>
-                      </div>
-                    </div>
-                    <div class="ide-assistant">
-                      <div class="assistant-header">Claude AI Code (1:1 Mentoring)</div>
-                      <div class="assistant-content">
-                        <p class="chat-msg">기존의 전체 유저 로드 방식은 대용량 트래픽에서 N+1 쿼리 오버헤드가 있습니다. ORM 인덱스 컬럼을 타도록 수정 코드를 제안했습니다.</p>
-                        <div class="chat-tag">Optimized via Claude</div>
+                    <div class="rs-preview">
+                      <div class="rs-prev-head">live preview · 멘티 결과물</div>
+                      <div class="rs-prev-body">
+                        <div class="rs-prev-title">AI 도서 추천</div>
+                        <div class="rs-prev-row"><span>딥워크</span><i style="width:88%"></i></div>
+                        <div class="rs-prev-row"><span>클린 코드</span><i style="width:72%"></i></div>
+                        <div class="rs-prev-row"><span>함께 자라기</span><i style="width:64%"></i></div>
+                        <div class="rs-prev-tag">⌁ Claude 임베딩 · 실시간 추천</div>
                       </div>
                     </div>
                   </div>
@@ -3066,32 +3119,24 @@ grid-template-columns: 1fr;
 
                 <!-- Screen 3: Slide Deck Presentation Dashboard -->
                 <div class="mockup-screen" data-screen="3">
-                  <div class="screen-edu-dashboard">
-                    <div class="edu-slideshow">
-                      <div class="slide-header">AX &amp; Full-Stack AI Course</div>
-                      <div class="slide-canvas">
-                        <div class="diagram-flow">
-                          <div class="flow-box">Prompt</div>
-                          <div class="flow-arrow">➔</div>
-                          <div class="flow-box accent">LLM Agent</div>
-                          <div class="flow-arrow">➔</div>
-                          <div class="flow-box">Service Deploy</div>
-                        </div>
-                        <div class="slide-title">12회차 실습: 생성형 AI 에이전트 웹 배포</div>
+                  <div class="rs rs-edu">
+                    <div class="rs-topbar">
+                      <span class="rs-app">🎓 AX · 풀스택 AI 과정</span>
+                      <span class="rs-period">12회차 · 수강생 12명</span>
+                    </div>
+                    <div class="rs-edu-body">
+                      <div class="rs-chart">
+                        <i style="height:42%"></i><i style="height:58%"></i><i style="height:50%"></i><i style="height:71%"></i><i style="height:65%"></i><i style="height:84%"></i><i style="height:78%"></i><i style="height:96%"></i>
+                      </div>
+                      <div class="rs-edu-stats">
+                        <div><b>100%</b><span>수료율</span></div>
+                        <div><b>4.9</b><span>강의 만족도</span></div>
+                        <div><b>1위</b><span>경진대회 수상</span></div>
                       </div>
                     </div>
-                    <div class="edu-badges">
-                      <span class="badge purple">TypeScript</span>
-                      <span class="badge blue">Next.js</span>
-                      <span class="badge cyan">Python</span>
-                      <span class="badge pink">AI Integration</span>
-                    </div>
-                    <div class="edu-progress">
-                      <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:11px; color:rgba(255,255,255,0.4);">
-                        <span>강의 진행률</span>
-                        <span>85% (17/20회 완료)</span>
-                      </div>
-                      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
+                    <div class="rs-foot">
+                      <span class="rs-badges"><i>Next.js</i><i>Python</i><i>MCP</i></span>
+                      <span>최종 프로젝트 · 전원 웹 배포 완료</span>
                     </div>
                   </div>
                 </div>
@@ -3641,7 +3686,7 @@ grid-template-columns: 1fr;
     const lerp = (a, b, t) => a + (b - a) * t;
     const rgb = (a, b, t) => `rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`;
     const rgba = (a, b, t, al) => `rgba(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))},${al})`;
-    const MORPH_MAX = 16; // max liquid-displacement during a transition
+    const MORPH_MAX = 12; // max liquid-displacement during a transition
 
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
