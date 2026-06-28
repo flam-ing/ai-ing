@@ -1640,7 +1640,7 @@ grid-template-columns: 1fr;
   background-size: cover;
   background-position: center;
   opacity: 0;
-  filter: url(#liquid-morph) brightness(0.2) contrast(1.1) saturate(0.65);
+  filter: url(#liquid-morph) grayscale(1) brightness(0.6) contrast(1.05); /* desaturated, translucent backdrop */
   transform: scale(1.08);
   will-change: opacity, transform;
   z-index: 0;
@@ -1763,14 +1763,14 @@ grid-template-columns: 1fr;
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 60px;
   overflow: hidden;
 }
 .sticky-text-pane {
   position: relative;
-  width: 46%;
-  height: 500px; /* Same as mockup height */
+  width: min(760px, 64%);
+  height: 460px;
 }
 .sticky-text-item {
   position: absolute;
@@ -2999,9 +2999,9 @@ grid-template-columns: 1fr;
         <span class="aurora-blob blob-b"></span>
         <span class="aurora-blob blob-c"></span>
       </div>
-      <div class="service-bg-img" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
-      <div class="service-bg-img" data-bg="2" style="background-image:url('img/story-2.jpg');"></div>
-      <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-3.jpg');"></div>
+      <div class="service-bg-img" data-bg="1" style="background-image:url('img/story-2.jpg');"></div>
+      <div class="service-bg-img" data-bg="2" style="background-image:url('img/story-5.jpg');"></div>
+      <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-4.jpg');"></div>
     </div>
 
     <div class="services-container">
@@ -3057,93 +3057,7 @@ grid-template-columns: 1fr;
 
           </div>
 
-          <!-- Right: Sticky Mockup -->
-          <div class="sticky-mockup-pane">
-            <div class="mockup-window">
-              <div class="mockup-header">
-                <span class="mockup-dot red"></span>
-                <span class="mockup-dot yellow"></span>
-                <span class="mockup-dot green"></span>
-                <div class="mockup-address" id="mockup-url">https://ai-ing.org/automation</div>
-              </div>
-              <div class="mockup-body">
-                <!-- Screen 1: Agent Terminal -->
-                <div class="mockup-screen active" data-screen="1">
-                  <div class="rs rs-dash">
-                    <div class="rs-topbar">
-                      <span class="rs-app">⚡ 업무 자동화 리포트</span>
-                      <span class="rs-period">2026.06 · 실시간</span>
-                    </div>
-                    <div class="rs-kpis">
-                      <div class="rs-kpi"><div class="rs-kpi-num">312<span>건</span></div><div class="rs-kpi-label">자동 처리 문서</div></div>
-                      <div class="rs-kpi"><div class="rs-kpi-num">47<span>h</span></div><div class="rs-kpi-label">월 절감 시간</div></div>
-                      <div class="rs-kpi accent"><div class="rs-kpi-num">92<span>%</span></div><div class="rs-kpi-label">자동화율</div></div>
-                    </div>
-                    <div class="rs-table">
-                      <div class="rs-tr rs-th"><span>날짜</span><span>항목</span><span>금액</span><span>상태</span></div>
-                      <div class="rs-tr"><span>06.18</span><span>세금계산서 #2026-0312</span><span>₩1,240,000</span><span class="rs-ok">✓ 동기화</span></div>
-                      <div class="rs-tr"><span>06.18</span><span>법인카드 지출결의서</span><span>₩86,500</span><span class="rs-ok">✓ 동기화</span></div>
-                      <div class="rs-tr"><span>06.17</span><span>거래명세서 일괄 12건</span><span>₩4,310,000</span><span class="rs-ok">✓ 동기화</span></div>
-                      <div class="rs-tr"><span>06.17</span><span>영수증 OCR 파싱</span><span>—</span><span class="rs-run">● 처리중</span></div>
-                    </div>
-                    <div class="rs-foot"><span class="rs-live">● Notion DB 연동 활성</span><span>Claude · 마지막 동기화 2분 전</span></div>
-                  </div>
-                </div>
-
-                <!-- Screen 2: VS Code AI Collaborative Coding -->
-                <div class="mockup-screen" data-screen="2">
-                  <div class="rs rs-deploy">
-                    <div class="rs-code">
-                      <div class="rs-code-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="rs-file">api/recommend.ts</span></div>
-                      <pre class="rs-pre"><span class="c-keyword">export async function</span> <span class="c-fn">POST</span>(req) {
-  <span class="c-keyword">const</span> { query } = <span class="c-keyword">await</span> req.json();
-  <span class="c-keyword">const</span> hits = <span class="c-keyword">await</span> vector.<span class="c-fn">search</span>(query, {
-    <span class="c-obj">topK</span>: <span class="c-str">8</span>, <span class="c-obj">model</span>: <span class="c-str">'claude'</span>,
-  });
-  <span class="c-keyword">return</span> Response.<span class="c-fn">json</span>(hits);
-}</pre>
-                      <div class="rs-deploy-bar">✓ Vercel 배포 성공 · build 2.3s · 200 OK</div>
-                    </div>
-                    <div class="rs-preview">
-                      <div class="rs-prev-head">live preview · 멘티 결과물</div>
-                      <div class="rs-prev-body">
-                        <div class="rs-prev-title">AI 도서 추천</div>
-                        <div class="rs-prev-row"><span>딥워크</span><i style="width:88%"></i></div>
-                        <div class="rs-prev-row"><span>클린 코드</span><i style="width:72%"></i></div>
-                        <div class="rs-prev-row"><span>함께 자라기</span><i style="width:64%"></i></div>
-                        <div class="rs-prev-tag">⌁ Claude 임베딩 · 실시간 추천</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Screen 3: Slide Deck Presentation Dashboard -->
-                <div class="mockup-screen" data-screen="3">
-                  <div class="rs rs-edu">
-                    <div class="rs-topbar">
-                      <span class="rs-app">🎓 AX · 풀스택 AI 과정</span>
-                      <span class="rs-period">12회차 · 수강생 12명</span>
-                    </div>
-                    <div class="rs-edu-body">
-                      <div class="rs-chart">
-                        <i style="height:42%"></i><i style="height:58%"></i><i style="height:50%"></i><i style="height:71%"></i><i style="height:65%"></i><i style="height:84%"></i><i style="height:78%"></i><i style="height:96%"></i>
-                      </div>
-                      <div class="rs-edu-stats">
-                        <div><b>100%</b><span>수료율</span></div>
-                        <div><b>4.9</b><span>강의 만족도</span></div>
-                        <div><b>1위</b><span>경진대회 수상</span></div>
-                      </div>
-                    </div>
-                    <div class="rs-foot">
-                      <span class="rs-badges"><i>Next.js</i><i>Python</i><i>MCP</i></span>
-                      <span>최종 프로젝트 · 전원 웹 배포 완료</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
 
@@ -3160,15 +3074,7 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>로컬 인프라 구축 및 단말 보안 세팅</strong> — 맥미니 등 사내 로컬 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 데이터 유출 방지용 24시간 보안 AI 비서 구축</span></li>
             <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 및 데이터 중앙화</strong> — 사내 분산된 도구 및 인프라의 DT 중앙화 전략 수립, 노션·메신저 등 협업 툴의 중앙 연동 가이드 제공</span></li>
           </ul>
-          <div class="mockup-window">
-            <div class="mockup-header">
-              <span class="mockup-dot red"></span>
-              <span class="mockup-dot yellow"></span>
-              <span class="mockup-dot green"></span>
-              <div class="mockup-address">https://ai-ing.org/automation</div>
-            </div>
-            <div class="mockup-body" style="background-image: url('img/story-1.jpg');"></div>
-          </div>
+          
         </div>
 
         <!-- Item 2 -->
@@ -3181,15 +3087,7 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>생성형 AI 서비스 및 MSA 설계</strong> — AI Native 서비스 구축, MCP(Model Context Protocol) 개발, custom skills 작업 및 API 설계/명세화 멘토링</span></li>
             <li><span class="arrow">→</span><span><strong>실전 프로젝트 성과 도출</strong> — 정부 부처 및 교육 기관 연계 AI 인재 양성 과정 프로젝트 멘토링 진행, 생성형 AI 연동 플랫폼으로 경진대회 최종 발표 1등 수상 및 AI 서비스 기획/개발 가이드</span></li>
           </ul>
-          <div class="mockup-window">
-            <div class="mockup-header">
-              <span class="mockup-dot red"></span>
-              <span class="mockup-dot yellow"></span>
-              <span class="mockup-dot green"></span>
-              <div class="mockup-address">https://ai-ing.org/mentoring</div>
-            </div>
-            <div class="mockup-body" style="background-image: url('img/story-2.jpg');"></div>
-          </div>
+          
         </div>
 
         <!-- Item 3 -->
@@ -3202,15 +3100,7 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 교육</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
             <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
           </ul>
-          <div class="mockup-window">
-            <div class="mockup-header">
-              <span class="mockup-dot red"></span>
-              <span class="mockup-dot yellow"></span>
-              <span class="mockup-dot green"></span>
-              <div class="mockup-address">https://ai-ing.org/education</div>
-            </div>
-            <div class="mockup-body" style="background-image: url('img/story-3.jpg');"></div>
-          </div>
+          
         </div>
       </div>
 
@@ -3659,7 +3549,7 @@ grid-template-columns: 1fr;
     const screens = Array.from(story.querySelectorAll('.mockup-screen'));
     const bgImages = Array.from(story.querySelectorAll('.service-bg-img'));
     const urlBar = story.querySelector('#mockup-url');
-    if (!desktopLayout || textItems.length === 0 || screens.length === 0) return;
+    if (!desktopLayout || textItems.length === 0) return;
     
     let storyTicking = false;
 
@@ -3711,7 +3601,7 @@ grid-template-columns: 1fr;
 
       // Continuous crossfade — each visual is centered at i+0.5, neighbours overlap to morph
       const weight = (i) => Math.max(0, 1 - Math.abs(local - (i + 0.5)));
-      bgImages.forEach((img, i) => { img.style.opacity = (weight(i) * 0.26).toFixed(3); });
+      bgImages.forEach((img, i) => { img.style.opacity = (weight(i) * 0.45).toFixed(3); });
       screens.forEach((scr, i) => {
         scr.style.opacity = weight(i).toFixed(3);
         scr.classList.toggle('active', i === activeIdx);
