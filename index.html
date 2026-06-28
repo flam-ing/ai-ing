@@ -1682,51 +1682,6 @@ grid-template-columns: 1fr;
   line-height: 1.6;
 }
 
-/* Gmarket-style trust metrics report band */
-.trust-metrics {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  max-width: 920px;
-  margin: 0 auto 64px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(6px);
-}
-.trust-metrics .metric {
-  background: rgba(10, 12, 20, 0.55);
-  padding: 28px 16px;
-  text-align: center;
-  transition: background 0.3s ease;
-}
-.trust-metrics .metric:hover {
-  background: rgba(230, 24, 98, 0.06);
-}
-.trust-metrics .metric-num {
-  font-family: 'Outfit', 'GmarketSans', sans-serif;
-  font-size: clamp(26px, 3.4vw, 38px);
-  font-weight: 800;
-  background: linear-gradient(120deg, #fff 0%, #ff7eb0 60%, #8c82ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-  line-height: 1;
-}
-.trust-metrics .metric-label {
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.55);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-@media (max-width: 640px) {
-  .trust-metrics { grid-template-columns: repeat(2, 1fr); }
-}
-
 /* Live AI consult simulation */
 .ai-chat-sim {
   max-width: 760px;
@@ -2991,26 +2946,6 @@ grid-template-columns: 1fr;
         <p class="services-lead">비개발자의 관점에서 가장 쉽고 빠르며, 최신 AI 도구를 융합하는 실무적인 가치를 전합니다.</p>
       </div>
 
-      <!-- Gmarket-style trust metrics (clean report grid + count-up) -->
-      <div class="trust-metrics" data-reveal="up" data-delay="120">
-        <div class="metric">
-          <div class="metric-num"><span data-count="12" data-suffix="명+">0</span></div>
-          <div class="metric-label">1:1 멘토링 수료생</div>
-        </div>
-        <div class="metric">
-          <div class="metric-num"><span data-count="4" data-suffix="회">0</span></div>
-          <div class="metric-label">기업 사내 AI 세미나</div>
-        </div>
-        <div class="metric">
-          <div class="metric-num"><span data-count="7" data-suffix="회">0</span></div>
-          <div class="metric-label">취업 특강 · 심사위원</div>
-        </div>
-        <div class="metric">
-          <div class="metric-num"><span data-count="1" data-prefix="🏆 " data-suffix="등">0</span></div>
-          <div class="metric-label">생성형 AI 경진대회 수상</div>
-        </div>
-      </div>
-
       <!-- DESKTOP STICKY SCROLL LAYOUT (Visible only on desktop > 992px) -->
       <div class="desktop-services-layout">
         <!-- Sticky Wrapper -->
@@ -3378,9 +3313,8 @@ grid-template-columns: 1fr;
             </div>
           </div>
           <div>
-            <!-- TODO: 실제 에이아잉 스마트스토어 URL로 교체하세요 (예: https://smartstore.naver.com/ai-ing) -->
-            <a href="https://smartstore.naver.com/" target="_blank" rel="noopener noreferrer" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:6px;background:#03c75a;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:filter 0.2s,transform 0.2s;" class="btn-gradient-hover">스마트스토어에서 구매 (오픈 예정)</a>
-            <button type="button" onclick="navigateTo('contact')" style="width:100%;margin-top:10px;padding:11px;border-radius:6px;background:transparent;color:#36d98a;border:1px solid rgba(3,199,90,0.4);font-size:13.5px;font-weight:700;cursor:pointer;transition:background 0.2s;">오픈 알림 신청 →</button>
+            <a href="https://smartstore.naver.com/ai-ing/products/13640154837" target="_blank" rel="noopener noreferrer" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:6px;background:#03c75a;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:filter 0.2s,transform 0.2s;" class="btn-gradient-hover">스마트스토어에서 구매하기</a>
+            <a href="https://smartstore.naver.com/ai-ing" target="_blank" rel="noopener noreferrer" style="width:100%;margin-top:10px;display:inline-flex;align-items:center;justify-content:center;padding:11px;border-radius:6px;background:transparent;color:#36d98a;border:1px solid rgba(3,199,90,0.4);font-size:13.5px;font-weight:700;text-decoration:none;transition:background 0.2s;">스토어 전체 상품 보기 →</a>
           </div>
         </div>
 
