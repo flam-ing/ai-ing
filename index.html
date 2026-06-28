@@ -1573,18 +1573,17 @@ grid-template-columns: 1fr;
 .scroll-story::before {
   content: '';
   position: absolute;
-  top: 30%;
+  top: var(--glow-top, 30%);
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
+  width: 640px;
+  height: 640px;
   border-radius: 50%;
-  background: radial-gradient(circle, #e61862 0%, transparent 70%);
+  background: var(--glow-grad, radial-gradient(circle, #e61862 0%, transparent 70%));
   filter: blur(150px);
-  opacity: 0.14;
+  opacity: 0.22;
   pointer-events: none;
   z-index: 1;
-  transition: background 0.8s ease, top 0.8s ease, left 0.8s ease;
 }
 
 /* Background Illustrations Layer */
@@ -1602,18 +1601,49 @@ grid-template-columns: 1fr;
               linear-gradient(to bottom, #030408 0%, transparent 15%, transparent 85%, #030408 100%);
   z-index: 1;
 }
+/* Morphing aurora mesh — colors & positions are lerped by JS every frame */
+.services-aurora {
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  filter: url(#liquid-morph) blur(60px) saturate(1.2);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  transform: translate3d(0, 0, 0);
+  will-change: left, top, background;
+}
+.aurora-blob.blob-a {
+  width: 46vw; height: 46vw;
+  left: var(--a-x, 8%); top: var(--a-y, 8%);
+  background: radial-gradient(circle, var(--c1, #e61862) 0%, transparent 66%);
+}
+.aurora-blob.blob-b {
+  width: 52vw; height: 52vw;
+  left: var(--b-x, 50%); top: var(--b-y, 26%);
+  background: radial-gradient(circle, var(--c2, #3b33a5) 0%, transparent 66%);
+}
+.aurora-blob.blob-c {
+  width: 38vw; height: 38vw;
+  left: var(--c-x, 26%); top: var(--c-y, 52%);
+  background: radial-gradient(circle, var(--c3, #06b6d4) 0%, transparent 66%);
+}
+
+/* Photo layer — opacity lerped by JS; shares the liquid-morph filter so it melts on transition */
 .service-bg-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   opacity: 0;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: brightness(0.18) contrast(1.1) saturate(0.7) blur(2px);
+  filter: url(#liquid-morph) brightness(0.2) contrast(1.1) saturate(0.65);
+  transform: scale(1.08);
+  will-change: opacity, transform;
   z-index: 0;
-}
-.service-bg-img.active {
-  opacity: 0.25;
 }
 
 .services-container {
@@ -1651,6 +1681,120 @@ grid-template-columns: 1fr;
   margin: 0 auto;
   line-height: 1.6;
 }
+
+/* Gmarket-style trust metrics report band */
+.trust-metrics {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  max-width: 920px;
+  margin: 0 auto 64px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+.trust-metrics .metric {
+  background: rgba(10, 12, 20, 0.55);
+  padding: 28px 16px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+.trust-metrics .metric:hover {
+  background: rgba(230, 24, 98, 0.06);
+}
+.trust-metrics .metric-num {
+  font-family: 'Outfit', 'GmarketSans', sans-serif;
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 800;
+  background: linear-gradient(120deg, #fff 0%, #ff7eb0 60%, #8c82ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.trust-metrics .metric-label {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 640px) {
+  .trust-metrics { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Live AI consult simulation */
+.ai-chat-sim {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(160deg, rgba(22, 14, 30, 0.92), rgba(8, 9, 16, 0.96));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 70px -22px rgba(230, 24, 98, 0.45);
+  overflow: hidden;
+  text-align: left;
+}
+.chat-sim-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+}
+.chat-sim-dot { width: 9px; height: 9px; border-radius: 50%; background: #e61862; box-shadow: 0 0 10px #e61862; }
+.chat-sim-title { font-size: 13.5px; font-weight: 700; color: #fff; font-family: 'GmarketSans', sans-serif; }
+.chat-sim-status { margin-left: auto; font-size: 11px; color: #27c93f; font-weight: 600; }
+.chat-sim-body {
+  padding: 20px 18px;
+  height: 230px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  scrollbar-width: thin;
+}
+.chat-bubble {
+  max-width: 82%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  animation: chatIn .35s cubic-bezier(.16, 1, .3, 1);
+  word-break: keep-all;
+}
+.chat-bubble.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #e61862, #b3124d);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble.ai {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-left-radius: 4px;
+}
+.chat-bubble.typing { display: flex; gap: 4px; padding: 14px; }
+.chat-bubble.typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: chatBlink 1.2s infinite;
+}
+.chat-bubble.typing span:nth-child(2) { animation-delay: .2s; }
+.chat-bubble.typing span:nth-child(3) { animation-delay: .4s; }
+.chat-sim-input {
+  display: flex; align-items: center;
+  padding: 13px 18px; min-height: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 13.5px; color: rgba(255, 255, 255, 0.85);
+  font-family: 'GmarketSans', sans-serif;
+}
+.chat-sim-caret { color: #e61862; animation: blink 1s infinite; margin-left: 1px; }
+@keyframes chatIn { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes chatBlink { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
 
 /* Desktop-only Sticky Scroll layout */
 .desktop-services-layout {
@@ -1769,14 +1913,26 @@ grid-template-columns: 1fr;
 .mockup-window {
   width: 100%;
   max-width: 520px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0f111a;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(160deg, rgba(26, 28, 42, 0.95), rgba(12, 14, 20, 0.96));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+              0 0 70px -12px var(--glow, rgba(230, 24, 98, 0.35));
   overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease-out;
+  transition: transform 0.2s ease-out, box-shadow 0.6s ease;
+}
+.mockup-window::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  z-index: 6;
+  pointer-events: none;
 }
 .mockup-header {
   height: 38px;
@@ -1813,18 +1969,18 @@ grid-template-columns: 1fr;
   position: relative;
   background: #0f111a;
   overflow: hidden;
+  filter: url(#liquid-morph); /* screens melt into each other during scroll transitions */
 }
 .mockup-screen {
   position: absolute;
   inset: 0;
   opacity: 0;
   transform: scale(0.97);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* opacity is driven per-frame by JS */
   pointer-events: none;
   background: #0f111a;
 }
 .mockup-screen.active {
-  opacity: 1;
   transform: scale(1);
   pointer-events: auto;
 }
@@ -2806,18 +2962,53 @@ grid-template-columns: 1fr;
 </section>
 
   <section id="services" class="tab-content-section scroll-story" style="position:relative;scroll-margin-top:64px;display:none;">
-    <!-- Background Illustrations/Pictures Layer -->
+    <!-- Liquid-morph SVG filter: scroll drives the displacement scale so visuals melt/morph between steps -->
+    <svg class="morph-defs" aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;pointer-events:none;">
+      <defs>
+        <filter id="liquid-morph" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+          <feTurbulence id="liquid-turb" type="fractalNoise" baseFrequency="0.006 0.011" numOctaves="2" seed="6" stitchTiles="stitch" result="noise"/>
+          <feDisplacementMap id="liquid-disp" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- Background: morphing aurora mesh + photo layer (both driven continuously by scroll) -->
     <div class="services-bg-layer">
-      <div class="service-bg-img active" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
+      <div class="services-aurora" id="services-aurora">
+        <span class="aurora-blob blob-a"></span>
+        <span class="aurora-blob blob-b"></span>
+        <span class="aurora-blob blob-c"></span>
+      </div>
+      <div class="service-bg-img" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
       <div class="service-bg-img" data-bg="2" style="background-image:url('img/story-2.jpg');"></div>
       <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-3.jpg');"></div>
     </div>
 
     <div class="services-container">
-      <div class="services-header">
+      <div class="services-header" data-reveal="zoom">
         <p class="services-kicker">SERVICES</p>
         <h2 class="services-title">제공하는 전문 교육 &amp; 컨설팅 서비스</h2>
         <p class="services-lead">비개발자의 관점에서 가장 쉽고 빠르며, 최신 AI 도구를 융합하는 실무적인 가치를 전합니다.</p>
+      </div>
+
+      <!-- Gmarket-style trust metrics (clean report grid + count-up) -->
+      <div class="trust-metrics" data-reveal="up" data-delay="120">
+        <div class="metric">
+          <div class="metric-num"><span data-count="12" data-suffix="명+">0</span></div>
+          <div class="metric-label">1:1 멘토링 수료생</div>
+        </div>
+        <div class="metric">
+          <div class="metric-num"><span data-count="4" data-suffix="회">0</span></div>
+          <div class="metric-label">기업 사내 AI 세미나</div>
+        </div>
+        <div class="metric">
+          <div class="metric-num"><span data-count="7" data-suffix="회">0</span></div>
+          <div class="metric-label">취업 특강 · 심사위원</div>
+        </div>
+        <div class="metric">
+          <div class="metric-num"><span data-count="1" data-prefix="🏆 " data-suffix="등">0</span></div>
+          <div class="metric-label">생성형 AI 경진대회 수상</div>
+        </div>
       </div>
 
       <!-- DESKTOP STICKY SCROLL LAYOUT (Visible only on desktop > 992px) -->
@@ -3049,10 +3240,12 @@ grid-template-columns: 1fr;
   <!-- ============ CONTACT ============ -->
   
   <!-- ============ PAYMENT ============ -->
-  <section id="payment" class="tab-content-section" style="background:#030408;padding:clamp(80px,9vw,130px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
-    <div style="width:min(1200px,92vw);margin:0 auto;text-align:center;">
+  <section id="payment" class="tab-content-section" style="position:relative;overflow:hidden;background:#030408;padding:clamp(80px,9vw,130px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
+    <div aria-hidden="true" style="position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:760px;height:760px;border-radius:50%;background:radial-gradient(circle, rgba(230,24,98,0.16) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+    <div aria-hidden="true" style="position:absolute;bottom:-15%;right:-5%;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(59,51,165,0.18) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+    <div style="position:relative;z-index:1;width:min(1200px,92vw);margin:0 auto;text-align:center;">
 
-      <div class="payment-header" style="text-align:center; margin-bottom: 60px;">
+      <div class="payment-header" data-reveal="zoom" style="text-align:center; margin-bottom: 60px;">
         <p class="payment-kicker" style="font-family:'GmarketSans',sans-serif; font-size:13px; font-weight:700; color:#e61862; letter-spacing:0.25em; text-transform:uppercase; margin-bottom:12px;">PAYMENT PLAN</p>
         <h2 class="payment-title" style="font-family:'GmarketSans',sans-serif; font-size:clamp(28px, 4vw, 42px); font-weight:800; color:#ffffff; margin-bottom:20px;">합리적인 서비스 플랜 &amp; 결제 안내</h2>
         <p class="payment-lead" style="font-size:16px; color:rgba(255, 255, 255, 0.6); max-width:600px; margin:0 auto; line-height:1.6;">신용카드 및 간편 결제(카카오페이)와 계좌이체 등 편리한 결제 방식을 통해 바로 서비스를 예약하실 수 있습니다.</p>
@@ -3110,6 +3303,19 @@ grid-template-columns: 1fr;
         </div>
       </div>
 
+      <!-- Live AI consult simulation (rich interactive component) -->
+      <div class="ai-chat-sim" data-reveal="zoom">
+        <div class="chat-sim-head">
+          <span class="chat-sim-dot"></span>
+          <span class="chat-sim-title">에이아잉 AI 상담 어시스턴트</span>
+          <span class="chat-sim-status">● online</span>
+        </div>
+        <div class="chat-sim-body" id="chat-sim-body"></div>
+        <div class="chat-sim-input">
+          <span id="chat-sim-typed"></span><span class="chat-sim-caret">|</span>
+        </div>
+      </div>
+
       <!-- Payment Methods Box -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:0px;">
         <!-- Card 1: Account Transfer -->
@@ -3155,6 +3361,26 @@ grid-template-columns: 1fr;
           
           <div>
             <button type="button" onclick="openPaymentModal()" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:14px;border-radius:6px;background:#e61862;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제창 열기</button>
+          </div>
+        </div>
+
+        <!-- Card 3: Naver SmartStore -->
+        <div data-reveal="up" data-delay="200" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #03c75a;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#03c75a;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 03</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:#03c75a;color:#fff;font-weight:800;font-size:13px;font-family:'Outfit',sans-serif;">N</span>
+              네이버 스마트스토어
+            </h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">네이버페이 포인트 적립과 실제 수강 후기를 확인하며 구매하고 싶다면 스마트스토어를 이용하세요. 동일한 교육·컨설팅 이용권을 안전거래로 제공합니다.</p>
+            <div style="background:rgba(3,199,90,0.06);border:1px solid rgba(3,199,90,0.2);padding:12px 16px;border-radius:8px;margin-bottom:20px;">
+              <span style="font-size:13px;color:#36d98a;font-weight:500;line-height:1.5;display:block;">✓ 네이버페이 간편결제 · 포인트 적립 · 안전거래 보장</span>
+            </div>
+          </div>
+          <div>
+            <!-- TODO: 실제 에이아잉 스마트스토어 URL로 교체하세요 (예: https://smartstore.naver.com/ai-ing) -->
+            <a href="https://smartstore.naver.com/" target="_blank" rel="noopener noreferrer" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:6px;background:#03c75a;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:filter 0.2s,transform 0.2s;" class="btn-gradient-hover">스마트스토어에서 구매 (오픈 예정)</a>
+            <button type="button" onclick="navigateTo('contact')" style="width:100%;margin-top:10px;padding:11px;border-radius:6px;background:transparent;color:#36d98a;border:1px solid rgba(3,199,90,0.4);font-size:13.5px;font-weight:700;cursor:pointer;transition:background 0.2s;">오픈 알림 신청 →</button>
           </div>
         </div>
 
@@ -3252,7 +3478,69 @@ grid-template-columns: 1fr;
     setupCountup();
     setupParallax();
     setupScrollStory();
+    setupAIChatSim();
   });
+
+  // Self-playing AI consultation chat (loops while the payment section is visible)
+  function setupAIChatSim() {
+    const body = document.getElementById('chat-sim-body');
+    const typed = document.getElementById('chat-sim-typed');
+    if (!body || !typed) return;
+
+    const convo = [
+      { who: 'user', text: '세무 영수증 정리를 자동화하고 싶어요. 가능할까요?' },
+      { who: 'ai',   text: '네! 폴더의 PDF를 Claude로 파싱해 노션 DB에 자동 동기화하는 24시간 에이전트를 설계해 드립니다. 월 처리량만 알려주시면 인프라 비용도 추정해 드려요.' },
+      { who: 'user', text: '한 달에 영수증 300건 정도예요.' },
+      { who: 'ai',   text: '300건이면 로컬 맥미니 한 대로 충분합니다. 초기 세팅과 보안망 구성까지 1:1로 진행해요. 아래 결제 옵션으로 상담을 예약해 보세요 👇' }
+    ];
+
+    let i = 0, timers = [];
+    const after = (ms, fn) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+
+    function addBubble(who, text) {
+      const b = document.createElement('div');
+      b.className = 'chat-bubble ' + who;
+      b.textContent = text;
+      body.appendChild(b);
+      body.scrollTop = body.scrollHeight;
+    }
+    function typingDots() {
+      const b = document.createElement('div');
+      b.className = 'chat-bubble ai typing';
+      b.innerHTML = '<span></span><span></span><span></span>';
+      body.appendChild(b);
+      body.scrollTop = body.scrollHeight;
+      return b;
+    }
+    function typeInto(text, done) {
+      let n = 0;
+      typed.textContent = '';
+      const tick = () => {
+        typed.textContent = text.slice(0, n++);
+        if (n <= text.length) after(28, tick); else after(450, done);
+      };
+      tick();
+    }
+    function run() {
+      const step = convo[i];
+      if (!step) { after(2800, () => { body.innerHTML = ''; i = 0; run(); }); return; }
+      if (step.who === 'user') {
+        typeInto(step.text, () => { typed.textContent = ''; addBubble('user', step.text); i++; after(550, run); });
+      } else {
+        const t = typingDots();
+        after(1100, () => { t.remove(); addBubble('ai', step.text); i++; after(1200, run); });
+      }
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { clear(); body.innerHTML = ''; typed.textContent = ''; i = 0; run(); }
+        else { clear(); }
+      });
+    }, { threshold: 0.3 });
+    io.observe(body);
+  }
 
   // Particle background field
   function initParticles() {
@@ -3354,9 +3642,17 @@ grid-template-columns: 1fr;
   function setupReveal() {
     const els = document.querySelectorAll('[data-reveal]');
     els.forEach((el) => {
+      const type = el.getAttribute('data-reveal');
       el.style.opacity = '0';
-      el.style.transform = 'translateY(30px)';
-      el.style.transition = 'opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1)';
+      if (type === 'zoom') {
+        // Apple-style grand zoom-in + soft focus
+        el.style.transform = 'scale(0.9)';
+        el.style.filter = 'blur(8px)';
+        el.style.transition = 'opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1), filter .9s cubic-bezier(.16,1,.3,1)';
+      } else {
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1)';
+      }
     });
 
     const io = new IntersectionObserver((entries) => {
@@ -3366,6 +3662,7 @@ grid-template-columns: 1fr;
           el.style.transitionDelay = (el.getAttribute('data-delay') || 0) + 'ms';
           el.style.opacity = '1';
           el.style.transform = 'none';
+          el.style.filter = 'none';
           io.unobserve(el);
         }
       });
@@ -3387,18 +3684,30 @@ grid-template-columns: 1fr;
     
     let storyTicking = false;
 
-    // Background glows configs
-    const glows = [
-      'radial-gradient(circle, #e61862 0%, transparent 70%)',
-      'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
-      'radial-gradient(circle, #3b82f6 0%, transparent 70%)'
+    // Per-step aurora palette (rgb) + blob positions (%) — interpolated continuously while scrolling
+    const palette = [
+      { c1:[230,24,98],   c2:[59,51,165],   c3:[6,182,212] },
+      { c1:[139,130,255], c2:[59,130,246],  c3:[230,24,98] },
+      { c1:[6,182,212],   c2:[16,185,129],  c3:[59,51,165] }
     ];
-    const glowTops = ['30%', '50%', '70%'];
+    const blobPos = [
+      { ax:6,  ay:6,  bx:50, by:24, cx:24, cy:50 },
+      { ax:38, ay:14, bx:12, by:40, cx:58, cy:48 },
+      { ax:20, ay:40, bx:56, by:10, cx:30, cy:58 }
+    ];
     const urls = [
       'https://ai-ing.org/automation',
       'https://ai-ing.org/mentoring',
       'https://ai-ing.org/education'
     ];
+    const aurora = document.getElementById('services-aurora');
+    const dispNode = document.getElementById('liquid-disp');
+    const turbNode = document.getElementById('liquid-turb');
+    const mockupWindow = story.querySelector('.sticky-mockup-pane .mockup-window');
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const rgb = (a, b, t) => `rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`;
+    const rgba = (a, b, t, al) => `rgba(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))},${al})`;
+    const MORPH_MAX = 16; // max liquid-displacement during a transition
 
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
@@ -3409,38 +3718,51 @@ grid-template-columns: 1fr;
       if (total <= 0) return;
 
       const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(0.999, scrolled / total));
-      
-      // Determine active index (0, 1, 2)
-      const activeIdx = Math.floor(progress * 3);
-      
-      // Update active classes for texts, mockup screens, url bar, background images, and background glows
-      textItems.forEach((item, i) => {
-        item.classList.toggle('active', i === activeIdx);
+      const progress = Math.max(0, Math.min(0.9999, scrolled / total));
+
+      const local = progress * 3;               // 0..3 across the three steps
+      const idx = Math.min(2, Math.floor(local));
+      const next = Math.min(2, idx + 1);
+      const frac = local - Math.floor(local);   // 0..1 within current step
+      const activeIdx = idx;                     // active = current step (centers at i+0.5)
+
+      // Text + url bar: discrete with CSS pop
+      textItems.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+      if (urlBar) urlBar.textContent = urls[activeIdx];
+
+      // Continuous crossfade — each visual is centered at i+0.5, neighbours overlap to morph
+      const weight = (i) => Math.max(0, 1 - Math.abs(local - (i + 0.5)));
+      bgImages.forEach((img, i) => { img.style.opacity = (weight(i) * 0.26).toFixed(3); });
+      screens.forEach((scr, i) => {
+        scr.style.opacity = weight(i).toFixed(3);
+        scr.classList.toggle('active', i === activeIdx);
       });
-      screens.forEach((screen, i) => {
-        screen.classList.toggle('active', i === activeIdx);
-      });
-      bgImages.forEach((img, i) => {
-        img.classList.toggle('active', i === activeIdx);
-      });
-      if (urlBar) {
-        urlBar.textContent = urls[activeIdx];
+
+      // Morphing aurora — lerp colors + blob positions between this step and the next
+      if (aurora) {
+        const p0 = palette[idx], p1 = palette[next];
+        const b0 = blobPos[idx], b1 = blobPos[next];
+        aurora.style.setProperty('--c1', rgb(p0.c1, p1.c1, frac));
+        aurora.style.setProperty('--c2', rgb(p0.c2, p1.c2, frac));
+        aurora.style.setProperty('--c3', rgb(p0.c3, p1.c3, frac));
+        aurora.style.setProperty('--a-x', lerp(b0.ax, b1.ax, frac).toFixed(2) + '%');
+        aurora.style.setProperty('--a-y', lerp(b0.ay, b1.ay, frac).toFixed(2) + '%');
+        aurora.style.setProperty('--b-x', lerp(b0.bx, b1.bx, frac).toFixed(2) + '%');
+        aurora.style.setProperty('--b-y', lerp(b0.by, b1.by, frac).toFixed(2) + '%');
+        aurora.style.setProperty('--c-x', lerp(b0.cx, b1.cx, frac).toFixed(2) + '%');
+        aurora.style.setProperty('--c-y', lerp(b0.cy, b1.cy, frac).toFixed(2) + '%');
+        if (mockupWindow) mockupWindow.style.setProperty('--glow', rgba(p0.c1, p1.c1, frac, 0.4));
       }
 
-      // Update background glow using style sheets rule or inline variables
-      const style = document.createElement('style');
-      style.id = 'services-dynamic-glow-style';
-      const oldStyle = document.getElementById('services-dynamic-glow-style');
-      if (oldStyle) oldStyle.remove();
-      
-      style.innerHTML = `
-        .scroll-story::before {
-          background: ${glows[activeIdx]} !important;
-          top: ${glowTops[activeIdx]} !important;
-        }
-      `;
-      document.head.appendChild(style);
+      // Fluid headline glow — color + vertical position flow with scroll progress
+      const glowTops = [30, 50, 70];
+      story.style.setProperty('--glow-grad', `radial-gradient(circle, ${rgb(palette[idx].c1, palette[next].c1, frac)} 0%, transparent 70%)`);
+      story.style.setProperty('--glow-top', lerp(glowTops[idx], glowTops[next], frac).toFixed(1) + '%');
+
+      // Liquid displacement — 0 when a step is centered (frac≈0.5), peaks at the boundary (frac≈0/1)
+      const morph = (1 + Math.cos(frac * Math.PI * 2)) / 2;
+      if (dispNode) dispNode.setAttribute('scale', (morph * MORPH_MAX).toFixed(2));
+      if (turbNode) turbNode.setAttribute('baseFrequency', (0.006 + progress * 0.004).toFixed(4) + ' ' + (0.011 + progress * 0.004).toFixed(4));
 
       storyTicking = false;
     };
