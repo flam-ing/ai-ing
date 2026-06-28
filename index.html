@@ -2343,19 +2343,16 @@ grid-template-columns: 1fr;
 }
 @media (max-width: 992px) {
   .desktop-services-layout {
-    display: none;
+    display: block;
   }
   .mobile-services-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    padding: 20px 0;
+    display: none;
   }
-  .mobile-flow-item .mockup-window {
-    max-width: 100%;
+  .sticky-text-pane {
+    width: 100% !important;
   }
-  .mobile-flow-item .mockup-body {
-    height: 280px;
+  .sticky-inner-wrapper {
+    justify-content: center !important;
   }
 }
 @media (min-width: 769px) {
@@ -3104,7 +3101,7 @@ grid-template-columns: 1fr;
   <!-- ============ CONTACT ============ -->
   
   <!-- ============ PAYMENT ============ -->
-  <section id="payment" class="tab-content-section" style="position:relative;overflow:hidden;background:#030408;padding:clamp(40px,5vw,70px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
+  <section id="payment" class="tab-content-section" style="position:relative;overflow:hidden;background:#030408;padding:clamp(90px,10vw,140px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
     <div aria-hidden="true" style="position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:760px;height:760px;border-radius:50%;background:radial-gradient(circle, rgba(230,24,98,0.16) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
     <div aria-hidden="true" style="position:absolute;bottom:-15%;right:-5%;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(59,51,165,0.18) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
     <div style="position:relative;z-index:1;width:min(1200px,92vw);margin:0 auto;text-align:center;">
@@ -3113,7 +3110,7 @@ grid-template-columns: 1fr;
       
 
       <!-- Payment Methods Box -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:0px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:20px;">
         <!-- Card 1: Account Transfer -->
         <div data-reveal="up" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #3b33a5;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
@@ -3193,8 +3190,18 @@ grid-template-columns: 1fr;
       </div>
 
 
-
-      <!-- Success Msg -->
+      <!-- Live AI consult simulation (rich interactive component) -->
+      <div class="ai-chat-sim" data-reveal="zoom">
+        <div class="chat-sim-head" style="display:flex;align-items:center;gap:6px;padding:12px 16px;">
+          <span class="chat-sim-dot"></span>
+          <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);display:inline-block;"></span>
+          <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);display:inline-block;"></span>
+        </div>
+        <div class="chat-sim-body" id="chat-sim-body"></div>
+        <div class="chat-sim-input">
+          <span id="chat-sim-typed"></span><span class="chat-sim-caret">|</span>
+        </div>
+      </div>
       <div id="form-success-container" style="display:none;border-radius:3px;background:#0d0f17;border:1px solid rgba(230,24,98,.3);border-top:3px solid #e61862;padding:64px 32px;text-align:center;">
         <div style="width:66px;height:66px;border-radius:3px;background:#e61862;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;color:#fff;">✓</div>
         <h3 style="font-size:26px;font-weight:700;margin-bottom:12px;">문의가 접수되었습니다</h3>
@@ -3508,7 +3515,6 @@ grid-template-columns: 1fr;
 
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
-      if (window.innerWidth <= 992) return; // Disable sticky scroll logic on mobile
 
       const rect = desktopLayout.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
