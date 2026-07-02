@@ -1588,10 +1588,13 @@ grid-template-columns: 1fr;
 
 /* Background Illustrations Layer */
 .services-bg-layer {
-  position: absolute;
-  inset: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 .services-bg-layer::after {
   content: '';
