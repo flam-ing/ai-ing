@@ -3589,8 +3589,20 @@ grid-template-columns: 1fr;
       const c1 = [lerp(p0.c1[0], p1.c1[0], f), lerp(p0.c1[1], p1.c1[1], f), lerp(p0.c1[2], p1.c1[2], f)];
       const c2 = [lerp(p0.c2[0], p1.c2[0], f), lerp(p0.c2[1], p1.c2[1], f), lerp(p0.c2[2], p1.c2[2], f)];
 
-      const cx = w * 0.5;
-      const cy = h * 0.5;
+      const narrow = w < 992;
+      let cx = w * 0.5;
+      let cy = h * 0.5;
+      if (!narrow) {
+        const textPane = story.querySelector('.sticky-text-pane');
+        if (textPane) {
+          const tpRect = textPane.getBoundingClientRect();
+          const cRect = dotsCanvas.getBoundingClientRect();
+          cx = (tpRect.left - cRect.left) + tpRect.width * 0.45;
+          cy = (tpRect.top - cRect.top) + tpRect.height * 0.5;
+        } else {
+          cx = w * 0.38;
+        }
+      }
       const R = Math.min(w, h) * 0.32;
 
       const px = (dotsSmx - 0.5) * 26;
