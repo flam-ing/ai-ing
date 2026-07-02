@@ -2350,12 +2350,20 @@ grid-template-columns: 1fr;
   }
   .mobile-services-layout {
     display: block !important;
+    transform: translateZ(0);
   }
   .services-bg-layer {
     position: absolute !important;
     inset: 0 !important;
     height: 100% !important;
     margin-bottom: 0 !important;
+  }
+  .services-aurora {
+    filter: blur(35px) !important; /* Disable heavy SVG liquid morph shader on mobile GPUs for 60fps scrolling */
+    transform: translateZ(0);
+  }
+  #services-dots-canvas {
+    display: none !important; /* Hide particle canvas on mobile to free up GPU & CPU during touch scroll */
   }
 }
 @media (min-width: 769px) {
