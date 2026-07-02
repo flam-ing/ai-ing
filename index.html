@@ -3586,9 +3586,8 @@ grid-template-columns: 1fr;
       const c1 = [lerp(p0.c1[0], p1.c1[0], f), lerp(p0.c1[1], p1.c1[1], f), lerp(p0.c1[2], p1.c1[2], f)];
       const c2 = [lerp(p0.c2[0], p1.c2[0], f), lerp(p0.c2[1], p1.c2[1], f), lerp(p0.c2[2], p1.c2[2], f)];
 
-      const narrow = w < 992;
-      const cx = narrow ? w * 0.5 : w * 0.70;
-      const cy = h * 0.52;
+      const cx = w * 0.5;
+      const cy = h * 0.5;
       const R = Math.min(w, h) * 0.32;
 
       const px = (dotsSmx - 0.5) * 26;
