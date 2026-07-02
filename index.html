@@ -2346,17 +2346,16 @@ grid-template-columns: 1fr;
 }
 @media (max-width: 992px) {
   .desktop-services-layout {
-    display: block;
-    height: 140vh !important;
+    display: none !important;
   }
   .mobile-services-layout {
-    display: none;
+    display: block !important;
   }
-  .sticky-text-pane {
-    width: 100% !important;
-  }
-  .sticky-inner-wrapper {
-    justify-content: center !important;
+  .services-bg-layer {
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+    margin-bottom: 0 !important;
   }
 }
 @media (min-width: 769px) {
@@ -3691,6 +3690,7 @@ grid-template-columns: 1fr;
 
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
+      if (window.innerWidth <= 992) return;
 
       const rect = desktopLayout.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
