@@ -2999,6 +2999,7 @@ grid-template-columns: 1fr;
       <div class="service-bg-img" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
       <div class="service-bg-img" data-bg="2" style="background-image:url('img/service-coding.jpg');"></div>
       <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-3.jpg');"></div>
+      <canvas id="services-dots-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:0.65;"></canvas>
     </div>
 
     <div class="services-container">
@@ -3513,6 +3514,166 @@ grid-template-columns: 1fr;
     const rgba = (a, b, t, al) => `rgba(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))},${al})`;
     const MORPH_MAX = 12; // max liquid-displacement during a transition
 
+    // ===== Particles Morph Canvas Background =====
+    const dotsCanvas = document.getElementById('services-dots-canvas');
+    let dotsCtx = null;
+    if (dotsCanvas) {
+      dotsCtx = dotsCanvas.getContext('2d');
+    }
+    let dotsTime = 0;
+    let dotsMx = 0.5, dotsMy = 0.5, dotsSmx = 0.5, dotsSmy = 0.5;
+    const N = 144;
+    const pt = [];
+    for (let i = 0; i < N; i++) {
+      pt.push({ x: 0, y: 0 });
+    }
+
+    story.addEventListener('pointermove', (e) => {
+      const rect = story.getBoundingClientRect();
+      dotsMx = (e.clientX - rect.left) / Math.max(1, rect.width);
+      dotsMy = (e.clientY - rect.top) / Math.max(1, rect.height);
+    }, { passive: true });
+
+    function target(i, stage, cx, cy, R, time) {
+      if (stage === 0) {
+        const ring = i % 3;
+        const idx = Math.floor(i / 3);
+        const per = 48;
+        const ang = (idx / per) * Math.PI * 2 + time * 0.05 * (ring % 2 ? -1 : 1) + ring * 0.42;
+        const rad = R * (0.42 + 0.30 * ring);
+        return [cx + Math.cos(ang) * rad, cy + Math.sin(ang) * rad * 0.92];
+      }
+      if (stage === 1) {
+        const side = i % 2;
+        const k = Math.floor(i / 2);
+        const ccx = cx + (side ? R * 0.46 : -R * 0.46);
+        const ang = (k / 72) * Math.PI * 2 + time * (side ? -0.09 : 0.09);
+        const rad = R * 0.56 * (0.3 + 0.7 * (((k * 7919) % 72) / 72));
+        return [ccx + Math.cos(ang) * rad, cy + Math.sin(ang) * rad];
+      }
+      const cols = 16;
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = cx - R * 0.95 + col * (R * 1.9 / (cols - 1));
+      const y = cy + R * 0.72 - row * R * 0.165 - col * R * 0.035 + Math.sin(time * 1.3 + col * 0.55) * 5;
+      return [x, y];
+    }
+
+    function drawDots() {
+      if (!dotsCanvas || !dotsCtx) return;
+      const w = dotsCanvas.clientWidth;
+      const h = dotsCanvas.clientHeight;
+      if (!w || !h) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      if (dotsCanvas.width !== Math.round(w * dpr) || dotsCanvas.height !== Math.round(h * dpr)) {
+        dotsCanvas.width = Math.round(w * dpr);
+        dotsCanvas.height = Math.round(h * dpr);
+        pt.forEach(p => {
+          if (p.x === 0 || p.x > w) p.x = Math.random() * w;
+          if (p.y === 0 || p.y > h) p.y = Math.random() * h;
+        });
+      }
+      dotsCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dotsCtx.clearRect(0, 0, w, h);
+
+      const s = progressVal * 2;
+      const seg = Math.min(1, Math.max(0, Math.floor(s)));
+      const f = Math.min(1, Math.max(0, s - seg));
+      const ef = f * f * (3 - 2 * f);
+
+      const p0 = palette[seg];
+      const p1 = palette[Math.min(2, seg + 1)];
+      const c1 = [lerp(p0.c1[0], p1.c1[0], f), lerp(p0.c1[1], p1.c1[1], f), lerp(p0.c1[2], p1.c1[2], f)];
+      const c2 = [lerp(p0.c2[0], p1.c2[0], f), lerp(p0.c2[1], p1.c2[1], f), lerp(p0.c2[2], p1.c2[2], f)];
+
+      const narrow = w < 992;
+      const cx = narrow ? w * 0.5 : w * 0.70;
+      const cy = h * 0.52;
+      const R = Math.min(w, h) * 0.32;
+
+      const px = (dotsSmx - 0.5) * 26;
+      const py = (dotsSmy - 0.5) * 18;
+
+      for (let i = 0; i < N; i++) {
+        const A = target(i, seg, cx, cy, R, dotsTime);
+        const B = target(i, Math.min(2, seg + 1), cx, cy, R, dotsTime);
+        let tx = A[0] + (B[0] - A[0]) * ef + px;
+        let ty = A[1] + (B[1] - A[1]) * ef + py;
+        const p = pt[i];
+        p.x += (tx - p.x) * 0.075;
+        p.y += (ty - p.y) * 0.075;
+      }
+
+      const weights = [];
+      for (let i = 0; i < 3; i++) {
+        weights.push(Math.min(1, Math.max(0, 1 - Math.abs(s - i) * 1.6)));
+      }
+
+      dotsCtx.lineWidth = 1;
+      const w0 = weights[0];
+      const w1 = weights[1];
+      const w2 = weights[2];
+
+      if (w0 > 0.04) {
+        for (let i = 0; i < N; i += 6) {
+          const p = pt[i];
+          dotsCtx.strokeStyle = `rgba(${Math.round(c1[0])},${Math.round(c1[1])},${Math.round(c1[2])},${(0.055 * w0).toFixed(3)})`;
+          dotsCtx.beginPath(); dotsCtx.moveTo(p.x, p.y); dotsCtx.lineTo(cx + px, cy + py); dotsCtx.stroke();
+        }
+        for (let i = 0; i < N; i += 3) {
+          const p = pt[i], q2 = pt[(i + 9) % N];
+          const dx = p.x - q2.x, dy = p.y - q2.y;
+          if (dx * dx + dy * dy < R * R * 0.07) {
+            dotsCtx.strokeStyle = `rgba(${Math.round(c2[0])},${Math.round(c2[1])},${Math.round(c2[2])},${(0.075 * w0).toFixed(3)})`;
+            dotsCtx.beginPath(); dotsCtx.moveTo(p.x, p.y); dotsCtx.lineTo(q2.x, q2.y); dotsCtx.stroke();
+          }
+        }
+        const g = dotsCtx.createRadialGradient(cx + px, cy + py, 0, cx + px, cy + py, R * 0.2);
+        g.addColorStop(0, `rgba(${Math.round(c1[0])},${Math.round(c1[1])},${Math.round(c1[2])},${(0.5 * w0).toFixed(3)})`);
+        g.addColorStop(1, `rgba(${Math.round(c1[0])},${Math.round(c1[1])},${Math.round(c1[2])},0)`);
+        dotsCtx.fillStyle = g;
+        dotsCtx.beginPath(); dotsCtx.arc(cx + px, cy + py, R * 0.2, 0, Math.PI * 2); dotsCtx.fill();
+      }
+      if (w1 > 0.04) {
+        for (let i = 0; i < N - 1; i += 4) {
+          const p = pt[i], q2 = pt[i + 1];
+          dotsCtx.strokeStyle = `rgba(${Math.round(c2[0])},${Math.round(c2[1])},${Math.round(c2[2])},${(0.07 * w1).toFixed(3)})`;
+          dotsCtx.beginPath(); dotsCtx.moveTo(p.x, p.y); dotsCtx.lineTo(q2.x, q2.y); dotsCtx.stroke();
+        }
+      }
+      if (w2 > 0.04) {
+        for (let i = 0; i < N; i += 8) {
+          const p = pt[i];
+          dotsCtx.strokeStyle = `rgba(${Math.round(c1[0])},${Math.round(c1[1])},${Math.round(c1[2])},${(0.06 * w2).toFixed(3)})`;
+          dotsCtx.beginPath(); dotsCtx.moveTo(p.x, p.y); dotsCtx.lineTo(p.x, p.y + 44); dotsCtx.stroke();
+        }
+      }
+
+      for (let i = 0; i < N; i++) {
+        const p = pt[i];
+        const c = i % 2 ? c1 : c2;
+        const al = 0.4 + 0.5 * (((i * 37) % 100) / 100);
+        const r = 1.3 + (((i * 13) % 10) / 10) * 1.7;
+        dotsCtx.fillStyle = `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${(al * 0.14).toFixed(3)})`;
+        dotsCtx.beginPath(); dotsCtx.arc(p.x, p.y, r * 3.4, 0, Math.PI * 2); dotsCtx.fill();
+        dotsCtx.fillStyle = `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${al.toFixed(3)})`;
+        dotsCtx.beginPath(); dotsCtx.arc(p.x, p.y, r, 0, Math.PI * 2); dotsCtx.fill();
+      }
+    }
+
+    function tickDots() {
+      if (story.classList.contains('active')) {
+        dotsTime += 1 / 60;
+        dotsSmx += (dotsMx - dotsSmx) * 0.06;
+        dotsSmy += (dotsMy - dotsSmy) * 0.06;
+        drawDots();
+      }
+      requestAnimationFrame(tickDots);
+    }
+    requestAnimationFrame(tickDots);
+
+    let progressVal = 0;
+
     const updateStory = () => {
       if (!story.classList.contains('active')) return;
 
@@ -3522,6 +3683,7 @@ grid-template-columns: 1fr;
 
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(0.9999, scrolled / total));
+      progressVal = progress;
 
       const local = progress * 3;               // 0..3 across the three steps
       const idx = Math.min(2, Math.floor(local));
