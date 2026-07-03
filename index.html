@@ -2396,7 +2396,175 @@ grid-template-columns: 1fr;
   .mobile-only-buttons {
     display: none !important;
   }
-}
+
+  /* ===== HYPE MOTION SYSTEM (Remotion-style) ===== */
+  #scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #e61862, #8c82ff);
+    box-shadow: 0 0 14px rgba(230,24,98,.55);
+    z-index: 200;
+    pointer-events: none;
+  }
+
+  .kinetic-ready .kinetic-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(.65em) rotate(3deg) scale(.92);
+    filter: blur(5px);
+    will-change: transform, opacity, filter;
+  }
+  .kinetic-ready.kinetic-on .kinetic-word {
+    animation: kineticPop .8s cubic-bezier(.22,1.35,.36,1) forwards;
+    animation-delay: var(--kd, 0ms);
+  }
+  @keyframes kineticPop {
+    0% { opacity: 0; transform: translateY(.65em) rotate(3deg) scale(.92); filter: blur(5px); }
+    55% { filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); filter: blur(0); }
+  }
+
+  .grad-flow {
+    background: linear-gradient(90deg, #ff5e9c, #e61862, #8c82ff, #ff5e9c);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: gradFlow 5s linear infinite;
+  }
+  .kinetic-ready.kinetic-on .kinetic-word.grad-flow {
+    animation: kineticPop .8s cubic-bezier(.22,1.35,.36,1) forwards, gradFlow 5s linear infinite;
+    animation-delay: var(--kd, 0ms), 0ms;
+  }
+  @keyframes gradFlow {
+    to { background-position: 300% 50%; }
+  }
+
+  .hero-typer {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'GmarketSans', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.82);
+    padding: 9px 18px;
+    border: 1px solid rgba(230,24,98,.45);
+    border-radius: 2px;
+    background: rgba(230,24,98,.09);
+    box-shadow: 0 0 26px -6px rgba(230,24,98,.5);
+    margin-bottom: 28px;
+  }
+  .hero-typer b { color: #ff5e9c; }
+  .typer-caret {
+    color: #e61862;
+    font-weight: 400;
+    margin-left: 3px;
+    animation: aiingBlink 1s steps(1) infinite;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-top: 54px;
+  }
+  .hero-stats > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 0 clamp(20px, 3.4vw, 44px);
+  }
+  .hero-stats > div + div { border-left: 1px solid rgba(255,255,255,.12); }
+  .hs-num {
+    font-family: 'GmarketSans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 2.8vw, 36px);
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 30px rgba(230,24,98,.4);
+  }
+  .hs-label {
+    font-size: 12.5px;
+    font-weight: 300;
+    color: rgba(255,255,255,.55);
+    letter-spacing: .05em;
+  }
+  @media (max-width: 768px) {
+    .hero-stats { display: grid; grid-template-columns: repeat(2, auto); gap: 20px 36px; margin-top: 40px; justify-content: center; }
+    .hero-stats > div { padding: 0; }
+    .hero-stats > div + div { border-left: none; }
+  }
+
+  .hero-marquee {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    overflow: hidden;
+    padding: 15px 0;
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: rgba(7,8,13,.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .hero-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: aiingMarquee 30s linear infinite;
+  }
+  .hm-group {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    padding-right: 34px;
+  }
+  .hero-marquee span {
+    font-family: 'GmarketSans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    white-space: nowrap;
+  }
+  .hero-marquee span.o {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(230,24,98,.8);
+  }
+  .hero-marquee i {
+    font-style: normal;
+    font-size: 11px;
+    color: #e61862;
+    animation: aiingPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes aiingMarquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes aiingPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  @keyframes aiingBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes aiingFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
 </style>
 
 </head>
@@ -2430,10 +2598,11 @@ grid-template-columns: 1fr;
     </div>
     <div style="position:absolute;inset:0;background:rgba(7,8,13,0.3);z-index:1;pointer-events:none;"></div>
 
-    <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 0 60px;">
-      <img src="logo.png" alt="AI-ing Logo" style="width:150px;height:150px;border-radius:30px;margin-bottom:28px;object-fit:cover;box-shadow:0 12px 36px rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.15);">
-      <h2 data-reveal="up" data-delay="80" style="font-family: GmarketSans, sans-serif; font-size: clamp(20px, 2.6vw, 38px); font-weight: 500; line-height: 1.45; color: rgb(255, 255, 255); margin-bottom: 32px; word-break: keep-all; letter-spacing: -0.02em;">
-        AI 도입 및 프로세스 자동화 AX 컨설팅<br>
+    <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 0 150px;">
+      <img src="logo.png" alt="AI-ing Logo" style="width:150px;height:150px;border-radius:30px;margin-bottom:28px;object-fit:cover;box-shadow:0 12px 36px rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.15);animation:aiingFloat 6s ease-in-out infinite;">
+      <div class="hero-typer" data-reveal="up">AI&nbsp;×&nbsp;<span id="typer-word">CONSULT<b>ING</b></span><span class="typer-caret">|</span></div>
+      <h2 data-kinetic style="font-family: GmarketSans, sans-serif; font-size: clamp(20px, 2.6vw, 38px); font-weight: 500; line-height: 1.45; color: rgb(255, 255, 255); margin-bottom: 32px; word-break: keep-all; letter-spacing: -0.02em;">
+        AI 도입 및 프로세스 자동화 <span class="grad-flow">AX 컨설팅</span><br>
         <span style="font-size:0.92em;font-weight:300;color:rgba(255,255,255,0.9);">1:1 실무 맞춤형 과외부터 기업 특강·멘토링 교육까지</span>
       </h2>
       <p data-reveal="up" data-delay="160" style="max-width:680px;font-size:clamp(16px,1.6vw,21px);font-weight:300;line-height:1.7;color:rgba(255,255,255,0.7);margin-bottom:48px;word-break:keep-all;">
@@ -2442,6 +2611,22 @@ grid-template-columns: 1fr;
       <div data-reveal="up" data-delay="240" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
         <a href="#services" onclick="event.preventDefault(); navigateTo('services');" class="btn-gradient-hover" style="display:inline-flex;align-items:center;padding:16px 32px;border-radius:2px;background:#e61862;color:#fff;font-weight:700;font-size:16px;text-decoration:none;transition:filter .2s,transform .2s;font-family:'GmarketSans',sans-serif;">서비스 알아보기</a>
         <a href="#contact" onclick="event.preventDefault(); navigateTo('contact');" class="btn-outline-hover" style="display:inline-flex;align-items:center;padding:16px 30px;border-radius:2px;background:transparent;color:#e8ecf4;font-weight:500;font-size:16px;font-family:'GmarketSans',sans-serif;border:1px solid rgba(255,255,255,.22);cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s;">무료 자문 신청 →</a>
+      </div>
+      <div class="hero-stats" data-reveal="up" data-delay="320">
+        <div><span class="hs-num" data-count="12" data-suffix="+">12+</span><span class="hs-label">1:1 지도 인원</span></div>
+        <div><span class="hs-num" data-count="6" data-suffix="개사">6개사</span><span class="hs-label">기업 AX 컨설팅</span></div>
+        <div><span class="hs-num" data-count="7" data-suffix="회">7회</span><span class="hs-label">특강·심사 참여</span></div>
+        <div><span class="hs-num" data-count="45" data-suffix="만+">45만+</span><span class="hs-label">테크블로그 누적 방문</span></div>
+      </div>
+    </div>
+    <div class="hero-marquee" aria-hidden="true">
+      <div class="hero-marquee-track">
+        <div class="hm-group">
+          <span>AX Consulting</span><i>✦</i><span class="o">AI Automation</span><i>✦</i><span>1:1 Coding</span><i>✦</i><span class="o">OpenClaw Agent</span><i>✦</i><span>AI Education</span><i>✦</i><span class="o">Second Brain</span><i>✦</i><span>Cost Optimization</span><i>✦</i><span class="o">Digital Transformation</span><i>✦</i>
+        </div>
+        <div class="hm-group" aria-hidden="true">
+          <span>AX Consulting</span><i>✦</i><span class="o">AI Automation</span><i>✦</i><span>1:1 Coding</span><i>✦</i><span class="o">OpenClaw Agent</span><i>✦</i><span>AI Education</span><i>✦</i><span class="o">Second Brain</span><i>✦</i><span>Cost Optimization</span><i>✦</i><span class="o">Digital Transformation</span><i>✦</i>
+        </div>
       </div>
     </div>
 </section>
@@ -3315,7 +3500,101 @@ grid-template-columns: 1fr;
     setupParallax();
     setupScrollStory();
     setupAIChatSim();
+    setupKinetic();
+    setupTyper();
+    setupScrollProgress();
   });
+
+  // Hype motion: kinetic word-by-word title reveals (Remotion-style)
+  function splitKinetic(root) {
+    let idx = 0;
+    const process = (node) => {
+      Array.from(node.childNodes).forEach((child) => {
+        if (child.nodeType === 3) {
+          const parts = child.textContent.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          parts.forEach((w) => {
+            if (!w) return;
+            if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+            const s = document.createElement('span');
+            s.className = 'kinetic-word';
+            s.style.setProperty('--kd', (idx++ * 55) + 'ms');
+            s.textContent = w;
+            frag.appendChild(s);
+          });
+          node.replaceChild(frag, child);
+        } else if (child.nodeType === 1 && child.tagName !== 'BR') {
+          if (child.classList.contains('grad-flow')) {
+            child.classList.add('kinetic-word');
+            child.style.setProperty('--kd', (idx++ * 55) + 'ms');
+          } else {
+            process(child);
+          }
+        }
+      });
+    };
+    process(root);
+  }
+
+  function setupKinetic() {
+    if (prefersReducedMotion) return;
+    const targets = Array.from(document.querySelectorAll('[data-kinetic], .section-title, .services-title, #contact h2'));
+    targets.forEach((el) => {
+      if (el.dataset.kineticDone) return;
+      el.dataset.kineticDone = '1';
+      splitKinetic(el);
+      el.classList.add('kinetic-ready');
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('kinetic-on');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    targets.forEach((el) => io.observe(el));
+  }
+
+  // Brand typewriter chip: AI x CONSULT(ING)...
+  function setupTyper() {
+    const el = document.getElementById('typer-word');
+    if (!el) return;
+    if (prefersReducedMotion) { el.innerHTML = 'CONSULT<b>ING</b>'; return; }
+    const words = ['CONSULTING', 'CODING', 'AUTOMATING', 'TEACHING', 'BUILDING'];
+    let wi = 0, n = words[0].length, dir = -1;
+    const render = () => {
+      const word = words[wi];
+      const cut = Math.max(0, Math.min(n, word.length - 3));
+      const head = word.slice(0, cut);
+      const tail = word.slice(cut, n);
+      el.innerHTML = head + (tail ? '<b>' + tail + '</b>' : '');
+    };
+    const tick = () => {
+      const word = words[wi];
+      n += dir;
+      if (n > word.length) { n = word.length; dir = -1; setTimeout(tick, 1700); return; }
+      if (n < 0) { n = 0; dir = 1; wi = (wi + 1) % words.length; setTimeout(tick, 350); return; }
+      render();
+      setTimeout(tick, dir > 0 ? 70 : 36);
+    };
+    setTimeout(tick, 1600);
+  }
+
+  // Gradient scroll progress bar
+  function setupScrollProgress() {
+    if (document.getElementById('scroll-progress')) return;
+    const bar = document.createElement('div');
+    bar.id = 'scroll-progress';
+    document.body.appendChild(bar);
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0).toFixed(2) + '%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
 
   // Self-playing AI consultation chat (loops while the payment section is visible)
   function setupAIChatSim() {
