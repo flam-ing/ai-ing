@@ -2602,9 +2602,58 @@ grid-template-columns: 1fr;
     letter-spacing: .05em;
   }
   @media (max-width: 768px) {
-    .hero-stats { display: grid; grid-template-columns: repeat(2, auto); gap: 20px 36px; margin-top: 40px; justify-content: center; }
-    .hero-stats > div { padding: 0; }
-    .hero-stats > div + div { border-left: none; }
+    #hero > div {
+      padding: clamp(75px, 10vh, 90px) 16px 110px !important;
+    }
+    #hero img[alt="AI-ing Logo"] {
+      width: 90px !important;
+      height: 90px !important;
+      border-radius: 20px !important;
+      margin-bottom: 18px !important;
+    }
+    .hero-typer {
+      font-size: 11px !important;
+      padding: 6px 13px !important;
+      margin-bottom: 16px !important;
+      letter-spacing: .12em !important;
+    }
+    #hero h2[data-kinetic] {
+      font-size: 21px !important;
+      line-height: 1.4 !important;
+      margin-bottom: 16px !important;
+    }
+    #hero h2[data-kinetic] span {
+      font-size: 13.5px !important;
+    }
+    #hero p[data-reveal] {
+      font-size: 13.5px !important;
+      line-height: 1.6 !important;
+      margin-bottom: 24px !important;
+      color: rgba(255,255,255,0.72) !important;
+    }
+    #hero .btn-gradient-hover, #hero .btn-outline-hover {
+      padding: 12px 22px !important;
+      font-size: 14px !important;
+    }
+    .hero-stats {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 16px 20px !important;
+      margin-top: 28px !important;
+      justify-content: center !important;
+      width: 100% !important;
+      max-width: 320px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    .hero-stats > div { padding: 0 !important; }
+    .hero-stats > div + div { border-left: none !important; }
+    .hs-num {
+      font-size: 24px !important;
+    }
+    .hs-label {
+      font-size: 11px !important;
+    }
   }
 
   .hero-marquee {
