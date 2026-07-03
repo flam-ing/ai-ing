@@ -71,16 +71,23 @@
     box-sizing: border-box;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
+  html, body {
     margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    position: relative;
+    scroll-behavior: smooth;
     background: #07080d;
     font-family: 'GmarketSans', 'Pretendard', -apple-system, sans-serif;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
+  }
+
+  a, a:visited {
+    color: inherit;
+    text-decoration: none;
   }
 
   ::selection {
@@ -115,8 +122,8 @@
   }
 
   /* Style-hover/focus replacements */
-  .hover-cyan:hover {
-    color: #e61862 !important;
+  .hover-cyan:hover, .hover-purple:hover {
+    color: #8c82ff !important;
   }
 
   .btn-gradient-hover:hover {
@@ -2579,10 +2586,10 @@ grid-template-columns: 1fr;
         <span style="font-family:'GmarketSans',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
       </a>
       <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
-        <a href="#services" onclick="event.preventDefault(); navigateTo('services');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
-        <a href="#about" onclick="event.preventDefault(); navigateTo('about');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
-        <a href="#payment" onclick="event.preventDefault(); navigateTo('payment');" class="hover-cyan nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">결제</a>
-        <a href="#contact" onclick="event.preventDefault(); navigateTo('contact');" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:2px;background:#e61862;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;transition:filter .2s;">무료 상담 신청</a>
+        <a href="#services" onclick="event.preventDefault(); navigateTo('services');" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
+        <a href="#about" onclick="event.preventDefault(); navigateTo('about');" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
+        <a href="#payment" onclick="event.preventDefault(); navigateTo('payment');" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">결제</a>
+        <a href="#contact" onclick="event.preventDefault(); navigateTo('contact');" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:4px;background:#8c82ff;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;box-shadow:0 0 16px rgba(140,130,255,0.4);transition:filter .2s,transform .2s;">무료 상담 신청</a>
       </div>
     </div>
   </nav>
@@ -4359,7 +4366,7 @@ grid-template-columns: 1fr;
     // Update active nav link indicator
     document.querySelectorAll('.nav-link-tab').forEach(link => {
       if (link.getAttribute('href') === '#' + tabId) {
-        link.style.color = '#e61862';
+        link.style.color = '#8c82ff';
       } else {
         link.style.color = '';
       }
