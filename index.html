@@ -2359,6 +2359,51 @@ grid-template-columns: 1fr;
     display: flex !important;
   }
 }
+  /* ===== DESKTOP SERVICE STEP CONTROL BAR ===== */
+  .service-step-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 10;
+  }
+  .step-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'GmarketSans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+  }
+  .step-nav-btn:hover {
+    background: rgba(140, 130, 255, 0.12);
+    border-color: rgba(140, 130, 255, 0.35);
+    color: #fff;
+  }
+  .step-nav-btn.active {
+    background: rgba(140, 130, 255, 0.22);
+    border-color: #8c82ff;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 16px rgba(140, 130, 255, 0.35);
+  }
+  .step-nav-btn .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8c82ff;
+    background: rgba(140, 130, 255, 0.15);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
 @media (max-width: 992px) {
   .desktop-services-layout {
     display: none !important;
@@ -3286,6 +3331,18 @@ grid-template-columns: 1fr;
         <div class="sticky-inner-wrapper">
           <!-- Left: Scrolling Content -->
           <div class="sticky-text-pane">
+            <!-- Step Navigation Controls -->
+            <div class="service-step-nav">
+              <button type="button" class="step-nav-btn active" onclick="goToServiceStep(0)">
+                <span class="step-num">01</span> B2B 기업 AX
+              </button>
+              <button type="button" class="step-nav-btn" onclick="goToServiceStep(1)">
+                <span class="step-num">02</span> 1:1 맞춤 멘토링
+              </button>
+              <button type="button" class="step-nav-btn" onclick="goToServiceStep(2)">
+                <span class="step-num">03</span> 기관/기업 특강
+              </button>
+            </div>
             
             <!-- Step 1 Text -->
             <div class="sticky-text-item active" data-step="1">
@@ -3876,6 +3933,33 @@ grid-template-columns: 1fr;
     els.forEach((el) => io.observe(el));
   }
 
+  // Desktop Service Step Controller
+  function goToServiceStep(stepIdx) {
+    const story = document.getElementById('services');
+    if (!story) return;
+
+    // Ensure services tab is active
+    if (!story.classList.contains('active')) {
+      navigateTo('services');
+    }
+
+    const desktopLayout = story.querySelector('.desktop-services-layout');
+    if (!desktopLayout) return;
+
+    const rect = desktopLayout.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    if (total <= 0) return;
+
+    // Step 0 (0.12), Step 1 (0.50), Step 2 (0.88)
+    const stepProgress = [0.12, 0.50, 0.88][stepIdx] || 0;
+    const targetY = window.scrollY + rect.top + (total * stepProgress);
+
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth'
+    });
+  }
+
   // Scroll Story for Services (autoae.online / ReactBits style Sticky Scroll Reveal)
   function setupScrollStory() {
     const story = document.getElementById('services');
@@ -4109,8 +4193,9 @@ grid-template-columns: 1fr;
       const frac = local - Math.floor(local);   // 0..1 within current step
       const activeIdx = idx;                     // active = current step (centers at i+0.5)
 
-      // Text + url bar: discrete with CSS pop
+      // Text + url bar + step nav buttons: discrete with CSS pop
       textItems.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
+      story.querySelectorAll('.step-nav-btn').forEach((btn, i) => btn.classList.toggle('active', i === activeIdx));
       if (urlBar) urlBar.textContent = urls[activeIdx];
 
       // Continuous crossfade with extended full-display window (0.35 width) per step
