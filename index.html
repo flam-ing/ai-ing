@@ -4220,6 +4220,7 @@ grid-template-columns: 1fr;
     let progressVal = 0;
 
     const updateStory = () => {
+      storyTicking = false;
       if (!story.classList.contains('active')) return;
       if (window.innerWidth <= 992) return;
 
