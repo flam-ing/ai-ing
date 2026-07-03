@@ -270,14 +270,11 @@
     background: #e61862 !important;
   }
 
-  /* Tabbed sections */
+  /* Continuous landing page sections */
   .tab-content-section {
-    display: none !important;
-  }
-  .tab-content-section.active {
     display: block !important;
   }
-  #hero.tab-content-section.active {
+  #hero.tab-content-section {
     display: flex !important;
   }
 
@@ -4205,7 +4202,8 @@ grid-template-columns: 1fr;
     }
 
     function tickDots() {
-      if (story.classList.contains('active')) {
+      const rect = story.getBoundingClientRect();
+      if (rect.bottom >= 0 && rect.top <= window.innerHeight) {
         dotsTime += 1 / 60;
         dotsSmx += (dotsMx - dotsSmx) * 0.06;
         dotsSmy += (dotsMy - dotsSmy) * 0.06;
@@ -4219,12 +4217,12 @@ grid-template-columns: 1fr;
 
     const updateStory = () => {
       storyTicking = false;
-      if (!story.classList.contains('active')) return;
       if (window.innerWidth <= 992) return;
 
       const rect = desktopLayout.getBoundingClientRect();
       const total = rect.height - window.innerHeight;
       if (total <= 0) return;
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(0.9999, scrolled / total));
@@ -4563,14 +4561,16 @@ grid-template-columns: 1fr;
   });
 
   function showTab(tabId) {
-    document.querySelectorAll('.tab-content-section').forEach(sec => {
-      sec.classList.remove('active');
-    });
     const target = document.getElementById(tabId);
-    if (target) {
-      target.classList.add('active');
+    if (!target) return;
+    
+    if (tabId === 'hero') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const navHeight = 64;
+      const targetY = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
     }
-    window.scrollTo({ top: 0, behavior: 'instant' });
     
     // Close burger menu / mobile menu if active (for mobile view in ai-ing.html)
     const burger = document.getElementById('burger');
