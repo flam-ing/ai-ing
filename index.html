@@ -2390,6 +2390,48 @@ grid-template-columns: 1fr;
   .mobile-flow-item:last-child {
     margin-bottom: 0 !important;
   }
+  .mobile-hype-box {
+    margin-top: 20px;
+    background: rgba(7, 9, 14, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'GmarketSans', monospace;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  .mobile-hype-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(230, 24, 98, 0.6), rgba(140, 130, 255, 0.6), transparent);
+    animation: gradFlow 4s linear infinite;
+  }
+  .mobile-hype-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .mobile-hype-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: #03cf5d;
+    box-shadow: 0 0 8px #03cf5d;
+    animation: aiingPulse 2s infinite;
+  }
   .services-bg-layer {
     position: absolute !important;
     inset: 0 !important;
@@ -3301,6 +3343,17 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>사내 AI 인프라 및 단말 보안 세팅</strong> — 사내 서버 및 임직원 기기 환경 세팅, 사내망 연동 및 기업 데이터 유출을 원천 방지하는 24시간 보안 AI 비서 인프라 구축</span></li>
             <li><span class="arrow">→</span><span><strong>디지털 트랜스포메이션(DT) 기획</strong> — 기업마다 파편화된 오피스 워크플로우를 분석하여 비용 구조를 혁신하는 실질적인 전사 AX 로드맵 컨설팅</span></li>
           </ul>
+          <div class="mobile-hype-box">
+            <div class="mobile-hype-header">
+              <span><i class="mobile-hype-dot"></i>AI-ing Agent Hub v2.4</span>
+              <span style="color:#8c82ff;">RAG &amp; Security Active</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:rgba(255,255,255,0.78);">
+              <div><span style="color:#e61862;">▶ [RAG Node]</span> Parsed 1,420 PDF receipts -> Notion DB</div>
+              <div><span style="color:#8c82ff;">▶ [Cost Router]</span> Dynamic model dispatch (Saved 70%)</div>
+              <div><span style="color:#03cf5d;">▶ [Sandbox]</span> Mac mini local 24/7 Agent Active</div>
+            </div>
+          </div>
         </div>
 
         <!-- Item 2 -->
@@ -3313,6 +3366,17 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>AI 협업 실무 풀스택 코딩</strong> — Claude, Codex, Antigravity 등 최신 AI 도구를 100% 활용하는 실무형 개발 워크플로우 및 프롬프트 엔지니어링 1:1 과외 (다수의 비전공생 커리어 전환 성공)</span></li>
             <li><span class="arrow">→</span><span><strong>AI Native 프로젝트 설계 및 멘토링</strong> — AI API 설계, MCP(Model Context Protocol) 개발, 커스텀 에이전트 스킬 구현 등 실전 프로토타입 성과 도출 밀착 가이드</span></li>
           </ul>
+          <div class="mobile-hype-box">
+            <div class="mobile-hype-header">
+              <span><i class="mobile-hype-dot"></i>Antigravity MCP Session</span>
+              <span style="color:#e61862;">1:1 Live Tutoring</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:rgba(255,255,255,0.78);">
+              <div><span style="color:#8c82ff;">▶ [Mentoring]</span> Full-stack Prompt Engineering</div>
+              <div><span style="color:#e61862;">▶ [MCP Agent]</span> Custom Tool Specs &amp; API Integration</div>
+              <div><span style="color:#03cf5d;">▶ [Result]</span> 1:1 Live Coding &amp; Portfolio Build</div>
+            </div>
+          </div>
         </div>
 
         <!-- Item 3 -->
@@ -3325,6 +3389,17 @@ grid-template-columns: 1fr;
             <li><span class="arrow">→</span><span><strong>청소년 AI 디지털 코딩 캠프</strong> — 교육지원센터 및 초·중·고 학생 대상 생성형 AI 활용 웹 서비스 제작 및 AI 협업 코딩 특강 지도</span></li>
             <li><span class="arrow">→</span><span><strong>취준생 대상 취업 특강 및 심사위원</strong> — 중소기업협회 및 아카데미 취업 전략 특강 및 프로젝트 심사위원 7회 참여, 외부 테크 채널 게스트 강연</span></li>
           </ul>
+          <div class="mobile-hype-box">
+            <div class="mobile-hype-header">
+              <span><i class="mobile-hype-dot"></i>AI Digital Workshop</span>
+              <span style="color:#03cf5d;">7+ Guest Lectures</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:rgba(255,255,255,0.78);">
+              <div><span style="color:#03cf5d;">▶ [Camp]</span> Youth AI Web App Creation Workshop</div>
+              <div><span style="color:#8c82ff;">▶ [Seminar]</span> 4 Corporate AI Literacy Seminars</div>
+              <div><span style="color:#e61862;">▶ [Jury]</span> 7 SME Tech Hackathon Jury Engagements</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -4377,7 +4452,7 @@ grid-template-columns: 1fr;
       if (link.getAttribute('href') === '#' + tabId) {
         link.style.color = '#8c82ff';
       } else {
-        link.style.color = '';
+        link.style.color = 'rgba(255, 255, 255, 0.88)';
       }
     });
   }
