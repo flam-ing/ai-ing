@@ -675,7 +675,7 @@
   // Routing & Tab Navigation functions
 
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function init() {
     initParticles();
     setupReveal();
     setupCountup();
@@ -689,7 +689,13 @@
     if (form) {
       form.addEventListener('submit', handleFormSubmit);
     }
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 </body>
 </html>

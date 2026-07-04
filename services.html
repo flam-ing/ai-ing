@@ -638,11 +638,17 @@
   // Desktop Service Step Controller
 
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function init() {
     setupScrollStory();
     setupMockupTilt();
     setupReveal();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 </body>
 </html>

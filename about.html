@@ -858,9 +858,15 @@
 
 
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function init() {
     setupReveal();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 </body>
 </html>
