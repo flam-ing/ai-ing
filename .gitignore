@@ -32,3 +32,6 @@ dist/
 .env
 .env.*
 
+
+# PII - never deploy (contains resident registration & account numbers)
+.agents/AGENTS.md
