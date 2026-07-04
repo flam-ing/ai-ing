@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-ing (에이아잉) | AX 컨설팅 및 AI 코딩 교육</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "에이아잉 (AI-ing)",
+  "image": "https://ai-ing.org/logo.png",
+  "url": "https://ai-ing.org",
+  "description": "대기업 개발자 출신 IT 전문가가 설계하는 비즈니스 실전 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "서초구",
+    "addressRegion": "서울특별시",
+    "addressCountry": "KR"
+  },
+  "knowsAbout": [
+    "AI Consulting",
+    "AX Consulting",
+    "Coding Education",
+    "Software Development",
+    "1:1 Tutoring"
+  ]
+}
+</script>
+<meta name="description" content="대기업 개발자 출신 IT 전문가가 설계하는 비즈니스 실전 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+<div id="root-container" style="background:#07080d;color:#ffffff;position:relative;">
+
+    <!-- ============ NAV ============ -->
+  <nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
+    <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
+      <a href="index.html" class="brand-link" style="display:flex;align-items:center;gap:11px;text-decoration:none;white-space:nowrap;">
+        <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
+        <span style="font-family:'GmarketSans',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
+      </a>
+      <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
+        <a href="services.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
+        <a href="about.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
+        <a href="payment.html" class="hover-purple nav-link-tab active" style="padding:9px 15px;color:#8c82ff;text-decoration:none;font-size:14.5px;font-weight:700;transition:color .2s;">결제</a>
+        <a href="index.html#contact" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:4px;background:#8c82ff;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;box-shadow:0 0 16px rgba(140,130,255,0.4);transition:filter .2s,transform .2s;">무료 상담 신청</a>
+      </div>
+    </div>
+  </nav>
+
+
+
+    <section id="payment" class="tab-content-section" style="position:relative;overflow:hidden;background:#030408;padding:clamp(90px,10vw,140px) 0;border-top:1px solid rgba(255,255,255,0.07);scroll-margin-top:64px;">
+    <div aria-hidden="true" style="position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:760px;height:760px;border-radius:50%;background:radial-gradient(circle, rgba(230,24,98,0.16) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+    <div aria-hidden="true" style="position:absolute;bottom:-15%;right:-5%;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle, rgba(59,51,165,0.18) 0%, transparent 60%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+    <div style="position:relative;z-index:1;width:min(1200px,92vw);margin:0 auto;text-align:center;">
+
+      <!-- Pricing Tier Table / Variety -->
+      
+
+      <!-- Payment Methods Box -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px;text-align:left;margin-top:20px;">
+        <!-- Card 1: Account Transfer -->
+        <div data-reveal="up" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #8c82ff;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#8c82ff;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 01</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">무통장 입금 (계좌이체)</h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">상담 진행 후 발행된 인보이스(청구서)에 따라 정해진 계좌로 송금합니다. 현금영수증 및 세금계산서 발행이 즉시 지원됩니다.</p>
+            
+            <div style="background:rgba(255,255,255,0.03);padding:16px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);margin-bottom:20px;">
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);font-weight:500;margin-bottom:6px;">주거래 계좌 정보</div>
+              <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">토스뱅크 1002-6334-1822</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.6);">예금주: 김민우(에이아잉)</div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="mobile-only-buttons" style="display:flex;gap:10px;">
+              <a href="http://aq.gy/f/iYQcx" target="_blank" rel="noopener noreferrer" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:6px;background:#8c82ff;color:#fff;font-size:14px;font-weight:700;text-decoration:none;transition:background 0.2s,transform 0.2s;text-align:center;" class="btn-gradient-hover">송금하기</a>
+              <button type="button" onclick="copyAccount()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;padding:12px;border-radius:6px;background:transparent;color:#8c82ff;border:1px solid #8c82ff;font-size:14px;font-weight:700;transition:background 0.2s,color 0.2s;cursor:pointer;" class="btn-outline-hover">계좌번호 복사</button>
+            </div>
+            
+            <div class="pc-only-qr" style="margin-top:10px;text-align:center;display:none;">
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;font-weight:500;">계좌 송금 서비스 QR</div>
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http%3A%2F%2Faq.gy%2Ff%2FiYQcx" alt="Toss Remittance QR" style="width:130px;height:130px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px;background:#fff;display:inline-block;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Card / PG Payment -->
+        <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#ff5e9c;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 02</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">신용카드 및 간편 결제</h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 토스페이 등 국내 주요 간편결제 및 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 결제 수단을 선택하세요.</p>
+            
+            <div style="background:rgba(230,24,98,0.05);border:1px solid rgba(230,24,98,0.15);padding:16px;border-radius:8px;margin-bottom:20px;">
+              <span style="font-size:13px;color:#ff5e9c;font-weight:500;display:block;line-height:1.5;">
+                <strong>서비스 제공 기간 안내:</strong> 비실물 온라인 상품으로 결제 완료 시 즉시 예약되거나 컨설팅이 배정되며, 구매일로부터 최대 1년 이내에 최종 완료됩니다.
+              </span>
+            </div>
+          </div>
+          
+          <div>
+            <button type="button" onclick="openPaymentModal()" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:14px;border-radius:6px;background:#e61862;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;" class="btn-gradient-hover">카드 / 간편결제창 열기</button>
+          </div>
+        </div>
+
+        <!-- Card 3: Naver SmartStore -->
+        <div data-reveal="up" data-delay="200" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #03c75a;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="font-family:'GmarketSans',sans-serif;font-size:12px;font-weight:700;color:#03c75a;margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase;">METHOD 03</div>
+            <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:#03c75a;color:#fff;font-weight:800;font-size:13px;font-family:'Outfit',sans-serif;">N</span>
+              네이버 스마트스토어
+            </h3>
+            <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">네이버페이 포인트 적립과 실제 수강 후기를 확인하며 구매하고 싶다면 스마트스토어를 이용하세요. 동일한 교육·컨설팅 이용권을 안전거래로 제공합니다.</p>
+            <div style="background:rgba(3,199,90,0.06);border:1px solid rgba(3,199,90,0.2);padding:12px 16px;border-radius:8px;margin-bottom:20px;">
+              <span style="font-size:13px;color:#36d98a;font-weight:500;line-height:1.5;display:block;">✓ 네이버페이 간편결제 · 포인트 적립 · 안전거래 보장</span>
+            </div>
+          </div>
+          <div>
+            <a href="https://smartstore.naver.com/ai-ing/products/13640154837" target="_blank" rel="noopener noreferrer" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px;border-radius:6px;background:#03c75a;color:#fff;font-size:15px;font-weight:700;text-decoration:none;transition:filter 0.2s,transform 0.2s;" class="btn-gradient-hover">스마트스토어에서 구매하기</a>
+            <a href="https://smartstore.naver.com/ai-ing" target="_blank" rel="noopener noreferrer" style="width:100%;margin-top:10px;display:inline-flex;align-items:center;justify-content:center;padding:11px;border-radius:6px;background:transparent;color:#36d98a;border:1px solid rgba(3,199,90,0.4);font-size:13.5px;font-weight:700;text-decoration:none;transition:background 0.2s;">스토어 전체 상품 보기 →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+    <!-- ============ FOOTER ============ -->
+  <footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
+    <div style="width:min(1200px,92vw);margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+        <img src="logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
+        <span style="font-weight:700;font-size:17px;color:#fff;">AI-ing <span style="font-weight:300;color:#6b7385;font-size:14px;">에이아잉</span></span>
+      </div>
+      <div style="font-size:13px;font-weight:300;line-height:2;color:#6b7385;max-width:880px;">
+        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 개인정보관리책임자: 김민우<br>
+        사업장 주소: 서울특별시 서초구 신반포로33길 15, 동아아파트 102동 1002호<br>
+        연락처: 010-7646-3634 &nbsp;|&nbsp; 이메일: rlaalsdn456456@naver.com<br>
+        사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
+        호스팅 서비스: Cloudflare / 에이아잉<br>
+        서비스 제공 기간: 비실물 상품으로 결제 즉시 사용 가능 (구매일로부터 최대 1년 이내 제공)
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);">
+        <span style="font-size:13px;font-weight:300;color:#4f5666;">© 2026 에이아잉(AI-ing). All rights reserved.</span>
+        <div style="display:flex;gap:20px;">
+          <a href="/privacy.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">개인정보처리방침</a>
+          <a href="/terms.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">이용약관</a>
+          <a href="/refund.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">환불정책</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Payment Modal -->
+<div id="payment-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,8,13,0.65);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+  <div style="position:relative;width:min(440px,100%);background:#fff;border-radius:6px;box-shadow:0 24px 64px rgba(0,0,0,0.35);border:1px solid #e3e5ea;overflow:hidden;animation:aiingModalFade .3s ease;">
+    <button onclick="closePaymentModal()" style="position:absolute;top:18px;right:18px;background:none;border:none;font-size:22px;color:#8b93a5;cursor:pointer;line-height:1;outline:none;">&times;</button>
+    
+    <!-- Step 1: Select Product -->
+    <div id="payment-step-1" style="padding:32px;">
+      <h3 style="font-size:20px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">상품 선택</h3>
+      <p style="font-size:13.5px;color:#5c6573;margin-bottom:24px;font-weight:300;">구매하실 에이아잉 온라인 상품을 선택해 주세요.</p>
+      
+      <!-- Product Selection Area -->
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;text-align:left;">
+        <!-- Product 1: PDF Textbook -->
+        <label id="product-label-pdf" style="display:block;position:relative;border:2px solid #e3e5ea;border-radius:6px;padding:16px;cursor:pointer;transition:all 0.2s;background:#fff;">
+          <input type="radio" name="payment-product" value="10000" checked style="position:absolute;top:18px;left:16px;width:18px;height:18px;accent-color:#e61862;cursor:pointer;" onchange="selectProduct('pdf')">
+          <div style="padding-left:28px;">
+            <div style="font-size:15px;font-weight:700;color:#0c0e14;margin-bottom:4px;">온라인 PDF 교재</div>
+            <div style="font-size:13px;color:#5c6573;margin-bottom:8px;">AX 입문 및 인재 양성용 디지털 교재</div>
+            <div style="font-size:16px;font-weight:800;color:#e61862;">10,000원 <span style="font-size:13px;color:#8b93a5;font-weight:normal;">(부가세 10% 별도)</span></div>
+          </div>
+        </label>
+        
+        <!-- Product 2: 1-Hour Consulting/Education -->
+        <label id="product-label-consult" style="display:block;position:relative;border:2px solid #e3e5ea;border-radius:6px;padding:16px;cursor:pointer;transition:all 0.2s;background:#fff;">
+          <input type="radio" name="payment-product" value="50000" style="position:absolute;top:18px;left:16px;width:18px;height:18px;accent-color:#e61862;cursor:pointer;" onchange="selectProduct('consult')">
+          <div style="padding-left:28px;">
+            <div style="font-size:15px;font-weight:700;color:#0c0e14;margin-bottom:4px;">컨설팅 및 교육 1시간권</div>
+            <div style="font-size:13px;color:#5c6573;margin-bottom:8px;">1:1 코딩 과외 / AX 맞춤형 컨설팅 및 실습</div>
+            <div style="font-size:16px;font-weight:800;color:#e61862;">50,000원 <span style="font-size:13px;color:#8b93a5;font-weight:normal;">(부가세 10% 별도)</span></div>
+          </div>
+        </label>
+      </div>
+      
+      <!-- Hidden inputs to track amount and product name -->
+      <input type="hidden" id="payment-amount" value="11000">
+      <input type="hidden" id="payment-product-name" value="온라인 PDF 교재">
+      
+      <button onclick="openPGWindow()" style="width:100%;padding:14px;background:#e61862;color:#fff;border-radius:4px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;font-family:'GmarketSans',sans-serif;" class="btn-gradient-hover">결제하기</button>
+    </div>
+
+    <!-- Step 2: Choose Payment Method -->
+    <div id="payment-pg-window" style="display:none;padding:32px;background:#f8f9fa;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #e3e5ea;margin-bottom:20px;">
+        <span style="font-size:15px;font-weight:700;color:#0c0e14;font-family:'GmarketSans',sans-serif;">결제 수단 선택</span>
+        <span style="font-size:12px;color:#8b93a5;font-weight:500;">테스트 결제</span>
+      </div>
+      <div style="margin-bottom:20px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;color:#5c6573;">결제 금액</span>
+        <span style="font-size:18px;font-weight:700;color:#0c0e14;" id="pg-amount-display">50,000원</span>
+      </div>
+      
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+        <!-- Kakao Pay -->
+        <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
+          카카오페이 결제
+        </button>
+        
+        <!-- Card -->
+        <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#8c82ff;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
+          일반 신용카드 결제
+        </button>
+      </div>
+
+      
+      <button onclick="cancelPGWindow()" style="width:100%;padding:12px;background:#fff;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-weight:700;color:#5c6573;cursor:pointer;outline:none;">뒤로가기</button>
+    </div>
+
+    <!-- Step 3: Success Receipt -->
+    <div id="payment-step-2" style="display:none;padding:48px 32px;text-align:center;">
+      <div style="width:60px;height:60px;border-radius:50%;background:#03cf5d;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">✓</div>
+      <h3 style="font-size:22px;font-weight:700;color:#0c0e14;margin-bottom:8px;font-family:'GmarketSans',sans-serif;">결제가 완료되었습니다</h3>
+      <p style="font-size:14px;color:#5c6573;font-weight:300;margin-bottom:24px;line-height:1.5;">에이아잉 교육 서비스 결제가 성공적으로 이루어졌습니다.</p>
+      <div style="background:#f4f5f7;border-radius:4px;border:1px solid #e3e5ea;padding:16px;text-align:left;font-size:13.5px;margin-bottom:28px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
+          <span>결제 금액</span>
+          <span style="font-weight:700;color:#0c0e14;" id="receipt-amount">100,000원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
+          <span>결제 수단</span>
+          <span style="font-weight:700;color:#0c0e14;" id="receipt-method">카드 결제</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:#5c6573;">
+          <span>결제 ID</span>
+          <span style="font-weight:500;color:#0c0e14;font-family:monospace;word-break:break-all;" id="receipt-txid">-</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;color:#5c6573;">
+          <span>주문 상태</span>
+          <span style="font-weight:700;color:#03cf5d;">결제완료 (승인)</span>
+        </div>
+      </div>
+      <button onclick="closePaymentModal()" style="width:100%;padding:14px;border-radius:4px;background:#8c82ff;color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;outline:none;">확인</button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes aiingModalFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes pg-spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+
+
+
+</div>
+
+<!-- Common scripts -->
+<script src="js/common.js"></script>
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+
+<script>
+  // Reveal effects
+    function setupReveal() {
+    const els = document.querySelectorAll('[data-reveal]');
+    els.forEach((el) => {
+      const type = el.getAttribute('data-reveal');
+      el.style.opacity = '0';
+      if (type === 'zoom') {
+        // Apple-style grand zoom-in + soft focus
+        el.style.transform = 'scale(0.9)';
+        el.style.filter = 'blur(8px)';
+        el.style.transition = 'opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1), filter .9s cubic-bezier(.16,1,.3,1)';
+      } else {
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1)';
+      }
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const el = e.target;
+          el.style.transitionDelay = (el.getAttribute('data-delay') || 0) + 'ms';
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.style.filter = 'none';
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach((el) => io.observe(el));
+  }
+
+  // Desktop Service Step Controller
+
+
+  // Payment open / close
+    window.openPaymentModal = function() {
+    document.getElementById('payment-modal').style.display = 'flex';
+    document.getElementById('payment-step-1').style.display = 'block';
+    document.getElementById('payment-pg-window').style.display = 'none';
+    document.getElementById('payment-step-2').style.display = 'none';
+    
+    const radioPdf = document.querySelector('input[name="payment-product"][value="10000"]');
+    if (radioPdf) radioPdf.checked = true;
+    window.selectProduct('pdf');
+  };
+  window.closePaymentModal = function() {
+    document.getElementById('payment-modal').style.display = 'none';
+  };
+
+
+  // Payment select product, checkout trig
+    window.selectProduct = function(type) {
+    const pdfLabel = document.getElementById('product-label-pdf');
+    const consultLabel = document.getElementById('product-label-consult');
+    const amountInput = document.getElementById('payment-amount');
+    const nameInput = document.getElementById('payment-product-name');
+    
+    if (!pdfLabel || !consultLabel || !amountInput || !nameInput) return;
+    
+    if (type === 'pdf') {
+      pdfLabel.style.borderColor = '#e61862';
+      pdfLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
+      consultLabel.style.borderColor = '#e3e5ea';
+      consultLabel.style.backgroundColor = '#fff';
+      amountInput.value = 11000; // 10,000 + 10% VAT
+      nameInput.value = "온라인 PDF 교재";
+    } else {
+      consultLabel.style.borderColor = '#e61862';
+      consultLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
+      pdfLabel.style.borderColor = '#e3e5ea';
+      pdfLabel.style.backgroundColor = '#fff';
+      amountInput.value = 55000; // 50,000 + 10% VAT
+      nameInput.value = "컨설팅 및 교육 1시간권";
+    }
+  };
+  window.openPGWindow = function() {
+    const amount = Number(document.getElementById('payment-amount').value);
+    const productName = document.getElementById('payment-product-name').value;
+    if (!amount || amount < 1000) {
+      alert("최소 결제 금액은 1,000원입니다.");
+      return;
+    }
+    document.getElementById('pg-amount-display').innerText = amount.toLocaleString() + '원 (부가세 10% 포함)';
+    document.getElementById('payment-step-1').style.display = 'none';
+    document.getElementById('payment-pg-window').style.display = 'block';
+  };
+  window.cancelPGWindow = function() {
+    document.getElementById('payment-pg-window').style.display = 'none';
+    document.getElementById('payment-step-1').style.display = 'block';
+  };
+  window.triggerPortOnePayment = async function(method) {
+    const amount = Number(document.getElementById('payment-amount').value);
+    
+    let channelKey = "CHANNEL_KEY_PLACEHOLDER";
+    let payMethod = "EASY_PAY";
+    let easyPayProvider = null;
+    let methodNameKr = "";
+
+    if (method === 'KAKAOPAY') {
+      channelKey = "channel-key-659caa1e-6f55-42f5-8b02-d06e3837a446"; // KakaoPay test channel key
+      easyPayProvider = "KAKAOPAY";
+      methodNameKr = "카카오페이";
+    } else if (method === 'CARD') {
+      channelKey = "channel-key-b95c36d1-7b94-49c4-bbde-c943bf57b12d"; // Korea Payment Networks card channel key
+      payMethod = "CARD";
+      methodNameKr = "신용카드 결제";
+    }
+
+    const payBtnMap = {
+      'KAKAOPAY': document.getElementById('btn-pay-kakao'),
+      'CARD': document.getElementById('btn-pay-card')
+    };
+    
+    const activeBtn = payBtnMap[method];
+    const originalText = activeBtn.innerHTML;
+    
+    const allButtons = document.querySelectorAll('#payment-pg-window button');
+    allButtons.forEach(btn => btn.disabled = true);
+    activeBtn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid ${method === 'KAKAOPAY' ? '#000' : '#fff'};border-top-color:transparent;border-radius:50%;animation:pg-spin .6s linear infinite;vertical-align:middle;margin-right:6px;"></span>처리 중...`;
+
+    try {
+      const paymentParams = {
+        storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
+        paymentId: "pay" + Date.now() + Math.random().toString(36).substring(2, 10),
+
+        orderName: document.getElementById('payment-product-name').value,
+        totalAmount: amount,
+        currency: "CURRENCY_KRW",
+        channelKey: channelKey,
+        payMethod: payMethod,
+        customer: {
+          fullName: "에이아잉 고객",
+          email: "customer@ai-ing.org",
+        }
+      };
+
+      if (easyPayProvider) {
+        paymentParams.easyPay = {
+          provider: easyPayProvider
+        };
+      }
+
+      const response = await PortOne.requestPayment(paymentParams);
+
+      allButtons.forEach(btn => btn.disabled = false);
+      activeBtn.innerHTML = originalText;
+
+      if (response.code !== undefined) {
+        if (response.code === "PORTONE_ERROR" || response.code === "PAY_PROCESS_CANCELED") {
+          return;
+        }
+        alert("결제 실패: " + (response.message || "알 수 없는 오류"));
+        return;
+      }
+
+      const formatted = amount.toLocaleString() + '원';
+      document.getElementById('receipt-amount').innerText = formatted;
+      document.getElementById('receipt-method').innerText = methodNameKr;
+      if (document.getElementById('receipt-txid')) {
+        document.getElementById('receipt-txid').innerText = response.txId || response.paymentId || '-';
+      }
+      document.getElementById('payment-pg-window').style.display = 'none';
+      document.getElementById('payment-step-2').style.display = 'block';
+
+    } catch (error) {
+      allButtons.forEach(btn => btn.disabled = false);
+      activeBtn.innerHTML = originalText;
+      console.error("Payment error:", error);
+      alert("결제 중 오류가 발생했습니다: " + (error.message || error));
+    }
+  };
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupReveal();
+  });
+</script>
+</body>
+</html>

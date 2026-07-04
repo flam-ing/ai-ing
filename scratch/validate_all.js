@@ -10,7 +10,7 @@ const os = require('os');
 const { execSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
-const files = ['index.html'].filter((f) => fs.existsSync(path.join(root, f)));
+const files = ['index.html', 'services.html', 'about.html', 'payment.html'].filter((f) => fs.existsSync(path.join(root, f)));
 
 const scriptRe = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
 let totalBlocks = 0;
