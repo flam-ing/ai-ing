@@ -4178,7 +4178,7 @@ grid-template-columns: 1fr;
       story.style.setProperty('--glow-top', lerp(glowTops[idx], glowTops[next], frac).toFixed(1) + '%');
 
       // Liquid displacement — desktop only (SVG displacement shader is too heavy for mobile GPUs)
-      if (!isMobile) {
+      if (window.innerWidth > 992) {
         const morph = (1 + Math.cos(frac * Math.PI * 2)) / 2;
         if (dispNode) dispNode.setAttribute('scale', (morph * MORPH_MAX).toFixed(2));
         if (turbNode) turbNode.setAttribute('baseFrequency', (0.006 + progress * 0.004).toFixed(4) + ' ' + (0.011 + progress * 0.004).toFixed(4));
