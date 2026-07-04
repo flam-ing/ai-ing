@@ -44,7 +44,6 @@
 
 
 <link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/about.css">
 </head>
 <body>
 <div id="root-container" style="background:#07080d;color:#ffffff;position:relative;">
@@ -632,6 +631,9 @@
   </div>
 </section>
 
+  <!-- ============ CONTACT ============ -->
+  
+  <!-- ============ PAYMENT ============ -->
 
 
     <!-- ============ FOOTER ============ -->
@@ -668,6 +670,15 @@
       <button onclick="closeVideo()" style="position:absolute;top:-42px;right:0;background:none;border:none;color:#cdd3df;font-size:26px;cursor:pointer;line-height:1;">✕</button>
       <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid rgba(255,255,255,.14);overflow:hidden;">
         <iframe id="video-iframe" src="" title="강연 영상" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;display:block;"></iframe>
+      </div>
+    </div>
+  </div>
+
+  
+
+</div>
+
+<!-- Native JS Logic -->
 
 
 </div>
@@ -844,6 +855,7 @@
       pendingPlay.add(config.playerId);
   }
   window.startVideo = startVideo;
+
 
 
   document.addEventListener('DOMContentLoaded', () => {
