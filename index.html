@@ -3931,10 +3931,59 @@ grid-template-columns: 1fr;
       pt.push({ x: 0, y: 0 });
     }
 
+    let cachedW = 0;
+    let cachedH = 0;
+    let cachedCx = 0;
+    let cachedCy = 0;
+    let storyRect = null;
+
+    function resizeDotsCanvas() {
+      if (!dotsCanvas) return;
+      cachedW = dotsCanvas.clientWidth;
+      cachedH = dotsCanvas.clientHeight;
+      if (!cachedW || !cachedH) return;
+
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const targetW = Math.round(cachedW * dpr);
+      const targetH = Math.round(cachedH * dpr);
+      if (dotsCanvas.width !== targetW || dotsCanvas.height !== targetH) {
+        dotsCanvas.width = targetW;
+        dotsCanvas.height = targetH;
+        pt.forEach(p => {
+          if (p.x === 0 || p.x > cachedW) p.x = Math.random() * cachedW;
+          if (p.y === 0 || p.y > cachedH) p.y = Math.random() * cachedH;
+        });
+      }
+
+      const narrow = cachedW < 992;
+      if (narrow) {
+        cachedCx = cachedW * 0.5;
+        cachedCy = cachedH * 0.5;
+      } else {
+        const textPane = story.querySelector('.sticky-text-pane');
+        if (textPane) {
+          const tpRect = textPane.getBoundingClientRect();
+          const cRect = dotsCanvas.getBoundingClientRect();
+          cachedCx = (tpRect.left - cRect.left) + tpRect.width * 0.45;
+          cachedCy = (tpRect.top - cRect.top) + tpRect.height * 0.5;
+        } else {
+          cachedCx = cachedW * 0.38;
+          cachedCy = cachedH * 0.5;
+        }
+      }
+      storyRect = story.getBoundingClientRect();
+    }
+
+    window.addEventListener('resize', resizeDotsCanvas);
+
+    story.addEventListener('pointerenter', () => {
+      storyRect = story.getBoundingClientRect();
+    });
+
     story.addEventListener('pointermove', (e) => {
-      const rect = story.getBoundingClientRect();
-      dotsMx = (e.clientX - rect.left) / Math.max(1, rect.width);
-      dotsMy = (e.clientY - rect.top) / Math.max(1, rect.height);
+      if (!storyRect) storyRect = story.getBoundingClientRect();
+      dotsMx = (e.clientX - storyRect.left) / Math.max(1, storyRect.width);
+      dotsMy = (e.clientY - storyRect.top) / Math.max(1, storyRect.height);
     }, { passive: true });
 
     function target(i, stage, cx, cy, R, time) {
@@ -3963,21 +4012,11 @@ grid-template-columns: 1fr;
     }
 
     function drawDots() {
-      if (!dotsCanvas || !dotsCtx) return;
-      const w = dotsCanvas.clientWidth;
-      const h = dotsCanvas.clientHeight;
-      if (!w || !h) return;
+      if (!dotsCanvas || !dotsCtx || !cachedW || !cachedH) return;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
-      if (dotsCanvas.width !== Math.round(w * dpr) || dotsCanvas.height !== Math.round(h * dpr)) {
-        dotsCanvas.width = Math.round(w * dpr);
-        dotsCanvas.height = Math.round(h * dpr);
-        pt.forEach(p => {
-          if (p.x === 0 || p.x > w) p.x = Math.random() * w;
-          if (p.y === 0 || p.y > h) p.y = Math.random() * h;
-        });
-      }
+
       dotsCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      dotsCtx.clearRect(0, 0, w, h);
+      dotsCtx.clearRect(0, 0, cachedW, cachedH);
 
       const s = progressVal * 2;
       const seg = Math.min(1, Math.max(0, Math.floor(s)));
@@ -3989,21 +4028,9 @@ grid-template-columns: 1fr;
       const c1 = [lerp(p0.c1[0], p1.c1[0], f), lerp(p0.c1[1], p1.c1[1], f), lerp(p0.c1[2], p1.c1[2], f)];
       const c2 = [lerp(p0.c2[0], p1.c2[0], f), lerp(p0.c2[1], p1.c2[1], f), lerp(p0.c2[2], p1.c2[2], f)];
 
-      const narrow = w < 992;
-      let cx = w * 0.5;
-      let cy = h * 0.5;
-      if (!narrow) {
-        const textPane = story.querySelector('.sticky-text-pane');
-        if (textPane) {
-          const tpRect = textPane.getBoundingClientRect();
-          const cRect = dotsCanvas.getBoundingClientRect();
-          cx = (tpRect.left - cRect.left) + tpRect.width * 0.45;
-          cy = (tpRect.top - cRect.top) + tpRect.height * 0.5;
-        } else {
-          cx = w * 0.38;
-        }
-      }
-      const R = Math.min(w, h) * 0.32;
+      const cx = cachedCx;
+      const cy = cachedCy;
+      const R = Math.min(cachedW, cachedH) * 0.32;
 
       const px = (dotsSmx - 0.5) * 26;
       const py = (dotsSmy - 0.5) * 18;
@@ -4174,12 +4201,18 @@ grid-template-columns: 1fr;
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
-          setTimeout(updateStory, 50);
+          if (story.classList.contains('active')) {
+            setTimeout(() => {
+              resizeDotsCanvas();
+              updateStory();
+            }, 50);
+          }
         }
       });
     });
     observer.observe(story, { attributes: true });
     
+    resizeDotsCanvas();
     updateStory();
     setupMockupTilt();
   }
