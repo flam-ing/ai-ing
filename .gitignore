@@ -35,3 +35,6 @@ dist/
 
 # PII - never deploy (contains resident registration & account numbers)
 .agents/AGENTS.md
+
+# Nested repository - keep folders local but separate Git histories
+payment-backend/
