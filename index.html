@@ -16,40 +16,14 @@
   "@type": "ProfessionalService",
   "name": "에이아잉 (AI-ing)",
   "image": "https://ai-ing.org/logo.png",
-  "@id": "https://ai-ing.org",
   "url": "https://ai-ing.org",
-  "telephone": "+82-10-7646-3634",
-  "email": "rlaalsdn456456@naver.com",
+  "description": "대기업 개발자 출신 IT 전문가가 설계하는 비즈니스 실전 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)",
     "addressLocality": "서초구",
     "addressRegion": "서울특별시",
-    "postalCode": "06520",
     "addressCountry": "KR"
   },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 37.514757,
-    "longitude": 127.011684
-  },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ],
-    "opens": "00:00",
-    "closes": "23:59"
-  },
-  "sameAs": [
-    "https://blog.naver.com/rlaalsdn456456"
-  ],
   "knowsAbout": [
     "AI Consulting",
     "AX Consulting",
@@ -68,14 +42,12 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
-
-<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="root-container" style="background:#07080d;color:#ffffff;position:relative;">
+<div id="root-container" style="background:#f4f5f7;color:#0c0e14;position:relative;">
 
-    <!-- ============ NAV ============ -->
-  <nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
+<nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
     <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
       <a href="index.html" class="brand-link" style="display:flex;align-items:center;gap:11px;text-decoration:none;white-space:nowrap;">
         <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
@@ -90,10 +62,7 @@
     </div>
   </nav>
 
-
-
-    <!-- ============ HERO ============ -->
-  <section id="hero" class="tab-content-section active" style="position:relative;min-height:100vh;background:#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
+<section id="hero" class="tab-content-section active" style="position:relative;min-height:100vh;background:#07080d;overflow:hidden;display:flex;align-items:center;scroll-margin-top:70px;">
     <!-- Seamless Background Videos -->
     <div style="position:absolute;inset:0;overflow:hidden;z-index:0;">
       <video id="bg-video-1" src="bg_video_1.mp4" autoplay muted playsinline style="position:absolute;top:50%;left:50%;width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) scale(1.15);filter:blur(10px) brightness(0.45);transition:opacity 1.2s ease;opacity:1;"></video>
@@ -136,10 +105,7 @@
     </div>
 </section>
 
-
-
-    <!-- ============ FOOTER ============ -->
-  <footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
+<footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
     <div style="width:min(1200px,92vw);margin:0 auto;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
         <img src="logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
@@ -164,372 +130,8 @@
     </div>
   </footer>
 
-
-
 </div>
 
-<!-- Common scripts -->
-<script src="js/common.js"></script>
-
-<script>
-  // State variables for Hero & Typing
-  let currentHero = 1;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // 1. Particle system
-    function initParticles() {
-    const canvas = document.getElementById('particle-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const mouse = { x: -9999, y: -9999 };
-    let w = 0, h = 0, particles = [];
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      w = rect.width;
-      h = rect.height;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.max(40, Math.min(130, Math.floor(w * h / 12000)));
-      particles = [];
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.28,
-          vy: (Math.random() - 0.5) * 0.28,
-          r: Math.random() * 1.6 + 0.5
-        });
-      }
-    };
-    
-    resize();
-    const host = canvas.parentElement;
-    
-    host.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    });
-    
-    host.addEventListener('mouseleave', () => {
-      mouse.x = -9999;
-      mouse.y = -9999;
-    });
-
-    window.addEventListener('resize', resize);
-
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      
-      // Update particles
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 150 && dist > 0.01) {
-          const f = (150 - dist) / 150;
-          p.x += dx / dist * f * 1.4;
-          p.y += dy / dist * f * 1.4;
-        }
-      }
-
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 112) {
-            ctx.strokeStyle = 'rgba(59,51,165,' + (1 - d / 112) * 0.16 + ')';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw particle dots
-      for (const p of particles) {
-        const dm = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-        const near = dm < 150;
-        ctx.fillStyle = near ? 'rgba(230,24,98,0.95)' : 'rgba(226,219,236,0.45)';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, near ? p.r + 0.6 : p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      requestAnimationFrame(draw);
-    };
-    draw();
-  }
-
-  // Scroll Reveal Animations
-
-
-  // 2. Kinetic Title
-    function splitKinetic(root) {
-    let idx = 0;
-    const process = (node) => {
-      Array.from(node.childNodes).forEach((child) => {
-        if (child.nodeType === 3) {
-          const parts = child.textContent.split(/(\s+)/);
-          const frag = document.createDocumentFragment();
-          parts.forEach((w) => {
-            if (!w) return;
-            if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
-            const s = document.createElement('span');
-            s.className = 'kinetic-word';
-            s.style.setProperty('--kd', (idx++ * 55) + 'ms');
-            s.textContent = w;
-            frag.appendChild(s);
-          });
-          node.replaceChild(frag, child);
-        } else if (child.nodeType === 1 && child.tagName !== 'BR') {
-          if (child.classList.contains('grad-flow')) {
-            child.classList.add('kinetic-word');
-            child.style.setProperty('--kd', (idx++ * 55) + 'ms');
-          } else {
-            process(child);
-          }
-        }
-      });
-    };
-    process(root);
-  }
-
-  function setupKinetic() {
-    if (prefersReducedMotion) return;
-    const targets = Array.from(document.querySelectorAll('[data-kinetic], .section-title, .services-title, #contact h2'));
-    targets.forEach((el) => {
-      if (el.dataset.kineticDone) return;
-      el.dataset.kineticDone = '1';
-      splitKinetic(el);
-      el.classList.add('kinetic-ready');
-    });
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('kinetic-on');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    targets.forEach((el) => io.observe(el));
-  }
-
-  // Brand typewriter chip: AI x CONSULT(ING)...
-
-
-  // 3. Typer
-    function setupTyper() {
-    const el = document.getElementById('typer-word');
-    if (!el) return;
-    if (prefersReducedMotion) { el.innerHTML = 'CONSULT<b>ING</b>'; return; }
-    const words = ['CONSULTING', 'CODING', 'AUTOMATING', 'TEACHING', 'BUILDING'];
-    let wi = 0, n = words[0].length, dir = -1;
-    const render = () => {
-      const word = words[wi];
-      const cut = Math.max(0, Math.min(n, word.length - 3));
-      const head = word.slice(0, cut);
-      const tail = word.slice(cut, n);
-      el.innerHTML = head + (tail ? '<b>' + tail + '</b>' : '');
-    };
-    const tick = () => {
-      const word = words[wi];
-      n += dir;
-      if (n > word.length) { n = word.length; dir = -1; setTimeout(tick, 1700); return; }
-      if (n < 0) { n = 0; dir = 1; wi = (wi + 1) % words.length; setTimeout(tick, 350); return; }
-      render();
-      setTimeout(tick, dir > 0 ? 70 : 36);
-    };
-    setTimeout(tick, 1600);
-  }
-
-  // Gradient scroll progress bar
-
-
-  // 4. Scroll progress bar
-    function setupScrollProgress() {
-    if (document.getElementById('scroll-progress')) return;
-    const bar = document.createElement('div');
-    bar.id = 'scroll-progress';
-    document.body.appendChild(bar);
-    const update = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0).toFixed(2) + '%';
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    update();
-  }
-
-  // Self-playing AI consultation chat (loops while the payment section is visible)
-
-
-  // 5. Reveal
-    function setupReveal() {
-    const els = document.querySelectorAll('[data-reveal]');
-    els.forEach((el) => {
-      const type = el.getAttribute('data-reveal');
-      el.style.opacity = '0';
-      if (type === 'zoom') {
-        // Apple-style grand zoom-in + soft focus
-        el.style.transform = 'scale(0.9)';
-        el.style.filter = 'blur(8px)';
-        el.style.transition = 'opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1), filter .9s cubic-bezier(.16,1,.3,1)';
-      } else {
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1)';
-      }
-    });
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const el = e.target;
-          el.style.transitionDelay = (el.getAttribute('data-delay') || 0) + 'ms';
-          el.style.opacity = '1';
-          el.style.transform = 'none';
-          el.style.filter = 'none';
-          io.unobserve(el);
-        }
-      });
-    }, { threshold: 0.12 });
-    els.forEach((el) => io.observe(el));
-  }
-
-  // Desktop Service Step Controller
-
-
-  // 6. Stats Countup
-    function setupCountup() {
-    const els = document.querySelectorAll('[data-count]');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          animateCount(e.target);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    els.forEach((el) => io.observe(el));
-  }
-
-  function animateCount(el) {
-    const target = parseFloat(el.getAttribute('data-count'));
-    const prefix = el.getAttribute('data-prefix') || '';
-    const suffix = el.getAttribute('data-suffix') || '';
-    const dur = 1500;
-    const start = performance.now();
-
-    const step = (now) => {
-      const t = Math.min((now - start) / dur, 1);
-      const e = 1 - Math.pow(1 - t, 3); // easeOutCubic
-      el.textContent = prefix + Math.round(target * e) + suffix;
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-
-  // Parallax Photo Scroll
-
-
-  // 7. Parallax Background Videos
-    function setupParallax() {
-    const el = document.getElementById('parallax-photo');
-    if (!el) return;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY || 0;
-      if (y < 1000) {
-        el.style.transform = 'translateY(' + (y * 0.06) + 'px) scale(1.08)';
-      }
-    }, { passive: true });
-  }
-
-  // Scroll Story for Services tab
-  // Hero switcher
-
-    // Seamless Background video playlist cycling (Cross-fading between statically loaded videos)
-  const vids = [
-    document.getElementById('bg-video-1'),
-    document.getElementById('bg-video-2'),
-    document.getElementById('bg-video-3'),
-    document.getElementById('bg-video-4')
-  ].filter(Boolean);
-  
-  if (vids.length > 0) {
-    let currentIdx = 0;
-    
-    // Play the first video initially
-    vids[0].play().catch(e => console.log(e));
-    
-    const handleTimeUpdate = (e) => {
-      const activeVideo = e.target;
-      
-      // Start crossfade after 5 seconds of playback, or 1.2s before the end if the video is shorter
-      const threshold = activeVideo.duration ? Math.min(5, activeVideo.duration - 1.2) : 5;
-      if (activeVideo.currentTime >= threshold) {
-        activeVideo.removeEventListener('timeupdate', handleTimeUpdate);
-        
-        const nextIdx = (currentIdx + 1) % vids.length;
-        const nextVideo = vids[nextIdx];
-        
-        // Prepare and play the next video
-        nextVideo.currentTime = 0;
-        nextVideo.play().then(() => {
-          // Fade active out, next in
-          activeVideo.style.opacity = '0';
-          nextVideo.style.opacity = '1';
-          
-          // Pause the old video after transition completes (1.2s)
-          const oldVideo = activeVideo;
-          setTimeout(() => {
-            if (currentIdx !== nextIdx) {
-              oldVideo.pause();
-            }
-          }, 1200);
-          
-          currentIdx = nextIdx;
-          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
-        }).catch(err => {
-          console.log('Video cycle error:', err);
-          activeVideo.style.opacity = '0';
-          nextVideo.style.opacity = '1';
-          activeVideo.pause();
-          currentIdx = nextIdx;
-          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
-        });
-      }
-    };
-    
-    vids[0].addEventListener('timeupdate', handleTimeUpdate);
-  }
-
-
-  function init() {
-    initParticles();
-    setupReveal();
-    setupCountup();
-    setupParallax();
-    setupKinetic();
-    setupTyper();
-    setupScrollProgress();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-</script>
+<script src="main.js"></script>
 </body>
 </html>
