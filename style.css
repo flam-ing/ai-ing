@@ -1793,15 +1793,18 @@ grid-template-columns: 1fr;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 22px; /* Increased spacing between items */
   font-size: 13.5px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.85);
+  word-break: keep-all; /* Keep words intact on line wraps */
 }
 .item-list li {
   display: flex;
   gap: 10px;
   align-items: flex-start;
+  line-height: 1.7; /* Looser text height */
+  word-break: keep-all;
 }
 .item-list li strong {
   color: #ffffff;
@@ -2380,7 +2383,7 @@ grid-template-columns: 1fr;
   .item-kicker { font-size: 11px; }
   .item-title { font-size: 19px; }
   .item-desc { font-size: 13px; }
-  .item-list { font-size: 12px; gap: 9px; }
+  .item-list { font-size: 12.5px; gap: 16px; line-height: 1.65; word-break: keep-all; }
 
   /* Lightweight FX: keep aurora color-morph + photo crossfade, drop the heavy shaders */
   .services-aurora {
@@ -2574,14 +2577,20 @@ grid-template-columns: 1fr;
       font-size: 10.5px !important;
     }
     .hero-marquee {
-      padding: 8px 0 !important;
+      height: 38px !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      bottom: 0 !important;
+      position: absolute !important;
     }
     .hero-marquee-track span {
-      font-size: 15px !important;
+      font-size: 13.5px !important;
+      line-height: 38px !important;
     }
     .hero-marquee-track i {
-      font-size: 10px !important;
-      margin: 0 10px !important;
+      font-size: 8px !important;
+      margin: 0 8px !important;
     }
   }
 
