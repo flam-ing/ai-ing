@@ -2402,9 +2402,7 @@ grid-template-columns: 1fr;
   .service-bg-img {
     filter: grayscale(1) brightness(0.6) contrast(1.05); /* static filter only, no displacement */
   }
-  #services-dots-canvas {
-    display: none !important; /* Particle canvas off on mobile to free GPU/CPU during touch scroll */
-  }
+  /* #services-dots-canvas enabled on mobile */
 }
 @media (min-width: 769px) {
   .pc-only-qr {
@@ -2518,7 +2516,7 @@ grid-template-columns: 1fr;
   }
   @media (max-width: 768px) {
     #hero > div {
-      padding: clamp(75px, 10vh, 90px) 16px 110px !important;
+      padding: clamp(35px, 1vh, 90px) 16px 30px !important;
     }
     #hero img[alt="AI-ing Logo"] {
       width: 90px !important;
