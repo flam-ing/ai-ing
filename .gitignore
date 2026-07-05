@@ -38,3 +38,6 @@ dist/
 
 # Custom Agent Skills
 .agents/skills/
+
+# Local backend service code
+payment-backend/
