@@ -2537,17 +2537,20 @@ grid-template-columns: 1fr;
       margin-bottom: 20px !important;
     }
     .hero-buttons {
-      margin-top: 28px !important;
-      margin-bottom: 30px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      width: 100% !important;
       max-width: 290px !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
+      margin: 28px auto 30px !important;
     }
     #hero .btn-gradient-hover, #hero .btn-outline-hover {
-      padding: 10px 8px !important;
-      font-size: 12px !important;
-      width: auto !important;
-      flex: 1 !important;
+      padding: 14px 16px !important;
+      font-size: 13.5px !important;
+      width: 100% !important;
+      flex: none !important;
+      box-sizing: border-box !important;
+      text-align: center !important;
       justify-content: center !important;
     }
     .hero-stats {
