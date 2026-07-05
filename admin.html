@@ -146,7 +146,7 @@
     <div style="font-size: 36px; margin-bottom: 12px;">🔐</div>
     <h2>Turso DB Admin Login</h2>
     <p>Turso 데이터베이스 대장 관리를 위한 암호를 입력하세요.</p>
-    <input type="password" id="admin-pass-input" class="input-field" placeholder="Admin Password (기본: 321)" onkeyup="if(event.key==='Enter') login()">
+    <input type="password" id="admin-pass-input" class="input-field" placeholder="Admin Password" onkeyup="if(event.key==='Enter') login()">
     <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="login()">로그인</button>
   </div>
 </div>
@@ -233,7 +233,7 @@
 
 <script>
   let adminPassword = localStorage.getItem('turso_admin_pass') || '';
-  const backendBaseUrl = 'https://pay-to-minwoo.vercel.app';
+  const backendBaseUrl = 'https://payment.ai-ing.org';
   let currentTab = 'dashboard';
   let currentPage = 1;
   let rawData = [];
