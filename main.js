@@ -1181,7 +1181,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           paymentId: orderId,
-          txId: response.txId || response.paymentId || "",
+          txId: response.transactionId || response.txId || response.paymentId || "",
           method: methodNameKr
         })
       });
@@ -1195,7 +1195,7 @@
       document.getElementById('receipt-amount').innerText = formatted;
       document.getElementById('receipt-method').innerText = methodNameKr;
       if (document.getElementById('receipt-txid')) {
-        document.getElementById('receipt-txid').innerText = response.txId || response.paymentId || '-';
+        document.getElementById('receipt-txid').innerText = response.transactionId || response.txId || response.paymentId || '-';
       }
       document.getElementById('payment-pg-window').style.display = 'none';
       document.getElementById('payment-step-2').style.display = 'block';
