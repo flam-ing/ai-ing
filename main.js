@@ -1118,9 +1118,30 @@
     activeBtn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid ${method === 'KAKAOPAY' ? '#000' : '#fff'};border-top-color:transparent;border-radius:50%;animation:pg-spin .6s linear infinite;vertical-align:middle;margin-right:6px;"></span>처리 중...`;
 
     try {
+      // 1. 백엔드 API에 임시 주문(Order)을 생성하여 Turso DB에 기입
+      const orderResponse = await fetch("https://payment.ai-ing.org/api/v1/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: amount,
+          currency: "KRW",
+          itemName: document.getElementById('payment-product-name').value,
+          locale: "ko",
+          region: "domestic"
+        })
+      });
+      
+      const orderData = await orderResponse.json();
+      if (!orderData.ok) {
+        throw new Error(orderData.message || "주문 생성에 실패했습니다.");
+      }
+      
+      const orderId = orderData.order.id;
+
+      // 2. 생성된 orderId를 사용하여 포트원 결제 파라미터 세팅
       const paymentParams = {
         storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
-        paymentId: "pay" + Date.now() + Math.random().toString(36).substring(2, 10),
+        paymentId: orderId, // 하드코딩 랜덤값 대신 실제 DB orderId 매핑
 
         orderName: document.getElementById('payment-product-name').value,
         totalAmount: amount,
@@ -1139,17 +1160,35 @@
         };
       }
 
+      // 3. 포트원 결제창 띄우기
       const response = await PortOne.requestPayment(paymentParams);
 
       allButtons.forEach(btn => btn.disabled = false);
       activeBtn.innerHTML = originalText;
 
+      // 결제창이 닫혔거나 취소/실패된 경우
       if (response.code !== undefined) {
         if (response.code === "PORTONE_ERROR" || response.code === "PAY_PROCESS_CANCELED") {
           return;
         }
         alert("결제 실패: " + (response.message || "알 수 없는 오류"));
         return;
+      }
+
+      // 4. 결제 완료 승인 시 백엔드 API 호출하여 Turso DB 상태를 PAID 및 CAPTURED로 최종 업데이트
+      const logResponse = await fetch("https://payment.ai-ing.org/api/v1/orders/" + orderId + "/payment-attempts/portone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentId: orderId,
+          txId: response.txId || response.paymentId || "",
+          method: methodNameKr
+        })
+      });
+      
+      const logData = await logResponse.json();
+      if (!logData.ok) {
+        console.error("Warning: Failed to log transaction state to Turso DB:", logData);
       }
 
       const formatted = amount.toLocaleString() + '원';
