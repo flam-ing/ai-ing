@@ -2534,11 +2534,15 @@ grid-template-columns: 1fr;
     #hero p[data-reveal] {
       font-size: 13.5px !important;
       line-height: 1.6 !important;
-      margin-bottom: 24px !important;
+      margin-bottom: 20px !important;
+    }
+    .hero-buttons {
+      margin-top: 14px !important;
+      margin-bottom: 30px !important;
     }
     #hero .btn-gradient-hover, #hero .btn-outline-hover {
-      padding: 12px 8px !important;
-      font-size: 13.5px !important;
+      padding: 10px 8px !important;
+      font-size: 12.5px !important;
       width: auto !important;
       flex: 1 !important;
       justify-content: center !important;
@@ -2546,21 +2550,32 @@ grid-template-columns: 1fr;
     .hero-stats {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr) !important;
-      gap: 16px 20px !important;
-      margin-top: 28px !important;
+      gap: 12px 16px !important;
+      margin-top: 40px !important;
       justify-content: center !important;
       width: 100% !important;
-      max-width: 320px !important;
+      max-width: 290px !important;
       margin-left: auto !important;
       margin-right: auto !important;
     }
     .hero-stats > div { padding: 0 !important; }
     .hero-stats > div + div { border-left: none !important; }
     .hs-num {
-      font-size: 24px !important;
+      font-size: 19px !important;
+      text-shadow: 0 0 20px rgba(230,24,98,.3) !important;
     }
     .hs-label {
-      font-size: 11px !important;
+      font-size: 10.5px !important;
+    }
+    .hero-marquee {
+      padding: 8px 0 !important;
+    }
+    .hero-marquee-track span {
+      font-size: 15px !important;
+    }
+    .hero-marquee-track i {
+      font-size: 10px !important;
+      margin: 0 10px !important;
     }
   }
 
