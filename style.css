@@ -2368,9 +2368,9 @@ grid-template-columns: 1fr;
     padding: 1px 4px;
   }
   .sticky-text-item {
-    top: calc(50% + 34px);
-    gap: 12px;
-    max-height: calc(100% - 128px);
+    top: 40% !important;
+    gap: 0px !important;
+    max-height: calc(100% - 100px);
     overflow-y: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
@@ -2535,11 +2535,12 @@ grid-template-columns: 1fr;
       font-size: 13.5px !important;
       line-height: 1.6 !important;
       margin-bottom: 24px !important;
-      color: rgba(255,255,255,0.72) !important;
-    }
     #hero .btn-gradient-hover, #hero .btn-outline-hover {
-      padding: 12px 22px !important;
-      font-size: 14px !important;
+      padding: 12px 8px !important;
+      font-size: 13.5px !important;
+      width: auto !important;
+      flex: 1 !important;
+      justify-content: center !important;
     }
     .hero-stats {
       display: grid !important;
