@@ -1061,14 +1061,14 @@
       pdfLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
       consultLabel.style.borderColor = '#e3e5ea';
       consultLabel.style.backgroundColor = '#fff';
-      amountInput.value = 11000; // 10,000 + 10% VAT
+      amountInput.value = 10000; // Flat 10,000
       nameInput.value = "온라인 PDF 교재";
     } else {
       consultLabel.style.borderColor = '#e61862';
       consultLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
       pdfLabel.style.borderColor = '#e3e5ea';
       pdfLabel.style.backgroundColor = '#fff';
-      amountInput.value = 55000; // 50,000 + 10% VAT
+      amountInput.value = 50000; // Flat 50,000
       nameInput.value = "컨설팅 및 교육 1시간권";
     }
   };
@@ -1079,7 +1079,7 @@
       alert("최소 결제 금액은 1,000원입니다.");
       return;
     }
-    document.getElementById('pg-amount-display').innerText = amount.toLocaleString() + '원 (부가세 10% 포함)';
+    document.getElementById('pg-amount-display').innerText = amount.toLocaleString() + '원';
     document.getElementById('payment-step-1').style.display = 'none';
     document.getElementById('payment-pg-window').style.display = 'block';
   };
