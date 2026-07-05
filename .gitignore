@@ -39,5 +39,5 @@ dist/
 # Local backend service code
 payment-backend/
 
-# Nested repository - keep folders local but separate Git histories
-payment-backend/
+# Custom Agent Skills
+.agents/skills/
