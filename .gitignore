@@ -36,8 +36,5 @@ dist/
 # PII - never deploy (contains resident registration & account numbers)
 .agents/AGENTS.md
 
-# Local backend service code
-payment-backend/
-
 # Custom Agent Skills
 .agents/skills/
