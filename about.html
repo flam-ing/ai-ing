@@ -574,8 +574,8 @@
                                  </div>
 
                                  <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
-                                     <div class="video-container" style="width: 100%; height: 200px; position: relative;">
-                                         <video id="player_demo" width="100%" height="100%" controls playsinline preload="metadata" style="object-fit: cover;" src="./video/demo.mp4"></video>
+                                     <div class="video-container" style="width: 100%; height: 480px; position: relative; background: #000;">
+                                         <video id="player_demo" width="100%" height="100%" controls playsinline preload="metadata" style="object-fit: contain; background: #000;" src="./video/demo.mp4"></video>
                                          <div class="video-blocker"></div>
                                          <div class="video-start-overlay" id="start_demo" onclick="startVideo('_demo')">
                                              <div class="play-button"></div>
