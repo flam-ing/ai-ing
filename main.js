@@ -872,7 +872,39 @@
   }
 
 
+  // Native HTML5 Video configurations
+  const videoConfigs = [
+      { playerId: 'player1', overlayId: 'overlay1' },
+      { playerId: 'player2', overlayId: 'overlay2' },
+      { playerId: 'player3', overlayId: 'overlay3' },
+      { playerId: 'player4', overlayId: 'overlay4' },
+      { playerId: 'player5', overlayId: 'overlay5' },
+      { playerId: 'player6', overlayId: 'overlay6' },
+      { playerId: 'player7', overlayId: 'overlay7' },
+      { playerId: 'player8', overlayId: 'overlay8', fullPlay: true },
+      { playerId: 'player9', overlayId: 'overlay9', fullPlay: true }
+  ];
 
+  function startVideo(playerNum) {
+      const startOverlay = document.getElementById('start' + playerNum);
+      if (startOverlay) {
+          startOverlay.classList.add('hidden');
+      }
+
+      const video = document.getElementById('player' + playerNum);
+      if (video) {
+          video.style.display = 'block';
+          video.play();
+          
+          const config = videoConfigs.find(item => item.playerId === 'player' + playerNum);
+          if (config && !config.fullPlay) {
+              video.onended = () => {
+                  document.getElementById(config.overlayId).classList.add('active');
+              };
+          }
+      }
+  }
+  window.startVideo = startVideo;
 
   // Seamless Background video playlist cycling (Cross-fading between statically loaded videos)
   const vids = [
