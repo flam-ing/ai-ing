@@ -963,7 +963,7 @@ width: auto;
 }
 .resume-wrapper .tech-icons img:hover {
 opacity: 1;
-    filter: grayscale(0);
+    filter: grayscale(0) drop-shadow(0 0 6px #e61862);
 }
 .resume-wrapper .main-footer {
 padding: 48px 24px 64px;
@@ -1462,7 +1462,7 @@ position: absolute;
             -webkit-backdrop-filter: blur(2px);
 }
 .resume-wrapper .video-start-overlay::after {
-content: '10분 미리보기 재생';
+content: '영상 재생';
             position: absolute;
             left: 50%;
             bottom: 18px;
@@ -1485,7 +1485,7 @@ opacity: 0;
 .resume-wrapper .play-button {
 width: 80px;
             height: 80px;
-            background: rgba(255, 0, 0, 0.9);
+            background: rgba(230, 24, 98, 0.9);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -1494,7 +1494,7 @@ width: 80px;
 }
 .resume-wrapper .play-button:hover {
 transform: scale(1.1);
-            background: rgba(255, 0, 0, 1);
+            background: rgba(230, 24, 98, 1);
 }
 .resume-wrapper .play-button::after {
 content: '';
@@ -2659,4 +2659,9 @@ grid-template-columns: 1fr;
 }
 @keyframes pg-spin {
   to { transform: rotate(360deg); }
+}
+
+.resume-wrapper .portfolio-btn:hover {
+    background: #ff5e7e !important;
+    box-shadow: 0 0 12px rgba(230, 24, 98, 0.6);
 }
