@@ -878,18 +878,18 @@ color: var(--text-tertiary);
     font-size: 13px;
 }
 .resume-wrapper .video-group {
-display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    justify-content: center;
+    display: block;
+    margin-top: 10px;
 }
 .resume-wrapper .video-group .video-container {
-width: 100%;
+    width: 100%;
 }
 .resume-wrapper .video-item {
-display: flex;
+    display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
+    margin-bottom: 40px;
 }
 .resume-wrapper .video-project-grid {
 align-items: start;
@@ -1381,17 +1381,12 @@ position: absolute;
             z-index: 10;
 }
 .resume-wrapper .video-group {
-display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            display: block;
             margin-top: 10px;
 }
 .resume-wrapper .video-item {
-min-width: 0;
-}
-.resume-wrapper .lesson-video-pair {
-grid-template-columns: 1fr;
-            gap: 16px;
+            width: 100%;
+            margin-bottom: 30px;
 }
 .resume-wrapper .guidance-grid {
 display: grid;
