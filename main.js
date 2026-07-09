@@ -102,6 +102,14 @@
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0).toFixed(2) + '%';
+
+      // Toggle visibility of standard scroll cues
+      const scrollY = window.scrollY;
+      document.querySelectorAll('.scroll-cue').forEach(cue => {
+        if (cue.id !== 'services-scroll-cue') {
+          cue.classList.toggle('hide', scrollY > 30);
+        }
+      });
     };
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
