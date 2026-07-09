@@ -34,7 +34,6 @@
         <a href="services.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
         <a href="about.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
         <a href="payment.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">결제</a>
-        <a href="https://flamingallery.pages.dev" target="_blank" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">3D 미술관</a>
         <a href="contact.html" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:4px;background:#8c82ff;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;box-shadow:0 0 16px rgba(140,130,255,0.4);transition:filter .2s,transform .2s;">무료 상담 신청</a>
       </div>
     </div>
@@ -62,6 +61,12 @@
           <span id="chat-sim-typed"></span><span class="chat-sim-caret">|</span>
         </div>
       </div>
+
+      <!-- Scroll cue showing direction to input form -->
+      <div style="position: relative; height: 65px; margin: 15px 0 25px;">
+        <div class="scroll-cue"></div>
+      </div>
+
       <div id="form-success-container" style="display:none;border-radius:3px;background:#0d0f17;border:1px solid rgba(230,24,98,.3);border-top:3px solid #e61862;padding:64px 32px;text-align:center;">
         <div style="width:66px;height:66px;border-radius:3px;background:#e61862;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px;color:#fff;">✓</div>
         <h3 style="font-size:26px;font-weight:700;margin-bottom:12px;">문의가 접수되었습니다</h3>
@@ -75,6 +80,11 @@
         <div style="margin-bottom:20px;">
           <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">이메일 또는 연락처 <span style="color:#e61862;">*</span></label>
           <input required type="text" id="contact-info" placeholder="name@example.com 또는 010-0000-0000" class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s;">
+        </div>
+
+        <!-- Scroll cue between inputs -->
+        <div style="position: relative; height: 50px; margin: 10px 0;">
+          <div class="scroll-cue" style="border-color: rgba(255,255,255,0.45);"></div>
         </div>
         
         <div style="margin-bottom:28px;">
