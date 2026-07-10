@@ -191,12 +191,24 @@
         </section>
 
         <!-- ============ 자격 및 특허 ============ -->
+        <style>
+            .credentials-grid {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            @media (min-width: 768px) {
+                .credentials-grid {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                }
+            }
+        </style>
         <section class="content-section reveal">
             <div class="section-intro">
                 <p class="section-kicker">Credentials & Patents</p>
                 <h2 class="section-title">자격 및 특허</h2>
             </div>
-            <div class="projects" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="projects credentials-grid">
                 <div class="project">
                     <h3>중등학교 정교사 2급</h3>
                     <p><strong>발급기관:</strong> 교육부 (성균관대학교 사범대학 졸업 및 교직 이수)</p>
