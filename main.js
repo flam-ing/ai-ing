@@ -576,6 +576,11 @@
       const frac = local - Math.floor(local);   // 0..1 within current step
       const activeIdx = idx;                     // active = current step (centers at i+0.5)
 
+      // Drive Mingo-mate 3D: zoom + 360° orbit + descend (0→1 across the sticky journey)
+      if (window.__mingoScroll && typeof window.__mingoScroll.setProgress === 'function') {
+        window.__mingoScroll.setProgress(progressVal);
+      }
+
       // Text + url bar + step nav buttons: discrete with CSS pop
       textItems.forEach((item, i) => item.classList.toggle('active', i === activeIdx));
       story.querySelectorAll('.step-nav-btn').forEach((btn, i) => btn.classList.toggle('active', i === activeIdx));
@@ -972,122 +977,295 @@
 
 
 
-  window.openPaymentModal = function() {
-    document.getElementById('payment-modal').style.display = 'flex';
-    document.getElementById('payment-step-1').style.display = 'block';
-    document.getElementById('payment-pg-window').style.display = 'none';
-    document.getElementById('payment-step-2').style.display = 'none';
-    
-    const radioPdf = document.querySelector('input[name="payment-product"][value="10000"]');
-    if (radioPdf) radioPdf.checked = true;
-    window.selectProduct('pdf');
+  const PAYMENT_PRODUCTS = {
+    pdf: { value: "10000", amount: 10000, name: "온라인 PDF 교재", labelId: "product-label-pdf" },
+    consult: { value: "50000", amount: 50000, name: "컨설팅 및 교육 1시간권", labelId: "product-label-consult" },
+    consult100k: { value: "100000", amount: 100000, name: "컨설팅 및 교육 10만원권", labelId: "product-label-consult100k" },
+    consult200k: { value: "200000", amount: 200000, name: "컨설팅 및 교육 20만원권", labelId: "product-label-consult200k" },
+    consult500k: { value: "500000", amount: 500000, name: "컨설팅 및 교육 50만원권", labelId: "product-label-consult500k" },
+    test100: { value: "100", amount: 100, name: "결제 테스트 (100원)", labelId: "product-label-test100" }
   };
-  window.closePaymentModal = function() {
-    document.getElementById('payment-modal').style.display = 'none';
+
+  function productTypeFromRadioValue(value) {
+    const map = {
+      "100": "test100",
+      "10000": "pdf",
+      "50000": "consult",
+      "100000": "consult100k",
+      "200000": "consult200k",
+      "500000": "consult500k"
+    };
+    return map[String(value)] || "pdf";
+  }
+
+  /** 선택 라디오를 금액/상품명의 단일 소스로 맞춤 */
+  function syncAmountFromSelectedProduct() {
+    const amountInput = document.getElementById("payment-amount");
+    const nameInput = document.getElementById("payment-product-name");
+    const checked = document.querySelector('input[name="payment-product"]:checked');
+    if (!amountInput) return 0;
+
+    let type = checked
+      ? productTypeFromRadioValue(String(checked.value))
+      : "pdf";
+    const cfg = PAYMENT_PRODUCTS[type] || PAYMENT_PRODUCTS.pdf;
+    amountInput.value = String(cfg.amount);
+    if (nameInput) nameInput.value = cfg.name;
+    return cfg.amount;
+  }
+
+  window.openPaymentModal = function () {
+    document.getElementById("payment-modal").style.display = "flex";
+    document.getElementById("payment-step-1").style.display = "block";
+    document.getElementById("payment-pg-window").style.display = "none";
+    document.getElementById("payment-step-2").style.display = "none";
+    window.selectProduct("pdf");
   };
-  window.selectProduct = function(type) {
-    const pdfLabel = document.getElementById('product-label-pdf');
-    const consultLabel = document.getElementById('product-label-consult');
-    const amountInput = document.getElementById('payment-amount');
-    const nameInput = document.getElementById('payment-product-name');
-    
-    if (!pdfLabel || !consultLabel || !amountInput || !nameInput) return;
-    
-    if (type === 'pdf') {
-      pdfLabel.style.borderColor = '#e61862';
-      pdfLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
-      consultLabel.style.borderColor = '#e3e5ea';
-      consultLabel.style.backgroundColor = '#fff';
-      amountInput.value = 10000; // Flat 10,000
-      nameInput.value = "온라인 PDF 교재";
-    } else {
-      consultLabel.style.borderColor = '#e61862';
-      consultLabel.style.backgroundColor = 'rgba(230,24,98,0.02)';
-      pdfLabel.style.borderColor = '#e3e5ea';
-      pdfLabel.style.backgroundColor = '#fff';
-      amountInput.value = 50000; // Flat 50,000
-      nameInput.value = "컨설팅 및 교육 1시간권";
+  window.closePaymentModal = function () {
+    document.getElementById("payment-modal").style.display = "none";
+  };
+  window.selectProduct = function (type, evt) {
+    if (evt) {
+      // label 클릭 시 라디오 change와 이중 호출돼도 동일 결과
+      evt.stopPropagation?.();
     }
+    const cfg = PAYMENT_PRODUCTS[type];
+    if (!cfg) return;
+
+    const amountInput = document.getElementById("payment-amount");
+    const nameInput = document.getElementById("payment-product-name");
+    if (!amountInput || !nameInput) return;
+
+    const radio = document.querySelector(
+      `input[name="payment-product"][value="${cfg.value}"]`
+    );
+    if (radio) radio.checked = true;
+
+    amountInput.value = String(cfg.amount);
+    nameInput.value = cfg.name;
+
+    Object.keys(PAYMENT_PRODUCTS).forEach((key) => {
+      const el = document.getElementById(PAYMENT_PRODUCTS[key].labelId);
+      if (!el) return;
+      const active = key === type;
+      if (active) {
+        el.style.borderColor = "#e61862";
+        el.style.backgroundColor = "rgba(230,24,98,0.02)";
+        el.style.borderStyle = key === "test100" ? "dashed" : "solid";
+      } else {
+        el.style.borderColor = key === "test100" ? "#c5ccda" : "#e3e5ea";
+        el.style.backgroundColor = key === "test100" ? "#fafbfc" : "#fff";
+        el.style.borderStyle = key === "test100" ? "dashed" : "solid";
+      }
+    });
+
+    console.info("[ai-ing payment] product selected", {
+      type,
+      amount: cfg.amount,
+      name: cfg.name,
+      radioValue: radio?.value
+    });
   };
-  window.openPGWindow = function() {
-    const amount = Number(document.getElementById('payment-amount').value);
-    const productName = document.getElementById('payment-product-name').value;
-    if (!amount || amount < 1000) {
-      alert("최소 결제 금액은 1,000원입니다.");
+  // --- PortOne / ai-ing payment (Kakao live, card pending 보증보험) ---
+  const AI_ING_PAYMENT = {
+    apiBase: "https://payment.ai-ing.org",
+    // 포트원 콘솔 「연동 정보」의 상점 ID. 실 카카오 채널과 같은 상점인지 확인할 것.
+    storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
+    // 실 카카오페이 채널 (월 한도 50만 — 백엔드 status API로 제어)
+    kakaopayChannelKey: "channel-key-12b5e3ba-c048-4222-8eab-d8877dbf7c2a",
+    // 가맹점 참고번호(메일/콘솔). PortOne V2 requestPayment 파라미터는 아님.
+    kakaopayMerchantRef: "CA82817663",
+    cardEnabled: false,
+    cardChannelKey: null,
+    kakaopayMonthlyLimit: 500000
+  };
+
+  async function fetchKakaopayStatus(amount) {
+    const q = amount > 0 ? `?amount=${encodeURIComponent(amount)}` : "";
+    const res = await fetch(
+      `${AI_ING_PAYMENT.apiBase}/api/v1/payments/status/kakaopay${q}`,
+      { cache: "no-store" }
+    );
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.message || "카카오페이 한도 조회에 실패했습니다.");
+    }
+    return data;
+  }
+
+  // 한도 숫자는 고객 UI에 노출하지 않음 — 콘솔 디버그 + 결제 차단만
+  function logKakaopayStatus(status, amount) {
+    if (!status) return;
+    console.info("[ai-ing payment] kakaopay limit", {
+      amount: amount ?? null,
+      limit: status.limit,
+      remainingLimit: status.remainingLimit,
+      net: status.net,
+      isAvailable: status.isAvailable,
+      message: status.message
+    });
+  }
+
+  window.openPGWindow = async function () {
+    // 선택 라디오 값으로 금액 확정 (hidden input 어긋남 / 100원→5만원 버그 방지)
+    const amount = syncAmountFromSelectedProduct();
+    console.info("[ai-ing payment] openPGWindow amount", amount);
+    if (!amount || amount < 100) {
+      alert("최소 결제 금액은 100원입니다.");
       return;
     }
-    document.getElementById('pg-amount-display').innerText = amount.toLocaleString() + '원';
-    document.getElementById('payment-step-1').style.display = 'none';
-    document.getElementById('payment-pg-window').style.display = 'block';
+    document.getElementById("pg-amount-display").innerText =
+      amount.toLocaleString() + "원";
+    document.getElementById("payment-step-1").style.display = "none";
+    document.getElementById("payment-pg-window").style.display = "block";
+
+    // 카드: 이니시스 보증보험·실채널 오픈 전 비활성
+    const cardBtn = document.getElementById("btn-pay-card");
+    if (cardBtn) {
+      if (!AI_ING_PAYMENT.cardEnabled) {
+        cardBtn.disabled = true;
+        cardBtn.style.opacity = "0.55";
+        cardBtn.style.cursor = "not-allowed";
+        cardBtn.title = "신용카드는 준비 중입니다.";
+        cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
+      } else {
+        cardBtn.disabled = false;
+        cardBtn.style.opacity = "1";
+        cardBtn.style.cursor = "pointer";
+        cardBtn.innerHTML = "일반 신용카드 결제";
+      }
+    }
+
+    const kakaoBtn = document.getElementById("btn-pay-kakao");
+    try {
+      const status = await fetchKakaopayStatus(amount);
+      logKakaopayStatus(status, amount);
+      if (kakaoBtn) {
+        if (status.isAvailable === false) {
+          kakaoBtn.disabled = true;
+          kakaoBtn.style.opacity = "0.55";
+          kakaoBtn.style.cursor = "not-allowed";
+          kakaoBtn.title = "지금은 카카오페이를 이용할 수 없습니다.";
+        } else {
+          kakaoBtn.disabled = false;
+          kakaoBtn.style.opacity = "1";
+          kakaoBtn.style.cursor = "pointer";
+          kakaoBtn.title = "";
+        }
+      }
+    } catch (e) {
+      console.warn("[ai-ing payment] kakaopay status fetch failed", e);
+      // 조회 실패 시에는 결제 시도는 허용 (서버/네트워크 일시 오류 대비)
+      if (kakaoBtn) {
+        kakaoBtn.disabled = false;
+        kakaoBtn.style.opacity = "1";
+        kakaoBtn.style.cursor = "pointer";
+        kakaoBtn.title = "";
+      }
+    }
   };
-  window.cancelPGWindow = function() {
-    document.getElementById('payment-pg-window').style.display = 'none';
-    document.getElementById('payment-step-1').style.display = 'block';
+
+  window.cancelPGWindow = function () {
+    document.getElementById("payment-pg-window").style.display = "none";
+    document.getElementById("payment-step-1").style.display = "block";
   };
-  window.triggerPortOnePayment = async function(method) {
-    const amount = Number(document.getElementById('payment-amount').value);
-    
-    let channelKey = "CHANNEL_KEY_PLACEHOLDER";
+
+  window.triggerPortOnePayment = async function (method) {
+    const amount = syncAmountFromSelectedProduct();
+    console.info("[ai-ing payment] triggerPortOne amount", amount, method);
+
+    if (method === "CARD" && !AI_ING_PAYMENT.cardEnabled) {
+      alert(
+        "신용카드 결제는 아직 준비 중입니다.\n(이니시스 보증보험·포트원 실채널 오픈 후 활성화됩니다.)\n지금은 카카오페이를 이용해 주세요."
+      );
+      return;
+    }
+
+    let channelKey = "";
     let payMethod = "EASY_PAY";
     let easyPayProvider = null;
     let methodNameKr = "";
+    let methodCode = "";
 
-    if (method === 'KAKAOPAY') {
-      channelKey = "channel-key-659caa1e-6f55-42f5-8b02-d06e3837a446"; // KakaoPay test channel key
+    if (method === "KAKAOPAY") {
+      // 결제 직전 한도 재확인 (숫자는 UI에 안 보여 줌)
+      try {
+        const status = await fetchKakaopayStatus(amount);
+        logKakaopayStatus(status, amount);
+        if (status.isAvailable === false) {
+          alert("지금은 카카오페이 결제를 이용할 수 없습니다.\n잠시 후 다시 시도해 주세요.");
+          return;
+        }
+      } catch (e) {
+        console.warn("[ai-ing payment] kakaopay status recheck failed", e);
+        // 조회 실패 시 진행은 허용 (네트워크 일시 오류)
+      }
+
+      channelKey = AI_ING_PAYMENT.kakaopayChannelKey;
       easyPayProvider = "KAKAOPAY";
       methodNameKr = "카카오페이";
-    } else if (method === 'CARD') {
-      channelKey = "channel-key-b95c36d1-7b94-49c4-bbde-c943bf57b12d"; // Korea Payment Networks card channel key
+      methodCode = "kakaopay"; // 백엔드 월 한도 집계용 (kakaopay% 매칭)
+    } else if (method === "CARD") {
+      channelKey = AI_ING_PAYMENT.cardChannelKey;
       payMethod = "CARD";
       methodNameKr = "신용카드 결제";
+      methodCode = "card";
+    }
+
+    if (!channelKey) {
+      alert("결제 채널이 설정되지 않았습니다.");
+      return;
     }
 
     const payBtnMap = {
-      'KAKAOPAY': document.getElementById('btn-pay-kakao'),
-      'CARD': document.getElementById('btn-pay-card')
+      KAKAOPAY: document.getElementById("btn-pay-kakao"),
+      CARD: document.getElementById("btn-pay-card")
     };
-    
+
     const activeBtn = payBtnMap[method];
+    if (!activeBtn) return;
     const originalText = activeBtn.innerHTML;
-    
-    const allButtons = document.querySelectorAll('#payment-pg-window button');
-    allButtons.forEach(btn => btn.disabled = true);
-    activeBtn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid ${method === 'KAKAOPAY' ? '#000' : '#fff'};border-top-color:transparent;border-radius:50%;animation:pg-spin .6s linear infinite;vertical-align:middle;margin-right:6px;"></span>처리 중...`;
+
+    const allButtons = document.querySelectorAll("#payment-pg-window button");
+    allButtons.forEach((btn) => (btn.disabled = true));
+    activeBtn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid ${
+      method === "KAKAOPAY" ? "#000" : "#fff"
+    };border-top-color:transparent;border-radius:50%;animation:pg-spin .6s linear infinite;vertical-align:middle;margin-right:6px;"></span>처리 중...`;
 
     try {
-      // 1. 백엔드 API에 임시 주문(Order)을 생성하여 Turso DB에 기입
-      const orderResponse = await fetch("https://payment.ai-ing.org/api/v1/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: amount,
-          currency: "KRW",
-          itemName: document.getElementById('payment-product-name').value,
-          locale: "ko",
-          region: "domestic"
-        })
-      });
-      
+      const orderResponse = await fetch(
+        `${AI_ING_PAYMENT.apiBase}/api/v1/orders`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: amount,
+            currency: "KRW",
+            itemName: document.getElementById("payment-product-name").value,
+            locale: "ko",
+            region: "domestic"
+          })
+        }
+      );
+
       const orderData = await orderResponse.json();
       if (!orderData.ok) {
         throw new Error(orderData.message || "주문 생성에 실패했습니다.");
       }
-      
+
       const orderId = orderData.order.id;
 
-      // 2. 생성된 orderId를 사용하여 포트원 결제 파라미터 세팅
       const paymentParams = {
-        storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
-        paymentId: orderId, // 하드코딩 랜덤값 대신 실제 DB orderId 매핑
-
-        orderName: document.getElementById('payment-product-name').value,
+        storeId: AI_ING_PAYMENT.storeId,
+        paymentId: orderId,
+        orderName: document.getElementById("payment-product-name").value,
         totalAmount: amount,
         currency: "CURRENCY_KRW",
         channelKey: channelKey,
         payMethod: payMethod,
         customer: {
           fullName: "에이아잉 고객",
-          email: "customer@ai-ing.org",
+          email: "customer@ai-ing.org"
         }
       };
 
@@ -1097,49 +1275,78 @@
         };
       }
 
-      // 3. 포트원 결제창 띄우기
       const response = await PortOne.requestPayment(paymentParams);
 
-      allButtons.forEach(btn => btn.disabled = false);
+      allButtons.forEach((btn) => (btn.disabled = false));
       activeBtn.innerHTML = originalText;
+      // 카드 준비 중 상태 유지
+      if (!AI_ING_PAYMENT.cardEnabled) {
+        const cardBtn = document.getElementById("btn-pay-card");
+        if (cardBtn) {
+          cardBtn.disabled = true;
+          cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
+        }
+      }
 
-      // 결제창이 닫혔거나 취소/실패된 경우
       if (response.code !== undefined) {
-        if (response.code === "PORTONE_ERROR" || response.code === "PAY_PROCESS_CANCELED") {
+        if (
+          response.code === "PORTONE_ERROR" ||
+          response.code === "PAY_PROCESS_CANCELED"
+        ) {
           return;
         }
         alert("결제 실패: " + (response.message || "알 수 없는 오류"));
         return;
       }
 
-      // 4. 결제 완료 승인 시 백엔드 API 호출하여 Turso DB 상태를 PAID 및 CAPTURED로 최종 업데이트
-      const logResponse = await fetch("https://payment.ai-ing.org/api/v1/orders/" + orderId + "/payment-attempts/portone", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          paymentId: orderId,
-          txId: response.transactionId || response.txId || response.paymentId || "",
-          method: methodNameKr
-        })
-      });
-      
+      const logResponse = await fetch(
+        `${AI_ING_PAYMENT.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentId: orderId,
+            txId:
+              response.transactionId ||
+              response.txId ||
+              response.paymentId ||
+              "",
+            // 한도 집계: method 는 kakaopay 로 저장 (표시명은 receipt에)
+            method: methodCode
+          })
+        }
+      );
+
       const logData = await logResponse.json();
       if (!logData.ok) {
-        console.error("Warning: Failed to log transaction state to Turso DB:", logData);
+        console.error(
+          "Warning: Failed to log transaction state to Turso DB:",
+          logData
+        );
       }
 
-      const formatted = amount.toLocaleString() + '원';
-      document.getElementById('receipt-amount').innerText = formatted;
-      document.getElementById('receipt-method').innerText = methodNameKr;
-      if (document.getElementById('receipt-txid')) {
-        document.getElementById('receipt-txid').innerText = response.transactionId || response.txId || response.paymentId || '-';
+      const formatted = amount.toLocaleString() + "원";
+      document.getElementById("receipt-amount").innerText = formatted;
+      document.getElementById("receipt-method").innerText = methodNameKr;
+      if (document.getElementById("receipt-txid")) {
+        document.getElementById("receipt-txid").innerText =
+          response.transactionId ||
+          response.txId ||
+          response.paymentId ||
+          "-";
       }
-      document.getElementById('payment-pg-window').style.display = 'none';
-      document.getElementById('payment-step-2').style.display = 'block';
-
+      document.getElementById("payment-pg-window").style.display = "none";
+      document.getElementById("payment-step-2").style.display = "block";
     } catch (error) {
-      allButtons.forEach(btn => btn.disabled = false);
+      allButtons.forEach((btn) => (btn.disabled = false));
       activeBtn.innerHTML = originalText;
+      if (!AI_ING_PAYMENT.cardEnabled) {
+        const cardBtn = document.getElementById("btn-pay-card");
+        if (cardBtn) {
+          cardBtn.disabled = true;
+          cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
+        }
+      }
       console.error("Payment error:", error);
       alert("결제 중 오류가 발생했습니다: " + (error.message || error));
     }
