@@ -1074,7 +1074,7 @@
     // 가맹점 참고번호(메일/콘솔). PortOne V2 requestPayment 파라미터는 아님.
     kakaopayMerchantRef: "CA82817663",
     cardEnabled: true,
-    cardChannelKey: null, // 포트원 콘솔에서 KG이니시스 채널키 등록 후 기재 (입력 전까진 선택 시 채널 안내)
+    cardChannelKey: "channel-key-e03c26ff-03b9-4b7f-b030-35b1c9c63235", // KG이니시스 V2 실운영 채널키
     kakaopayMonthlyLimit: 500000
   };
 
