@@ -1117,21 +1117,13 @@
     document.getElementById("payment-step-1").style.display = "none";
     document.getElementById("payment-pg-window").style.display = "block";
 
-    // 카드: 이니시스 보증보험·실채널 오픈 전 비활성
     const cardBtn = document.getElementById("btn-pay-card");
     if (cardBtn) {
-      if (!AI_ING_PAYMENT.cardEnabled) {
-        cardBtn.disabled = true;
-        cardBtn.style.opacity = "0.55";
-        cardBtn.style.cursor = "not-allowed";
-        cardBtn.title = "신용카드는 준비 중입니다.";
-        cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
-      } else {
-        cardBtn.disabled = false;
-        cardBtn.style.opacity = "1";
-        cardBtn.style.cursor = "pointer";
-        cardBtn.innerHTML = "일반 신용카드 결제";
-      }
+      cardBtn.disabled = false;
+      cardBtn.style.opacity = "1";
+      cardBtn.style.cursor = "pointer";
+      cardBtn.title = "일반 신용카드 결제";
+      cardBtn.innerHTML = "일반 신용카드 결제";
     }
 
     const kakaoBtn = document.getElementById("btn-pay-kakao");
