@@ -979,11 +979,11 @@
 
   const PAYMENT_PRODUCTS = {
     pdf: { value: "10000", amount: 10000, name: "온라인 PDF 교재", labelId: "product-label-pdf" },
-    consult: { value: "50000", amount: 50000, name: "컨설팅 및 교육 1시간권", labelId: "product-label-consult" },
-    consult100k: { value: "100000", amount: 100000, name: "컨설팅 및 교육 10만원권", labelId: "product-label-consult100k" },
-    consult200k: { value: "200000", amount: 200000, name: "컨설팅 및 교육 20만원권", labelId: "product-label-consult200k" },
-    consult500k: { value: "500000", amount: 500000, name: "컨설팅 및 교육 50만원권", labelId: "product-label-consult500k" },
-    test100: { value: "100", amount: 100, name: "결제 테스트 (100원)", labelId: "product-label-test100" }
+    consult: { value: "50000", amount: 50000, name: "AX 맞춤형 컨설팅 & 1:1 멘토링 1시간 서비스", labelId: "product-label-consult" },
+    consult100k: { value: "100000", amount: 100000, name: "AX 맞춤형 컨설팅 & 실습 2시간 과정", labelId: "product-label-consult100k" },
+    consult200k: { value: "200000", amount: 200000, name: "AX 맞춤형 컨설팅 & 프로젝트 1개월 집중 과정", labelId: "product-label-consult200k" },
+    consult500k: { value: "500000", amount: 500000, name: "AX 맞춤형 기업 컨설팅 & 1:1 멘토링 3개월 패키지", labelId: "product-label-consult500k" },
+    test100: { value: "100", amount: 100, name: "디지털 샘플 자료집 (100원)", labelId: "product-label-test100" }
   };
 
   function productTypeFromRadioValue(value) {
@@ -1075,8 +1075,8 @@
     kakaopayChannelKey: "channel-key-12b5e3ba-c048-4222-8eab-d8877dbf7c2a",
     // 가맹점 참고번호(메일/콘솔). PortOne V2 requestPayment 파라미터는 아님.
     kakaopayMerchantRef: "CA82817663",
-    cardEnabled: false,
-    cardChannelKey: null,
+    cardEnabled: true,
+    cardChannelKey: null, // 포트원 콘솔에서 KG이니시스 채널키 등록 후 기재 (입력 전까진 선택 시 채널 안내)
     kakaopayMonthlyLimit: 500000
   };
 
