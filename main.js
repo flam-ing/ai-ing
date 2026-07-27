@@ -1246,7 +1246,8 @@
         payMethod: payMethod,
         customer: {
           fullName: "에이아잉 고객",
-          email: "customer@ai-ing.org"
+          email: "customer@ai-ing.org",
+          phoneNumber: "010-0000-0000"
         }
       };
 
