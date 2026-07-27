@@ -1091,10 +1091,22 @@
     return data;
   }
 
-  // 한도 숫자는 고객 UI에 노출하지 않음 — 콘솔 디버그 + 결제 차단만
-  function logKakaopayStatus(status, amount) {
+  async function fetchCardStatus(amount) {
+    const q = amount > 0 ? `?amount=${encodeURIComponent(amount)}` : "";
+    const res = await fetch(
+      `${AI_ING_PAYMENT.apiBase}/api/v1/payments/status/card${q}`,
+      { cache: "no-store" }
+    );
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.message || "신용카드 한도 조회에 실패했습니다.");
+    }
+    return data;
+  }
+
+  function logCardStatus(status, amount) {
     if (!status) return;
-    console.info("[ai-ing payment] kakaopay limit", {
+    console.info("[ai-ing payment] card limit", {
       amount: amount ?? null,
       limit: status.limit,
       remainingLimit: status.remainingLimit,
@@ -1118,12 +1130,33 @@
     document.getElementById("payment-pg-window").style.display = "block";
 
     const cardBtn = document.getElementById("btn-pay-card");
-    if (cardBtn) {
-      cardBtn.disabled = false;
-      cardBtn.style.opacity = "1";
-      cardBtn.style.cursor = "pointer";
-      cardBtn.title = "일반 신용카드 결제";
-      cardBtn.innerHTML = "일반 신용카드 결제";
+    try {
+      const cardStatus = await fetchCardStatus(amount);
+      logCardStatus(cardStatus, amount);
+      if (cardBtn) {
+        if (cardStatus.isAvailable === false) {
+          cardBtn.disabled = true;
+          cardBtn.style.opacity = "0.55";
+          cardBtn.style.cursor = "not-allowed";
+          cardBtn.title = "이번 달 신용카드 정산 한도(300만원)가 소진되었습니다.";
+          cardBtn.innerHTML = "일반 신용카드 결제 (한도 소진)";
+        } else {
+          cardBtn.disabled = false;
+          cardBtn.style.opacity = "1";
+          cardBtn.style.cursor = "pointer";
+          cardBtn.title = "일반 신용카드 결제";
+          cardBtn.innerHTML = "일반 신용카드 결제";
+        }
+      }
+    } catch (e) {
+      console.warn("[ai-ing payment] card status fetch failed", e);
+      if (cardBtn) {
+        cardBtn.disabled = false;
+        cardBtn.style.opacity = "1";
+        cardBtn.style.cursor = "pointer";
+        cardBtn.title = "일반 신용카드 결제";
+        cardBtn.innerHTML = "일반 신용카드 결제";
+      }
     }
 
     const kakaoBtn = document.getElementById("btn-pay-kakao");
