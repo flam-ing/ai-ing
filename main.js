@@ -1172,13 +1172,6 @@
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] triggerPortOne amount", amount, method);
 
-    if (method === "CARD" && !AI_ING_PAYMENT.cardEnabled) {
-      alert(
-        "신용카드 결제는 아직 준비 중입니다.\n(이니시스 보증보험·포트원 실채널 오픈 후 활성화됩니다.)\n지금은 카카오페이를 이용해 주세요."
-      );
-      return;
-    }
-
     let channelKey = "";
     let payMethod = "EASY_PAY";
     let easyPayProvider = null;
@@ -1203,16 +1196,15 @@
       easyPayProvider = "KAKAOPAY";
       methodNameKr = "카카오페이";
       methodCode = "kakaopay"; // 백엔드 월 한도 집계용 (kakaopay% 매칭)
+      if (!channelKey) {
+        alert("카카오페이 결제 채널이 설정되지 않았습니다.");
+        return;
+      }
     } else if (method === "CARD") {
-      channelKey = AI_ING_PAYMENT.cardChannelKey;
+      channelKey = AI_ING_PAYMENT.cardChannelKey || "";
       payMethod = "CARD";
       methodNameKr = "신용카드 결제";
       methodCode = "card";
-    }
-
-    if (!channelKey) {
-      alert("결제 채널이 설정되지 않았습니다.");
-      return;
     }
 
     const payBtnMap = {
@@ -1259,13 +1251,16 @@
         orderName: document.getElementById("payment-product-name").value,
         totalAmount: amount,
         currency: "CURRENCY_KRW",
-        channelKey: channelKey,
         payMethod: payMethod,
         customer: {
           fullName: "에이아잉 고객",
           email: "customer@ai-ing.org"
         }
       };
+
+      if (channelKey) {
+        paymentParams.channelKey = channelKey;
+      }
 
       if (easyPayProvider) {
         paymentParams.easyPay = {
@@ -1277,14 +1272,6 @@
 
       allButtons.forEach((btn) => (btn.disabled = false));
       activeBtn.innerHTML = originalText;
-      // 카드 준비 중 상태 유지
-      if (!AI_ING_PAYMENT.cardEnabled) {
-        const cardBtn = document.getElementById("btn-pay-card");
-        if (cardBtn) {
-          cardBtn.disabled = true;
-          cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
-        }
-      }
 
       if (response.code !== undefined) {
         if (
@@ -1338,13 +1325,6 @@
     } catch (error) {
       allButtons.forEach((btn) => (btn.disabled = false));
       activeBtn.innerHTML = originalText;
-      if (!AI_ING_PAYMENT.cardEnabled) {
-        const cardBtn = document.getElementById("btn-pay-card");
-        if (cardBtn) {
-          cardBtn.disabled = true;
-          cardBtn.innerHTML = "일반 신용카드 결제 (준비 중)";
-        }
-      }
       console.error("Payment error:", error);
       alert("결제 중 오류가 발생했습니다: " + (error.message || error));
     }
