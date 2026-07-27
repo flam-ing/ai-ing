@@ -982,13 +982,11 @@
     consult: { value: "50000", amount: 50000, name: "AX 맞춤형 컨설팅 & 1:1 멘토링 1시간 서비스", labelId: "product-label-consult" },
     consult100k: { value: "100000", amount: 100000, name: "AX 맞춤형 컨설팅 & 실습 2시간 과정", labelId: "product-label-consult100k" },
     consult200k: { value: "200000", amount: 200000, name: "AX 맞춤형 컨설팅 & 프로젝트 1개월 집중 과정", labelId: "product-label-consult200k" },
-    consult500k: { value: "500000", amount: 500000, name: "AX 맞춤형 기업 컨설팅 & 1:1 멘토링 3개월 패키지", labelId: "product-label-consult500k" },
-    test100: { value: "100", amount: 100, name: "디지털 샘플 자료집 (100원)", labelId: "product-label-test100" }
+    consult500k: { value: "500000", amount: 500000, name: "AX 맞춤형 기업 컨설팅 & 1:1 멘토링 3개월 패키지", labelId: "product-label-consult500k" }
   };
 
   function productTypeFromRadioValue(value) {
     const map = {
-      "100": "test100",
       "10000": "pdf",
       "50000": "consult",
       "100000": "consult100k",
