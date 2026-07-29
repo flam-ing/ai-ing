@@ -37,7 +37,10 @@ dist/
 .agents/AGENTS.md
 
 # Custom Agent Skills
-.agents/skills/
+# Local Secret Vaults
+AI_ING_SECURE_VAULT.md
+*_vault.md
 
 # Local backend service code
 payment-backend/
+.vercel
