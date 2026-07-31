@@ -1,9 +1,24 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Pages (manual)
+
+# ⚠️ 기본 배포 경로는 로컬의 ./scripts/deploy.sh 입니다.
+#
+# 이 워크플로는 자동 실행을 끈 상태입니다. 저장소 시크릿 CLOUDFLARE_API_TOKEN 이
+# 무효(Authentication error, code 10000)라 2026-07-30 이후 push 마다 실패하고 있었고,
+# 그래서 로컬에서 `wrangler pages deploy .` 를 쓰게 되면서
+# git 이 추적하지 않는 AI_ING_SECURE_VAULT.md(마스터 시크릿)가 공개 배포되는 사고가 났습니다.
+#
+# 다시 활성화하려면:
+#   1) Cloudflare 대시보드에서 API 토큰 생성 (권한: Account > Cloudflare Pages > Edit)
+#   2) GitHub 저장소 Settings > Secrets and variables > Actions 에서
+#      CLOUDFLARE_API_TOKEN 값을 교체
+#   3) 아래 on: 에 push 트리거를 다시 추가
+#
+# 그때까지는 로컬에서:
+#   ./scripts/deploy.sh            # 커밋된 파일만 배포 (시크릿 유출 방지 게이트 포함)
+#   ./scripts/deploy.sh --dry-run  # 배포될 파일 목록만 확인
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
