@@ -1,0 +1,36 @@
+name: Naver SmartStore 30-Min Auto Dispatch
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  auto-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests bcrypt python-dotenv urllib3
+
+      - name: Check Egress IP
+        run: |
+          echo "🌐 GitHub Action Outbound Public IP:"
+          curl -s https://api.ipify.org
+          echo ""
+
+      - name: Run Naver SmartStore Auto Dispatch
+        env:
+          NAVER_COMMERCE_CLIENT_ID: ${{ secrets.NAVER_COMMERCE_CLIENT_ID || '4rtl3xVaxRa7AijyoYblHy' }}
+          NAVER_COMMERCE_CLIENT_SECRET: ${{ secrets.NAVER_COMMERCE_CLIENT_SECRET || '$2a$04$9vw5JqOfFkf8BiVihe9/Ce' }}
+        run: |
+          python naver_smartstore_auto_dispatch.py
