@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사례 | AI-ing (에이아잉)</title>
+<meta name="description" content="기업 사내 AX 교육, 기관 특강, 1:1 멘토링, 자동화·웹 구축 프로젝트 — 에이아잉이 실제로 수행한 작업 사례.">
+<link rel="canonical" href="https://ai-ing.org/cases">
+
+<!-- Open Graph (카카오톡·슬랙·페이스북 공유 카드) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI-ing (에이아잉)">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://ai-ing.org/cases">
+<meta property="og:title" content="사례 | AI-ing (에이아잉)">
+<meta property="og:description" content="기업 사내 AX 교육, 기관 특강, 1:1 멘토링, 자동화·웹 구축 프로젝트 — 에이아잉이 실제로 수행한 작업 사례.">
+<meta property="og:image" content="https://ai-ing.org/logo.png">
+<meta property="og:image:width" content="1254">
+<meta property="og:image:height" content="1254">
+<meta property="og:image:alt" content="AI-ing 에이아잉 로고">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="사례 | AI-ing (에이아잉)">
+<meta name="twitter:description" content="기업 사내 AX 교육, 기관 특강, 1:1 멘토링, 자동화·웹 구축 프로젝트 사례.">
+<meta name="twitter:image" content="https://ai-ing.org/logo.png">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<style>
+  .case-sec { margin-bottom: clamp(48px, 6vw, 76px); }
+  .case-kicker { font-family: 'Pretendard', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #8c82ff; margin-bottom: 12px; }
+  .case-sec > h3 { font-size: clamp(20px, 2.4vw, 27px); font-weight: 700; color: #fff; letter-spacing: -.02em; margin: 0 0 8px; word-break: keep-all; }
+  .case-sec > p.lead { font-size: 14.5px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.6); margin: 0 0 26px; word-break: keep-all; }
+  .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(288px, 1fr)); gap: 18px; }
+  .case-card { border-radius: 12px; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.08); padding: 26px 24px; transition: transform .3s, box-shadow .3s, border-color .3s; }
+  .case-card:hover { transform: translateY(-4px); border-color: rgba(140,130,255,.34); box-shadow: 0 16px 40px rgba(0,0,0,.34); }
+  .case-card h4 { font-size: 16.5px; font-weight: 700; color: #fff; margin: 0 0 10px; line-height: 1.4; word-break: keep-all; }
+  .case-card p { font-size: 13.5px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.62); margin: 0; word-break: keep-all; }
+  .case-tag { display: inline-block; font-size: 11.5px; font-weight: 700; color: #ff5e9c; background: rgba(230,24,98,.09); border: 1px solid rgba(230,24,98,.2); border-radius: 20px; padding: 4px 11px; margin-bottom: 13px; }
+  .case-link { display: inline-block; margin-top: 15px; font-size: 13px; font-weight: 600; color: #8c82ff; text-decoration: none; }
+  .case-link:hover { text-decoration: underline; }
+  .case-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px; margin-bottom: clamp(46px, 6vw, 70px); }
+  .case-stat { border-radius: 10px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); padding: 22px 18px; text-align: center; }
+  .case-stat b { display: block; font-family: 'Pretendard', sans-serif; font-size: clamp(24px, 3vw, 32px); font-weight: 800; color: #fff; letter-spacing: -.02em; }
+  .case-stat span { display: block; margin-top: 6px; font-size: 12.5px; font-weight: 300; color: rgba(255,255,255,.55); }
+</style>
+</head>
+<body>
+<div id="root-container" style="background:#f4f5f7;color:#0c0e14;position:relative;">
+
+<nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
+    <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
+      <a href="index.html" class="brand-link" style="display:flex;align-items:center;gap:11px;text-decoration:none;white-space:nowrap;">
+        <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
+        <span style="font-family:'Pretendard',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
+      </a>
+      <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
+        <a href="services.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
+        <a href="about.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표자</a>
+        <a href="cases.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#fff;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">사례</a>
+        <a href="contact.html" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:4px;background:#8c82ff;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;box-shadow:0 0 16px rgba(140,130,255,0.4);transition:filter .2s,transform .2s;">무료 상담 신청</a>
+      </div>
+    </div>
+  </nav>
+
+<section id="cases" class="tab-content-section active" style="position:relative;overflow:hidden;background:#07080d;padding:clamp(96px,11vw,140px) 0 clamp(70px,8vw,110px);scroll-margin-top:64px;">
+    <div aria-hidden="true" style="position:absolute;top:-8%;left:50%;transform:translateX(-50%);width:720px;height:720px;border-radius:50%;background:radial-gradient(circle, rgba(140,130,255,0.14) 0%, transparent 62%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+    <div aria-hidden="true" style="position:absolute;bottom:-12%;right:-6%;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle, rgba(230,24,98,0.14) 0%, transparent 62%);filter:blur(120px);pointer-events:none;z-index:0;"></div>
+
+    <div style="position:relative;z-index:1;width:min(1200px,92vw);margin:0 auto;">
+
+      <div data-reveal="up" style="text-align:center;margin-bottom:clamp(40px,5vw,58px);">
+        <h2 style="font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.25;color:#fff;font-family:'Pretendard',sans-serif;margin:0 0 16px;">사례</h2>
+        <p style="max-width:660px;margin:0 auto;font-size:clamp(14.5px,1.5vw,16.5px);font-weight:300;line-height:1.75;color:rgba(255,255,255,.66);word-break:keep-all;">
+          기업 사내 교육부터 기관 특강, 1:1 멘토링, 자동화·웹 구축까지 실제로 수행한 작업입니다.
+        </p>
+      </div>
+
+      <div class="case-stats" data-reveal="up" data-delay="80">
+        <div class="case-stat"><b>12+</b><span>1:1 지도 인원</span></div>
+        <div class="case-stat"><b>6개사</b><span>기업 AX 컨설팅</span></div>
+        <div class="case-stat"><b>7회</b><span>특강·심사 참여</span></div>
+        <div class="case-stat"><b>45만+</b><span>테크블로그 누적 방문</span></div>
+      </div>
+
+      <!-- 1. 기업 사내 -->
+      <div class="case-sec" data-reveal="up">
+        <p class="case-kicker">01 / 기업 · 사내 교육</p>
+        <h3>전 임직원 대상 AX 세미나 및 업무 자동화 교육</h3>
+        <p class="lead">기술블로그 기고 내용을 바탕으로 전 직원 대상 기술 세미나와 업무 효율화 강의를 진행했습니다. 사내 세미나 기획·발표 4회.</p>
+        <div class="case-grid">
+          <div class="case-card">
+            <span class="case-tag">사내 세미나</span>
+            <h4>AI 자동화 실전 시연</h4>
+            <p>무료 AI 도구와 간단한 스크립트만으로 반복 업무를 줄이는 방법을 설명합니다. 사내 프로모션 알림 예시로 실무형 자동화 아이디어를 시연했습니다.</p>
+            <a class="case-link" href="about.html#activities">발표 영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">사내 세미나</span>
+            <h4>AI 브라우저 응용</h4>
+            <p>크롬 익스텐션 자동화에서 한 단계 나아가, AI 브라우저가 웹 탐색과 반복 작업을 어떻게 대신할 수 있는지 다뤘습니다. 최신 AI 도구 흐름과 실제 업무 적용 가능성을 함께 설명했습니다.</p>
+            <a class="case-link" href="about.html#activities">발표 영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">B2B 컨설팅</span>
+            <h4>직무별 AX 교육 및 AI 업무 자동화 컨설팅</h4>
+            <p>직무별 워크플로우를 분석해 AI 도입 지점을 정하고, 비용 최적화 모델 라우팅과 사내 보안 세팅까지 포함한 전사 AX 로드맵을 설계합니다.</p>
+            <a class="case-link" href="services.html">서비스 상세 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 기관 특강 -->
+      <div class="case-sec" data-reveal="up">
+        <p class="case-kicker">02 / 기관 · 특강</p>
+        <h3>기관·학교 대상 특강 및 프로젝트 심사</h3>
+        <p class="lead">중소기업협회 추천 특강 및 프로젝트 심사위원 7회, 고용노동부 연계 디지털 인재 양성 과정 멘토링 2회, 교육지원센터 디지털 특강.</p>
+        <div class="case-grid">
+          <div class="case-card">
+            <span class="case-tag">취준생 특강</span>
+            <h4>개발자 취업 전략</h4>
+            <p>개발자에게 필요한 기본 역량과 취업 준비 전략을 중심으로 진행했습니다. GitHub·프로젝트·블로그 같은 결과물을 포트폴리오와 면접 이야기로 연결하는 방법을 설명했습니다.</p>
+            <a class="case-link" href="about.html#activities">강의 영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">아카데미</span>
+            <h4>프론트엔드 장시간 특강</h4>
+            <p>프론트엔드 실무에 필요한 개념과 작업 흐름을 장시간 과정으로 구성해 지도했습니다.</p>
+            <a class="case-link" href="about.html#activities">강의 영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">초·중학생</span>
+            <h4>웹 제작과 AI 활용 특강</h4>
+            <p>개발자가 하는 일부터 HTML·CSS·JavaScript의 역할까지 학생 눈높이로 설명하고, 엔트리·스크래치와 AI 활용 예시로 직접 웹페이지와 상호작용을 만드는 흐름을 보여줬습니다.</p>
+            <a class="case-link" href="about.html#activities">수업 자료 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">초·중학생</span>
+            <h4>엔트리 블록 코딩 — X피하기 게임</h4>
+            <p>Entry 블록 코딩으로 게임을 만드는 수업입니다. 조건·좌표·충돌 같은 개념을 학생 눈높이의 작은 기능으로 나누고, 직접 실행 가능한 게임으로 연결했습니다.</p>
+            <a class="case-link" href="https://playentry.org/project/5cb7d5f0558489236dad3230" target="_blank" rel="noopener noreferrer">결과물 보기 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 1:1 멘토링 -->
+      <div class="case-sec" data-reveal="up">
+        <p class="case-kicker">03 / 1:1 · 멘토링</p>
+        <h3>1:1 맞춤형 과외 및 프로젝트 멘토링</h3>
+        <p class="lead">비전공 입문자부터 실무자까지 목표에 맞춰 지도했습니다. 다수의 비전공생이 커리어 전환에 성공했습니다.</p>
+        <div class="case-grid">
+          <div class="case-card">
+            <span class="case-tag">입문자</span>
+            <h4>비전공자·입문자 맞춤형 과외</h4>
+            <p>Git·GitHub를 처음 접하는 입문자에게 로컬 저장만으로 부족한 이유와 클라우드 백업의 필요성부터 시작해, 코드 저장·공유·버전 관리의 기본 흐름을 시연하며 지도합니다.</p>
+            <a class="case-link" href="about.html#activities">시연 영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">실무자</span>
+            <h4>AX 교육 · AI 업무 자동화 · 바이브 코딩 수익화 컨설팅</h4>
+            <p>Claude·Codex·Antigravity 등 최신 AI 도구를 활용하는 실무형 개발 워크플로우와 프롬프트 엔지니어링을 1:1로 전수합니다.</p>
+            <a class="case-link" href="services.html">서비스 상세 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">고용노동부 연계</span>
+            <h4>배달 중계 플랫폼 프로젝트 지도</h4>
+            <p>디지털 인재 양성 과정 멘토링 2회 중 대표 사례입니다. 요구사항 정의부터 구현·발표까지 팀 프로젝트 전 과정을 밀착 지도했습니다.</p>
+            <a class="case-link" href="about.html#activities">프로젝트 보기 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 외부 채널 -->
+      <div class="case-sec" data-reveal="up">
+        <p class="case-kicker">04 / 외부 채널 · 게스트</p>
+        <h3>테크 채널 게스트 출연 및 강연</h3>
+        <p class="lead">외부 채널에 현직자로 출연해 실무 관점의 경험을 공유했습니다.</p>
+        <div class="case-grid">
+          <div class="case-card">
+            <span class="case-tag">게스트 출연</span>
+            <h4>비전공 개발자 취업 전략</h4>
+            <p>비전공·부트캠프 출신 개발자가 무엇을 준비해야 하는지, 전공자와의 격차를 어떻게 메우는지를 현직자 관점에서 이야기했습니다.</p>
+            <a class="case-link" href="about.html#activities">영상 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">게스트 강의</span>
+            <h4>맥미니 + OpenClaw로 24시간 비서 만들기</h4>
+            <p>맥미니와 OpenClaw를 활용해 24시간 동작하는 개인 AI 비서를 만드는 흐름을 설명했습니다. AI 에이전트 운영과 업무 자동화의 실제 적용 방법을 다뤘습니다.</p>
+            <a class="case-link" href="about.html#activities">영상 보기 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 구축 프로젝트 -->
+      <div class="case-sec" data-reveal="up">
+        <p class="case-kicker">05 / 구축 · 자동화</p>
+        <h3>웹 구축 및 자동화 솔루션</h3>
+        <p class="lead">초기 창업자와 사업자를 지원하는 웹 개발부터 마케팅 자동화, 운영 효율화 도구까지 직접 만들어 운영하고 있습니다.</p>
+        <div class="case-grid">
+          <div class="case-card">
+            <span class="case-tag">비즈니스 빌드업</span>
+            <h4>Flaming Web Designs &amp; Business Setup</h4>
+            <p>웹 개발부터 마케팅 자동화, 운영 효율화 도구까지 원스톱으로 지원하는 종합 비즈니스 패키지 솔루션입니다.</p>
+            <a class="case-link" href="https://flam-ing.github.io/flaming-web-designs/" target="_blank" rel="noopener noreferrer">사이트 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">자동화</span>
+            <h4>카드 뉴스 비디오 자동화 솔루션</h4>
+            <p>카드 뉴스 콘텐츠 제작과 영상 변환 과정을 자동화해, 반복적인 콘텐츠 생산 공수를 줄이는 파이프라인입니다.</p>
+            <a class="case-link" href="about.html#activities">데모 보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">3D · WebGL</span>
+            <h4>Flaming Gallery — 3D 가상 미술관</h4>
+            <p>3D WebGL 그래픽스로 물리 전시장을 구현하고 11점의 명화를 24개 액자에 걸어둔 가상 미술관입니다.</p>
+            <a class="case-link" href="https://flamingallery.pages.dev" target="_blank" rel="noopener noreferrer">둘러보기 →</a>
+          </div>
+          <div class="case-card">
+            <span class="case-tag">인터랙티브 웹</span>
+            <h4>Flaming Games</h4>
+            <p>인터랙티브 웹 기술과 게임 개발 역량을 결합한 프로젝트 컬렉션입니다. 3D 멀티플레이어 체스, 3D 쿼터뷰 러닝 액션, 2D 레트로 플랫포머를 웹에서 바로 실행할 수 있습니다.</p>
+            <a class="case-link" href="https://flam-ing.github.io/flaming-games/flamingo-chess/" target="_blank" rel="noopener noreferrer">Flaming Chess →</a><br>
+            <a class="case-link" style="margin-top:6px;" href="https://flam-ing.github.io/flaming-games/flamingo-road/" target="_blank" rel="noopener noreferrer">Flaming Road →</a><br>
+            <a class="case-link" style="margin-top:6px;" href="https://flam-ing.github.io/flaming-games/super-mingo/" target="_blank" rel="noopener noreferrer">Super Mingo →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div data-reveal="up" style="text-align:center;padding:clamp(34px,4vw,46px) 26px;border-radius:14px;background:rgba(140,130,255,.055);border:1px solid rgba(140,130,255,.18);">
+        <h3 style="font-size:clamp(19px,2.2vw,25px);font-weight:700;color:#fff;margin:0 0 12px;letter-spacing:-.02em;word-break:keep-all;">비슷한 과제가 있으신가요?</h3>
+        <p style="font-size:14.5px;font-weight:300;line-height:1.7;color:rgba(255,255,255,.64);margin:0 0 26px;word-break:keep-all;">현재 업무 흐름을 알려주시면 어디서부터 자동화할 수 있을지 무료로 진단해 드립니다.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <a href="contact.html" class="btn-gradient-hover" style="display:inline-flex;align-items:center;padding:15px 26px;border-radius:3px;background:#e61862;color:#fff;font-weight:700;font-size:14.5px;text-decoration:none;font-family:'Pretendard',sans-serif;">무료 상담 신청 →</a>
+          <a href="services.html" class="btn-outline-hover" style="display:inline-flex;align-items:center;padding:15px 24px;border-radius:3px;background:transparent;color:#e8ecf4;font-weight:500;font-size:14.5px;font-family:'Pretendard',sans-serif;border:1px solid rgba(255,255,255,.22);text-decoration:none;">서비스 알아보기</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
+    <div style="width:min(1200px,92vw);margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+        <img src="logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
+        <span style="font-weight:700;font-size:17px;color:#fff;">AI-ing <span style="font-weight:300;color:#6b7385;font-size:14px;">에이아잉</span></span>
+      </div>
+      <div style="font-size:13px;font-weight:300;line-height:2;color:#6b7385;max-width:880px;">
+        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 이메일: contact@ai-ing.org<br>
+        사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
+        사업장 주소·연락처·호스팅·서비스 제공 기간 등 상세 내역은 <a href="/business.html" class="hover-cyan" style="color:#8b93a5;text-decoration:underline;">사업자정보</a>에서 확인하실 수 있습니다.
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);">
+        <span style="font-size:13px;font-weight:300;color:#4f5666;">© 2026 에이아잉(AI-ing). All rights reserved.</span>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;">
+          <a href="/privacy.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">개인정보처리방침</a>
+          <a href="/business.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">사업자정보</a>
+          <a href="/terms.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">이용약관</a>
+          <a href="/refund.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">환불정책</a>
+          <a href="/payment.html" class="hover-cyan" style="font-size:13px;color:#8b93a5;text-decoration:none;">결제</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js?v=20260801_cases"></script>
+</body>
+</html>
