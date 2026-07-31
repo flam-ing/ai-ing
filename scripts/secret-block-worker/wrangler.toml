@@ -1,0 +1,20 @@
+name = "ai-ing-secret-block"
+main = "index.js"
+compatibility_date = "2026-01-01"
+workers_dev = false
+
+[[routes]]
+pattern = "ai-ing.org/AI_ING_SECURE_VAULT.md"
+zone_name = "ai-ing.org"
+
+[[routes]]
+pattern = "www.ai-ing.org/AI_ING_SECURE_VAULT.md"
+zone_name = "ai-ing.org"
+
+[[routes]]
+pattern = "ai-ing.org/AI_ING_FULL_SECURE_VAULT.md"
+zone_name = "ai-ing.org"
+
+[[routes]]
+pattern = "www.ai-ing.org/AI_ING_FULL_SECURE_VAULT.md"
+zone_name = "ai-ing.org"
