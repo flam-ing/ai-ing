@@ -23,14 +23,21 @@ jobs:
           pip install requests bcrypt python-dotenv urllib3
 
       - name: Check Egress IP
+        env:
+          FIXED_PROXY_URL: ${{ secrets.FIXED_PROXY_URL }}
         run: |
           echo "🌐 GitHub Action Outbound Public IP:"
-          curl -s https://api.ipify.org
+          if [ -n "$FIXED_PROXY_URL" ]; then
+            curl -s -x "$FIXED_PROXY_URL" https://api.ipify.org
+          else
+            curl -s https://api.ipify.org
+          fi
           echo ""
 
       - name: Run Naver SmartStore Auto Dispatch
         env:
           NAVER_COMMERCE_CLIENT_ID: ${{ secrets.NAVER_COMMERCE_CLIENT_ID || '4rtl3xVaxRa7AijyoYblHy' }}
           NAVER_COMMERCE_CLIENT_SECRET: ${{ secrets.NAVER_COMMERCE_CLIENT_SECRET || '$2a$04$9vw5JqOfFkf8BiVihe9/Ce' }}
+          FIXED_PROXY_URL: ${{ secrets.FIXED_PROXY_URL }}
         run: |
           python naver_smartstore_auto_dispatch.py

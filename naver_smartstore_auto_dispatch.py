@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 네이버 스마트스토어 주문 자동 발주확인 및 직접전달 발송처리 자동화 스크립트
-Naver Commerce API Client (OAuth2 + JWT Bcrypt + DIRECT_DELIVERY)
+Naver Commerce API Client (OAuth2 + JWT Bcrypt + DIRECT_DELIVERY + Fixed Egress Proxy)
 """
 
 import os
@@ -12,7 +12,10 @@ import datetime
 import urllib.parse
 from typing import Dict, Any, List
 import requests
+import urllib3
 import bcrypt
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def load_env():
     env_path = os.path.expanduser("~/.env")
@@ -28,8 +31,19 @@ load_env()
 
 CLIENT_ID = os.environ.get("NAVER_COMMERCE_CLIENT_ID", "")
 CLIENT_SECRET = os.environ.get("NAVER_COMMERCE_CLIENT_SECRET", "")
+FIXED_PROXY_URL = os.environ.get("FIXED_PROXY_URL", "")
 
 API_BASE_URL = "https://api.commerce.naver.com/external"
+
+def get_http_session() -> requests.Session:
+    s = requests.Session()
+    s.verify = False
+    if FIXED_PROXY_URL:
+        s.proxies = {
+            "http": FIXED_PROXY_URL,
+            "https": FIXED_PROXY_URL
+        }
+    return s
 
 def generate_signature(client_id: str, client_secret: str, timestamp: int) -> str:
     """네이버 커머스 API OAuth2 signature 생성 (bcrypt)"""
@@ -52,7 +66,8 @@ def get_access_token(client_id: str, client_secret: str) -> str:
         "type": "SELF"
     }
     
-    res = requests.post(url, headers=headers, data=data, timeout=10)
+    session = get_http_session()
+    res = session.post(url, headers=headers, data=data, timeout=10)
     if not res.ok:
         raise RuntimeError(f"토큰 발급 실패 ({res.status_code}): {res.text}")
     
@@ -68,7 +83,8 @@ def get_last_changed_statuses(token: str, days_back: int = 30) -> List[Dict[str,
     url = f"{API_BASE_URL}/v1/pay-order/seller/product-orders/last-changed-statuses?lastChangedFrom={encoded_time}"
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     
-    res = requests.get(url, headers=headers, timeout=10)
+    session = get_http_session()
+    res = session.get(url, headers=headers, timeout=10)
     if not res.ok:
         print(f"⚠️ 변경 주문 조회 실패 ({res.status_code}): {res.text}")
         return []
@@ -91,7 +107,8 @@ def confirm_orders(token: str, product_order_ids: List[str]) -> bool:
         "Content-Type": "application/json"
     }
     body = {"productOrderIds": product_order_ids}
-    res = requests.post(url, headers=headers, json=body, timeout=10)
+    session = get_http_session()
+    res = session.post(url, headers=headers, json=body, timeout=10)
     if res.ok:
         print(f"✅ 발주 확인 성공: {product_order_ids}")
         return True
@@ -120,7 +137,8 @@ def dispatch_direct_delivery(token: str, product_order_ids: List[str]) -> bool:
         "Content-Type": "application/json"
     }
     body = {"dispatchProductOrders": dispatch_items}
-    res = requests.post(url, headers=headers, json=body, timeout=10)
+    session = get_http_session()
+    res = session.post(url, headers=headers, json=body, timeout=10)
     if res.ok:
         print(f"🚀 직접전달 발송 처리 성공: {product_order_ids}")
         return True
