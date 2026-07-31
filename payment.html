@@ -10,7 +10,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>결제 | AI-ing (에이아잉)</title>
-<meta name="description" content="대기업 개발자 출신 IT 전문가가 설계하는 비즈니스 실전 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.">
+<meta name="description" content="계좌이체, 신용카드·카카오페이 간편결제, 네이버 스마트스토어 — 에이아잉 AX 컨설팅 및 1:1 교육 서비스 결제 안내.">
+<link rel="canonical" href="https://ai-ing.org/payment">
+
+<!-- Open Graph (카카오톡·슬랙·페이스북 공유 카드) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI-ing (에이아잉)">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://ai-ing.org/payment">
+<meta property="og:title" content="결제 | AI-ing (에이아잉)">
+<meta property="og:description" content="계좌이체, 신용카드·카카오페이 간편결제, 네이버 스마트스토어 — 에이아잉 AX 컨설팅 및 1:1 교육 서비스 결제 안내.">
+<meta property="og:image" content="https://ai-ing.org/logo.png">
+<meta property="og:image:width" content="1254">
+<meta property="og:image:height" content="1254">
+<meta property="og:image:alt" content="AI-ing 에이아잉 로고">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="결제 | AI-ing (에이아잉)">
+<meta name="twitter:description" content="계좌이체, 신용카드·카카오페이 간편결제, 네이버 스마트스토어 결제 안내.">
+<meta name="twitter:image" content="https://ai-ing.org/logo.png">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -209,7 +226,27 @@
       <!-- Hidden inputs to track amount and product name -->
       <input type="hidden" id="payment-amount" value="10000">
       <input type="hidden" id="payment-product-name" value="온라인 PDF 교재">
-      
+
+      <!-- 구매자 정보: 영수증 발행·결제 분쟁 대응·현금영수증 발급에 필요하다. -->
+      <div style="text-align:left;border-top:1px solid #e3e5ea;padding-top:20px;margin-bottom:20px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0c0e14;margin:0 0 4px;font-family:'Pretendard',sans-serif;">구매자 정보</h4>
+        <p style="font-size:12.5px;color:#8b93a5;margin:0 0 16px;font-weight:300;">영수증 발행 및 서비스 안내를 위해 필요합니다.</p>
+
+        <label for="payer-name" style="display:block;font-size:13px;font-weight:600;color:#5c6573;margin-bottom:6px;">이름 <span style="color:#e61862;">*</span></label>
+        <input type="text" id="payer-name" autocomplete="name" placeholder="홍길동" style="width:100%;padding:11px 13px;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-family:inherit;margin-bottom:14px;box-sizing:border-box;outline:none;">
+
+        <label for="payer-email" style="display:block;font-size:13px;font-weight:600;color:#5c6573;margin-bottom:6px;">이메일 <span style="color:#e61862;">*</span></label>
+        <input type="email" id="payer-email" autocomplete="email" placeholder="name@example.com" style="width:100%;padding:11px 13px;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-family:inherit;margin-bottom:14px;box-sizing:border-box;outline:none;">
+
+        <label for="payer-phone" style="display:block;font-size:13px;font-weight:600;color:#5c6573;margin-bottom:6px;">휴대폰 번호 <span style="color:#e61862;">*</span></label>
+        <input type="tel" id="payer-phone" autocomplete="tel" placeholder="010-1234-5678" style="width:100%;padding:11px 13px;border:1px solid #e3e5ea;border-radius:4px;font-size:14px;font-family:inherit;margin-bottom:14px;box-sizing:border-box;outline:none;">
+
+        <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:#5c6573;line-height:1.5;cursor:pointer;">
+          <input type="checkbox" id="payer-consent" style="margin-top:2px;width:15px;height:15px;accent-color:#e61862;cursor:pointer;flex-shrink:0;">
+          <span>결제 및 서비스 제공을 위한 개인정보 수집·이용에 동의합니다. (<a href="/privacy.html" target="_blank" rel="noopener noreferrer" style="color:#e61862;">개인정보처리방침</a>)</span>
+        </label>
+      </div>
+
       <button onclick="openPGWindow()" style="width:100%;padding:14px;background:#e61862;color:#fff;border-radius:4px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;font-family:'Pretendard',sans-serif;" class="btn-gradient-hover">결제하기</button>
     </div>
 
@@ -267,7 +304,7 @@
   </div>
 </div>
 
-<script src="main.js?v=20260727_phone_fix"></script>
+<script src="main.js?v=20260731_secfix"></script>
 <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 </body>
 </html>

@@ -792,6 +792,9 @@
     // Get values
     const contactInfo = form.querySelector('#contact-info').value.trim();
     const content = form.querySelector('textarea').value.trim();
+    // 허니팟(봇 차단용). 사람이 채우는 필드가 아니므로 값이 있으면 서버가 스팸으로 처리한다.
+    const honeypotEl = form.querySelector('#company-website');
+    const honeypot = honeypotEl ? honeypotEl.value.trim() : '';
     
     if (!contactInfo || !content) {
       alert("이메일 또는 연락처 정보와 문의 내용을 입력해 주세요.");
@@ -819,6 +822,7 @@
         body: JSON.stringify({
           contact: contactInfo,
           content: content,
+          company_website: honeypot,
         }),
       });
 
@@ -996,6 +1000,12 @@
     return map[String(value)] || "pdf";
   }
 
+  /** 현재 선택된 상품 코드. 서버 카탈로그 조회 키로 사용된다. */
+  function selectedProductCode() {
+    const checked = document.querySelector('input[name="payment-product"]:checked');
+    return checked ? productTypeFromRadioValue(String(checked.value)) : "pdf";
+  }
+
   /** 선택 라디오를 금액/상품명의 단일 소스로 맞춤 */
   function syncAmountFromSelectedProduct() {
     const amountInput = document.getElementById("payment-amount");
@@ -1116,6 +1126,25 @@
     });
   }
 
+  // --- 구매자 정보 (PG 전달용) ---
+  const CUSTOMER_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const CUSTOMER_PHONE_RE = /^01[016789]-?\d{3,4}-?\d{4}$/;
+
+  /** 결제 모달의 구매자 입력값을 읽어 정규화한다. */
+  function readCustomerInfo() {
+    const val = (id) => document.getElementById(id)?.value?.trim() || "";
+    const rawPhone = val("payer-phone").replace(/[^0-9]/g, "");
+    const phoneNumber =
+      rawPhone.length >= 10
+        ? rawPhone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3")
+        : val("payer-phone");
+    return {
+      fullName: val("payer-name"),
+      email: val("payer-email"),
+      phoneNumber
+    };
+  }
+
   window.openPGWindow = async function () {
     // 선택 라디오 값으로 금액 확정 (hidden input 어긋남 / 100원→5만원 버그 방지)
     const amount = syncAmountFromSelectedProduct();
@@ -1124,6 +1153,29 @@
       alert("최소 결제 금액은 100원입니다.");
       return;
     }
+
+    // 구매자 정보 검증. PG에 실제 결제자 정보를 넘겨야 영수증·분쟁 대응이 가능하다.
+    const customer = readCustomerInfo();
+    if (!customer.fullName) {
+      alert("구매자 이름을 입력해 주세요.");
+      document.getElementById("payer-name")?.focus();
+      return;
+    }
+    if (!CUSTOMER_EMAIL_RE.test(customer.email)) {
+      alert("올바른 이메일 주소를 입력해 주세요.");
+      document.getElementById("payer-email")?.focus();
+      return;
+    }
+    if (!CUSTOMER_PHONE_RE.test(customer.phoneNumber)) {
+      alert("올바른 휴대폰 번호를 입력해 주세요. (예: 010-1234-5678)");
+      document.getElementById("payer-phone")?.focus();
+      return;
+    }
+    if (!document.getElementById("payer-consent")?.checked) {
+      alert("개인정보 수집·이용에 동의해 주세요.");
+      return;
+    }
+
     document.getElementById("pg-amount-display").innerText =
       amount.toLocaleString() + "원";
     document.getElementById("payment-step-1").style.display = "none";
@@ -1197,6 +1249,18 @@
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] triggerPortOne amount", amount, method);
 
+    // 구매자 정보 재확인 (모달을 열어둔 채 값이 지워진 경우 방지)
+    const customer = readCustomerInfo();
+    if (
+      !customer.fullName ||
+      !CUSTOMER_EMAIL_RE.test(customer.email) ||
+      !CUSTOMER_PHONE_RE.test(customer.phoneNumber)
+    ) {
+      alert("구매자 정보를 다시 확인해 주세요.");
+      window.cancelPGWindow();
+      return;
+    }
+
     let channelKey = "";
     let payMethod = "EASY_PAY";
     let easyPayProvider = null;
@@ -1254,11 +1318,18 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            // 금액의 최종 기준은 서버 카탈로그다. amount는 표시/검증 대조용으로만 보낸다.
+            productCode: selectedProductCode(),
             amount: amount,
             currency: "KRW",
             itemName: document.getElementById("payment-product-name").value,
             locale: "ko",
-            region: "domestic"
+            region: "domestic",
+            customer: {
+              fullName: customer.fullName,
+              email: customer.email,
+              phoneNumber: customer.phoneNumber
+            }
           })
         }
       );
@@ -1269,18 +1340,24 @@
       }
 
       const orderId = orderData.order.id;
+      // 서버 카탈로그가 확정한 금액/상품명을 그대로 사용한다.
+      // (KRW는 최소단위가 원이므로 order.amount를 그대로 쓸 수 있다.)
+      const confirmedAmount = Number(orderData.order.amount) || amount;
+      const confirmedItemName =
+        orderData.order.itemName ||
+        document.getElementById("payment-product-name").value;
 
       const paymentParams = {
         storeId: AI_ING_PAYMENT.storeId,
         paymentId: orderId,
-        orderName: document.getElementById("payment-product-name").value,
-        totalAmount: amount,
+        orderName: confirmedItemName,
+        totalAmount: confirmedAmount,
         currency: "CURRENCY_KRW",
         payMethod: payMethod,
         customer: {
-          fullName: "에이아잉 고객",
-          email: "customer@ai-ing.org",
-          phoneNumber: "010-0000-0000"
+          fullName: customer.fullName,
+          email: customer.email,
+          phoneNumber: customer.phoneNumber
         }
       };
 
@@ -1328,7 +1405,18 @@
         }
       );
 
-      const logData = await logResponse.json();
+      const logData = await logResponse.json().catch(() => ({ ok: false }));
+
+      // 서버 검증 실패(402) 시 "결제완료"로 단정하지 않는다.
+      if (logResponse.status === 402) {
+        alert(
+          "결제 승인 내역을 서버에서 확인하지 못했습니다.\n" +
+            "중복 결제를 막기 위해 다시 시도하지 마시고, contact@ai-ing.org 로 문의해 주세요.\n" +
+            "결제 ID: " +
+            orderId
+        );
+        return;
+      }
       if (!logData.ok) {
         console.error(
           "Warning: Failed to log transaction state to Turso DB:",
@@ -1336,7 +1424,7 @@
         );
       }
 
-      const formatted = amount.toLocaleString() + "원";
+      const formatted = confirmedAmount.toLocaleString() + "원";
       document.getElementById("receipt-amount").innerText = formatted;
       document.getElementById("receipt-method").innerText = methodNameKr;
       if (document.getElementById("receipt-txid")) {

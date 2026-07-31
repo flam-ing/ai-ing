@@ -1,9 +1,11 @@
-# Short URLs for slide decks redirecting to the protected /slides/ folder
-/web          /slides/lecture-slides.html         301
-/ai-browser   /slides/ai-browser-slides.html      301
-/sls          /slides/sls-ppt/index.html          301
-/ai-agents    /slides/ai-agents-slides/index.html 301
-/entry        /slides/entry-poop-slides.html      301
-/portfolio    /slides/portfolio-slides.html       301
-/frontend     /slides/frontend-slides.html        301
-
+# 강의·발표 자료 단축 URL
+# 슬라이드는 별도 Cloudflare Pages 프로젝트(slides-ai-ing)로 배포되어
+# https://slides.ai-ing.org 에서 서비스된다. ai-ing 배포에는 /slides/ 디렉터리가 없으므로
+# 반드시 절대 URL로 리다이렉트해야 한다. (과거 /slides/... 상대경로는 홈으로 폴백되어 링크가 죽었음)
+/web          https://slides.ai-ing.org/lecture-slides.html          301
+/ai-browser   https://slides.ai-ing.org/ai-browser-slides.html       301
+/sls          https://slides.ai-ing.org/sls-ppt/index.html           301
+/ai-agents    https://slides.ai-ing.org/ai-agents-slides/index.html  301
+/entry        https://slides.ai-ing.org/entry-poop-slides.html        301
+/portfolio    https://slides.ai-ing.org/portfolio-slides.html        301
+/frontend     https://slides.ai-ing.org/frontend-slides.html         301

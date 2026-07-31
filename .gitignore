@@ -38,8 +38,17 @@ dist/
 
 # Custom Agent Skills
 # Local Secret Vaults
+# 실수로 배포 디렉터리에 두면 https://ai-ing.org/<파일명> 으로 그대로 공개된다.
+# 시크릿은 반드시 ~/.ai-ing-private/ 또는 1Password 등 레포 밖에 보관할 것.
 AI_ING_SECURE_VAULT.md
 *_vault.md
+*secret*.md
+*SECURE*.md
+
+# 로컬 작업물 — 배포 대상이 아니다 (과거 로컬 wrangler 배포로 공개 노출된 이력 있음)
+drafts/
+models/
+js/mingo-scroll.js
 
 # Local backend service code
 payment-backend/

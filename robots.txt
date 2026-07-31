@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /api/
 
 Sitemap: https://ai-ing.org/sitemap.xml

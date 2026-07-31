@@ -10,7 +10,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>무료 상담 신청 | AI-ing (에이아잉)</title>
-<meta name="description" content="대기업 개발자 출신 IT 전문가가 설계하는 비즈니스 실전 AX 도입 컨설팅, 1:1 맞춤형 개발 과외, 그리고 실전 코딩 교육.">
+<meta name="description" content="AI 도입·업무 자동화 무료 상담 신청. 연락처와 문의 내용을 남겨주시면 24시간 이내에 회신드립니다.">
+<link rel="canonical" href="https://ai-ing.org/contact">
+
+<!-- Open Graph (카카오톡·슬랙·페이스북 공유 카드) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI-ing (에이아잉)">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://ai-ing.org/contact">
+<meta property="og:title" content="무료 상담 신청 | AI-ing (에이아잉)">
+<meta property="og:description" content="AI 도입·업무 자동화 무료 상담 신청. 연락처와 문의 내용을 남겨주시면 24시간 이내에 회신드립니다.">
+<meta property="og:image" content="https://ai-ing.org/logo.png">
+<meta property="og:image:width" content="1254">
+<meta property="og:image:height" content="1254">
+<meta property="og:image:alt" content="AI-ing 에이아잉 로고">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="무료 상담 신청 | AI-ing (에이아잉)">
+<meta name="twitter:description" content="AI 도입·업무 자동화 무료 상담 신청. 24시간 이내에 회신드립니다.">
+<meta name="twitter:image" content="https://ai-ing.org/logo.png">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +45,7 @@
     <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
       <a href="index.html" class="brand-link" style="display:flex;align-items:center;gap:11px;text-decoration:none;white-space:nowrap;">
         <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
-        <span style="font-family:'GmarketSans',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
+        <span style="font-family:'Pretendard',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
       </a>
       <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
         <a href="services.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
@@ -42,8 +59,8 @@
 <section id="contact" class="tab-content-section active" style="position:relative;background:#07080d;padding:clamp(80px,9vw,130px) 0;color:#fff;overflow:hidden;scroll-margin-top:64px;">
     <div style="width:min(820px,92vw);margin:0 auto;">
       <div data-reveal="up" style="text-align:center;margin-bottom:36px;">
-        <h2 style="font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.2;font-family:'GmarketSans',sans-serif;">Contact</h2>
-        <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.7;margin-top:16px;font-family:'GmarketSans',sans-serif;">
+        <h2 style="font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.2;font-family:'Pretendard',sans-serif;">Contact</h2>
+        <p style="color:rgba(255,255,255,0.7);font-size:15px;line-height:1.7;margin-top:16px;font-family:'Pretendard',sans-serif;">
           직접 연락처 또는 이메일로 문의(010-7646-3634 / <a href="mailto:contact@ai-ing.org" style="color:#e61862;text-decoration:none;">contact@ai-ing.org</a>)주시거나,<br>아래에 정보를 남겨주시면 24시간 이내에 회신드리겠습니다.
         </p>
       </div>
@@ -77,6 +94,11 @@
       <div class="contact-container">
 <!-- Form Container -->
       <form id="contact-form" onsubmit="handleFormSubmit(event)" data-reveal="up" data-delay="100" style="border-radius:3px;background:#0d0f17;border:1px solid rgba(255,255,255,.1);padding:clamp(26px,4vw,42px);">
+        <!-- 허니팟: 실제 사용자에게는 보이지 않는 필드. 봇이 채우면 서버가 스팸으로 처리한다. -->
+        <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+          <label for="company-website">Company website</label>
+          <input type="text" id="company-website" name="company_website" tabindex="-1" autocomplete="off">
+        </div>
         <div style="margin-bottom:20px;">
           <label style="display:block;font-size:13.5px;font-weight:500;color:#c7cdda;margin-bottom:8px;">이메일 또는 연락처 <span style="color:#e61862;">*</span></label>
           <input required type="text" id="contact-info" placeholder="name@example.com 또는 010-0000-0000" class="input-focus-cyan" style="width:100%;padding:14px 16px;border-radius:2px;background:#07080d;border:1px solid rgba(255,255,255,.14);color:#fff;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s;">
@@ -124,6 +146,6 @@
 
 </div>
 
-<script src="main.js"></script>
+<script src="main.js?v=20260731_secfix"></script>
 </body>
 </html>
