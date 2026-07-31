@@ -15,9 +15,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # `pages deploy .` 는 디렉터리의 모든 파일을 업로드한다.
+      # git archive 로 커밋된 파일만(.gitattributes export-ignore 적용) 추출해
+      # 시크릿·내부 스크립트가 배포에 섞이지 않도록 한다.
+      - name: Build clean deploy directory
+        run: |
+          mkdir -p dist
+          git archive HEAD | tar -x -C dist
+          echo "배포 대상 파일 수: $(find dist -type f | wc -l)"
+          if find dist -type f \( -iname "*vault*" -o -iname "*secret*" -o -name ".env*" -o -name ".dev.vars" \) | grep -q .; then
+            echo "::error::배포 대상에 시크릿 의심 파일이 포함되어 있습니다."
+            find dist -type f \( -iname "*vault*" -o -iname "*secret*" -o -name ".env*" -o -name ".dev.vars" \)
+            exit 1
+          fi
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=ai-ing --branch=main
+          command: pages deploy dist --project-name=ai-ing --branch=main

@@ -1,0 +1,16 @@
+# git archive(=배포 산출물)에서 제외할 파일.
+# scripts/deploy.sh 와 GitHub Actions 배포가 모두 git archive 를 쓰므로
+# 여기에 적힌 항목은 https://ai-ing.org/ 로 공개되지 않는다.
+#
+# 이전에는 내부 자동화 스크립트와 설정 파일이 그대로 공개 다운로드 가능했다.
+.gitattributes            export-ignore
+.gitignore                export-ignore
+.github/                  export-ignore
+scripts/                  export-ignore
+README.md                 export-ignore
+drafts/                   export-ignore
+models/                   export-ignore
+
+# 내부 운영 자동화 스크립트 — 웹으로 서비스할 필요가 없다.
+hometax_cash_receipt_issuer.py    export-ignore
+naver_smartstore_auto_dispatch.py export-ignore
