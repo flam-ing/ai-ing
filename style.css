@@ -921,7 +921,6 @@ right: 0;
 display: flex;
     width: max-content;
     gap: 0;
-    --marquee-distance: 0px;
     --tech-gap: 54px;
     animation: tech-scroll 20s linear infinite;
     will-change: transform;
@@ -2553,69 +2552,8 @@ grid-template-columns: 1fr;
     .hs-label {
       font-size: 10.5px !important;
     }
-    .hero-marquee {
-      height: 38px !important;
-      padding: 0 !important;
-      display: flex !important;
-      align-items: center !important;
-      bottom: 0 !important;
-      position: absolute !important;
-    }
-    .hero-marquee-track span {
-      font-size: 13.5px !important;
-      line-height: 38px !important;
-    }
-    .hero-marquee-track i {
-      font-size: 8px !important;
-      margin: 0 8px !important;
-    }
   }
 
-  .hero-marquee {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 3;
-    overflow: hidden;
-    padding: 15px 0;
-    border-top: 1px solid rgba(255,255,255,.08);
-    background: rgba(7,8,13,.45);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  }
-  .hero-marquee-track {
-    display: flex;
-    width: max-content;
-    animation: aiingMarquee 30s linear infinite;
-  }
-  .hm-group {
-    display: flex;
-    align-items: center;
-    gap: 34px;
-    padding-right: 34px;
-  }
-  .hero-marquee span {
-    font-family: 'Pretendard', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.55);
-    white-space: nowrap;
-  }
-  .hero-marquee span.o {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(230,24,98,.8);
-  }
-  .hero-marquee i {
-    font-style: normal;
-    font-size: 11px;
-    color: #e61862;
-    animation: aiingPulse 2.2s ease-in-out infinite;
-  }
   @keyframes aiingMarquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
