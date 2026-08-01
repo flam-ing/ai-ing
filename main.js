@@ -123,7 +123,7 @@
     update();
   }
 
-  // 메일 주고받기 시뮬레이션 (습니다체 · 자동화 QnA 예시)
+  // 메일 주고받기 시뮬레이션 (1회만 · 스크롤 가능 · 습니다체)
   function setupAIChatSim() {
     const body = document.getElementById('mail-thread-body');
     const root = document.getElementById('mail-thread');
@@ -134,33 +134,34 @@
         who: 'in',
         from: '문의자',
         to: 'contact@ai-ing.org',
-        subject: '자동화 구축 방법이 궁금합니다',
-        body: '안녕하세요.\n반복 업무를 자동화하고 싶은데, 설계·구축을 어떤 순서로 보면 될지 궁금합니다.\n감사합니다.'
+        subject: '반복 업무 자동화가 궁금합니다',
+        body: '안녕하세요.\n반복 업무를 자동화하고 싶은데, 어떻게 시작하면 될지 궁금합니다.\n감사합니다.'
       },
       {
         who: 'out',
         from: 'AI-ing',
         to: '문의자',
-        subject: 'Re: 자동화 구축 방법이 궁금합니다',
-        body: '안녕하세요. 에이아잉입니다.\n설계·구축 방법 등 QnA는 평생 무료로 안내드립니다.\n자동화하고 싶은 업무 한 가지만 알려주시면, 단계별로 정리해 드리겠습니다.'
+        subject: 'Re: 반복 업무 자동화가 궁금합니다',
+        body: '안녕하세요. 에이아잉입니다.\n설계·구축 방법 등 QnA는 평생 무료로 안내드립니다.\n첨부해 드리는 안내를 보신 뒤, 원하시는 구독제와 에이전트를 골라 주시면 됩니다.\n초기 설치를 진행해 주시고, 필요하시면 해당 클라우드에서 API 연결까지 하시거나, 맥 미니와 같은 워크스페이스를 사서 설치해 주시면 됩니다.\n진행 중 막히는 부분이 있으면 메일로 이어서 물어 주시면 됩니다.'
       },
       {
         who: 'in',
         from: '문의자',
         to: 'contact@ai-ing.org',
-        subject: 'Re: 자동화 구축 방법이 궁금합니다',
-        body: '노션 정리와 파일 분류를 자동으로 해 보려 했는데, 설치가 어렵고 잘 되지 않습니다.\n직접 화면을 보며 설명을 듣고 싶습니다.'
+        subject: 'Re: 반복 업무 자동화가 궁금합니다',
+        body: '안내 감사합니다.\n설치와 연결 과정에서 막히면 다시 여쭙겠습니다.'
       },
       {
         who: 'out',
         from: 'AI-ing',
         to: '문의자',
-        subject: 'Re: 자동화 구축 방법이 궁금합니다',
-        body: '알겠습니다. 일정을 잡아 드리겠습니다.\n방문·밋업처럼 시간을 쓰는 서비스는, 서비스 당일 직후에 사이트 결제 페이지에서 결제 요청드리겠습니다.'
+        subject: 'Re: 반복 업무 자동화가 궁금합니다',
+        body: '네, 편하게 남겨 주세요.\n방문·밋업·화상회의처럼 제 시간을 쓰는 서비스는 결제 페이지에서 요청드리겠습니다.'
       }
     ];
 
     let i = 0;
+    let played = false;
     let timers = [];
     const after = (ms, fn) => {
       const t = setTimeout(fn, ms);
@@ -195,38 +196,32 @@
         bodyEl.appendChild(p);
       });
       body.appendChild(el);
+      // 새 메일 보일 때 아래로 스크롤 (영역 자체는 수동 스크롤 가능)
       body.scrollTop = body.scrollHeight;
       requestAnimationFrame(() => el.classList.add('is-in'));
     }
 
     function run() {
-      if (i >= mails.length) {
-        after(3200, () => {
-          body.innerHTML = '';
-          i = 0;
-          run();
-        });
-        return;
-      }
+      if (i >= mails.length) return; // 1회만, 반복 없음
       addMail(mails[i]);
       i += 1;
-      after(i === mails.length ? 2400 : 1600, run);
+      if (i < mails.length) after(1700, run);
     }
 
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) {
+          if (e.isIntersecting && !played) {
+            played = true;
             clear();
             body.innerHTML = '';
             i = 0;
             run();
-          } else {
-            clear();
+            io.unobserve(root);
           }
         });
       },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
     io.observe(root);
   }

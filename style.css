@@ -1746,13 +1746,23 @@ grid-template-columns: 1fr;
   flex-shrink: 0;
 }
 .mail-thread-body {
-  max-height: min(420px, 58vh);
+  max-height: min(480px, 62vh);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 14px 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   scroll-behavior: smooth;
+  touch-action: pan-y;
+}
+.mail-thread-body::-webkit-scrollbar {
+  width: 6px;
+}
+.mail-thread-body::-webkit-scrollbar-thumb {
+  background: rgba(140, 130, 255, 0.35);
+  border-radius: 4px;
 }
 .mail-card {
   border-radius: 10px;
