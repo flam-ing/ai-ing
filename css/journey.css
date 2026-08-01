@@ -307,9 +307,11 @@
   opacity:1;
   visibility:visible;
 }
-/* overview 스크롤 유도: └ 를 45° 기울여 ↓ 화살 (style.css rotate/translate 덮어씀) */
+/* 스크롤 유도(개요·서비스 공통): └ 를 45° 기울여 ↓ 화살 */
 .ax-overview-stage .scroll-cue,
-.ax-overview-stage #overview-scroll-hint{
+.ax-overview-stage #overview-scroll-hint,
+.ax-journey-stage .scroll-cue,
+.ax-journey-stage #scroll-hint{
   position:absolute !important;
   left:50% !important;
   bottom:clamp(32px,6.5vh,52px) !important;
@@ -335,7 +337,11 @@
   transition:opacity .35s ease,visibility .35s ease !important;
 }
 .ax-overview-stage .scroll-cue.hide,
-.ax-overview-stage #overview-scroll-hint.hide{
+.ax-overview-stage #overview-scroll-hint.hide,
+.ax-journey-stage .scroll-cue.hide,
+.ax-journey-stage #scroll-hint.hide,
+.ax-journey-stage .scroll-cue.is-hide,
+.ax-journey-stage #scroll-hint.is-hide{
   opacity:0 !important;
   visibility:hidden !important;
   animation:none !important;

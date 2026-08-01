@@ -39,13 +39,13 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  // 한 번의 스크롤 제스처 = 1단계 (관성 스킵 방지) / 홀드 없이 바로 다음 가능
-  var WHEEL_THRESHOLD = mobile ? 40 : 55;
-  var SWIPE_PX = mobile ? 36 : 44;
-  var SLOW_RATE = 0.75;
-  var TRANS_MS = 560;
-  /** 휠이 잠깐 멈춘 뒤에만 다음 단계 — 관성 1→3 방지, 의도적 스크롤은 즉시 */
-  var GESTURE_IDLE_MS = mobile ? 160 : 180;
+  // 한 번의 스크롤 제스처 = 1단계. 고정 쿨다운(리셋 없음)으로 2번에서 안 넘어가던 문제 해결
+  var WHEEL_THRESHOLD = mobile ? 36 : 48;
+  var SWIPE_PX = mobile ? 34 : 42;
+  var SLOW_RATE = 0.78;
+  var TRANS_MS = 420;
+  /** 단계 전환 후 고정 쿨다운 — 휠이 계속 와도 타이머를 늘리지 않음 */
+  var STEP_COOLDOWN_MS = mobile ? 260 : 300;
 
   var step = -1;
   var locked = false;
@@ -59,9 +59,10 @@
   var slowRaf = 0;
   var timeUpdateHandler = null;
   var holdTimer = null;
-  /** true면 스크롤 관성 끝날 때까지 추가 step 금지 */
+  /** true면 쿨다운 중 — 추가 step 금지 (타이머 리셋 없음) */
   var gestureGate = false;
-  var gestureIdleTimer = null;
+  var gateTimer = null;
+  var gateUntil = 0;
   var touchY0 = 0;
   var touchOn = false;
   var lastStepDir = 0;
@@ -79,28 +80,32 @@
       holdTimer = null;
     }
   }
-  /** 단계 1회 소비 후 — 사용자가 스크롤을 멈출 때까지 gate (강제 홀드 없음) */
+  /** 단계 1회 소비 후 고정 쿨다운 (스크롤 중에도 타이머 연장 안 함) */
   function consumeGesture() {
     gestureGate = true;
     wheelAcc = 0;
-    if (gestureIdleTimer) {
-      clearTimeout(gestureIdleTimer);
-      gestureIdleTimer = null;
-    }
-  }
-  /** 휠/터치가 오면 타이머 리셋, 조용해지면 gate 해제 → 바로 다음 스크롤 가능 */
-  function noteGestureActivity() {
-    if (gestureIdleTimer) clearTimeout(gestureIdleTimer);
-    gestureIdleTimer = setTimeout(function () {
+    gateUntil = Date.now() + STEP_COOLDOWN_MS;
+    if (gateTimer) clearTimeout(gateTimer);
+    gateTimer = setTimeout(function () {
       gestureGate = false;
       wheelAcc = 0;
-      gestureIdleTimer = null;
-    }, GESTURE_IDLE_MS);
+      gateTimer = null;
+    }, STEP_COOLDOWN_MS);
+  }
+  function unlockGate() {
+    gestureGate = false;
+    wheelAcc = 0;
+    gateUntil = 0;
+    if (gateTimer) {
+      clearTimeout(gateTimer);
+      gateTimer = null;
+    }
   }
   function canAdvance(dir) {
     if (!locked) return false;
     dir = dir > 0 ? 1 : -1;
-    // 영상 전환 중: 전진만 막고, 위로 스크롤은 전환 끊고 허용
+    if (gestureGate && Date.now() >= gateUntil) unlockGate();
+    // 영상 전환 중: 전진만 막고, 위로는 전환 끊고 허용
     if (busy) {
       if (dir > 0) return false;
       stopSlow();
@@ -112,15 +117,10 @@
       }
       busy = false;
     }
-    // 같은 방향 관성만 게이트 — 반대 방향(위로)은 즉시 허용
+    // 같은 방향 쿨다운만 차단 — 반대 방향(위로) 즉시 허용
     if (gestureGate) {
       if (dir === lastStepDir) return false;
-      gestureGate = false;
-      wheelAcc = 0;
-      if (gestureIdleTimer) {
-        clearTimeout(gestureIdleTimer);
-        gestureIdleTimer = null;
-      }
+      unlockGate();
     }
     return true;
   }
@@ -189,7 +189,10 @@
       vid.currentTime = tOf(STEPS[i].v1) - 0.02;
     } catch (e) {}
     clearHold();
-    if (hint) hint.classList.remove("is-hide");
+    if (hint) {
+      hint.classList.remove("hide", "is-hide");
+      hint.setAttribute("aria-hidden", "false");
+    }
   }
 
   function startSlowInStep(i) {
@@ -455,10 +458,12 @@
     var prev = step;
     step = i;
     showPanel(STEPS[i].panel);
-    if (hint) hint.classList.add("is-hide");
-    // 1회 전환 소비 → 관성으로 연속 step만 막고, 멈춘 뒤엔 바로 다음 가능
+    if (hint) {
+      hint.classList.add("hide", "is-hide");
+      hint.setAttribute("aria-hidden", "true");
+    }
+    // 1회 전환 소비 → 짧은 고정 쿨다운만
     consumeGesture();
-    noteGestureActivity();
 
     if (opts.instant || reduce) {
       stopSlow();
@@ -490,11 +495,7 @@
     setLocked(false);
     stopSlow();
     wheelAcc = 0;
-    gestureGate = false;
-    if (gestureIdleTimer) {
-      clearTimeout(gestureIdleTimer);
-      gestureIdleTimer = null;
-    }
+    unlockGate();
   }
   function releaseDown() {
     forceRelease();
@@ -504,13 +505,16 @@
     forceRelease();
     hideAllPanels();
     step = -1;
-    if (hint) hint.classList.remove("is-hide");
+    if (hint) {
+      hint.classList.remove("hide", "is-hide");
+      hint.setAttribute("aria-hidden", "false");
+    }
     if (pinST) window.scrollTo(0, Math.max(0, pinST.start - 8));
   }
 
   // 네비/단독 페이지 → 스테이지 pin 진입 (리셋 후 스크롤 꼬임 방지)
   window.__axJourneyEnter = function () {
-    if (hint) hint.classList.remove("is-hide");
+    if (hint) hint.classList.remove("hide", "is-hide"); if (hint) hint.setAttribute("aria-hidden", "false");
     if (pinST) {
       window.scrollTo(0, pinST.start + 1);
       setTimeout(function () {
@@ -531,11 +535,10 @@
     lastStepDir = dir;
     if (dir > 0) {
       if (step < STEPS.length - 1) {
-        goToStep(step + 1); // goToStep이 consumeGesture
+        goToStep(step + 1);
         return true;
       }
       consumeGesture();
-      noteGestureActivity();
       releaseDown();
       return true;
     }
@@ -544,7 +547,6 @@
       return true;
     }
     consumeGesture();
-    noteGestureActivity();
     releaseUp();
     return true;
   }
@@ -557,25 +559,20 @@
     var dir = e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0;
     if (!dir) return;
 
-    // 반대 방향 스크롤이면 게이트 즉시 해제 (위로 안 먹히던 문제)
+    if (gestureGate && Date.now() >= gateUntil) unlockGate();
+
+    // 반대 방향이면 쿨다운 즉시 해제
     if (gestureGate && lastStepDir && dir !== lastStepDir) {
-      gestureGate = false;
-      wheelAcc = 0;
-      if (gestureIdleTimer) {
-        clearTimeout(gestureIdleTimer);
-        gestureIdleTimer = null;
-      }
+      unlockGate();
     }
 
-    // 같은 방향 관성/전환 중이면 누적만 막고 대기
+    // 같은 방향 쿨다운/전환 중: 타이머 연장하지 않고 무시만
     if (busy && dir > 0) {
       wheelAcc = 0;
-      noteGestureActivity();
       return;
     }
     if (gestureGate && dir === lastStepDir) {
       wheelAcc = 0;
-      noteGestureActivity();
       return;
     }
 
@@ -606,10 +603,7 @@
         : touchY0;
     var dy = touchY0 - y1;
     if (Math.abs(dy) < SWIPE_PX) return;
-    if (!canAdvance(dy > 0 ? 1 : -1)) {
-      noteGestureActivity();
-      return;
-    }
+    if (!canAdvance(dy > 0 ? 1 : -1)) return;
     stepBy(dy > 0 ? 1 : -1);
   }
 
@@ -699,7 +693,10 @@
       stopSlow();
       hideAllPanels();
       step = -1;
-      if (hint) hint.classList.remove("is-hide");
+      if (hint) {
+        hint.classList.remove("hide", "is-hide");
+        hint.setAttribute("aria-hidden", "false");
+      }
     },
   });
 

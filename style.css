@@ -1659,12 +1659,17 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
-/* 대표 · 인사 */
+/* 대표 · 인사 — page-shell 안에서 가운데 정렬 */
+.about-greeting .section-intro {
+  text-align: center;
+}
 .about-greeting-body {
-  max-width: 42em;
+  max-width: 40em;
+  margin: 0 auto;
+  text-align: center;
 }
 .about-greeting-body p {
-  margin: 0 0 1.65em;
+  margin: 0 0 1.7em;
   font-size: clamp(15px, 1.55vw, 16.5px);
   font-weight: 300;
   line-height: 1.95;
@@ -1676,7 +1681,7 @@ grid-template-columns: 1fr;
   margin-bottom: 0;
 }
 .about-greeting-body .about-greeting-lead {
-  margin-bottom: 1.1em;
+  margin-bottom: 1.15em;
   font-size: clamp(1.15rem, 2.2vw, 1.35rem);
   font-weight: 500;
   line-height: 1.5;
