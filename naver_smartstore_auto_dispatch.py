@@ -31,7 +31,6 @@ load_env()
 
 CLIENT_ID = os.environ.get("NAVER_COMMERCE_CLIENT_ID", "4rtl3xVaxRa7AijyoYblHy")
 CLIENT_SECRET = os.environ.get("NAVER_COMMERCE_CLIENT_SECRET", "$2a$04$9vw5JqOfFkf8BiVihe9/Ce")
-# Webshare Static Egress Proxy (Egress IPv4: 38.154.185.97)
 FIXED_PROXY_URL = os.environ.get("FIXED_PROXY_URL", "http://pwrbxevg:ee0kdagkuu3a@38.154.185.97:6370")
 
 API_BASE_URL = "https://api.commerce.naver.com/external"
@@ -75,27 +74,37 @@ def get_access_token(client_id: str, client_secret: str) -> str:
     res_json = res.json()
     return res_json.get("access_token", "")
 
-def get_last_changed_statuses(token: str, days_back: int = 30) -> List[Dict[str, Any]]:
-    """최근 변경된 상품 주문 내역 조회"""
+def get_last_changed_statuses(token: str, days_back: int = 7) -> List[Dict[str, Any]]:
+    """최근 변경된 상품 주문 내역 24시간 청크 단위 조회"""
     now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
-    from_time = (now - datetime.timedelta(days=days_back)).strftime('%Y-%m-%dT%H:%M:%S.000+09:00')
-    encoded_time = urllib.parse.quote(from_time)
-    
-    url = f"{API_BASE_URL}/v1/pay-order/seller/product-orders/last-changed-statuses?lastChangedFrom={encoded_time}"
+    session = get_http_session()
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     
-    session = get_http_session()
-    res = session.get(url, headers=headers, timeout=10)
-    if not res.ok:
-        print(f"⚠️ 변경 주문 조회 실패 ({res.status_code}): {res.text}")
-        return []
+    all_statuses = []
+    seen_ids = set()
     
-    payload = res.json()
-    data = payload.get("data") or payload
-    statuses = data.get("lastChangeStatuses") or data.get("lastChangedStatuses") or []
-    if isinstance(statuses, dict):
-        statuses = statuses.get("elements") or []
-    return list(statuses)
+    for day in range(days_back):
+        start = now - datetime.timedelta(days=day+1)
+        end = now - datetime.timedelta(days=day)
+        
+        from_iso = start.strftime('%Y-%m-%dT%H:%M:%S.000+09:00')
+        to_iso = end.strftime('%Y-%m-%dT%H:%M:%S.000+09:00')
+        
+        url = f"{API_BASE_URL}/v1/pay-order/seller/product-orders/last-changed-statuses?lastChangedFrom={urllib.parse.quote(from_iso)}&lastChangedTo={urllib.parse.quote(to_iso)}"
+        res = session.get(url, headers=headers, timeout=10)
+        if res.ok:
+            payload = res.json()
+            data = payload.get("data") or payload
+            statuses = data.get("lastChangeStatuses") or data.get("lastChangedStatuses") or []
+            if isinstance(statuses, dict):
+                statuses = statuses.get("elements") or []
+            for item in statuses:
+                p_id = item.get("productOrderId")
+                if p_id and p_id not in seen_ids:
+                    seen_ids.add(p_id)
+                    all_statuses.append(item)
+                    
+    return all_statuses
 
 def confirm_orders(token: str, product_order_ids: List[str]) -> bool:
     """발주 확인 처리 (상품 준비 중으로 변경)"""
@@ -141,7 +150,7 @@ def dispatch_direct_delivery(token: str, product_order_ids: List[str]) -> bool:
     session = get_http_session()
     res = session.post(url, headers=headers, json=body, timeout=10)
     if res.ok:
-        print(f"🚀 직접전달 발송 처리 성공: {product_order_ids}")
+        print(f"🚀 직접전달 발송 처리 성공 (배송완료 전환): {product_order_ids}")
         return True
     else:
         print(f"⚠️ 발송 처리 결과 ({res.status_code}): {res.text}")
@@ -161,24 +170,24 @@ def main():
         print(f"❌ 인증 실패: {e}")
         sys.exit(1)
         
-    print("📦 최근 주문 상태 변경 내역 조회 중...")
-    statuses = get_last_changed_statuses(token, days_back=30)
+    print("📦 최근 7일간 주문 상태 변경 내역 조회 중...")
+    statuses = get_last_changed_statuses(token, days_back=7)
     
     payed_ids = [
         item.get("productOrderId")
         for item in statuses
-        if item.get("lastChangedType") in ["PAYED", "PREPARING", "PAY_WAITING"] and item.get("productOrderId")
+        if item.get("lastChangedType") in ["PAYED", "PREPARING", "PAY_WAITING", "DELIVERY_PREPARING"] and item.get("productOrderId")
     ]
     
     if not payed_ids:
         print("🎉 네이버 API 기준 현재 발주/발송 대기 중인 신규 미처리 주문이 없습니다.")
-        print("💡 (이미 처리 완료되었거나 스마트스토어 센터에서 확인 가능한 상태입니다)")
+        print("💡 (이미 배송완료 처리 완료되었거나 스마트스토어 센터에서 확인 가능한 상태입니다)")
         return
         
     print(f"📬 처리 대기 주문 {len(payed_ids)}건 감지: {payed_ids}")
     confirm_orders(token, payed_ids)
     dispatch_direct_delivery(token, payed_ids)
-    print("💯 네이버 스마트스토어 주문 자동 처리가 완료되었습니다!")
+    print("💯 네이버 스마트스토어 주문 자동 발주 및 직접전달(배송완료) 처리가 완료되었습니다!")
 
 if __name__ == "__main__":
     main()
