@@ -637,8 +637,8 @@
     if (!locked) return;
     if (e.target.closest("a, button, input, textarea, select, label, .steps")) return;
     if (Date.now() < clickCool) return;
-    if (busy) return;
-    clickCool = Date.now() + 320;
+    if (busy || inStepHold()) return;
+    clickCool = Date.now() + 420;
     stepBy(1);
   });
 
