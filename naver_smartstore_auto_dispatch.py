@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 네이버 스마트스토어 주문 자동 발주확인 및 직접전달 발송처리 자동화 스크립트
-Naver Commerce API Client (OAuth2 + JWT Bcrypt + DIRECT_DELIVERY + Fixed Egress Proxy)
+Naver Commerce API Client (OAuth2 + JWT Bcrypt + DIRECT_DELIVERY + Webshare Static Egress Proxy)
 """
 
 import os
@@ -29,9 +29,10 @@ def load_env():
 
 load_env()
 
-CLIENT_ID = os.environ.get("NAVER_COMMERCE_CLIENT_ID", "")
-CLIENT_SECRET = os.environ.get("NAVER_COMMERCE_CLIENT_SECRET", "")
-FIXED_PROXY_URL = os.environ.get("FIXED_PROXY_URL", "")
+CLIENT_ID = os.environ.get("NAVER_COMMERCE_CLIENT_ID", "4rtl3xVaxRa7AijyoYblHy")
+CLIENT_SECRET = os.environ.get("NAVER_COMMERCE_CLIENT_SECRET", "$2a$04$9vw5JqOfFkf8BiVihe9/Ce")
+# Webshare Static Egress Proxy (Egress IPv4: 38.154.185.97)
+FIXED_PROXY_URL = os.environ.get("FIXED_PROXY_URL", "http://pwrbxevg:ee0kdagkuu3a@38.154.185.97:6370")
 
 API_BASE_URL = "https://api.commerce.naver.com/external"
 
@@ -151,10 +152,11 @@ def main():
         print("❌ NAVER_COMMERCE_CLIENT_ID 및 NAVER_COMMERCE_CLIENT_SECRET 설정이 필요합니다.")
         sys.exit(1)
         
+    print(f"🌐 Webshare 고정 프록시 연결 중 (Egress IP: 38.154.185.97)...")
     print("🔑 네이버 커머스 API 인증 토큰 발급 중...")
     try:
         token = get_access_token(CLIENT_ID, CLIENT_SECRET)
-        print("✨ 인증 성공! (IP 화이트리스트 정상 동작 중)")
+        print("✨ 인증 성공! (IP 화이트리스트 38.154.185.97 정상 통과 중)")
     except Exception as e:
         print(f"❌ 인증 실패: {e}")
         sys.exit(1)
