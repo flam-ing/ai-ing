@@ -39,19 +39,20 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  // index 시절 감도 복구 + 단계 홀드로 너무 빠른 스킵 방지
-  var WHEEL_THRESHOLD = mobile ? 48 : 68;
-  var SWIPE_PX = mobile ? 40 : 50;
-  var ACC_RESET_MS = 260;
+  // 한 번의 스크롤 제스처 = 정확히 1단계 (관성으로 1→3 스킵 방지)
+  var WHEEL_THRESHOLD = mobile ? 42 : 58;
+  var SWIPE_PX = mobile ? 38 : 46;
   var SLOW_RATE = 0.72;
   var TRANS_MS = 720;
-  var STEP_HOLD_MS = mobile ? 780 : 980;
+  /** 단계 전환 직후 최소 대기 (영상/카피 볼 시간) */
+  var STEP_HOLD_MS = mobile ? 650 : 800;
+  /** 휠/스와이프가 이 시간 동안 안 와야 다음 단계 허용 (= 관성 끝) */
+  var GESTURE_IDLE_MS = mobile ? 280 : 320;
 
   var step = -1;
   var locked = false;
   var busy = false;
   var wheelAcc = 0;
-  var accTimer = null;
   var pinST = null;
   var prepared = false;
   var enterTween = null;
@@ -61,8 +62,12 @@
   var timeUpdateHandler = null;
   var holdTimer = null;
   var holdUntil = 0;
+  /** true면 스크롤 관성 끝날 때까지 추가 step 금지 */
+  var gestureGate = false;
+  var gestureIdleTimer = null;
   var touchY0 = 0;
   var touchOn = false;
+  var lastStepDir = 0;
 
   function clamp(n, a, b) {
     return Math.max(a, Math.min(b, n));
@@ -82,6 +87,31 @@
   }
   function inStepHold() {
     return Date.now() < holdUntil;
+  }
+  /** 단계 1회 소비 후 — 사용자가 스크롤을 멈출 때까지 gate */
+  function consumeGesture() {
+    gestureGate = true;
+    wheelAcc = 0;
+    if (gestureIdleTimer) {
+      clearTimeout(gestureIdleTimer);
+      gestureIdleTimer = null;
+    }
+  }
+  /** 휠/터치가 오면 타이머 리셋, 조용해지면 gate 해제 */
+  function noteGestureActivity() {
+    if (gestureIdleTimer) clearTimeout(gestureIdleTimer);
+    gestureIdleTimer = setTimeout(function () {
+      gestureGate = false;
+      wheelAcc = 0;
+      gestureIdleTimer = null;
+    }, GESTURE_IDLE_MS);
+  }
+  function canAdvance(dir) {
+    if (!locked || busy) return false;
+    // 전진: hold + gate 모두 막음 / 후진: gate만 (hold 중에도 뒤로 가능)
+    if (dir > 0 && inStepHold()) return false;
+    if (gestureGate) return false;
+    return true;
   }
 
   function setupVideo() {
@@ -417,7 +447,10 @@
     step = i;
     showPanel(STEPS[i].panel);
     if (hint) hint.classList.add("is-hide");
+    // 1회 전환 소비 → 관성 스크롤로 연속 step 금지
+    consumeGesture();
     armStepHold(STEP_HOLD_MS);
+    noteGestureActivity();
 
     if (opts.instant || reduce) {
       stopSlow();
@@ -449,6 +482,11 @@
     setLocked(false);
     stopSlow();
     wheelAcc = 0;
+    gestureGate = false;
+    if (gestureIdleTimer) {
+      clearTimeout(gestureIdleTimer);
+      gestureIdleTimer = null;
+    }
   }
   function releaseDown() {
     forceRelease();
@@ -477,39 +515,46 @@
   };
   window.__axJourneyForceRelease = forceRelease;
   function stepBy(dir) {
-    if (!locked || busy) return;
-    // 다음 단계만 홀드 적용 (뒤로 가기는 허용)
-    if (dir > 0 && inStepHold()) {
+    dir = dir > 0 ? 1 : -1;
+    if (!canAdvance(dir)) {
       wheelAcc = 0;
-      return;
+      return false;
     }
+    lastStepDir = dir;
     if (dir > 0) {
-      if (step < STEPS.length - 1) goToStep(step + 1);
-      else releaseDown();
-    } else {
-      if (step > 0) goToStep(step - 1);
-      else releaseUp();
+      if (step < STEPS.length - 1) {
+        goToStep(step + 1); // goToStep이 consumeGesture
+        return true;
+      }
+      consumeGesture();
+      noteGestureActivity();
+      releaseDown();
+      return true;
     }
+    if (step > 0) {
+      goToStep(step - 1);
+      return true;
+    }
+    consumeGesture();
+    noteGestureActivity();
+    releaseUp();
+    return true;
   }
 
   function onWheel(e) {
     if (!locked) return;
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
-    if (busy) {
+
+    // 관성 스크롤이 이어지는 동안은 계속 activity 기록 → gate 유지
+    if (busy || gestureGate || (e.deltaY > 0 && inStepHold())) {
       wheelAcc = 0;
+      noteGestureActivity();
       return;
     }
-    // 홀드 중 전진 스크롤은 무시 (의도 누적 X → 실수로 연속 스킵 방지)
-    if (inStepHold() && e.deltaY > 0) {
-      wheelAcc = 0;
-      return;
-    }
+
     wheelAcc += e.deltaY;
-    if (accTimer) clearTimeout(accTimer);
-    accTimer = setTimeout(function () {
-      wheelAcc = 0;
-    }, ACC_RESET_MS);
+    // 한 틱만 넘김 — 임계 초과해도 ±1
     if (wheelAcc > WHEEL_THRESHOLD) {
       wheelAcc = 0;
       stepBy(1);
@@ -530,13 +575,16 @@
   function onTouchEnd(e) {
     if (!locked || !touchOn) return;
     touchOn = false;
-    if (busy) return;
     var y1 =
       e.changedTouches && e.changedTouches[0]
         ? e.changedTouches[0].clientY
         : touchY0;
     var dy = touchY0 - y1;
     if (Math.abs(dy) < SWIPE_PX) return;
+    if (!canAdvance(dy > 0 ? 1 : -1)) {
+      noteGestureActivity();
+      return;
+    }
     stepBy(dy > 0 ? 1 : -1);
   }
 
@@ -631,14 +679,14 @@
   });
 
 
-  // 화면 클릭/탭으로도 다음 단계
+  // 화면 클릭/탭으로도 다음 단계 (1회만)
   var clickCool = 0;
   journey.addEventListener("click", function (e) {
     if (!locked) return;
     if (e.target.closest("a, button, input, textarea, select, label, .steps")) return;
     if (Date.now() < clickCool) return;
-    if (busy || inStepHold()) return;
-    clickCool = Date.now() + 420;
+    if (!canAdvance(1)) return;
+    clickCool = Date.now() + 500;
     stepBy(1);
   });
 
