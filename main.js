@@ -105,10 +105,17 @@
 
       // Toggle visibility of standard scroll cues
       const scrollY = window.scrollY;
+      // overview/journey 내부 스크롤 유도는 섹션 스크립트가 관리 — 전역 hide 금지
       document.querySelectorAll('.scroll-cue').forEach(cue => {
-        if (cue.id !== 'services-scroll-cue') {
-          cue.classList.toggle('hide', scrollY > 30);
+        if (
+          cue.id === 'services-scroll-cue' ||
+          cue.id === 'overview-scroll-hint' ||
+          cue.closest('#overview') ||
+          cue.closest('#journey')
+        ) {
+          return;
         }
+        cue.classList.toggle('hide', scrollY > 30);
       });
     };
     window.addEventListener('scroll', update, { passive: true });
@@ -341,10 +348,23 @@
     const textItems = Array.from(story.querySelectorAll('.sticky-text-item'));
     const screens = Array.from(story.querySelectorAll('.mockup-screen'));
     const bgImages = Array.from(story.querySelectorAll('.service-bg-img'));
+    const bgVideos = Array.from(story.querySelectorAll('.service-bg-video-el'));
     const urlBar = story.querySelector('#mockup-url');
     if (!desktopLayout || textItems.length === 0) return;
-    
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lastActiveVideoIdx = -1;
     let storyTicking = false;
+
+    // Warm metadata for scroll scrub; keep muted autoplay off until step is active
+    bgVideos.forEach((v) => {
+      try {
+        v.muted = true;
+        v.defaultMuted = true;
+        v.playsInline = true;
+        v.preload = 'metadata';
+      } catch (_) { /* ignore */ }
+    });
 
     // Per-step aurora palette (rgb) + blob positions (%) — interpolated continuously while scrolling
     const palette = [
@@ -592,11 +612,46 @@
         if (dist < 0.35) return 1.0;
         return Math.max(0, 1 - (dist - 0.35) / 0.35);
       };
-      bgImages.forEach((img, i) => { img.style.opacity = (weight(i) * 0.45).toFixed(3); });
+      // Background videos: stronger presence + scale punch on active step (product-page whoosh)
+      bgImages.forEach((img, i) => {
+        const w = weight(i);
+        img.style.opacity = (w * 0.72).toFixed(3);
+        const scale = 1.06 + w * 0.08;
+        img.style.transform = `scale(${scale.toFixed(3)})`;
+      });
       screens.forEach((scr, i) => {
         scr.style.opacity = weight(i).toFixed(3);
         scr.classList.toggle('active', i === activeIdx);
       });
+
+      // Drive service background videos by scroll: pause + scrub currentTime (no free-run play)
+      // local is roughly 0..2.5; step i centers around i+0.5, so map each step's local window to 0..1
+      if (!reduceMotion && bgVideos.length) {
+        bgVideos.forEach((v, i) => {
+          const w = weight(i);
+          if (w < 0.05) {
+            if (!v.paused) {
+              try { v.pause(); } catch (_) { /* ignore */ }
+            }
+            return;
+          }
+          if (!v.paused) {
+            try { v.pause(); } catch (_) { /* ignore */ }
+          }
+          // Within-step progress 0..1 (before hold tail maps local up to 2.5)
+          const stepLocal = Math.min(1, Math.max(0, local - i));
+          if (v.readyState >= 1 && Number.isFinite(v.duration) && v.duration > 0) {
+            const targetT = stepLocal * Math.max(0.05, v.duration - 0.05);
+            if (Math.abs((v.currentTime || 0) - targetT) > 0.08) {
+              try { v.currentTime = targetT; } catch (_) { /* ignore seek race */ }
+            }
+          } else if (v.readyState < 1) {
+            // kick metadata load once when the step becomes visible
+            try { v.load(); } catch (_) { /* ignore */ }
+          }
+        });
+        if (activeIdx !== lastActiveVideoIdx) lastActiveVideoIdx = activeIdx;
+      }
 
       // Morphing aurora — lerp colors + blob positions between this step and the next
       if (aurora) {

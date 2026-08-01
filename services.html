@@ -74,9 +74,43 @@
         <span class="aurora-blob blob-b"></span>
         <span class="aurora-blob blob-c"></span>
       </div>
-      <div class="service-bg-img" data-bg="1" style="background-image:url('img/story-1.jpg');"></div>
-      <div class="service-bg-img" data-bg="2" style="background-image:url('img/service-coding.jpg');"></div>
-      <div class="service-bg-img" data-bg="3" style="background-image:url('img/story-3.jpg');"></div>
+      <!-- Service-specific background videos (scroll crossfade + light scrub) -->
+      <div class="service-bg-img service-bg-video" data-bg="1">
+        <video
+          class="service-bg-video-el"
+          data-step="0"
+          src="video/service-b2b.mp4"
+          muted
+          playsinline
+          preload="metadata"
+          poster="img/service-b2b.jpg"
+          aria-hidden="true"
+        ></video>
+      </div>
+      <div class="service-bg-img service-bg-video" data-bg="2">
+        <video
+          class="service-bg-video-el"
+          data-step="1"
+          src="video/service-1on1.mp4"
+          muted
+          playsinline
+          preload="metadata"
+          poster="img/service-1on1.jpg"
+          aria-hidden="true"
+        ></video>
+      </div>
+      <div class="service-bg-img service-bg-video" data-bg="3">
+        <video
+          class="service-bg-video-el"
+          data-step="2"
+          src="video/service-edu.mp4"
+          muted
+          playsinline
+          preload="metadata"
+          poster="img/service-edu.jpg"
+          aria-hidden="true"
+        ></video>
+      </div>
       <canvas id="services-dots-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:0.95;"></canvas>
     </div>
 
@@ -162,6 +196,6 @@
 
 </div>
 
-<script src="main.js?v=20260731_secfix"></script>
+<script src="main.js?v=20260801_whoosh"></script>
 </body>
 </html>

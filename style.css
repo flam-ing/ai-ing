@@ -1576,17 +1576,50 @@ grid-template-columns: 1fr;
   background: radial-gradient(circle, var(--c3, #06b6d4) 0%, transparent 66%);
 }
 
-/* Photo layer — opacity lerped by JS; shares the liquid-morph filter so it melts on transition */
+/* Photo/video layer — opacity lerped by JS; shares the liquid-morph filter so it melts on transition */
 .service-bg-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   opacity: 0;
-  filter: url(#liquid-morph) grayscale(1) brightness(0.6) contrast(1.05); /* desaturated, translucent backdrop */
+  filter: url(#liquid-morph) grayscale(0.55) brightness(0.55) contrast(1.08);
   transform: scale(1.08);
   will-change: opacity, transform;
   z-index: 0;
+  overflow: hidden;
+}
+.service-bg-img.service-bg-video {
+  background-image: none;
+}
+.service-bg-video-el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-bg-video-el {
+    /* keep poster frame only — JS also pauses scrub */
+    visibility: hidden;
+  }
+  .service-bg-img.service-bg-video {
+    background-size: cover;
+    background-position: center;
+  }
+  .service-bg-img[data-bg="1"].service-bg-video {
+    background-image: url('img/service-b2b.jpg');
+  }
+  .service-bg-img[data-bg="2"].service-bg-video {
+    background-image: url('img/service-1on1.jpg');
+  }
+  .service-bg-img[data-bg="3"].service-bg-video {
+    background-image: url('img/service-edu.jpg');
+  }
 }
 
 .services-container {
@@ -1721,18 +1754,21 @@ grid-template-columns: 1fr;
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateY(-50%) translateY(30px);
+  transform: translateY(-50%) translateY(48px) scale(0.96);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* snappier product-page entrance (whoosh) */
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  will-change: opacity, transform;
 }
 .sticky-text-item.active {
   opacity: 1;
-  transform: translateY(-50%) translateY(0);
+  transform: translateY(-50%) translateY(0) scale(1);
   pointer-events: auto;
 }
 

@@ -1,0 +1,208 @@
+/* ---------- AX Manifesto: hero → 글귀 서사 → agent world → journey ---------- */
+.ax-manifesto{
+  position:relative;
+  height:100vh;
+  background:#000;
+  color:#eef1f6;
+}
+.ax-manifesto-stage{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+  transition:background .9s cubic-bezier(.16,1,.3,1);
+}
+.ax-manifesto.is-bright .ax-manifesto-stage{
+  background:#0a0c12;
+}
+.ax-manifesto-stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(70% 55% at 50% 48%,rgba(140,130,255,.08),transparent 68%),
+    radial-gradient(90% 80% at 50% 100%,rgba(230,24,98,.06),transparent 55%);
+  opacity:0;
+  transition:opacity .9s ease;
+}
+.ax-manifesto.is-bright .ax-manifesto-stage::after{opacity:1}
+
+.ax-manifesto-lines{
+  position:relative;
+  z-index:2;
+  width:min(920px,90vw);
+  min-height:8em;
+  text-align:center;
+}
+.mf-line{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:100%;
+  margin:0;
+  transform:translate(-50%,-50%);
+  font-family:"Pretendard Variable",Pretendard,"Noto Sans KR",sans-serif;
+  font-size:clamp(1.15rem,2.8vw,2.05rem);
+  font-weight:300;
+  line-height:1.65;
+  letter-spacing:-.02em;
+  word-break:keep-all;
+  color:rgba(255,255,255,.92);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  will-change:opacity,transform,filter;
+}
+.mf-line.is-on{
+  visibility:visible;
+  pointer-events:auto;
+}
+.mf-line em,
+.mf-line .mf-em{
+  font-style:italic;
+  font-weight:400;
+  color:#fff;
+}
+.mf-line .mf-accent{
+  color:#c4bfff;
+  font-weight:500;
+}
+.mf-hint{
+  position:absolute;
+  bottom:clamp(28px,5vh,48px);
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  font-size:10px;
+  letter-spacing:.38em;
+  text-transform:uppercase;
+  color:rgba(125,155,196,.55);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+.mf-hint i{
+  display:block;
+  width:1px;
+  height:36px;
+  background:linear-gradient(rgba(125,155,196,.7),transparent);
+  animation:mfHintPulse 2.1s cubic-bezier(.16,1,.3,1) infinite;
+}
+@keyframes mfHintPulse{
+  0%,100%{opacity:.25;transform:scaleY(.55)}
+  50%{opacity:1;transform:scaleY(1)}
+}
+.mf-hint.is-hide{opacity:0}
+
+@media(prefers-reduced-motion:reduce){
+  .mf-hint i{animation:none}
+  .mf-line{position:relative;left:auto;top:auto;transform:none;opacity:1;visibility:visible;margin:1.2em 0}
+  .ax-manifesto{height:auto}
+  .ax-manifesto-stage{position:relative;height:auto;min-height:100vh;padding:20vh 0;display:block}
+  .ax-manifesto-lines{min-height:0}
+}
+
+/* ---------- Agent world demos (scroll-scrub video bg) ---------- */
+.ax-agent-world{
+  position:relative;
+  background:#05060a;
+}
+.ax-agent-pin{
+  /* 스크롤 길이: 앞·뒤 정상 + 중간 슬로우 홀드 */
+  position:relative;
+  height:240vh;
+}
+.ax-agent-stage{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+  background:#05060a;
+}
+.ax-agent-vid{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#05060a;
+  filter:saturate(1.05) contrast(1.04) brightness(.72);
+  transform-origin:50% 45%;
+  will-change:transform,opacity;
+}
+.ax-agent-scrim{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(to top,rgba(5,6,10,.72) 0%,rgba(5,6,10,.28) 42%,rgba(5,6,10,.35) 100%),
+    radial-gradient(80% 70% at 50% 40%,transparent 30%,rgba(5,6,10,.45) 100%);
+}
+.ax-agent-ui{
+  position:relative;
+  z-index:3;
+  height:100%;
+  max-width:1180px;
+  margin:0 auto;
+  padding:clamp(100px,14vh,140px) clamp(20px,5vw,56px) clamp(48px,8vh,80px);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:clamp(14px,2.4vh,22px);
+}
+.ax-agent-quote{
+  max-width:min(38ch,720px);
+  font-family:Georgia,"Times New Roman",serif;
+  font-style:italic;
+  font-size:clamp(1.15rem,2.4vw,1.85rem);
+  font-weight:400;
+  line-height:1.55;
+  letter-spacing:-.01em;
+  color:rgba(255,255,255,.94);
+  word-break:keep-all;
+  text-shadow:0 2px 28px rgba(0,0,0,.45);
+  margin:0;
+}
+.ax-agent-title{
+  margin:0;
+  font-family:"Pretendard Variable",Pretendard,sans-serif;
+  font-size:clamp(.78rem,1.1vw,.95rem);
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#8c82ff;
+}
+.ax-agent-title span{
+  display:block;
+  margin-top:6px;
+  font-size:clamp(1.05rem,1.8vw,1.35rem);
+  letter-spacing:-.02em;
+  text-transform:none;
+  color:#fff;
+  font-weight:500;
+}
+.ax-agent-placeholder{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(ellipse at 40% 40%,rgba(140,130,255,.12),transparent 55%),
+    radial-gradient(ellipse at 70% 60%,rgba(230,24,98,.08),transparent 50%),
+    #0a0b10;
+  color:rgba(255,255,255,.28);
+  font-size:13px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  z-index:1;
+}
+.ax-agent-stage.has-video .ax-agent-placeholder{display:none}
