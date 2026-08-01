@@ -1659,14 +1659,14 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
-/* 대표 · 인사 — page-shell 안에서 가운데 정렬 */
+/* 대표 · 인사 — 왼쪽 정렬 */
 .about-greeting .section-intro {
-  text-align: center;
+  text-align: left;
 }
 .about-greeting-body {
-  max-width: 40em;
-  margin: 0 auto;
-  text-align: center;
+  max-width: 42em;
+  margin: 0;
+  text-align: left;
 }
 .about-greeting-body p {
   margin: 0 0 1.7em;
