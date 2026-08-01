@@ -358,14 +358,15 @@
   font-weight:500;
 }
 
-/* ---------- 에이전트 카드 레이아웃
- * 1 좌상단  2 우중앙  3 하단 가로
- * 스크롤마다 하나씩 등장 (이전 카드 유지)
+/* ---------- 에이전트 카드: 한 장씩 화면 중앙 (PC/모바일 동일)
+ * 스크롤·클릭·스와이프로 1→2→3 교체 (겹침/간격 문제 제거)
  */
 .ax-cards{
   position:absolute;inset:0;z-index:5;
-  /* 카드 3장이 겹치되 간격 일정하게 보이도록 패딩 압축 */
-  padding:clamp(76px,10vh,100px) clamp(18px,3.5vw,36px) clamp(52px,7vh,72px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(72px,10vh,96px) clamp(16px,3.5vw,36px) clamp(56px,8vh,80px);
   opacity:0;visibility:hidden;
   pointer-events:none;
   transition:opacity .4s ease,visibility .4s ease;
@@ -380,13 +381,17 @@
 .ax-cards-stage{
   position:relative;
   width:100%;
-  max-width:1120px;
-  height:100%;
+  max-width:min(720px,94vw);
+  height:auto;
   margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .ax-card{
-  position:absolute;
-  width:min(540px,54vw);
+  position:relative;
+  width:100%;
+  max-width:min(640px,94vw);
   border-radius:16px;
   overflow:hidden;
   background:rgba(16,18,26,.94);
@@ -397,67 +402,89 @@
   pointer-events:none;
   will-change:transform,opacity;
   transition:
-    transform .72s cubic-bezier(.16,1,.3,1),
-    opacity .55s ease,
-    visibility .55s;
+    transform .65s cubic-bezier(.16,1,.3,1),
+    opacity .5s ease,
+    visibility .5s;
   z-index:2;
+  /* 한 장만 보이게: 비활성은 레이아웃에서 제외 */
+  display:none;
+  margin:0 auto;
 }
-.ax-card.is-on,
-.ax-card.is-stack{
+.ax-card.is-on{
+  display:block;
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0) scale(1);
+}
+.ax-card.is-stack{ display:none; }
+
+/* 등장 방향 힌트 (한 장 전환용) */
+.ax-card--from-left,
+.ax-card--from-right,
+.ax-card--from-bottom{
+  transform:translateY(22px) scale(.97);
+}
+.ax-card.is-on.ax-card--from-left,
+.ax-card.is-on.ax-card--from-right,
+.ax-card.is-on.ax-card--from-bottom{
+  transform:translateY(0) scale(1);
+}
+
+/* 개요 끝 CTA */
+.ax-overview-cta{
+  position:absolute;
+  inset:0;
+  z-index:8;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  padding:24px;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .4s ease,visibility .4s;
+  background:rgba(5,6,10,.35);
+}
+.ax-overview-cta.is-on{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
 }
-
-/*
- * 배치 (세로 리듬 균등):
- * 1 좌상  ~0%
- * 2 우중  ~28%  (translateY 없이 top으로 간격 고정)
- * 3 좌하  bottom 0
- */
-.ax-card--tl{
-  top:0;
-  left:0;
-  width:min(560px,56vw);
-  z-index:3;
+.ax-overview-cta-label{
+  margin:0;
+  font-size:clamp(1rem,2.2vw,1.25rem);
+  font-weight:300;
+  color:rgba(255,255,255,.78);
+  text-align:center;
+  word-break:keep-all;
 }
-.ax-card--tl.ax-card--from-left{
-  transform:translateX(-48vw) scale(.94);
+.ax-overview-cta-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px 28px;
+  border-radius:3px;
+  background:#e61862;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  text-decoration:none;
+  font-family:Pretendard,sans-serif;
+  box-shadow:0 10px 32px rgba(230,24,98,.35);
+  transition:filter .2s,transform .2s;
 }
-.ax-card--tl.is-on,
-.ax-card--tl.is-stack{
-  transform:translate(0,0) scale(1);
+.ax-overview-cta-btn:hover{
+  filter:brightness(1.06);
+  transform:translateY(-1px);
 }
-
-.ax-card--mr{
-  top:28%;
-  right:0;
-  left:auto;
-  width:min(540px,54vw);
-  z-index:4;
+.ax-overview{
+  cursor:pointer;
 }
-.ax-card--mr.ax-card--from-right{
-  transform:translateX(48vw) scale(.94);
-}
-.ax-card--mr.is-on,
-.ax-card--mr.is-stack{
-  transform:translate(0,0) scale(1);
-}
-
-.ax-card--wide{
-  left:0;
-  bottom:0;
-  top:auto;
-  width:min(640px,68vw);
-  max-width:none;
-  z-index:5;
-}
-.ax-card--wide.ax-card--from-bottom{
-  transform:translateY(36vh) scale(.98);
-}
-.ax-card--wide.is-on,
-.ax-card--wide.is-stack{
-  transform:translateY(0) scale(1);
+.ax-overview.is-cta{
+  cursor:default;
 }
 
 /* 영상 + 문구 가로 배치 — 기본: GIF 왼쪽 / 문구 오른쪽 */
@@ -554,36 +581,12 @@
   line-height:1.55;
 }
 
-/* 모바일: 카드 absolute 겹침 → 중앙 세로 스택 (안 보이던 문제 해결) */
 @media(max-width:768px){
   .ax-cards{
-    padding:72px 14px 56px;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
+    padding:68px 14px 52px;
   }
-  .ax-cards-stage{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    height:auto;
-    min-height:100%;
-    max-width:100%;
-  }
-  .ax-card,
-  .ax-card--tl,
-  .ax-card--mr,
-  .ax-card--wide{
-    position:relative !important;
-    top:auto !important;
-    left:auto !important;
-    right:auto !important;
-    bottom:auto !important;
-    width:min(92vw,400px) !important;
-    max-width:100%;
-    margin:0 auto;
-    z-index:2;
+  .ax-card{
+    max-width:min(94vw,420px);
   }
   .ax-card--side{
     flex-direction:column;
@@ -594,19 +597,9 @@
     max-width:100%;
     aspect-ratio:16 / 9;
   }
-  /* 등장: 좌/우 오프스크린 대신 살짝 아래에서 페이드 */
-  .ax-card--tl.ax-card--from-left,
-  .ax-card--mr.ax-card--from-right,
-  .ax-card--wide.ax-card--from-bottom{
-    transform:translateY(28px) scale(.96);
-  }
-  .ax-card--tl.is-on,
-  .ax-card--tl.is-stack,
-  .ax-card--mr.is-on,
-  .ax-card--mr.is-stack,
-  .ax-card--wide.is-on,
-  .ax-card--wide.is-stack{
-    transform:translateY(0) scale(1);
+  .ax-card--side .ax-card-body{
+    flex:1 1 auto;
+    padding:14px 16px 16px;
   }
 }
 

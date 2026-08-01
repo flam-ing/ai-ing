@@ -39,7 +39,7 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  var WHEEL_THRESHOLD = mobile ? 40 : 58;
+  var WHEEL_THRESHOLD = mobile ? 32 : 46;
   var SWIPE_PX = mobile ? 34 : 44;
   var ACC_RESET_MS = 220;
   var SLOW_RATE = 0.78;
@@ -450,16 +450,18 @@
     if (pinST) window.scrollTo(0, Math.max(0, pinST.start - 8));
   }
 
-  // 네비 '서비스' → 저니 스테이지 진입
+  // 네비/단독 페이지 → 스테이지 pin 진입 (리셋 후 스크롤 꼬임 방지)
   window.__axJourneyEnter = function () {
-    forceRelease();
-    hideAllPanels();
-    step = -1;
     if (hint) hint.classList.remove("is-hide");
-    var target = document.getElementById("journey-stage") || journey;
-    var y =
-      target.getBoundingClientRect().top + window.pageYOffset - 8;
-    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    if (pinST) {
+      window.scrollTo(0, pinST.start + 1);
+      setTimeout(function () {
+        if (!locked) enterLock();
+        else if (step < 0) goToStep(0, { force: true, instant: false });
+      }, 60);
+    } else {
+      enterLock();
+    }
   };
   window.__axJourneyForceRelease = forceRelease;
   function stepBy(dir) {
@@ -478,13 +480,13 @@
     if (!locked) return;
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
-    // 전환 중에도 역방향 의도는 누적 (busy 끝나면 처리되게 하지 않고, busy면 무시)
-    if (busy) return;
+    // 영상 전환 중(busy)에도 의도 누적 — 끝나면 한 번 적용
     wheelAcc += e.deltaY;
     if (accTimer) clearTimeout(accTimer);
     accTimer = setTimeout(function () {
       wheelAcc = 0;
     }, ACC_RESET_MS);
+    if (busy) return;
     if (wheelAcc > WHEEL_THRESHOLD) {
       wheelAcc = 0;
       stepBy(1);
@@ -557,7 +559,8 @@
     trigger: pinTarget,
     start: "top top",
     end: function () {
-      return "+=" + Math.round(window.innerHeight * 1.6);
+      // 단계 3 + 여유 — 단독 페이지에서도 휠이 pin을 바로 탈출하지 않게
+      return "+=" + Math.round(window.innerHeight * 2.8);
     },
     pin: true,
     pinSpacing: true,
@@ -602,6 +605,18 @@
       step = -1;
       if (hint) hint.classList.remove("is-hide");
     },
+  });
+
+
+  // 화면 클릭/탭으로도 다음 단계
+  var clickCool = 0;
+  journey.addEventListener("click", function (e) {
+    if (!locked) return;
+    if (e.target.closest("a, button, input, textarea, select, label, .steps")) return;
+    if (Date.now() < clickCool) return;
+    if (busy) return;
+    clickCool = Date.now() + 320;
+    stepBy(1);
   });
 
   window.addEventListener("wheel", onWheel, { passive: false });

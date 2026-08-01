@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/journey.css?v=20260802_split">
+<link rel="stylesheet" href="css/journey.css?v=20260802_fix2">
 
 </head>
 <body>
@@ -207,16 +207,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/journey.js?v=20260802_split"></script>
-<script src="js/nav-scroll.js?v=20260802_split"></script>
-<script src="main.js?v=20260802_split"></script>
+<script src="js/journey.js?v=20260802_fix2"></script>
+<script src="js/nav-scroll.js?v=20260802_fix2"></script>
+<script src="main.js?v=20260802_fix2"></script>
 
 <script>
-// 서비스 단독 페이지: 로드 시 pin 진입
+// 서비스 단독 페이지: pin 갱신 후 진입 (forceRelease 없이 안정 진입)
 window.addEventListener('load', function () {
   setTimeout(function () {
+    if (window.ScrollTrigger) try { ScrollTrigger.refresh(); } catch (e) {}
     if (typeof window.__axJourneyEnter === 'function') window.__axJourneyEnter();
-  }, 180);
+  }, 140);
 });
 </script>
 </body>

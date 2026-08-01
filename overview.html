@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/journey.css?v=20260802_split">
+<link rel="stylesheet" href="css/journey.css?v=20260802_fix2">
 
 </head>
 <body>
@@ -104,12 +104,14 @@
     </div>
 
     <div class="scroll-cue" id="overview-scroll-hint" aria-hidden="true"></div>
+
+    <!-- 카드 3 이후 CTA (스크롤/클릭으로 진입) -->
+    <div class="ax-overview-cta" id="overview-cta" hidden aria-hidden="true">
+      <p class="ax-overview-cta-label">이런 에이전트 자동화, 실제로 어떻게 도입할까요?</p>
+      <a href="services.html" class="ax-overview-cta-btn btn-gradient-hover">서비스 보기 →</a>
+    </div>
   </div>
 </section>
-
-<div style="position:relative;z-index:2;padding:48px 24px 80px;text-align:center;background:#07080d;">
-  <a href="services.html" class="btn-gradient-hover" style="display:inline-flex;align-items:center;padding:16px 28px;border-radius:3px;background:#e61862;color:#fff;font-weight:700;font-size:15px;text-decoration:none;font-family:Pretendard,sans-serif;">서비스 알아보기 →</a>
-</div>
 
 
 <footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
@@ -150,16 +152,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/overview.js?v=20260802_split"></script>
-<script src="js/nav-scroll.js?v=20260802_split"></script>
-<script src="main.js?v=20260802_split"></script>
+<script src="js/overview.js?v=20260802_fix2"></script>
+<script src="js/nav-scroll.js?v=20260802_fix2"></script>
+<script src="main.js?v=20260802_fix2"></script>
 
 <script>
-// 개요 단독 페이지: 로드 시 pin 진입
+// 개요 단독 페이지: 로드 후 pin 진입 (스크롤·클릭 모두 가능)
 window.addEventListener('load', function () {
   setTimeout(function () {
+    if (window.ScrollTrigger) try { ScrollTrigger.refresh(); } catch (e) {}
     if (typeof window.__axOverviewEnter === 'function') window.__axOverviewEnter();
-  }, 180);
+  }, 120);
 });
 </script>
 </body>

@@ -942,6 +942,7 @@
       alert("계좌번호가 복사되었습니다: " + accountNum);
     });
   }
+  window.copyAccount = copyAccount;
 
 
   // Native HTML5 Video configurations
