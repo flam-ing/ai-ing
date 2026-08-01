@@ -1661,18 +1661,27 @@ grid-template-columns: 1fr;
 /* Live AI consult simulation */
 /* 대표 · 인사 */
 .about-greeting-body {
-  max-width: 46em;
+  max-width: 42em;
 }
 .about-greeting-body p {
-  margin: 0 0 1.05em;
-  font-size: clamp(14.5px, 1.5vw, 16px);
+  margin: 0 0 1.65em;
+  font-size: clamp(15px, 1.55vw, 16.5px);
   font-weight: 300;
-  line-height: 1.85;
+  line-height: 1.95;
+  letter-spacing: -0.01em;
   color: rgba(255, 255, 255, 0.78);
   word-break: keep-all;
 }
 .about-greeting-body p:last-child {
   margin-bottom: 0;
+}
+.about-greeting-body .about-greeting-lead {
+  margin-bottom: 1.1em;
+  font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.02em;
 }
 .about-greeting-body strong {
   color: #fff;
