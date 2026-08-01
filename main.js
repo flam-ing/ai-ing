@@ -123,67 +123,112 @@
     update();
   }
 
-  // Self-playing AI consultation chat (loops while the payment section is visible)
+  // 메일 주고받기 시뮬레이션 (습니다체 · 자동화 QnA 예시)
   function setupAIChatSim() {
-    const body = document.getElementById('chat-sim-body');
-    const typed = document.getElementById('chat-sim-typed');
-    if (!body || !typed) return;
+    const body = document.getElementById('mail-thread-body');
+    const root = document.getElementById('mail-thread');
+    if (!body || !root) return;
 
-    const convo = [
-      { who: 'user', text: '세무 영수증 정리 자동화하고 싶은데, 뭐부터 보면 될까요?' },
-      { who: 'ai',   text: '폴더에 PDF 모아두신 뒤, 파일명 규칙이랑 노션(또는 엑셀)에 넣을 항목만 정해보시면 됩니다. 원하시면 그 흐름 기준으로 단계별로 짚어드릴게요.' },
-      { who: 'user', text: '세무 쪽 증빙이랑 매칭이 잘 안 되는데, 계속 헤매고 있어요.' },
-      { who: 'ai',   text: '흔한 케이스예요. 보통은 날짜·금액·거래처 키를 먼저 맞추고, 그다음 OCR/파싱을 붙입니다. 지금 쓰는 툴이 있으면 이름만 알려주셔도 어디가 막히는지 짚어드릴 수 있어요.' },
-      { who: 'user', text: '제가 계속 해보는데 설치가 어렵고 잘 안 되네요. 직접 보고 설명을 듣고 싶어요.' },
-      { who: 'ai',   text: '그럼 일정을 잡아요. 직접 보면서 같이 세팅·설명 진행하고, 서비스 당일 직후에 결제 페이지(사이트 하단)에서 결제 요청드릴게요.' }
+    const mails = [
+      {
+        who: 'in',
+        from: '문의자',
+        to: 'contact@ai-ing.org',
+        subject: '자동화 구축 방법이 궁금합니다',
+        body: '안녕하세요.\n반복 업무를 자동화하고 싶은데, 설계·구축을 어떤 순서로 보면 될지 궁금합니다.\n감사합니다.'
+      },
+      {
+        who: 'out',
+        from: 'AI-ing',
+        to: '문의자',
+        subject: 'Re: 자동화 구축 방법이 궁금합니다',
+        body: '안녕하세요. 에이아잉입니다.\n설계·구축 방법 등 QnA는 평생 무료로 안내드립니다.\n자동화하고 싶은 업무 한 가지만 알려주시면, 단계별로 정리해 드리겠습니다.'
+      },
+      {
+        who: 'in',
+        from: '문의자',
+        to: 'contact@ai-ing.org',
+        subject: 'Re: 자동화 구축 방법이 궁금합니다',
+        body: '노션 정리와 파일 분류를 자동으로 해 보려 했는데, 설치가 어렵고 잘 되지 않습니다.\n직접 화면을 보며 설명을 듣고 싶습니다.'
+      },
+      {
+        who: 'out',
+        from: 'AI-ing',
+        to: '문의자',
+        subject: 'Re: 자동화 구축 방법이 궁금합니다',
+        body: '알겠습니다. 일정을 잡아 드리겠습니다.\n방문·밋업처럼 시간을 쓰는 서비스는, 서비스 당일 직후에 사이트 결제 페이지에서 결제 요청드리겠습니다.'
+      }
     ];
 
-    let i = 0, timers = [];
-    const after = (ms, fn) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
-    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    let i = 0;
+    let timers = [];
+    const after = (ms, fn) => {
+      const t = setTimeout(fn, ms);
+      timers.push(t);
+      return t;
+    };
+    const clear = () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+    };
 
-    function addBubble(who, text) {
-      const b = document.createElement('div');
-      b.className = 'chat-bubble ' + who;
-      b.textContent = text;
-      body.appendChild(b);
-      body.scrollTop = body.scrollHeight;
-    }
-    function typingDots() {
-      const b = document.createElement('div');
-      b.className = 'chat-bubble ai typing';
-      b.innerHTML = '<span></span><span></span><span></span>';
-      body.appendChild(b);
-      body.scrollTop = body.scrollHeight;
-      return b;
-    }
-    function typeInto(text, done) {
-      let n = 0;
-      typed.textContent = '';
-      const tick = () => {
-        typed.textContent = text.slice(0, n++);
-        if (n <= text.length) after(28, tick); else after(450, done);
-      };
-      tick();
-    }
-    function run() {
-      const step = convo[i];
-      if (!step) { after(2800, () => { body.innerHTML = ''; i = 0; run(); }); return; }
-      if (step.who === 'user') {
-        typeInto(step.text, () => { typed.textContent = ''; addBubble('user', step.text); i++; after(550, run); });
-      } else {
-        const t = typingDots();
-        after(1100, () => { t.remove(); addBubble('ai', step.text); i++; after(1200, run); });
-      }
-    }
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { clear(); body.innerHTML = ''; typed.textContent = ''; i = 0; run(); }
-        else { clear(); }
+    function addMail(mail) {
+      const el = document.createElement('article');
+      el.className = 'mail-card mail-card--' + mail.who;
+      el.innerHTML =
+        '<header class="mail-card-head">' +
+          '<div class="mail-card-meta">' +
+            '<span class="mail-card-label">From</span> <span class="mail-card-val">' + mail.from + '</span>' +
+          '</div>' +
+          '<div class="mail-card-meta">' +
+            '<span class="mail-card-label">To</span> <span class="mail-card-val">' + mail.to + '</span>' +
+          '</div>' +
+          '<div class="mail-card-meta mail-card-subject">' +
+            '<span class="mail-card-label">Subject</span> <span class="mail-card-val">' + mail.subject + '</span>' +
+          '</div>' +
+        '</header>' +
+        '<div class="mail-card-body"></div>';
+      const bodyEl = el.querySelector('.mail-card-body');
+      mail.body.split('\n').forEach((line) => {
+        const p = document.createElement('p');
+        p.textContent = line;
+        bodyEl.appendChild(p);
       });
-    }, { threshold: 0.3 });
-    io.observe(body);
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+      requestAnimationFrame(() => el.classList.add('is-in'));
+    }
+
+    function run() {
+      if (i >= mails.length) {
+        after(3200, () => {
+          body.innerHTML = '';
+          i = 0;
+          run();
+        });
+        return;
+      }
+      addMail(mails[i]);
+      i += 1;
+      after(i === mails.length ? 2400 : 1600, run);
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            clear();
+            body.innerHTML = '';
+            i = 0;
+            run();
+          } else {
+            clear();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    io.observe(root);
   }
 
   // Particle background field
@@ -866,9 +911,8 @@
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^(01[016789]-?\d{3,4}-?\d{4}|\d{2,3}-?\d{3,4}-?\d{4})$/;
-    if (!emailRegex.test(contactInfo) && !phoneRegex.test(contactInfo)) {
-      alert("올바른 이메일 주소 또는 전화번호를 입력해 주세요. (예: name@example.com 또는 010-1234-5678)");
+    if (!emailRegex.test(contactInfo)) {
+      alert("올바른 이메일 주소를 입력해 주세요. (예: name@example.com)");
       return;
     }
 

@@ -98,8 +98,30 @@
     }, GESTURE_IDLE_MS);
   }
   function canAdvance(dir) {
-    if (!locked || busy) return false;
-    if (gestureGate) return false;
+    if (!locked) return false;
+    dir = dir > 0 ? 1 : -1;
+    // 영상 전환 중: 전진만 막고, 위로 스크롤은 전환 끊고 허용
+    if (busy) {
+      if (dir > 0) return false;
+      stopSlow();
+      if (enterTween && window.gsap) {
+        try {
+          enterTween.kill();
+        } catch (e) {}
+        enterTween = null;
+      }
+      busy = false;
+    }
+    // 같은 방향 관성만 게이트 — 반대 방향(위로)은 즉시 허용
+    if (gestureGate) {
+      if (dir === lastStepDir) return false;
+      gestureGate = false;
+      wheelAcc = 0;
+      if (gestureIdleTimer) {
+        clearTimeout(gestureIdleTimer);
+        gestureIdleTimer = null;
+      }
+    }
     return true;
   }
 
@@ -532,15 +554,32 @@
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
 
-    // 관성 스크롤이 이어지는 동안은 activity 기록 → gate 유지 (1→3 스킵 방지)
-    if (busy || gestureGate) {
+    var dir = e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0;
+    if (!dir) return;
+
+    // 반대 방향 스크롤이면 게이트 즉시 해제 (위로 안 먹히던 문제)
+    if (gestureGate && lastStepDir && dir !== lastStepDir) {
+      gestureGate = false;
+      wheelAcc = 0;
+      if (gestureIdleTimer) {
+        clearTimeout(gestureIdleTimer);
+        gestureIdleTimer = null;
+      }
+    }
+
+    // 같은 방향 관성/전환 중이면 누적만 막고 대기
+    if (busy && dir > 0) {
+      wheelAcc = 0;
+      noteGestureActivity();
+      return;
+    }
+    if (gestureGate && dir === lastStepDir) {
       wheelAcc = 0;
       noteGestureActivity();
       return;
     }
 
     wheelAcc += e.deltaY;
-    // 한 틱만 넘김 — 임계 초과해도 ±1
     if (wheelAcc > WHEEL_THRESHOLD) {
       wheelAcc = 0;
       stepBy(1);
@@ -665,16 +704,6 @@
   });
 
 
-  // 화면 클릭/탭으로도 다음 단계 (1회만)
-  var clickCool = 0;
-  journey.addEventListener("click", function (e) {
-    if (!locked) return;
-    if (e.target.closest("a, button, input, textarea, select, label, .steps")) return;
-    if (Date.now() < clickCool) return;
-    if (!canAdvance(1)) return;
-    clickCool = Date.now() + 500;
-    stepBy(1);
-  });
 
   window.addEventListener("wheel", onWheel, { passive: false });
   journey.addEventListener("touchstart", onTouchStart, { passive: true });
