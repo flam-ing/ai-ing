@@ -120,23 +120,25 @@ def confirm_orders(token: str, product_order_ids: List[str]) -> bool:
     session = get_http_session()
     res = session.post(url, headers=headers, json=body, timeout=10)
     if res.ok:
-        print(f"✅ 발주 확인 성공: {product_order_ids}")
+        res_json = res.json()
+        successes = res_json.get("data", {}).get("successProductOrderIds", [])
+        print(f"✅ 발주 확인 성공 {len(successes)}건: {successes}")
         return True
     else:
         print(f"⚠️ 발주 확인 결과 ({res.status_code}): {res.text}")
         return False
 
 def dispatch_direct_delivery(token: str, product_order_ids: List[str]) -> bool:
-    """직접전달 발송 처리 (송장번호 없이 즉시 배송완료)"""
+    """직접전달 발송 처리 (KST ISO-8601 적용, 송장번호 없이 즉시 배송완료)"""
     if not product_order_ids:
         return True
     
-    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    now_kst = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y-%m-%dT%H:%M:%S.000+09:00')
     dispatch_items = [
         {
             "productOrderId": p_id,
             "deliveryMethod": "DIRECT_DELIVERY",
-            "dispatchDate": now_iso
+            "dispatchDate": now_kst
         }
         for p_id in product_order_ids
     ]
@@ -150,7 +152,14 @@ def dispatch_direct_delivery(token: str, product_order_ids: List[str]) -> bool:
     session = get_http_session()
     res = session.post(url, headers=headers, json=body, timeout=10)
     if res.ok:
-        print(f"🚀 직접전달 발송 처리 성공 (배송완료 전환): {product_order_ids}")
+        res_json = res.json()
+        data = res_json.get("data", {})
+        successes = data.get("successProductOrderIds", [])
+        fails = data.get("failProductOrderInfos", [])
+        if successes:
+            print(f"🚀 직접전달 발송 처리 성공 (배송완료 전환 {len(successes)}건): {successes}")
+        if fails:
+            print(f"⚠️ 일부 발송 처리 실패: {fails}")
         return True
     else:
         print(f"⚠️ 발송 처리 결과 ({res.status_code}): {res.text}")
@@ -176,7 +185,7 @@ def main():
     payed_ids = [
         item.get("productOrderId")
         for item in statuses
-        if item.get("lastChangedType") in ["PAYED", "PREPARING", "PAY_WAITING", "DELIVERY_PREPARING"] and item.get("productOrderId")
+        if item.get("productOrderStatus") in ["PAYED", "PREPARING", "PAY_WAITING", "DELIVERY_PREPARING"] and item.get("productOrderId")
     ]
     
     if not payed_ids:
