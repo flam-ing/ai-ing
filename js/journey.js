@@ -450,15 +450,15 @@
     if (pinST) window.scrollTo(0, Math.max(0, pinST.start - 8));
   }
 
-  // 네비 '서비스' → 가격 인트로(섹션 상단). stage pin 은 스크롤로 진입
+  // 네비 '서비스' → 저니 스테이지 진입
   window.__axJourneyEnter = function () {
     forceRelease();
     hideAllPanels();
     step = -1;
     if (hint) hint.classList.remove("is-hide");
-    var bridge = document.getElementById("price-bridge") || journey;
+    var target = document.getElementById("journey-stage") || journey;
     var y =
-      bridge.getBoundingClientRect().top + window.pageYOffset - 72;
+      target.getBoundingClientRect().top + window.pageYOffset - 8;
     window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
   };
   window.__axJourneyForceRelease = forceRelease;
@@ -552,7 +552,6 @@
   gsap.registerPlugin(ScrollTrigger);
 
   // pin 길이를 넉넉히 — 짧으면 휠 한 번에 pin 탈출 → 재진입 → 영상 재시작처럼 보임
-  // 가격 인트로 아래 stage 만 pin (서비스 섹션 전체 아님)
   var pinTarget = document.getElementById("journey-stage") || journey;
   pinST = ScrollTrigger.create({
     trigger: pinTarget,
@@ -590,7 +589,7 @@
     },
     onLeaveBack: function () {
       if (locked) {
-        // 첫 단계에서 위로 → 가격 인트로로
+        // 첫 단계에서 위로 → 섹션 위(페이지 상단)로
         if (step <= 0) {
           releaseUp();
           return;

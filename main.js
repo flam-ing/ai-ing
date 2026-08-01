@@ -913,7 +913,7 @@
   
   // Routing & Tab Navigation functions
   // Multi-page navigation: each tab now lives on its own page
-  const PAGE_MAP = { hero: 'index.html', services: 'services.html', about: 'about.html', payment: 'payment.html', contact: 'contact.html' };
+  const PAGE_MAP = { hero: 'index.html', overview: 'overview.html', services: 'services.html', about: 'about.html', cases: 'cases.html', payment: 'payment.html', contact: 'contact.html' };
   function navigateTo(tabId) {
     const target = document.getElementById(tabId);
     if (target) {
@@ -977,6 +977,10 @@
       }
   }
   window.startVideo = startVideo;
+  window.openVideo = openVideo;
+  window.closeVideo = closeVideo;
+  window.handleFormSubmit = handleFormSubmit;
+  window.resetForm = resetForm;
 
   // Seamless Background video playlist cycling (Cross-fading between statically loaded videos)
   const vids = [

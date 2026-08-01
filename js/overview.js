@@ -184,15 +184,16 @@
     busy = true;
 
     cards.forEach(function (card, idx) {
-      if (idx < maxIdx) {
-        card.classList.add("is-stack");
-        card.classList.remove("is-on");
-      } else if (idx === maxIdx) {
+      if (idx === maxIdx) {
         card.classList.remove("is-stack");
         if (!card.classList.contains("is-on")) {
           void card.offsetWidth;
           card.classList.add("is-on");
         }
+      } else if (!mobile && idx < maxIdx) {
+        // 데스크톱: 이전 카드 잔상 유지 / 모바일: 한 장만 중앙
+        card.classList.add("is-stack");
+        card.classList.remove("is-on");
       } else {
         card.classList.remove("is-on", "is-stack");
       }
