@@ -1693,6 +1693,18 @@ grid-template-columns: 1fr;
   text-align: left;
   margin-bottom: clamp(28px, 4vw, 40px);
 }
+.contact-lead--center {
+  text-align: center;
+  max-width: 38em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+.contact-lead--center .contact-lead-sub,
+.contact-lead--center .contact-lead-main {
+  margin-left: auto;
+  margin-right: auto;
+}
 .contact-lead-main {
   margin: 0 0 16px;
   font-size: clamp(1.2rem, 2.6vw, 1.55rem);

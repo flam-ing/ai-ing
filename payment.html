@@ -300,7 +300,7 @@
   </div>
 </div>
 
-<!-- 은행 선택 팝업 (AQR 송금 페이지 은행 목록 기반) -->
+<!-- 은행 선택 팝업 — AQR 페이지에서 추출한 로고·은행명 (AQR 링크 미사용) -->
 <div id="bank-picker-modal" onclick="if(event.target===this)closeBankPicker()" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(4,5,9,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:18px;">
   <div role="dialog" aria-modal="true" aria-labelledby="bank-picker-title" style="width:min(520px,96vw);max-height:min(88vh,720px);background:#0d0f17;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.5);">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;border-bottom:1px solid rgba(255,255,255,.08);">
@@ -310,10 +310,8 @@
       </div>
       <button type="button" onclick="closeBankPicker()" aria-label="닫기" style="background:none;border:none;color:#cdd3df;font-size:24px;cursor:pointer;line-height:1;padding:4px 8px;">✕</button>
     </div>
-    <div id="bank-picker-grid" style="padding:14px 16px 8px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;"></div>
-    <div style="padding:10px 16px 16px;border-top:1px solid rgba(255,255,255,.06);">
-      <a href="https://aq.gy/f/iYQcx" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;font-size:12.5px;color:#8c82ff;text-decoration:none;padding:8px;">전체 은행 목록 · AQR 페이지에서 열기 →</a>
-    </div>
+    <div id="bank-picker-grid" style="padding:14px 16px 16px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;"></div>
+    <p style="margin:0;padding:0 16px 16px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.4);text-align:center;word-break:keep-all;">버튼을 누르면 계좌번호가 복사되고, 은행 앱 송금 화면으로 이동합니다.</p>
   </div>
 </div>
 
@@ -322,12 +320,12 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
     padding:14px 8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
     background:rgba(255,255,255,.03);color:#eef1f6;cursor:pointer;transition:transform .15s,border-color .15s,background .15s;
-    font-family:Pretendard,sans-serif;min-height:92px;
+    font-family:Pretendard,sans-serif;min-height:96px;
   }
   .bank-pick-btn:hover{ transform:translateY(-2px); border-color:rgba(140,130,255,.45); background:rgba(140,130,255,.08); }
-  .bank-pick-logo{
-    width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:800;color:#fff;letter-spacing:-.02em;flex-shrink:0;
+  .bank-pick-logo-img{
+    width:40px;height:40px;border-radius:10px;object-fit:cover;background:#fff;flex-shrink:0;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
   }
   .bank-pick-name{ font-size:12px;font-weight:600;text-align:center;line-height:1.3;word-break:keep-all; }
   @media(max-width:420px){
@@ -335,49 +333,40 @@
   }
 </style>
 
-<script src="main.js?v=20260802_fix2"></script>
+<script src="main.js?v=20260802_bank"></script>
 <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 <script>
 /**
- * AQR(aq.gy) 송금 페이지에 노출되는 주요 은행 앱 목록.
- * 각 버튼은 계좌번호 복사 후 은행 앱 스킴(가능 시) 또는 AQR 송금 페이지로 이동.
- * 무통장 입금은 은행이 결제 완료 웹훅을 주지 않으므로, 입금 확인은 수동/계좌 조회 없이는 자동화 불가.
+ * 은행 목록·로고: https://aq.gy/f/iYQcx 개인용 탭에서 추출
+ * 클릭 시 계좌 복사 + 은행 앱 스킴 실행 (AQR 페이지로 보내지 않음)
  */
 (function () {
   var ACCOUNT = '1002-6334-1822';
-  var AQR_URL = 'https://aq.gy/f/iYQcx';
-
-  // 이름 · 약칭 · 브랜드 컬러 · 앱 스킴(선택) · 웹 폴백
+  // 로고: aq.gy 개인용 탭에서 추출 후 img/banks 에 저장
   var BANKS = [
-    { name: '토스', short: 'TOSS', color: '#0064FF', scheme: 'supertoss://send', web: AQR_URL },
-    { name: '카카오뱅크', short: '카뱅', color: '#FFE812', text: '#191600', scheme: 'kakaobank://', web: AQR_URL },
-    { name: 'KB국민', short: 'KB', color: '#756D4E', scheme: 'kbbank://', web: AQR_URL },
-    { name: '신한', short: '신한', color: '#0046FF', scheme: 'shinhan-sr-ansimclick://', web: AQR_URL },
-    { name: '우리', short: '우리', color: '#0067AC', scheme: 'wooribank://', web: AQR_URL },
-    { name: '하나', short: '하나', color: '#008485', scheme: 'hanaw://', web: AQR_URL },
-    { name: 'NH농협', short: 'NH', color: '#00A74E', scheme: 'nhappnew://', web: AQR_URL },
-    { name: 'IBK기업', short: 'IBK', color: '#003DA5', scheme: 'ibkbank://', web: AQR_URL },
-    { name: '케이뱅크', short: 'K', color: '#E60012', scheme: 'kbank://', web: AQR_URL },
-    { name: '카카오페이', short: '페이', color: '#FFEB00', text: '#191600', scheme: 'kakaopay://', web: AQR_URL },
-    { name: '새마을금고', short: 'MG', color: '#0072BC', scheme: 'mgbank://', web: AQR_URL },
-    { name: '우체국', short: '우체', color: '#E60012', scheme: 'epostbank://', web: AQR_URL },
-    { name: '신협', short: '신협', color: '#0055A5', scheme: 'cu://', web: AQR_URL },
-    { name: '수협', short: '수협', color: '#0082C8', scheme: 'suhyup-bank://', web: AQR_URL },
-    { name: 'SC제일', short: 'SC', color: '#0072AA', scheme: 'scbank://', web: AQR_URL },
-    { name: '대구은행', short: 'DGB', color: '#0066B3', scheme: 'dgb://', web: AQR_URL },
-    { name: '부산은행', short: 'BNK', color: '#A50034', scheme: 'busanbank://', web: AQR_URL },
-    { name: '경남은행', short: 'BNK', color: '#7B2D8E', scheme: 'knbank://', web: AQR_URL },
-    { name: '광주은행', short: 'KJ', color: '#0090D0', scheme: 'kjbank://', web: AQR_URL },
-    { name: '전북은행', short: 'JB', color: '#0057A8', scheme: 'jbbank://', web: AQR_URL },
-    { name: '제주은행', short: '제주', color: '#0072C6', scheme: 'jejubank://', web: AQR_URL },
-    { name: '씨티은행', short: 'Citi', color: '#003B70', scheme: 'citibank://', web: AQR_URL }
+    { name: '케이뱅크', icon: 'img/banks/kbank.png', scheme: 'kbank-banking://' },
+    { name: '우리은행', icon: 'img/banks/woori.png', scheme: 'wooribank://' },
+    { name: '국민은행', icon: 'img/banks/kb.png', scheme: 'kbbank://' },
+    { name: '신한은행', icon: 'img/banks/shinhan.png', scheme: 'shinhan-sr-ansimclick://' },
+    { name: '기업은행', icon: 'img/banks/ibk.png', scheme: 'ibkbank://' },
+    { name: '새마을금고', icon: 'img/banks/mg.png', scheme: 'mgbank://' },
+    { name: '농협은행', icon: 'img/banks/nh.png', scheme: 'nhappnew://' },
+    { name: '제일은행', icon: 'img/banks/sc.png', scheme: 'scbank://' },
+    { name: '씨티은행', icon: 'img/banks/citi.png', scheme: 'citibank://' },
+    { name: '광주은행', icon: 'img/banks/kj.png', scheme: 'kjbank://' },
+    { name: '하나은행', icon: 'img/banks/hana.png', scheme: 'hanaw://' },
+    { name: '우체국은행', icon: 'img/banks/post.png', scheme: 'epostbank://' },
+    { name: '부산은행', icon: 'img/banks/busan.png', scheme: 'busanbank://' },
+    { name: '아이엠뱅크', icon: 'img/banks/imbank.png', scheme: 'dgb-banking://' },
+    { name: '신협중앙회', icon: 'img/banks/shinhyup.png', scheme: 'cu://' },
+    { name: '제주은행', icon: 'img/banks/jeju.png', scheme: 'jejubank://' },
+    { name: '한국산업은행', icon: 'img/banks/kdb.png', scheme: 'kdb://' },
+    { name: '전북은행', icon: 'img/banks/jb.png', scheme: 'jbbank://' },
+    { name: '경남은행', icon: 'img/banks/kn.png', scheme: 'knbank://' },
+    { name: '수협은행', icon: 'img/banks/suhyup.png', scheme: 'suhyup-bank://' },
+    { name: '하나원큐', icon: 'img/banks/hanaoneq.png', scheme: 'hanaw://' },
+    { name: '토스', icon: 'img/banks/tossbank.png', scheme: 'supertoss://send' }
   ];
-
-  function fixBank(b) {
-    if (b.colorFix) b.color = b.colorFix;
-    return b;
-  }
-  BANKS.forEach(fixBank);
 
   function copyText(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -403,15 +392,24 @@
     }
   }
 
+  function toast(msg) {
+    try {
+      var tip = document.createElement('div');
+      tip.textContent = msg;
+      tip.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10001;background:#1a1d2a;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;border:1px solid rgba(140,130,255,.35);box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:90vw;text-align:center;';
+      document.body.appendChild(tip);
+      setTimeout(function () { tip.remove(); }, 2600);
+    } catch (e) {}
+  }
+
   function renderGrid() {
     var grid = document.getElementById('bank-picker-grid');
     if (!grid || grid.dataset.ready) return;
     grid.dataset.ready = '1';
     grid.innerHTML = BANKS.map(function (b, i) {
-      var tc = b.text || '#fff';
       return (
         '<button type="button" class="bank-pick-btn" data-bank-i="' + i + '">' +
-          '<span class="bank-pick-logo" style="background:' + b.color + ';color:' + tc + '">' + b.short + '</span>' +
+          '<img class="bank-pick-logo-img" src="' + b.icon + '" alt="' + b.name + '" width="40" height="40" loading="lazy" referrerpolicy="no-referrer">' +
           '<span class="bank-pick-name">' + b.name + '</span>' +
         '</button>'
       );
@@ -426,29 +424,18 @@
 
   function openBank(bank) {
     copyText(ACCOUNT).then(function () {
-      // 앱 스킴 시도 → 실패 시 AQR 웹 송금 페이지
-      var tried = false;
+      toast(bank.name + ' · 계좌번호가 복사되었습니다. 앱에서 붙여넣기 해 주세요.');
+      // 은행 앱 딥링크만 시도 (AQR 미사용). PC 등 앱 없으면 복사만으로 충분.
       if (bank.scheme) {
-        tried = true;
-        var t = Date.now();
-        window.location.href = bank.scheme;
+        var a = document.createElement('a');
+        a.href = bank.scheme;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
         setTimeout(function () {
-          // 앱이 안 열렸으면 웹으로
-          if (Date.now() - t < 1600) {
-            window.open(bank.web || AQR_URL, '_blank', 'noopener,noreferrer');
-          }
-        }, 900);
-      } else {
-        window.open(bank.web || AQR_URL, '_blank', 'noopener,noreferrer');
+          try { a.remove(); } catch (e) {}
+        }, 500);
       }
-      // 사용자 안내
-      try {
-        var tip = document.createElement('div');
-        tip.textContent = bank.name + ' · 계좌번호가 복사되었습니다';
-        tip.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10001;background:#1a1d2a;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;border:1px solid rgba(140,130,255,.35);box-shadow:0 8px 24px rgba(0,0,0,.4);';
-        document.body.appendChild(tip);
-        setTimeout(function () { tip.remove(); }, 2200);
-      } catch (e) {}
     });
   }
 

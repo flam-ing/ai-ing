@@ -156,7 +156,7 @@
         from: 'AI-ing',
         to: '문의자',
         subject: 'Re: 반복 업무 자동화가 궁금합니다',
-        body: '네, 편하게 남겨 주세요.\n방문·밋업·화상회의처럼 제 시간을 쓰는 서비스는 결제 페이지에서 요청드리겠습니다.'
+        body: '네, 편하게 남겨 주세요.\n방문·밋업·화상회의처럼 제 시간을 쓰는 서비스는 결제 페이지에서 별도 결제도 요청드리겠습니다.'
       }
     ];
 
@@ -906,8 +906,9 @@
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(contactInfo)) {
-      alert("올바른 이메일 주소를 입력해 주세요. (예: name@example.com)");
+    const phoneRegex = /^(01[016789]-?\d{3,4}-?\d{4}|\d{2,3}-?\d{3,4}-?\d{4})$/;
+    if (!emailRegex.test(contactInfo) && !phoneRegex.test(contactInfo)) {
+      alert("올바른 이메일 또는 전화번호를 입력해 주세요. (예: name@example.com 또는 010-1234-5678)");
       return;
     }
 
