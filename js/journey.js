@@ -39,13 +39,14 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  // 한 번의 스크롤 제스처 = 1단계. 고정 쿨다운(리셋 없음)으로 2번에서 안 넘어가던 문제 해결
-  var WHEEL_THRESHOLD = mobile ? 36 : 48;
-  var SWIPE_PX = mobile ? 34 : 42;
+  // index.html 시절 감도 복구 + 고정 쿨다운(리셋 없음, 너무 짧지도 길지도 않게)
+  var WHEEL_THRESHOLD = mobile ? 40 : 58;
+  var SWIPE_PX = mobile ? 34 : 44;
+  var ACC_RESET_MS = 220;
   var SLOW_RATE = 0.78;
-  var TRANS_MS = 420;
-  /** 단계 전환 후 고정 쿨다운 — 휠이 계속 와도 타이머를 늘리지 않음 */
-  var STEP_COOLDOWN_MS = mobile ? 260 : 300;
+  var TRANS_MS = 520;
+  /** 단계 전환 후 고정 쿨다운 — 휠로 타이머 연장 안 함 (1→3 스킵 방지 + 2번 붙잡힘 방지) */
+  var STEP_COOLDOWN_MS = mobile ? 520 : 580;
 
   var step = -1;
   var locked = false;
@@ -63,6 +64,7 @@
   var gestureGate = false;
   var gateTimer = null;
   var gateUntil = 0;
+  var accTimer = null;
   var touchY0 = 0;
   var touchOn = false;
   var lastStepDir = 0;
@@ -577,6 +579,13 @@
     }
 
     wheelAcc += e.deltaY;
+    // index 시절처럼 짧은 누적 창 — 오래 끌면 리셋
+    if (accTimer) clearTimeout(accTimer);
+    accTimer = setTimeout(function () {
+      wheelAcc = 0;
+      accTimer = null;
+    }, ACC_RESET_MS);
+
     if (wheelAcc > WHEEL_THRESHOLD) {
       wheelAcc = 0;
       stepBy(1);
