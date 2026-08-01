@@ -344,6 +344,8 @@
   var ACCOUNT = '1002-6334-1822';
   // 로고: aq.gy 개인용 탭에서 추출 후 img/banks 에 저장
   var BANKS = [
+    { name: '토스', icon: 'img/banks/toss.png', scheme: 'supertoss://send' },
+    { name: '카카오뱅크', icon: 'img/banks/kakao.png', scheme: 'kakaobank://' },
     { name: '케이뱅크', icon: 'img/banks/kbank.png', scheme: 'kbank-banking://' },
     { name: '우리은행', icon: 'img/banks/woori.png', scheme: 'wooribank://' },
     { name: '국민은행', icon: 'img/banks/kb.png', scheme: 'kbbank://' },
@@ -364,8 +366,7 @@
     { name: '전북은행', icon: 'img/banks/jb.png', scheme: 'jbbank://' },
     { name: '경남은행', icon: 'img/banks/kn.png', scheme: 'knbank://' },
     { name: '수협은행', icon: 'img/banks/suhyup.png', scheme: 'suhyup-bank://' },
-    { name: '하나원큐', icon: 'img/banks/hanaoneq.png', scheme: 'hanaw://' },
-    { name: '토스', icon: 'img/banks/tossbank.png', scheme: 'supertoss://send' }
+    { name: '하나원큐', icon: 'img/banks/hanaoneq.png', scheme: 'hanaw://' }
   ];
 
   function copyText(text) {
