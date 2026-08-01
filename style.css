@@ -1659,6 +1659,26 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
+/* 대표 · 인사 */
+.about-greeting-body {
+  max-width: 46em;
+}
+.about-greeting-body p {
+  margin: 0 0 1.05em;
+  font-size: clamp(14.5px, 1.5vw, 16px);
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.78);
+  word-break: keep-all;
+}
+.about-greeting-body p:last-child {
+  margin-bottom: 0;
+}
+.about-greeting-body strong {
+  color: #fff;
+  font-weight: 600;
+}
+
 /* 무료 상담 · 메일 스레드 */
 .contact-lead {
   text-align: left;

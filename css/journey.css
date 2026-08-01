@@ -464,8 +464,8 @@
 .ax-overview-cta{
   position:absolute;
   inset:0;
-  z-index:12;
-  display:flex;
+  z-index:40;
+  display:none;
   flex-direction:column;
   align-items:center;
   justify-content:center;
@@ -474,13 +474,21 @@
   opacity:0;
   visibility:hidden;
   pointer-events:none;
-  transition:opacity .4s ease,visibility .4s;
-  background:rgba(5,6,10,.2);
+  transition:opacity .45s ease,visibility .45s;
+  background:rgba(5,6,10,.55);
 }
-.ax-overview-cta.is-on{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
+.ax-overview-cta.is-on,
+.ax-overview.is-cta .ax-overview-cta{
+  display:flex !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
+}
+.ax-overview-cta[hidden]{
+  display:none !important;
+}
+.ax-overview.is-cta .ax-overview-cta[hidden]{
+  display:flex !important;
 }
 .ax-overview.is-cta .ax-cards{
   opacity:0 !important;
@@ -645,24 +653,41 @@
     max-width:100% !important;
     margin:0 auto;
     display:none;
-    transform:none !important;
     flex:0 1 auto;
     min-height:0;
     border-radius:12px;
     box-shadow:0 10px 28px rgba(0,0,0,.4);
+    /* 등장 트랜지션 유지 (transform:none 금지) */
+    transition:
+      transform .7s cubic-bezier(.16,1,.3,1),
+      opacity .5s ease,
+      visibility .5s !important;
+  }
+  .ax-card.is-on,
+  .ax-card.is-stack,
+  .ax-card.is-prein{
+    display:flex !important;
+    flex-direction:column;
+    pointer-events:auto;
   }
   .ax-card.is-on,
   .ax-card.is-stack{
-    display:flex !important; /* side 레이아웃 유지 시 */
-    flex-direction:column;
     opacity:1;
     visibility:visible;
-    transform:none !important;
   }
-  .ax-card--tl.ax-card--from-left,
-  .ax-card--mr.ax-card--from-right,
+  .ax-card.is-prein{
+    opacity:1;
+    visibility:visible;
+  }
+  /* 모바일 왼→오→왼 슬라이드 인 */
+  .ax-card--tl.ax-card--from-left{
+    transform:translateX(-72vw) scale(.96) !important;
+  }
+  .ax-card--mr.ax-card--from-right{
+    transform:translateX(72vw) scale(.96) !important;
+  }
   .ax-card--wide.ax-card--from-bottom{
-    transform:translateY(12px) scale(.98) !important;
+    transform:translateX(-72vw) scale(.96) !important;
   }
   .ax-card--tl.is-on,
   .ax-card--tl.is-stack,
@@ -670,7 +695,7 @@
   .ax-card--mr.is-stack,
   .ax-card--wide.is-on,
   .ax-card--wide.is-stack{
-    transform:none !important;
+    transform:translateX(0) scale(1) !important;
   }
   .ax-card--side{
     flex-direction:column !important;

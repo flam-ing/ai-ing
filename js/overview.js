@@ -81,9 +81,24 @@
       );
     if (cta) {
       var show = kind === "cta";
-      cta.hidden = !show;
+      if (show) {
+        cta.hidden = false;
+        cta.removeAttribute("hidden");
+        cta.classList.add("is-on");
+        cta.style.display = "flex";
+        cta.style.opacity = "1";
+        cta.style.visibility = "visible";
+        cta.style.pointerEvents = "auto";
+      } else {
+        cta.hidden = true;
+        cta.setAttribute("hidden", "");
+        cta.classList.remove("is-on");
+        cta.style.display = "";
+        cta.style.opacity = "";
+        cta.style.visibility = "";
+        cta.style.pointerEvents = "";
+      }
       cta.setAttribute("aria-hidden", show ? "false" : "true");
-      cta.classList.toggle("is-on", show);
     }
   }
 
@@ -190,7 +205,7 @@
     });
   }
 
-  /** 카드 누적: 0 → 0+1 → 0+1+2 (이전 카드 is-stack 유지) */
+  /** 카드 누적: 0 → 0+1 → 0+1+2 (이전 카드 is-stack 유지, 좌/우/좌 등장) */
   function showCard(maxIdx) {
     if (maxIdx === activeCard) return;
     activeCard = maxIdx;
@@ -203,8 +218,15 @@
       } else if (idx === maxIdx) {
         card.classList.remove("is-stack");
         if (!card.classList.contains("is-on")) {
+          // display 켠 뒤 한 프레임 오프스크린 pose → is-on 슬라이드 인
+          card.classList.add("is-prein");
           void card.offsetWidth;
-          card.classList.add("is-on");
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              card.classList.remove("is-prein");
+              card.classList.add("is-on");
+            });
+          });
         }
       } else {
         card.classList.remove("is-on", "is-stack");
@@ -213,7 +235,7 @@
 
     setTimeout(function () {
       busy = false;
-    }, 520);
+    }, 680);
   }
 
   /** 카드 비우고 서비스 보기만 */
@@ -221,6 +243,16 @@
     hideMf();
     hideCards();
     setMode("cta");
+    if (cta) {
+      cta.hidden = false;
+      cta.removeAttribute("hidden");
+      cta.classList.add("is-on");
+      cta.setAttribute("aria-hidden", "false");
+      cta.style.display = "flex";
+      cta.style.opacity = "1";
+      cta.style.visibility = "visible";
+      cta.style.pointerEvents = "auto";
+    }
     busy = false;
     showHint(false);
   }
@@ -474,9 +506,9 @@
   pinST = ScrollTrigger.create({
     trigger: "#overview",
     start: "top top",
-    // pin 여유를 짧게 — CTA 다음 빈 스크롤 구간 없이 푸터로
+    // CTA 단계까지 여유 확보 후 푸터로
     end: function () {
-      return "+=" + Math.round(window.innerHeight * (STEPS.length * 0.22 + 0.15));
+      return "+=" + Math.round(window.innerHeight * (STEPS.length * 0.28 + 0.35));
     },
     pin: true,
     pinSpacing: true,
