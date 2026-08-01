@@ -39,15 +39,13 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  // 한 번의 스크롤 제스처 = 정확히 1단계 (관성으로 1→3 스킵 방지)
-  var WHEEL_THRESHOLD = mobile ? 42 : 58;
-  var SWIPE_PX = mobile ? 38 : 46;
-  var SLOW_RATE = 0.72;
-  var TRANS_MS = 720;
-  /** 단계 전환 직후 최소 대기 (영상/카피 볼 시간) */
-  var STEP_HOLD_MS = mobile ? 650 : 800;
-  /** 휠/스와이프가 이 시간 동안 안 와야 다음 단계 허용 (= 관성 끝) */
-  var GESTURE_IDLE_MS = mobile ? 280 : 320;
+  // 한 번의 스크롤 제스처 = 1단계 (관성 스킵 방지) / 홀드 없이 바로 다음 가능
+  var WHEEL_THRESHOLD = mobile ? 40 : 55;
+  var SWIPE_PX = mobile ? 36 : 44;
+  var SLOW_RATE = 0.75;
+  var TRANS_MS = 560;
+  /** 휠이 잠깐 멈춘 뒤에만 다음 단계 — 관성 1→3 방지, 의도적 스크롤은 즉시 */
+  var GESTURE_IDLE_MS = mobile ? 160 : 180;
 
   var step = -1;
   var locked = false;
@@ -61,7 +59,6 @@
   var slowRaf = 0;
   var timeUpdateHandler = null;
   var holdTimer = null;
-  var holdUntil = 0;
   /** true면 스크롤 관성 끝날 때까지 추가 step 금지 */
   var gestureGate = false;
   var gestureIdleTimer = null;
@@ -82,13 +79,7 @@
       holdTimer = null;
     }
   }
-  function armStepHold(ms) {
-    holdUntil = Date.now() + (ms || STEP_HOLD_MS);
-  }
-  function inStepHold() {
-    return Date.now() < holdUntil;
-  }
-  /** 단계 1회 소비 후 — 사용자가 스크롤을 멈출 때까지 gate */
+  /** 단계 1회 소비 후 — 사용자가 스크롤을 멈출 때까지 gate (강제 홀드 없음) */
   function consumeGesture() {
     gestureGate = true;
     wheelAcc = 0;
@@ -97,7 +88,7 @@
       gestureIdleTimer = null;
     }
   }
-  /** 휠/터치가 오면 타이머 리셋, 조용해지면 gate 해제 */
+  /** 휠/터치가 오면 타이머 리셋, 조용해지면 gate 해제 → 바로 다음 스크롤 가능 */
   function noteGestureActivity() {
     if (gestureIdleTimer) clearTimeout(gestureIdleTimer);
     gestureIdleTimer = setTimeout(function () {
@@ -108,8 +99,6 @@
   }
   function canAdvance(dir) {
     if (!locked || busy) return false;
-    // 전진: hold + gate 모두 막음 / 후진: gate만 (hold 중에도 뒤로 가능)
-    if (dir > 0 && inStepHold()) return false;
     if (gestureGate) return false;
     return true;
   }
@@ -178,8 +167,6 @@
       vid.currentTime = tOf(STEPS[i].v1) - 0.02;
     } catch (e) {}
     clearHold();
-    // 장면 끝 직후 바로 넘기지 못하게 짧게 홀드
-    armStepHold(mobile ? 420 : 560);
     if (hint) hint.classList.remove("is-hide");
   }
 
@@ -447,9 +434,8 @@
     step = i;
     showPanel(STEPS[i].panel);
     if (hint) hint.classList.add("is-hide");
-    // 1회 전환 소비 → 관성 스크롤로 연속 step 금지
+    // 1회 전환 소비 → 관성으로 연속 step만 막고, 멈춘 뒤엔 바로 다음 가능
     consumeGesture();
-    armStepHold(STEP_HOLD_MS);
     noteGestureActivity();
 
     if (opts.instant || reduce) {
@@ -546,8 +532,8 @@
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
 
-    // 관성 스크롤이 이어지는 동안은 계속 activity 기록 → gate 유지
-    if (busy || gestureGate || (e.deltaY > 0 && inStepHold())) {
+    // 관성 스크롤이 이어지는 동안은 activity 기록 → gate 유지 (1→3 스킵 방지)
+    if (busy || gestureGate) {
       wheelAcc = 0;
       noteGestureActivity();
       return;

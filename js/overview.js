@@ -68,8 +68,7 @@
 
   function setMode(kind) {
     root.classList.toggle("is-mf", kind === "mf");
-    // CTA 단계에서도 카드 유지
-    root.classList.toggle("is-cards", kind === "cards" || kind === "cta");
+    root.classList.toggle("is-cards", kind === "cards");
     root.classList.toggle("is-cta", kind === "cta");
     if (kind !== "mf") root.classList.remove("is-mf-bright");
     if (black) black.setAttribute("aria-hidden", kind ? "false" : "true");
@@ -78,7 +77,7 @@
     if (cardsLayer)
       cardsLayer.setAttribute(
         "aria-hidden",
-        kind === "cards" || kind === "cta" ? "false" : "true"
+        kind === "cards" ? "false" : "true"
       );
     if (cta) {
       var show = kind === "cta";
@@ -217,21 +216,10 @@
     }, 520);
   }
 
-  /** 카드 3장 유지한 채 하단 서비스 보기 */
+  /** 카드 비우고 서비스 보기만 */
   function showCta() {
     hideMf();
-    // 카드 전부 보이게
-    if (activeCard < 2) showCard(2);
-    cards.forEach(function (card, idx) {
-      if (idx < 2) {
-        card.classList.add("is-stack");
-        card.classList.remove("is-on");
-      } else if (idx === 2) {
-        card.classList.remove("is-stack");
-        card.classList.add("is-on");
-      }
-    });
-    activeCard = 2;
+    hideCards();
     setMode("cta");
     busy = false;
     showHint(false);
@@ -293,27 +281,28 @@
   }
 
   function releaseDown() {
-    // CTA 이후 아래로 나갈 때
+    // CTA 이후 → pin 끝으로 점프 후 바로 푸터 (빈 스크롤 공간 최소화)
     releasing = true;
     setLocked(false);
     holdUntil = 0;
     wheelAcc = 0;
     showHint(false);
-    var endY = pinST ? pinST.end + 4 : window.pageYOffset + 4;
+    hideCards();
+    hideMf();
+    // CTA는 남겨도 되지만 pin 탈출 후 정리
+    var endY = pinST ? pinST.end + 2 : window.pageYOffset + 2;
     window.scrollTo(0, endY);
     requestAnimationFrame(function () {
-      setTimeout(function () {
-        hideCards();
-        hideMf();
-        setMode(null);
-        step = -1;
-        releasing = false;
-        if (window.ScrollTrigger) {
-          try {
-            ScrollTrigger.refresh();
-          } catch (e) {}
-        }
-      }, 200);
+      setMode(null);
+      step = -1;
+      releasing = false;
+      if (window.ScrollTrigger) {
+        try {
+          ScrollTrigger.refresh();
+        } catch (e) {}
+      }
+      // 푸터가 바로 이어지도록 약간 더
+      window.scrollTo({ top: endY + 4, behavior: "auto" });
     });
   }
 
@@ -485,8 +474,9 @@
   pinST = ScrollTrigger.create({
     trigger: "#overview",
     start: "top top",
+    // pin 여유를 짧게 — CTA 다음 빈 스크롤 구간 없이 푸터로
     end: function () {
-      return "+=" + Math.round(window.innerHeight * (STEPS.length * 0.42 + 0.5));
+      return "+=" + Math.round(window.innerHeight * (STEPS.length * 0.22 + 0.15));
     },
     pin: true,
     pinSpacing: true,
