@@ -49,9 +49,20 @@
   .case-tag { display: inline-block; font-size: 11.5px; font-weight: 700; color: #ff5e9c; background: rgba(230,24,98,.09); border: 1px solid rgba(230,24,98,.2); border-radius: 20px; padding: 4px 11px; margin-bottom: 13px; }
   .case-link { display: inline-block; margin-top: 15px; font-size: 13px; font-weight: 600; color: #8c82ff; text-decoration: none; }
   .case-link:hover { text-decoration: underline; }
-  .case-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px; margin-bottom: clamp(46px, 6vw, 70px); }
+  .case-stats--effect { margin-bottom: clamp(46px, 6vw, 70px); }
+  .case-stats-kicker {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: #8c82ff; text-align: center; margin: 0 0 16px;
+  }
+  .case-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px;
+  }
   .case-stat { border-radius: 10px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); padding: 22px 18px; text-align: center; }
-  .case-stat b { display: block; font-family: 'Pretendard', sans-serif; font-size: clamp(24px, 3vw, 32px); font-weight: 800; color: #fff; letter-spacing: -.02em; }
+  .case-stat b, .case-stat .hs-num {
+    display: block; font-family: 'Pretendard', sans-serif;
+    font-size: clamp(24px, 3vw, 32px); font-weight: 800; color: #fff; letter-spacing: -.02em;
+  }
   .case-block { margin-bottom: 34px; }
   .case-block-title { font-size: clamp(18px, 2.1vw, 22px); font-weight: 700; color: #fff; letter-spacing: -.02em; margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); word-break: keep-all; }
   .case-stat span { display: block; margin-top: 6px; font-size: 12.5px; font-weight: 300; color: rgba(255,255,255,.55); }
@@ -95,11 +106,26 @@
         </p>
       </div>
 
-      <div class="case-stats" data-reveal="up" data-delay="80">
-        <div class="case-stat"><b>22명</b><span>1:1 지도 인원</span></div>
-        <div class="case-stat"><b>7개사</b><span>기업 AX 컨설팅</span></div>
-        <div class="case-stat"><b>11회</b><span>특강·심사 참여</span></div>
-        <div class="case-stat"><b>15만+</b><span>테크블로그 누적 방문</span></div>
+      <div class="case-stats case-stats--effect" data-reveal="up" data-delay="80" aria-label="효과">
+        <p class="case-stats-kicker">효과</p>
+        <div class="case-stats-grid">
+          <div class="case-stat">
+            <b class="hs-num" data-count="22" data-suffix="명">22명</b>
+            <span>1:1 지도 인원</span>
+          </div>
+          <div class="case-stat">
+            <b class="hs-num" data-count="7" data-suffix="개사">7개사</b>
+            <span>기업 AX 컨설팅</span>
+          </div>
+          <div class="case-stat">
+            <b class="hs-num" data-count="11" data-suffix="회">11회</b>
+            <span>특강·심사 참여</span>
+          </div>
+          <div class="case-stat">
+            <b class="hs-num" data-count="15" data-suffix="만+">15만+</b>
+            <span>테크블로그 누적 방문</span>
+          </div>
+        </div>
       </div>
 
       <!-- about.html 에서 이관한 실제 활동 내역 (펼치기 토글 제거, 항상 표시) -->

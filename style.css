@@ -1659,14 +1659,22 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
-/* 대표 · 인사 — 왼쪽 정렬 */
+/* 대표 · 인사 — 왼쪽 정렬 (resume-wrapper 중앙 규칙 덮어씀) */
 .about-greeting .section-intro {
-  text-align: left;
+  text-align: left !important;
+}
+.about-greeting .section-title,
+.about-greeting .section-kicker {
+  text-align: left !important;
 }
 .about-greeting-body {
   max-width: 42em;
-  margin: 0;
-  text-align: left;
+  margin: 0 !important;
+  margin-right: auto !important;
+  text-align: left !important;
+}
+.about-greeting-body p {
+  text-align: left !important;
 }
 .about-greeting-body p {
   margin: 0 0 1.7em;
