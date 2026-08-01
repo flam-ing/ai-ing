@@ -358,104 +358,120 @@
   font-weight:500;
 }
 
-/* ---------- 에이전트 카드: 한 장씩 화면 중앙 (PC/모바일 동일)
- * 스크롤·클릭·스와이프로 1→2→3 교체 (겹침/간격 문제 제거)
+/* ---------- 에이전트 카드 누적 스택
+ * 1 좌상 → 1+2(우) → 1+2+3(하) → CTA (카드 유지)
  */
 .ax-cards{
   position:absolute;inset:0;z-index:5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:clamp(72px,10vh,96px) clamp(16px,3.5vw,36px) clamp(56px,8vh,80px);
+  padding:clamp(70px,9vh,92px) clamp(16px,3vw,32px) clamp(48px,7vh,72px);
   opacity:0;visibility:hidden;
   pointer-events:none;
   transition:opacity .4s ease,visibility .4s ease;
 }
-.ax-overview.is-cards .ax-cards{
+.ax-overview.is-cards .ax-cards,
+.ax-overview.is-cta .ax-cards{
   opacity:1;visibility:visible;
   pointer-events:auto;
 }
-.ax-overview.is-cards .ax-overview-black{
+.ax-overview.is-cards .ax-overview-black,
+.ax-overview.is-cta .ax-overview-black{
   background:#07080d;
 }
 .ax-cards-stage{
   position:relative;
   width:100%;
-  max-width:min(720px,94vw);
-  height:auto;
+  max-width:1120px;
+  height:100%;
   margin:0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 .ax-card{
-  position:relative;
-  width:100%;
-  max-width:min(640px,94vw);
+  position:absolute;
+  width:min(520px,50vw);
   border-radius:16px;
   overflow:hidden;
   background:rgba(16,18,26,.94);
   border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 24px 70px rgba(0,0,0,.5);
+  box-shadow:0 20px 56px rgba(0,0,0,.48);
   opacity:0;
   visibility:hidden;
   pointer-events:none;
   will-change:transform,opacity;
   transition:
-    transform .65s cubic-bezier(.16,1,.3,1),
-    opacity .5s ease,
-    visibility .5s;
+    transform .72s cubic-bezier(.16,1,.3,1),
+    opacity .55s ease,
+    visibility .55s;
   z-index:2;
-  /* 한 장만 보이게: 비활성은 레이아웃에서 제외 */
-  display:none;
-  margin:0 auto;
 }
-.ax-card.is-on{
-  display:block;
+.ax-card.is-on,
+.ax-card.is-stack{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
-  transform:translateY(0) scale(1);
-}
-.ax-card.is-stack{ display:none; }
-
-/* 등장 방향 힌트 (한 장 전환용) */
-.ax-card--from-left,
-.ax-card--from-right,
-.ax-card--from-bottom{
-  transform:translateY(22px) scale(.97);
-}
-.ax-card.is-on.ax-card--from-left,
-.ax-card.is-on.ax-card--from-right,
-.ax-card.is-on.ax-card--from-bottom{
-  transform:translateY(0) scale(1);
 }
 
-/* 개요 끝 CTA */
+/* 1 좌상 */
+.ax-card--tl{
+  top:0;
+  left:0;
+  width:min(540px,52vw);
+  z-index:3;
+}
+.ax-card--tl.ax-card--from-left{ transform:translateX(-42vw) scale(.94); }
+.ax-card--tl.is-on,
+.ax-card--tl.is-stack{ transform:translate(0,0) scale(1); }
+
+/* 2 우중 — 1과 세로 간격 확보 */
+.ax-card--mr{
+  top:32%;
+  right:0;
+  left:auto;
+  width:min(520px,50vw);
+  z-index:4;
+}
+.ax-card--mr.ax-card--from-right{ transform:translateX(42vw) scale(.94); }
+.ax-card--mr.is-on,
+.ax-card--mr.is-stack{ transform:translate(0,0) scale(1); }
+
+/* 3 좌하 */
+.ax-card--wide{
+  left:0;
+  bottom:0;
+  top:auto;
+  width:min(600px,62vw);
+  max-width:none;
+  z-index:5;
+}
+.ax-card--wide.ax-card--from-bottom{ transform:translateY(28vh) scale(.98); }
+.ax-card--wide.is-on,
+.ax-card--wide.is-stack{ transform:translateY(0) scale(1); }
+
+/* 개요 끝 CTA — 카드 위에 덮지 않고 하단 바 */
 .ax-overview-cta{
   position:absolute;
-  inset:0;
-  z-index:8;
+  left:0;right:0;bottom:0;
+  z-index:12;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  gap:18px;
-  padding:24px;
+  justify-content:flex-end;
+  gap:12px;
+  padding:28px 20px 32px;
   opacity:0;
   visibility:hidden;
   pointer-events:none;
   transition:opacity .4s ease,visibility .4s;
-  background:rgba(5,6,10,.35);
+  background:linear-gradient(to top,rgba(5,6,10,.95) 0%,rgba(5,6,10,.72) 55%,transparent 100%);
 }
 .ax-overview-cta.is-on{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
 }
+.ax-overview.is-cta .ax-card--wide{ bottom:100px; }
+.ax-overview.is-cta .ax-cards{ padding-bottom:110px; }
 .ax-overview-cta-label{
   margin:0;
-  font-size:clamp(1rem,2.2vw,1.25rem);
+  font-size:clamp(.92rem,1.8vw,1.1rem);
   font-weight:300;
   color:rgba(255,255,255,.78);
   text-align:center;
@@ -465,7 +481,7 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:16px 28px;
+  padding:15px 28px;
   border-radius:3px;
   background:#e61862;
   color:#fff;
@@ -480,12 +496,8 @@
   filter:brightness(1.06);
   transform:translateY(-1px);
 }
-.ax-overview{
-  cursor:pointer;
-}
-.ax-overview.is-cta{
-  cursor:default;
-}
+.ax-overview{ cursor:pointer; }
+.ax-overview.is-cta{ cursor:default; }
 
 /* 영상 + 문구 가로 배치 — 기본: GIF 왼쪽 / 문구 오른쪽 */
 .ax-card--side{
@@ -582,11 +594,56 @@
 }
 
 @media(max-width:768px){
+  /* 모바일: 누적 세로 스택 (1 → 1+2 → 1+2+3) */
   .ax-cards{
-    padding:68px 14px 52px;
+    padding:64px 12px 56px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
-  .ax-card{
-    max-width:min(94vw,420px);
+  .ax-cards-stage{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+    height:auto;
+    min-height:100%;
+    max-width:100%;
+  }
+  .ax-card,
+  .ax-card--tl,
+  .ax-card--mr,
+  .ax-card--wide{
+    position:relative !important;
+    top:auto !important;
+    left:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    width:min(94vw,400px) !important;
+    max-width:100%;
+    margin:0 auto;
+    display:none;
+    transform:none !important;
+  }
+  .ax-card.is-on,
+  .ax-card.is-stack{
+    display:block;
+    opacity:1;
+    visibility:visible;
+    transform:none !important;
+  }
+  .ax-card--tl.ax-card--from-left,
+  .ax-card--mr.ax-card--from-right,
+  .ax-card--wide.ax-card--from-bottom{
+    transform:translateY(18px) scale(.97) !important;
+  }
+  .ax-card--tl.is-on,
+  .ax-card--tl.is-stack,
+  .ax-card--mr.is-on,
+  .ax-card--mr.is-stack,
+  .ax-card--wide.is-on,
+  .ax-card--wide.is-stack{
+    transform:none !important;
   }
   .ax-card--side{
     flex-direction:column;
@@ -599,8 +656,11 @@
   }
   .ax-card--side .ax-card-body{
     flex:1 1 auto;
-    padding:14px 16px 16px;
+    padding:12px 14px 14px;
   }
+  .ax-overview.is-cta .ax-card--wide{ bottom:auto; }
+  .ax-overview.is-cta .ax-cards{ padding-bottom:120px; }
+  .ax-overview-cta{ padding:20px 14px 28px; }
 }
 
 .ax-journey-ui,

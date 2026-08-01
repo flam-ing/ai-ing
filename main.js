@@ -850,9 +850,16 @@
     // 허니팟(봇 차단용). 사람이 채우는 필드가 아니므로 값이 있으면 서버가 스팸으로 처리한다.
     const honeypotEl = form.querySelector('#company-website');
     const honeypot = honeypotEl ? honeypotEl.value.trim() : '';
+    const privacyEl = form.querySelector('#privacy-agree');
     
     if (!contactInfo || !content) {
       alert("이메일 또는 연락처 정보와 문의 내용을 입력해 주세요.");
+      return;
+    }
+
+    if (privacyEl && !privacyEl.checked) {
+      alert("개인정보 수집·이용에 동의해 주세요.");
+      privacyEl.focus();
       return;
     }
 
@@ -878,6 +885,7 @@
           contact: contactInfo,
           content: content,
           company_website: honeypot,
+          privacy_agree: privacyEl ? !!privacyEl.checked : true,
         }),
       });
 

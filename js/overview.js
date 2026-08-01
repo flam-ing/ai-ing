@@ -33,12 +33,12 @@
     { kind: "cta" },
   ];
 
-  var WHEEL_THRESHOLD = mobile ? 36 : 48;
-  var SWIPE_PX = mobile ? 32 : 40;
-  var ACC_RESET_MS = 200;
-  var FADE_MS = 320;
-  var MF_HOLD_MS = 180;
-  var CARD_HOLD_MS = 420;
+  var WHEEL_THRESHOLD = mobile ? 40 : 55;
+  var SWIPE_PX = mobile ? 36 : 44;
+  var ACC_RESET_MS = 220;
+  var FADE_MS = 360;
+  var MF_HOLD_MS = 280;
+  var CARD_HOLD_MS = 700;
 
   var step = -1;
   var locked = false;
@@ -68,7 +68,8 @@
 
   function setMode(kind) {
     root.classList.toggle("is-mf", kind === "mf");
-    root.classList.toggle("is-cards", kind === "cards");
+    // CTA 단계에서도 카드 유지
+    root.classList.toggle("is-cards", kind === "cards" || kind === "cta");
     root.classList.toggle("is-cta", kind === "cta");
     if (kind !== "mf") root.classList.remove("is-mf-bright");
     if (black) black.setAttribute("aria-hidden", kind ? "false" : "true");
@@ -77,7 +78,7 @@
     if (cardsLayer)
       cardsLayer.setAttribute(
         "aria-hidden",
-        kind === "cards" ? "false" : "true"
+        kind === "cards" || kind === "cta" ? "false" : "true"
       );
     if (cta) {
       var show = kind === "cta";
@@ -190,14 +191,17 @@
     });
   }
 
-  /** 카드는 한 장씩 중앙 — 간격/겹침 문제 제거 */
+  /** 카드 누적: 0 → 0+1 → 0+1+2 (이전 카드 is-stack 유지) */
   function showCard(maxIdx) {
     if (maxIdx === activeCard) return;
     activeCard = maxIdx;
     busy = true;
 
     cards.forEach(function (card, idx) {
-      if (idx === maxIdx) {
+      if (idx < maxIdx) {
+        card.classList.add("is-stack");
+        card.classList.remove("is-on");
+      } else if (idx === maxIdx) {
         card.classList.remove("is-stack");
         if (!card.classList.contains("is-on")) {
           void card.offsetWidth;
@@ -210,12 +214,24 @@
 
     setTimeout(function () {
       busy = false;
-    }, 480);
+    }, 520);
   }
 
+  /** 카드 3장 유지한 채 하단 서비스 보기 */
   function showCta() {
     hideMf();
-    hideCards();
+    // 카드 전부 보이게
+    if (activeCard < 2) showCard(2);
+    cards.forEach(function (card, idx) {
+      if (idx < 2) {
+        card.classList.add("is-stack");
+        card.classList.remove("is-on");
+      } else if (idx === 2) {
+        card.classList.remove("is-stack");
+        card.classList.add("is-on");
+      }
+    });
+    activeCard = 2;
     setMode("cta");
     busy = false;
     showHint(false);

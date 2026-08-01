@@ -39,11 +39,13 @@
     { panel: 2, v0: 0.78, v1: 0.88 },
   ];
 
-  var WHEEL_THRESHOLD = mobile ? 32 : 46;
-  var SWIPE_PX = mobile ? 34 : 44;
-  var ACC_RESET_MS = 220;
-  var SLOW_RATE = 0.78;
-  var TRANS_MS = 520;
+  // index 시절 감도 복구 + 단계 홀드로 너무 빠른 스킵 방지
+  var WHEEL_THRESHOLD = mobile ? 48 : 68;
+  var SWIPE_PX = mobile ? 40 : 50;
+  var ACC_RESET_MS = 260;
+  var SLOW_RATE = 0.72;
+  var TRANS_MS = 720;
+  var STEP_HOLD_MS = mobile ? 780 : 980;
 
   var step = -1;
   var locked = false;
@@ -58,6 +60,7 @@
   var slowRaf = 0;
   var timeUpdateHandler = null;
   var holdTimer = null;
+  var holdUntil = 0;
   var touchY0 = 0;
   var touchOn = false;
 
@@ -73,6 +76,12 @@
       clearTimeout(holdTimer);
       holdTimer = null;
     }
+  }
+  function armStepHold(ms) {
+    holdUntil = Date.now() + (ms || STEP_HOLD_MS);
+  }
+  function inStepHold() {
+    return Date.now() < holdUntil;
   }
 
   function setupVideo() {
@@ -130,7 +139,7 @@
     } catch (e) {}
   }
 
-  /** 구간 끝: 그냥 멈춤. 자동 다음 단계 없음 — 스크롤로만 이동 */
+  /** 구간 끝: 멈춤 + 홀드. 자동 다음 단계 없음 — 스크롤로만 이동 */
   function onSegmentEnd(i) {
     if (!locked || step !== i || busy) return;
     try {
@@ -139,6 +148,8 @@
       vid.currentTime = tOf(STEPS[i].v1) - 0.02;
     } catch (e) {}
     clearHold();
+    // 장면 끝 직후 바로 넘기지 못하게 짧게 홀드
+    armStepHold(mobile ? 420 : 560);
     if (hint) hint.classList.remove("is-hide");
   }
 
@@ -406,6 +417,7 @@
     step = i;
     showPanel(STEPS[i].panel);
     if (hint) hint.classList.add("is-hide");
+    armStepHold(STEP_HOLD_MS);
 
     if (opts.instant || reduce) {
       stopSlow();
@@ -466,11 +478,15 @@
   window.__axJourneyForceRelease = forceRelease;
   function stepBy(dir) {
     if (!locked || busy) return;
+    // 다음 단계만 홀드 적용 (뒤로 가기는 허용)
+    if (dir > 0 && inStepHold()) {
+      wheelAcc = 0;
+      return;
+    }
     if (dir > 0) {
       if (step < STEPS.length - 1) goToStep(step + 1);
       else releaseDown();
     } else {
-      // 위로: 01→개요 쪽 해제, 02/03→이전 단계
       if (step > 0) goToStep(step - 1);
       else releaseUp();
     }
@@ -480,13 +496,20 @@
     if (!locked) return;
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
-    // 영상 전환 중(busy)에도 의도 누적 — 끝나면 한 번 적용
+    if (busy) {
+      wheelAcc = 0;
+      return;
+    }
+    // 홀드 중 전진 스크롤은 무시 (의도 누적 X → 실수로 연속 스킵 방지)
+    if (inStepHold() && e.deltaY > 0) {
+      wheelAcc = 0;
+      return;
+    }
     wheelAcc += e.deltaY;
     if (accTimer) clearTimeout(accTimer);
     accTimer = setTimeout(function () {
       wheelAcc = 0;
     }, ACC_RESET_MS);
-    if (busy) return;
     if (wheelAcc > WHEEL_THRESHOLD) {
       wheelAcc = 0;
       stepBy(1);
@@ -559,8 +582,8 @@
     trigger: pinTarget,
     start: "top top",
     end: function () {
-      // 단계 3 + 여유 — 단독 페이지에서도 휠이 pin을 바로 탈출하지 않게
-      return "+=" + Math.round(window.innerHeight * 2.8);
+      // index 시절처럼 pin 구간을 넉넉히 (빠른 탈출 방지)
+      return "+=" + Math.round(window.innerHeight * 3.2);
     },
     pin: true,
     pinSpacing: true,
