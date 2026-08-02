@@ -379,12 +379,11 @@
   font-weight:500;
 }
 
-/* ---------- 에이전트 카드 누적 스택
- * 1 좌상 → 1+2(우) → 1+2+3(하) → CTA (카드 유지)
- */
-.ax-cards{
+/* ---------- 개요: 전체화면 장면 (한 장씩, 카드 스택 아님) ---------- */
+.ax-cards,
+.ax-scenes{
   position:absolute;inset:0;z-index:5;
-  padding:clamp(70px,9vh,92px) clamp(16px,3vw,32px) clamp(48px,7vh,72px);
+  padding:0;
   opacity:0;visibility:hidden;
   pointer-events:none;
   transition:opacity .4s ease,visibility .4s ease;
@@ -396,23 +395,27 @@
 }
 .ax-overview.is-cards .ax-overview-black,
 .ax-overview.is-cta .ax-overview-black{
-  background:#07080d;
+  background:#05060a;
 }
-.ax-cards-stage{
+.ax-cards-stage,
+.ax-scenes-stage{
   position:relative;
   width:100%;
-  max-width:1120px;
+  max-width:none;
   height:100%;
-  margin:0 auto;
+  margin:0;
 }
-.ax-card{
+.ax-card,
+.ax-scene{
   position:absolute;
-  width:min(520px,50vw);
-  border-radius:16px;
+  inset:0;
+  width:100%;
+  max-width:none;
+  border-radius:0;
   overflow:hidden;
-  background:rgba(16,18,26,.94);
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 20px 56px rgba(0,0,0,.48);
+  background:#05060a;
+  border:none;
+  box-shadow:none;
   opacity:0;
   visibility:hidden;
   pointer-events:none;
@@ -422,49 +425,66 @@
     opacity .55s ease,
     visibility .55s;
   z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(14px,2.4vh,28px);
+  padding:clamp(72px,10vh,96px) clamp(16px,4vw,40px) clamp(56px,8vh,80px);
+  box-sizing:border-box;
 }
+/* 한 장만 표시 — is-stack 은 사용하지 않음 */
 .ax-card.is-on,
-.ax-card.is-stack{
+.ax-scene.is-on,
+.ax-card.is-prein,
+.ax-scene.is-prein{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
-}
-
-/* 1 좌상 */
-.ax-card--tl{
-  top:0;
-  left:0;
-  width:min(540px,52vw);
-  z-index:3;
-}
-.ax-card--tl.ax-card--from-left{ transform:translateX(-42vw) scale(.94); }
-.ax-card--tl.is-on,
-.ax-card--tl.is-stack{ transform:translate(0,0) scale(1); }
-
-/* 2 우중 — 1과 세로 간격 확보 */
-.ax-card--mr{
-  top:32%;
-  right:0;
-  left:auto;
-  width:min(520px,50vw);
-  z-index:4;
-}
-.ax-card--mr.ax-card--from-right{ transform:translateX(42vw) scale(.94); }
-.ax-card--mr.is-on,
-.ax-card--mr.is-stack{ transform:translate(0,0) scale(1); }
-
-/* 3 좌하 */
-.ax-card--wide{
-  left:0;
-  bottom:0;
-  top:auto;
-  width:min(600px,62vw);
-  max-width:none;
   z-index:5;
 }
-.ax-card--wide.ax-card--from-bottom{ transform:translateY(28vh) scale(.98); }
-.ax-card--wide.is-on,
-.ax-card--wide.is-stack{ transform:translateY(0) scale(1); }
+.ax-card.is-stack,
+.ax-scene.is-stack{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+.ax-card--from-left{ transform:translateX(-18vw) scale(.98); }
+.ax-card--from-right{ transform:translateX(18vw) scale(.98); }
+.ax-card--from-bottom{ transform:translateY(12vh) scale(.98); }
+.ax-card.is-on,
+.ax-scene.is-on{
+  transform:translate(0,0) scale(1);
+}
+
+/* 전체화면 미디어 */
+.ax-scene-media,
+.ax-card .ax-card-media{
+  position:relative;
+  flex:0 1 auto;
+  width:min(1100px,92vw);
+  max-height:min(62vh,620px);
+  aspect-ratio:16 / 9;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0a0b10;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 24px 64px rgba(0,0,0,.45);
+}
+.ax-scene-body,
+.ax-card .ax-card-body{
+  flex:0 0 auto;
+  width:min(720px,92vw);
+  padding:0;
+  text-align:center;
+}
+.ax-scene-body .ax-card-quote,
+.ax-card .ax-card-quote{
+  font-size:clamp(1rem,2.1vw,1.28rem);
+  line-height:1.55;
+  color:rgba(255,255,255,.92);
+}
 
 /* 개요 끝 CTA — 카드 비운 뒤 중앙에 서비스 보기만 */
 .ax-overview-cta{
@@ -496,7 +516,8 @@
 .ax-overview.is-cta .ax-overview-cta[hidden]{
   display:flex !important;
 }
-.ax-overview.is-cta .ax-cards{
+.ax-overview.is-cta .ax-cards,
+.ax-overview.is-cta .ax-scenes{
   opacity:0 !important;
   visibility:hidden !important;
   pointer-events:none !important;
@@ -531,39 +552,6 @@
 .ax-overview{ cursor:pointer; }
 .ax-overview.is-cta{ cursor:default; }
 
-/* 영상 + 문구 가로 배치 — 기본: GIF 왼쪽 / 문구 오른쪽 */
-.ax-card--side{
-  display:flex;
-  flex-direction:row;
-  align-items:center; /* stretch 금지 → 세로로 안 늘어남 */
-  min-height:0;
-}
-/* 문구 왼쪽 / GIF 오른쪽 */
-.ax-card--side-rev{
-  flex-direction:row-reverse;
-}
-.ax-card--side .ax-card-media{
-  flex:0 0 auto;
-  width:58%;
-  max-width:58%;
-  aspect-ratio:16 / 9; /* GIF 원본이 가로여도 영역 고정 */
-  min-height:0;
-  height:auto;
-  align-self:center;
-}
-.ax-card--side .ax-card-body{
-  flex:1 1 42%;
-  display:flex;
-  align-items:center;
-  padding:clamp(12px,1.6vw,20px) clamp(14px,1.8vw,22px);
-  min-width:0;
-}
-.ax-card--wide.ax-card--side .ax-card-media{
-  width:55%;
-  max-width:55%;
-  aspect-ratio:16 / 9;
-}
-
 .ax-card-media{
   position:relative;
   aspect-ratio:16 / 9;
@@ -582,164 +570,88 @@
   filter:saturate(1.04) contrast(1.03);
 }
 .ax-card-body{
-  padding:16px 18px 18px;
+  padding:0;
 }
 .ax-card-quote{
   margin:0;
   font-family:Georgia,"Times New Roman",serif;
   font-style:italic;
-  font-size:clamp(.85rem,1.25vw,.98rem);
+  font-size:clamp(1rem,2.1vw,1.28rem);
   line-height:1.55;
-  color:rgba(255,255,255,.9);
+  color:rgba(255,255,255,.92);
   word-break:keep-all;
-}
-.ax-card-empty{
-  min-height:clamp(120px,16vh,160px);
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  justify-content:center;
-  padding:22px 28px;
-  background:
-    linear-gradient(120deg,rgba(140,130,255,.12),transparent 55%),
-    rgba(12,14,20,.95);
-}
-.ax-card-empty-kicker{
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:rgba(140,130,255,.9);
-  margin-bottom:8px;
-}
-.ax-card-empty-title{
-  margin:0;
-  font-size:clamp(1.05rem,2vw,1.3rem);
-  font-weight:500;
-  color:rgba(255,255,255,.88);
-  letter-spacing:-.02em;
-}
-.ax-card-quote--on-empty{
-  max-width:48ch;
-  font-size:clamp(1rem,1.8vw,1.2rem);
-  line-height:1.55;
 }
 
 @media(max-width:768px){
-  /* 모바일: 누적 세로 스택 — 3장이 화면 높이 안에 들어오도록 축소 */
-  .ax-cards{
-    padding:56px 10px 48px;
-    overflow:hidden; /* 화면 밖으로 넘기지 않음 */
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  /* 모바일도 전체화면 한 장 — 화면 높이 안에 맞춤 */
+  .ax-cards,
+  .ax-scenes{
+    padding:0;
+    overflow:hidden;
   }
-  .ax-cards-stage{
-    display:flex;
+  .ax-cards-stage,
+  .ax-scenes-stage{
+    width:100%;
+    max-width:none;
+    height:100%;
+  }
+  .ax-card,
+  .ax-scene{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0;
+    display:flex !important;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:clamp(6px,1.2vh,10px);
-    width:100%;
-    max-width:min(92vw,380px);
-    height:auto;
-    max-height:calc(100dvh - 100px);
-    min-height:0;
-  }
-  .ax-card,
-  .ax-card--tl,
-  .ax-card--mr,
-  .ax-card--wide{
-    position:relative !important;
-    top:auto !important;
-    left:auto !important;
-    right:auto !important;
-    bottom:auto !important;
-    width:100% !important;
-    max-width:100% !important;
-    margin:0 auto;
-    display:none;
-    flex:0 1 auto;
-    min-height:0;
-    border-radius:12px;
-    box-shadow:0 10px 28px rgba(0,0,0,.4);
-    /* 등장 트랜지션 유지 (transform:none 금지) */
+    gap:12px;
+    padding:64px 14px 52px !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
     transition:
       transform .7s cubic-bezier(.16,1,.3,1),
       opacity .5s ease,
       visibility .5s !important;
   }
-  .ax-card.is-on,
-  .ax-card.is-stack,
-  .ax-card.is-prein{
-    display:flex !important;
-    flex-direction:column;
-    pointer-events:auto;
+  .ax-card:not(.is-on):not(.is-prein),
+  .ax-scene:not(.is-on):not(.is-prein){
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
   }
   .ax-card.is-on,
-  .ax-card.is-stack{
-    opacity:1;
-    visibility:visible;
+  .ax-card.is-prein,
+  .ax-scene.is-on,
+  .ax-scene.is-prein{
+    opacity:1 !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
   }
-  .ax-card.is-prein{
-    opacity:1;
-    visibility:visible;
+  .ax-card--from-left{ transform:translateX(-40vw) scale(.97) !important; }
+  .ax-card--from-right{ transform:translateX(40vw) scale(.97) !important; }
+  .ax-card--from-bottom{ transform:translateY(16vh) scale(.97) !important; }
+  .ax-card.is-on,
+  .ax-scene.is-on{
+    transform:translate(0,0) scale(1) !important;
   }
-  /* 모바일 왼→오→왼 슬라이드 인 */
-  .ax-card--tl.ax-card--from-left{
-    transform:translateX(-72vw) scale(.96) !important;
-  }
-  .ax-card--mr.ax-card--from-right{
-    transform:translateX(72vw) scale(.96) !important;
-  }
-  .ax-card--wide.ax-card--from-bottom{
-    transform:translateX(-72vw) scale(.96) !important;
-  }
-  .ax-card--tl.is-on,
-  .ax-card--tl.is-stack,
-  .ax-card--mr.is-on,
-  .ax-card--mr.is-stack,
-  .ax-card--wide.is-on,
-  .ax-card--wide.is-stack{
-    transform:translateX(0) scale(1) !important;
-  }
-  .ax-card--side{
-    flex-direction:column !important;
-    align-items:stretch;
-  }
-  .ax-card--side .ax-card-media,
+  .ax-scene-media,
   .ax-card .ax-card-media{
-    width:100% !important;
-    max-width:100% !important;
-    flex:0 0 auto !important;
-    /* 3장 기준 화면 높이 안에 맞춤 */
+    width:min(96vw,520px) !important;
+    max-width:96vw !important;
+    max-height:min(42dvh,320px) !important;
     aspect-ratio:16 / 9;
-    max-height:clamp(72px,12.5dvh,110px);
-    height:auto;
+    border-radius:10px;
   }
-  .ax-card--side .ax-card-body,
+  .ax-scene-body,
   .ax-card .ax-card-body{
-    flex:0 1 auto;
-    padding:clamp(6px,1.2vh,10px) 10px clamp(8px,1.4vh,12px) !important;
-    min-width:0;
+    width:min(94vw,420px);
+    text-align:center;
   }
   .ax-card-quote{
-    font-size:clamp(.68rem,2.6vw,.82rem) !important;
-    line-height:1.4 !important;
-  }
-  /* 2장 이상일 때 더 압축 */
-  .ax-cards-stage:has(.ax-card.is-stack) .ax-card-media{
-    max-height:clamp(64px,11dvh,96px);
-  }
-  /* 3장 (is-stack 2개) */
-  .ax-cards-stage:has(.ax-card.is-stack ~ .ax-card.is-stack) .ax-card-media,
-  .ax-cards-stage:has(.ax-card.is-stack):has(.ax-card.is-on) .ax-card-media{
-    max-height:clamp(56px,9.5dvh,84px);
-  }
-  .ax-cards-stage:has(.ax-card.is-stack ~ .ax-card.is-stack) .ax-card-quote,
-  .ax-cards-stage:has(.ax-card.is-stack):has(.ax-card.is-on) .ax-card-quote{
-    font-size:clamp(.62rem,2.4vw,.76rem) !important;
-    line-height:1.35 !important;
+    font-size:clamp(.92rem,3.6vw,1.05rem);
+    line-height:1.5;
   }
   .ax-overview-cta{ padding:24px 14px; }
   .ax-overview-stage .scroll-cue,

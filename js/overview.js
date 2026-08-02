@@ -1,7 +1,7 @@
 /**
  * 개요 (#overview)
- * 글귀 3 + 카드 3 — 스크롤/스와이프/클릭/키보드로 진행
- * 마지막 카드 후 "서비스 보기" CTA
+ * 글귀 3 + 전체화면 장면 3 — 스크롤/스와이프/클릭/키보드로 진행
+ * 마지막 장면 후 "서비스 보기" CTA
  */
 (function () {
   "use strict";
@@ -201,24 +201,20 @@
   function hideCards() {
     activeCard = -1;
     cards.forEach(function (c) {
-      c.classList.remove("is-on", "is-stack");
+      c.classList.remove("is-on", "is-stack", "is-prein");
     });
   }
 
-  /** 카드 누적: 0 → 0+1 → 0+1+2 (이전 카드 is-stack 유지, 좌/우/좌 등장) */
+  /** 전체화면 장면: 한 장만 표시 (카드 누적 없음) */
   function showCard(maxIdx) {
     if (maxIdx === activeCard) return;
     activeCard = maxIdx;
     busy = true;
 
     cards.forEach(function (card, idx) {
-      if (idx < maxIdx) {
-        card.classList.add("is-stack");
-        card.classList.remove("is-on");
-      } else if (idx === maxIdx) {
+      if (idx === maxIdx) {
         card.classList.remove("is-stack");
         if (!card.classList.contains("is-on")) {
-          // display 켠 뒤 한 프레임 오프스크린 pose → is-on 슬라이드 인
           card.classList.add("is-prein");
           void card.offsetWidth;
           requestAnimationFrame(function () {
@@ -229,7 +225,7 @@
           });
         }
       } else {
-        card.classList.remove("is-on", "is-stack");
+        card.classList.remove("is-on", "is-stack", "is-prein");
       }
     });
 

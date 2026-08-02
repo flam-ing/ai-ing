@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/journey.css?v=20260802_cool">
+<link rel="stylesheet" href="css/journey.css?v=20260802_fullscreen">
 
 </head>
 <body>
@@ -59,7 +59,7 @@
     </div>
   </nav>
 
-<!-- ============ 개요: 글귀 3 + 에이전트 카드 스택 ============ -->
+<!-- ============ 개요: 글귀 3 + 전체화면 장면 3 ============ -->
 <section class="ax-overview" id="overview" aria-label="AI-ing 개요">
   <div class="ax-overview-stage">
     <div class="ax-overview-black" id="ax-overview-black" aria-hidden="true"></div>
@@ -71,32 +71,32 @@
       <p class="mf-line" data-mf="2">그 차이를 알면 이런 세상이 펼쳐집니다.</p>
     </div>
 
-    <!-- 카드 배치: 1 좌상단 / 2 우중앙 / 3 하단 가로 -->
-    <div class="ax-cards" id="ax-cards" aria-hidden="true">
-      <div class="ax-cards-stage">
-        <article class="ax-card ax-card--tl ax-card--from-left ax-card--side" data-card="0">
-          <div class="ax-card-media">
+    <!-- 전체화면 장면 (한 장씩) -->
+    <div class="ax-cards ax-scenes" id="ax-cards" aria-hidden="true">
+      <div class="ax-cards-stage ax-scenes-stage">
+        <article class="ax-card ax-scene ax-card--from-left" data-card="0">
+          <div class="ax-card-media ax-scene-media">
             <img class="ax-card-gif" src="assets/agent/cardnews.gif?v=1" alt="" decoding="async">
           </div>
-          <div class="ax-card-body">
+          <div class="ax-card-body ax-scene-body">
             <p class="ax-card-quote">“매일 아침마다 뉴스를 스크랩하고 영상형 카드뉴스로 만든 뒤에 SNS에 자동으로 올려줘”</p>
           </div>
         </article>
 
-        <article class="ax-card ax-card--mr ax-card--from-right ax-card--side ax-card--side-rev" data-card="1">
-          <div class="ax-card-media">
+        <article class="ax-card ax-scene ax-card--from-right" data-card="1">
+          <div class="ax-card-media ax-scene-media">
             <img class="ax-card-gif" src="assets/agent/payment.gif?v=1" alt="" decoding="async">
           </div>
-          <div class="ax-card-body">
+          <div class="ax-card-body ax-scene-body">
             <p class="ax-card-quote">“장기 휴가 나간 김과장 대신 우리 홈페이지에 결제시스템을 연결해놔주고 정산도 알아서 해줘”</p>
           </div>
         </article>
 
-        <article class="ax-card ax-card--wide ax-card--from-bottom ax-card--side" data-card="2">
-          <div class="ax-card-media">
+        <article class="ax-card ax-scene ax-card--from-bottom" data-card="2">
+          <div class="ax-card-media ax-scene-media">
             <img class="ax-card-gif" src="assets/agent/local-meet.gif?v=1" alt="" decoding="async">
           </div>
-          <div class="ax-card-body">
+          <div class="ax-card-body ax-scene-body">
             <p class="ax-card-quote">“내 컴퓨터에서 어제 미팅 폴더 정리하고, 녹화본 뽑아서 사이트로 정리해서 올려줘”</p>
           </div>
         </article>
@@ -152,7 +152,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/overview.js?v=20260802_slide"></script>
+<script src="js/overview.js?v=20260802_fullscreen"></script>
 <script src="js/nav-scroll.js?v=20260802_fix2"></script>
 <script src="main.js?v=20260802_mail"></script>
 
