@@ -9,3 +9,8 @@
 /entry        https://slides.ai-ing.org/entry-poop-slides.html        301
 /portfolio    https://slides.ai-ing.org/portfolio-slides.html        301
 /frontend     https://slides.ai-ing.org/frontend-slides.html         301
+
+# 내부 결제 대시보드는 payment 호스트로 이전 (마케팅 사이트 비노출)
+/admin        https://payment.ai-ing.org/dashboard  301
+/admin.html   https://payment.ai-ing.org/dashboard  301
+/dashboard    https://payment.ai-ing.org/dashboard  301
