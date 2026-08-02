@@ -324,8 +324,8 @@
   }
   .bank-pick-btn:hover{ transform:translateY(-2px); border-color:rgba(140,130,255,.45); background:rgba(140,130,255,.08); }
   .bank-pick-logo-img{
-    width:40px;height:40px;border-radius:10px;object-fit:contain;background:#fff;flex-shrink:0;
-    box-shadow:0 2px 8px rgba(0,0,0,.25);padding:3px;box-sizing:border-box;
+    width:44px;height:44px;border-radius:12px;object-fit:contain;background:#fff;flex-shrink:0;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);padding:4px;box-sizing:border-box;
   }
   .bank-pick-name{ font-size:12px;font-weight:600;text-align:center;line-height:1.3;word-break:keep-all; }
   @media(max-width:420px){
@@ -337,36 +337,37 @@
 <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 <script>
 /**
- * 은행 목록 — 로고는 인터넷(각 은행 도메인 파비콘/아이콘 CDN)에서 로드
- * 실패 시 img/banks 로컬 캐시로 폴백. 클릭 시 계좌 복사 + 은행 앱 스킴 (AQR 미사용)
+ * 은행 목록 — 로고: korea_bank_icons(MIT) 기반 공식 스타일 SVG (금융결제원 기관코드)
+ * 출처: https://github.com/flxh4894/korea_bank_icons
+ * 클릭 시 계좌 복사 + 은행 앱 스킴 (AQR 미사용)
  */
 (function () {
   var ACCOUNT = '1002-6334-1822';
-  // icon: 인터넷 로고 URL / local: 오프라인·CDN 실패 시 폴백
+  // icon: 로컬 SVG (배포 포함). 파비콘 CDN 의존 없음.
   var BANKS = [
-    { name: '토스', icon: 'https://icon.horse/icon/toss.im', local: 'img/banks/toss.png', scheme: 'supertoss://send' },
-    { name: '카카오뱅크', icon: 'https://icon.horse/icon/kakaobank.com', local: 'img/banks/kakao.png', scheme: 'kakaobank://' },
-    { name: '케이뱅크', icon: 'https://icon.horse/icon/kbanknow.com', local: 'img/banks/kbank.png', scheme: 'kbank-banking://' },
-    { name: '우리은행', icon: 'https://icon.horse/icon/wooribank.com', local: 'img/banks/woori.png', scheme: 'wooribank://' },
-    { name: '국민은행', icon: 'https://icon.horse/icon/kbstar.com', local: 'img/banks/kb.png', scheme: 'kbbank://' },
-    { name: '신한은행', icon: 'https://icon.horse/icon/shinhan.com', local: 'img/banks/shinhan.png', scheme: 'shinhan-sr-ansimclick://' },
-    { name: '기업은행', icon: 'https://icon.horse/icon/ibk.co.kr', local: 'img/banks/ibk.png', scheme: 'ibkbank://' },
-    { name: '새마을금고', icon: 'https://icon.horse/icon/kfcc.co.kr', local: 'img/banks/mg.png', scheme: 'mgbank://' },
-    { name: '농협은행', icon: 'https://icon.horse/icon/nonghyup.com', local: 'img/banks/nh.png', scheme: 'nhappnew://' },
-    { name: '제일은행', icon: 'https://icon.horse/icon/standardchartered.co.kr', local: 'img/banks/sc.png', scheme: 'scbank://' },
-    { name: '씨티은행', icon: 'https://icon.horse/icon/citibank.co.kr', local: 'img/banks/citi.png', scheme: 'citibank://' },
-    { name: '광주은행', icon: 'https://icon.horse/icon/kjbank.com', local: 'img/banks/kj.png', scheme: 'kjbank://' },
-    { name: '하나은행', icon: 'https://icon.horse/icon/kebhana.com', local: 'img/banks/hana.png', scheme: 'hanaw://' },
-    { name: '우체국은행', icon: 'https://icon.horse/icon/epost.go.kr', local: 'img/banks/post.png', scheme: 'epostbank://' },
-    { name: '부산은행', icon: 'https://icon.horse/icon/busanbank.co.kr', local: 'img/banks/busan.png', scheme: 'busanbank://' },
-    { name: '아이엠뱅크', icon: 'https://icon.horse/icon/imbank.co.kr', local: 'img/banks/imbank.png', scheme: 'dgb-banking://' },
-    { name: '신협중앙회', icon: 'https://icon.horse/icon/cu.co.kr', local: 'img/banks/shinhyup.png', scheme: 'cu://' },
-    { name: '제주은행', icon: 'https://icon.horse/icon/e-jejubank.com', local: 'img/banks/jeju.png', scheme: 'jejubank://' },
-    { name: '한국산업은행', icon: 'https://icon.horse/icon/kdb.co.kr', local: 'img/banks/kdb.png', scheme: 'kdb://' },
-    { name: '전북은행', icon: 'https://icon.horse/icon/jbbank.co.kr', local: 'img/banks/jb.png', scheme: 'jbbank://' },
-    { name: '경남은행', icon: 'https://icon.horse/icon/knbank.co.kr', local: 'img/banks/kn.png', scheme: 'knbank://' },
-    { name: '수협은행', icon: 'https://icon.horse/icon/suhyup-bank.com', local: 'img/banks/suhyup.png', scheme: 'suhyup-bank://' },
-    { name: '하나원큐', icon: 'https://icon.horse/icon/kebhana.com', local: 'img/banks/hanaoneq.png', scheme: 'hanaw://' }
+    { name: '토스', icon: 'img/banks/toss.svg', scheme: 'supertoss://send' },
+    { name: '카카오뱅크', icon: 'img/banks/kakao.svg', scheme: 'kakaobank://' },
+    { name: '케이뱅크', icon: 'img/banks/kbank.svg', scheme: 'kbank-banking://' },
+    { name: '우리은행', icon: 'img/banks/woori.svg', scheme: 'wooribank://' },
+    { name: '국민은행', icon: 'img/banks/kb.svg', scheme: 'kbbank://' },
+    { name: '신한은행', icon: 'img/banks/shinhan.svg', scheme: 'shinhan-sr-ansimclick://' },
+    { name: '기업은행', icon: 'img/banks/ibk.svg', scheme: 'ibkbank://' },
+    { name: '새마을금고', icon: 'img/banks/mg.svg', scheme: 'mgbank://' },
+    { name: '농협은행', icon: 'img/banks/nh.svg', scheme: 'nhappnew://' },
+    { name: '제일은행', icon: 'img/banks/sc.svg', scheme: 'scbank://' },
+    { name: '씨티은행', icon: 'img/banks/citi.svg', scheme: 'citibank://' },
+    { name: '광주은행', icon: 'img/banks/kj.svg', scheme: 'kjbank://' },
+    { name: '하나은행', icon: 'img/banks/hana.svg', scheme: 'hanaw://' },
+    { name: '우체국은행', icon: 'img/banks/post.svg', scheme: 'epostbank://' },
+    { name: '부산은행', icon: 'img/banks/busan.svg', scheme: 'busanbank://' },
+    { name: '아이엠뱅크', icon: 'img/banks/imbank.svg', scheme: 'dgb-banking://' },
+    { name: '신협중앙회', icon: 'img/banks/shinhyup.svg', scheme: 'cu://' },
+    { name: '제주은행', icon: 'img/banks/jeju.svg', scheme: 'jejubank://' },
+    { name: '한국산업은행', icon: 'img/banks/kdb.svg', scheme: 'kdb://' },
+    { name: '전북은행', icon: 'img/banks/jb.svg', scheme: 'jbbank://' },
+    { name: '경남은행', icon: 'img/banks/kn.svg', scheme: 'knbank://' },
+    { name: '수협은행', icon: 'img/banks/suhyup.svg', scheme: 'suhyup-bank://' },
+    { name: '하나원큐', icon: 'img/banks/hanaoneq.svg', scheme: 'hanaw://' }
   ];
 
   function copyText(text) {
@@ -408,10 +409,9 @@
     if (!grid || grid.dataset.ready) return;
     grid.dataset.ready = '1';
     grid.innerHTML = BANKS.map(function (b, i) {
-      var local = b.local || '';
       return (
         '<button type="button" class="bank-pick-btn" data-bank-i="' + i + '">' +
-          '<img class="bank-pick-logo-img" src="' + b.icon + '" alt="' + b.name + '" width="40" height="40" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-local="' + local + '" onerror="if(this.dataset.local&&this.src.indexOf(this.dataset.local)<0){this.src=this.dataset.local;}else{this.style.visibility=\'hidden\';}">' +
+          '<img class="bank-pick-logo-img" src="' + b.icon + '" alt="' + b.name + '" width="44" height="44" loading="lazy" decoding="async">' +
           '<span class="bank-pick-name">' + b.name + '</span>' +
         '</button>'
       );

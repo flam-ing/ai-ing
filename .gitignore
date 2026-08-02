@@ -13,6 +13,7 @@ untitled/
 !logo.png
 !favicon-*.png
 !apple-touch-icon.png
+!img/banks/**
 *.pdf
 
 # Allow assets inside slides directory
