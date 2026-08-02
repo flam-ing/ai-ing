@@ -1236,22 +1236,15 @@
     });
   }
 
-  // --- 구매자 정보 (PG 전달용) ---
-  const CUSTOMER_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const CUSTOMER_PHONE_RE = /^01[016789]-?\d{3,4}-?\d{4}$/;
-
-  /** 결제 모달의 구매자 입력값을 읽어 정규화한다. */
+  /**
+   * 구매자 입력 폼은 제거됨. PortOne/주문 API 호환용 최소 플레이스홀더만 사용.
+   * (가상계좌·계좌이체 등 현금성 수단은 쓰지 않음)
+   */
   function readCustomerInfo() {
-    const val = (id) => document.getElementById(id)?.value?.trim() || "";
-    const rawPhone = val("payer-phone").replace(/[^0-9]/g, "");
-    const phoneNumber =
-      rawPhone.length >= 10
-        ? rawPhone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3")
-        : val("payer-phone");
     return {
-      fullName: val("payer-name"),
-      email: val("payer-email"),
-      phoneNumber
+      fullName: "구매자",
+      email: "payment@ai-ing.org",
+      phoneNumber: "010-0000-0000"
     };
   }
 
@@ -1261,28 +1254,6 @@
     console.info("[ai-ing payment] openPGWindow amount", amount);
     if (!amount || amount < 100) {
       alert("최소 결제 금액은 100원입니다.");
-      return;
-    }
-
-    // 구매자 정보 검증. PG에 실제 결제자 정보를 넘겨야 영수증·분쟁 대응이 가능하다.
-    const customer = readCustomerInfo();
-    if (!customer.fullName) {
-      alert("구매자 이름을 입력해 주세요.");
-      document.getElementById("payer-name")?.focus();
-      return;
-    }
-    if (!CUSTOMER_EMAIL_RE.test(customer.email)) {
-      alert("올바른 이메일 주소를 입력해 주세요.");
-      document.getElementById("payer-email")?.focus();
-      return;
-    }
-    if (!CUSTOMER_PHONE_RE.test(customer.phoneNumber)) {
-      alert("올바른 휴대폰 번호를 입력해 주세요. (예: 010-1234-5678)");
-      document.getElementById("payer-phone")?.focus();
-      return;
-    }
-    if (!document.getElementById("payer-consent")?.checked) {
-      alert("개인정보 수집·이용에 동의해 주세요.");
       return;
     }
 
@@ -1359,17 +1330,14 @@
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] triggerPortOne amount", amount, method);
 
-    // 구매자 정보 재확인 (모달을 열어둔 채 값이 지워진 경우 방지)
-    const customer = readCustomerInfo();
-    if (
-      !customer.fullName ||
-      !CUSTOMER_EMAIL_RE.test(customer.email) ||
-      !CUSTOMER_PHONE_RE.test(customer.phoneNumber)
-    ) {
-      alert("구매자 정보를 다시 확인해 주세요.");
-      window.cancelPGWindow();
+    // 허용 수단: 카카오페이·신용카드만. 가상계좌/계좌이체/현금 송금 비활성.
+    const ALLOWED = { KAKAOPAY: true, CARD: true };
+    if (!ALLOWED[method]) {
+      alert("지원하지 않는 결제 수단입니다. 카카오페이 또는 신용카드만 이용 가능합니다.");
       return;
     }
+
+    const customer = readCustomerInfo();
 
     let channelKey = "";
     let payMethod = "EASY_PAY";
@@ -1404,6 +1372,10 @@
       payMethod = "CARD";
       methodNameKr = "신용카드 결제";
       methodCode = "card";
+    } else {
+      // VBANK / TRANSFER / VIRTUAL_ACCOUNT 등 현금성 수단 차단
+      alert("가상계좌·계좌이체(현금 송금) 결제는 제공하지 않습니다.");
+      return;
     }
 
     const payBtnMap = {
@@ -1457,6 +1429,7 @@
         orderData.order.itemName ||
         document.getElementById("payment-product-name").value;
 
+      // payMethod 는 CARD | EASY_PAY(카카오) 만. VIRTUAL_ACCOUNT/TRANSFER 미사용.
       const paymentParams = {
         storeId: AI_ING_PAYMENT.storeId,
         paymentId: orderId,
@@ -1479,6 +1452,11 @@
         paymentParams.easyPay = {
           provider: easyPayProvider
         };
+      }
+
+      // 이니시스 등 PG 창에서 가상계좌·계좌이체가 노출되지 않도록 payMethod 고정
+      if (payMethod !== "CARD" && payMethod !== "EASY_PAY") {
+        throw new Error("허용되지 않은 결제 방식입니다.");
       }
 
       const response = await PortOne.requestPayment(paymentParams);
