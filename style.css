@@ -1659,7 +1659,15 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
-/* 대표 · 인사 — 다른 섹션과 같은 평이한 본문 */
+/* 대표 인사 본문 — Hello/인사 제목 없이 본문만 위에 붙임 */
+.about-greeting--tight {
+  padding-top: 0;
+  margin-top: 0;
+}
+.about-greeting--tight .about-greeting-body {
+  margin-top: 0;
+  max-width: 40rem;
+}
 .about-greeting-body p {
   margin: 0 0 1em;
   font-size: 15px;
@@ -1672,7 +1680,7 @@ grid-template-columns: 1fr;
   margin-bottom: 0;
 }
 .about-greeting-body .about-greeting-lead {
-  margin-bottom: 0.75em;
+  margin-bottom: 0.65em;
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.5;

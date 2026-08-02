@@ -39,6 +39,8 @@
   var FADE_MS = 360;
   var MF_HOLD_MS = 280;
   var CARD_HOLD_MS = 700;
+  /** CTA 노출 직후 아래로 못 넘어가게 붙잡아 두는 시간 */
+  var CTA_HOLD_MS = 1100;
 
   var step = -1;
   var locked = false;
@@ -280,7 +282,8 @@
       armHold(CARD_HOLD_MS);
     } else {
       showCta();
-      holdUntil = 0;
+      // CTA는 조금 더 오래 머물게 — 이 동안 아래로 스크롤·스와이프 차단
+      armHold(CTA_HOLD_MS);
     }
   }
 
@@ -367,7 +370,7 @@
   function stepBy(dir) {
     if (!locked || busy) return;
     if (inHold() && dir > 0) {
-      // 짧은 hold 중 클릭/스크롤은 살짝 막되 너무 길지 않게
+      // hold 중에는 다음/이탈 불가 (CTA 포함 ~1초)
       wheelAcc = 0;
       return;
     }
@@ -384,9 +387,13 @@
     if (!locked) return;
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
-    // CTA 단계: 아래로 스크롤하면 페이지 이탈
+    // CTA 단계: hold 중엔 아래로 못 감. hold 끝난 뒤 아래로 이탈.
     if (STEPS[step] && STEPS[step].kind === "cta") {
       if (e.deltaY > 8) {
+        if (inHold()) {
+          wheelAcc = 0;
+          return;
+        }
         releaseDown();
       } else if (e.deltaY < -8) {
         stepBy(-1);
