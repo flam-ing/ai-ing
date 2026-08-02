@@ -47,8 +47,25 @@
   .case-card h4 { font-size: 16.5px; font-weight: 700; color: #fff; margin: 0 0 10px; line-height: 1.4; word-break: keep-all; }
   .case-card p { font-size: 13.5px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.62); margin: 0; word-break: keep-all; }
   .case-tag { display: inline-block; font-size: 11.5px; font-weight: 700; color: #ff5e9c; background: rgba(230,24,98,.09); border: 1px solid rgba(230,24,98,.2); border-radius: 20px; padding: 4px 11px; margin-bottom: 13px; }
+  .case-tag--purple { color: #b4adff; background: rgba(140,130,255,.1); border-color: rgba(140,130,255,.28); }
   .case-link { display: inline-block; margin-top: 15px; font-size: 13px; font-weight: 600; color: #8c82ff; text-decoration: none; }
   .case-link:hover { text-decoration: underline; }
+  .case-stories { margin-bottom: clamp(48px, 6vw, 72px); }
+  .case-stories-head { margin-bottom: 22px; }
+  .case-stories-head h3 { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; color: #fff; letter-spacing: -.02em; margin: 0 0 8px; word-break: keep-all; }
+  .case-stories-head p { margin: 0; font-size: 14.5px; font-weight: 300; line-height: 1.65; color: rgba(255,255,255,.58); word-break: keep-all; }
+  .case-story-list { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 720px) {
+    .case-story-list { grid-template-columns: 1fr 1fr; gap: 16px; }
+  }
+  .case-story {
+    border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+    padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .case-story-who { font-size: 15.5px; font-weight: 700; color: #fff; letter-spacing: -.02em; margin: 0; word-break: keep-all; }
+  .case-story-body { margin: 0; font-size: 14px; font-weight: 300; line-height: 1.75; color: rgba(255,255,255,.68); word-break: keep-all; }
+  .case-videos-sec { margin-top: clamp(12px, 2vw, 20px); margin-bottom: clamp(40px, 5vw, 60px); }
+  .case-videos-sec > .case-kicker { margin-bottom: 8px; }
   .case-stats--effect { margin-bottom: clamp(46px, 6vw, 70px); }
   .case-stats-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px;
@@ -81,8 +98,8 @@
       <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
         <a href="overview.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">개요</a>
         <a href="services.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">서비스</a>
-        <a href="about.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표</a>
         <a href="cases.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#fff;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">사례</a>
+        <a href="about.html" class="hover-purple nav-link-tab" style="padding:9px 15px;color:#c5ccda;text-decoration:none;font-size:14.5px;font-weight:500;transition:color .2s;">대표</a>
         <a href="contact.html" class="btn-gradient-hover nav-link-tab" style="margin-left:10px;padding:11px 20px;border-radius:4px;background:#8c82ff;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;box-shadow:0 0 16px rgba(140,130,255,0.4);transition:filter .2s,transform .2s;">무료 상담 신청</a>
       </div>
     </div>
@@ -120,6 +137,73 @@
             <span>평균 작업 기간<br><small style="font-size:11px;font-weight:300;opacity:.75;letter-spacing:0;">(주 1회 2시간 기준)</small></span>
           </div>
         </div>
+      </div>
+
+      <!-- 클라이언트 사례 스토리 (우선 노출) -->
+      <div class="case-stories" data-reveal="up" data-delay="60">
+        <div class="case-stories-head">
+          <h3>현장 사례</h3>
+          <p>실제 의뢰·컨설팅 흐름을 짧게 정리했습니다. (상호·실명은 비공개)</p>
+        </div>
+        <div class="case-story-list">
+          <article class="case-story">
+            <span class="case-tag">건축·콘텐츠 자동화</span>
+            <h4 class="case-story-who">건설사 대표</h4>
+            <p class="case-story-body">직원들이 메신저로 전달하는 건축자재 자료를 AI가 매일 아침에 읽어, SNS·블로그·홈페이지용 <strong style="color:#fff;font-weight:600;">3가지 버전</strong>으로 나눠 올려 줍니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag">자사몰·결제 구축</span>
+            <h4 class="case-story-who">소상공인 B씨</h4>
+            <p class="case-story-body">온라인 몰을 잘 모르던 상태에서, 통신판매업신고부터 PG 결제 연동까지 도와 <strong style="color:#fff;font-weight:600;">자사몰을 오픈</strong>했습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag">PoC·에이전트 인프라</span>
+            <h4 class="case-story-who">패션 디자인 대표</h4>
+            <p class="case-story-body">처음으로 PoC를 진행했고, 맥 미니 3대에 TF를 꾸려 각 에이전트와 지식 창고를 구성한 뒤 <strong style="color:#fff;font-weight:600;">업무 자동화</strong>부터 단계적으로 확장 중입니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag">교육·에이전트 도입</span>
+            <h4 class="case-story-who">교육 컨설팅 회사</h4>
+            <p class="case-story-body">에이전트가 무엇인지조차 모르던 단계에서 설치·사용법 안내까지 진행해, 고객 포트폴리오와 링크드인 작성을 <strong style="color:#fff;font-weight:600;">체계적으로</strong> 돌릴 수 있게 되었습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">대기업 AX 자문</span>
+            <h4 class="case-story-who">H사 · 패션 대기업</h4>
+            <p class="case-story-body">연매출 약 2,500억 규모 패션사에 사내 AI 도입 방향과 <strong style="color:#fff;font-weight:600;">기본 인프라 설계</strong>를 자문했습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">에이전트·비용</span>
+            <h4 class="case-story-who">B사 · 뷰티 마케팅 (임직원 50명)</h4>
+            <p class="case-story-body">AI 에이전트 기획과 인프라 운영 비용을 함께 재어, <strong style="color:#fff;font-weight:600;">도입 전 비용·범위</strong>를 맞췄습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">프로세스 자동화</span>
+            <h4 class="case-story-who">D사 · 패션 뉴미디어 (팔로워 37만)</h4>
+            <p class="case-story-body">사내 AI 에이전트 도입과 반복 업무 흐름 자동화로, 콘텐츠·운영 쪽 <strong style="color:#fff;font-weight:600;">프로세스 병목</strong>을 줄였습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">데이터·대시보드</span>
+            <h4 class="case-story-who">K사 · 건강식품 브랜드 (연매출 150억)</h4>
+            <p class="case-story-body">OpenClaw 연동과 주문·배송 데이터 <strong style="color:#fff;font-weight:600;">대시보드 시각화</strong>로 운영 현황을 한눈에 볼 수 있게 했습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">멘토링</span>
+            <h4 class="case-story-who">고용노동부 연계 디지털 인재 양성</h4>
+            <p class="case-story-body">프로젝트 멘토링 2회 중, 배달 중계 플랫폼 팀이 <strong style="color:#fff;font-weight:600;">최종 발표 1등</strong>을 수상했습니다.</p>
+          </article>
+          <article class="case-story">
+            <span class="case-tag case-tag--purple">기술 멘토링</span>
+            <h4 class="case-story-who">과학기술정보통신부 연계 멘토</h4>
+            <p class="case-story-body">생성형 AI 서비스·매칭 플랫폼 주제로 아키텍처, 서버 비용, MVP 전 운영 리스크까지 <strong style="color:#fff;font-weight:600;">기술 멘토링</strong>을 진행 중입니다.</p>
+          </article>
+        </div>
+      </div>
+
+      <!-- 시연·특강 영상 (사례 스토리 아래) -->
+      <div class="case-videos-sec" data-reveal="up">
+        <p class="case-kicker">Demos & Talks</p>
+        <h3 style="font-size:clamp(20px,2.4vw,26px);font-weight:700;color:#fff;letter-spacing:-.02em;margin:0 0 8px;word-break:keep-all;">시연·특강 영상</h3>
+        <p style="margin:0 0 26px;font-size:14.5px;font-weight:300;line-height:1.65;color:rgba(255,255,255,.58);word-break:keep-all;">강의·특강 현장에서 남긴 영상입니다. 위 현장 사례와는 별도 자료입니다.</p>
       </div>
 
       <!-- about.html 에서 이관한 실제 활동 내역 (펼치기 토글 제거, 항상 표시) -->
