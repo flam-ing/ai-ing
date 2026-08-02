@@ -50,11 +50,6 @@
   .case-link { display: inline-block; margin-top: 15px; font-size: 13px; font-weight: 600; color: #8c82ff; text-decoration: none; }
   .case-link:hover { text-decoration: underline; }
   .case-stats--effect { margin-bottom: clamp(46px, 6vw, 70px); }
-  .case-stats-kicker {
-    font-family: 'Pretendard', sans-serif;
-    font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-    color: #8c82ff; text-align: center; margin: 0 0 16px;
-  }
   .case-stats-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px;
   }
@@ -106,8 +101,7 @@
         </p>
       </div>
 
-      <div class="case-stats case-stats--effect" data-reveal="up" data-delay="80" aria-label="효과">
-        <p class="case-stats-kicker">효과</p>
+      <div class="case-stats case-stats--effect" data-reveal="up" data-delay="80">
         <div class="case-stats-grid">
           <div class="case-stat">
             <b class="hs-num" data-count="22" data-suffix="명">22명</b>
