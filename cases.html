@@ -66,6 +66,43 @@
   .case-story-body { margin: 0; font-size: 14px; font-weight: 300; line-height: 1.75; color: rgba(255,255,255,.68); word-break: keep-all; }
   .case-videos-sec { margin-top: clamp(12px, 2vw, 20px); margin-bottom: clamp(40px, 5vw, 60px); }
   .case-videos-sec > .case-kicker { margin-bottom: 8px; }
+  .case-agent-demo {
+    margin: 0 0 clamp(48px, 6vw, 72px);
+    border-radius: 14px;
+    border: 1px solid rgba(140,130,255,.22);
+    background:
+      linear-gradient(135deg, rgba(140,130,255,.08), transparent 48%),
+      rgba(255,255,255,.025);
+    padding: clamp(22px, 3vw, 32px);
+    display: grid;
+    gap: clamp(18px, 2.5vw, 28px);
+  }
+  @media (min-width: 860px) {
+    .case-agent-demo {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+      align-items: center;
+    }
+  }
+  .case-agent-demo-copy h3 {
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 700; color: #fff; letter-spacing: -.02em;
+    margin: 0 0 10px; word-break: keep-all;
+  }
+  .case-agent-demo-copy p {
+    margin: 0 0 12px; font-size: 14.5px; font-weight: 300;
+    line-height: 1.75; color: rgba(255,255,255,.68); word-break: keep-all;
+  }
+  .case-agent-demo-copy p:last-child { margin-bottom: 0; }
+  .case-agent-demo-shot {
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,.1);
+    background: #0a0b10;
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  }
+  .case-agent-demo-shot img {
+    display: block; width: 100%; height: auto;
+    vertical-align: middle;
+  }
   .case-stats--effect { margin-bottom: clamp(46px, 6vw, 70px); }
   .case-stats-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px;
@@ -197,6 +234,20 @@
             <p class="case-story-body">생성형 AI 서비스·매칭 플랫폼 주제로 아키텍처, 서버 비용, MVP 전 운영 리스크까지 <strong style="color:#fff;font-weight:600;">기술 멘토링</strong>을 진행 중입니다.</p>
           </article>
         </div>
+      </div>
+
+      <!-- Slack AI 앱 실물 (현장 카드와 별도 블록) -->
+      <div class="case-agent-demo" data-reveal="up" data-delay="40">
+        <div class="case-agent-demo-copy">
+          <p class="case-kicker" style="margin-bottom:10px;">Live Agent · Slack</p>
+          <h3>슬랙에 AI를 앱으로 걸어 두는 방식</h3>
+          <p>실제 워크스페이스에 AI를 <strong style="color:#fff;font-weight:600;">슬랙 앱</strong>으로 붙인 예시입니다. 채널에서 요청하면 앱이 읽고, 필요하면 생성·수정까지 이어 갑니다.</p>
+          <p>아래 화면은 Notion PPT 포맷을 학습하게 시킨 뒤, 같은 구조·스타일로 피티 자료를 만들도록 지시하는 대화입니다. 앱이 도구를 돌리며 대기·작업 상태를 스스로 남깁니다.</p>
+          <p style="color:rgba(255,255,255,.5);font-size:13px;">클라이언트 현장 사례 카드와는 별도로, “에이전트가 메신저 안에서 일하는” 모습을 보여 주는 자료입니다.</p>
+        </div>
+        <figure class="case-agent-demo-shot">
+          <img src="img/cases/slack-ai-app.png" alt="슬랙에 연결된 AI 앱이 Notion PPT 포맷을 학습하고 작업을 진행하는 실제 대화 화면" width="1200" height="800" loading="lazy" decoding="async">
+        </figure>
       </div>
 
       <!-- 시연·특강 영상 (사례 스토리 아래) -->
