@@ -99,9 +99,35 @@
     background: #0a0b10;
     box-shadow: 0 16px 40px rgba(0,0,0,.35);
   }
-  .case-agent-demo-shot img {
+  .case-agent-demo-shot img,
+  .case-agent-demo-shot video {
     display: block; width: 100%; height: auto;
     vertical-align: middle;
+    background: #0a0b10;
+  }
+  .case-agent-demo-shot video {
+    max-height: min(72vh, 720px);
+    object-fit: contain;
+  }
+  .case-agent-demo-note {
+    margin: 10px 0 0;
+    font-size: 12.5px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: rgba(255,255,255,.48);
+    word-break: keep-all;
+  }
+  .case-agent-demo-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+  }
+  .case-agent-demo-tags span {
+    display: inline-block;
+    font-size: 11.5px; font-weight: 700;
+    color: #8c82ff;
+    background: rgba(140,130,255,.1);
+    border: 1px solid rgba(140,130,255,.28);
+    border-radius: 20px;
+    padding: 4px 11px;
   }
   .case-stats--effect { margin-bottom: clamp(46px, 6vw, 70px); }
   .case-stats-grid {
@@ -236,17 +262,53 @@
         </div>
       </div>
 
-      <!-- Slack AI 앱 실물 (현장 카드와 별도 블록) -->
+      <!-- 솔루션 실물: 슬랙 앱 / 카드뉴스 스튜디오 가이드·내부툴 / 카드뉴스 비디오 자동화 -->
       <div class="case-agent-demo" data-reveal="up" data-delay="40">
         <div class="case-agent-demo-copy">
-          <p class="case-kicker" style="margin-bottom:10px;">Live Agent · Slack</p>
           <h3>슬랙에 AI를 앱으로 걸어 두는 방식</h3>
           <p>실제 워크스페이스에 AI를 <strong style="color:#fff;font-weight:600;">슬랙 앱</strong>으로 붙인 예시입니다. 채널에서 요청하면 앱이 읽고, 필요하면 생성·수정까지 이어 갑니다.</p>
           <p>아래 화면은 Notion PPT 포맷을 학습하게 시킨 뒤, 같은 구조·스타일로 피티 자료를 만들도록 지시하는 대화입니다. 앱이 도구를 돌리며 대기·작업 상태를 스스로 남깁니다.</p>
-          <p style="color:rgba(255,255,255,.5);font-size:13px;">클라이언트 현장 사례 카드와는 별도로, “에이전트가 메신저 안에서 일하는” 모습을 보여 주는 자료입니다.</p>
         </div>
         <figure class="case-agent-demo-shot">
           <img src="img/cases/slack-ai-app.png" alt="슬랙에 연결된 AI 앱이 Notion PPT 포맷을 학습하고 작업을 진행하는 실제 대화 화면" width="1200" height="800" loading="lazy" decoding="async">
+        </figure>
+      </div>
+
+      <div class="case-agent-demo" data-reveal="up" data-delay="55" style="margin-top:18px;">
+        <div class="case-agent-demo-copy">
+          <div class="case-agent-demo-tags">
+            <span>가이드 · 함께 만들기</span>
+            <span>내부 툴 전환</span>
+            <span>영상형 카드뉴스</span>
+          </div>
+          <h3>영상형 카드뉴스 스튜디오 — 스스로 짜고, 내부 툴로 쓰기</h3>
+          <p>마케팅·교육용 <strong style="color:#fff;font-weight:600;">세로 영상 카드뉴스</strong>를 브라우저에서 편집·내보내기하는 스튜디오를, 처음부터 같이 설계·구현할 수 있도록 가이드합니다. “납품만 받고 끝”이 아니라, 팀 안에서도 이어서 고칠 수 있게 구조를 열어 둡니다.</p>
+          <p>가이드 이후에는 같은 프로그램을 <strong style="color:#fff;font-weight:600;">사내·팀 내부 툴</strong>로 바로 붙입니다. 사진·문구·강조 효과·등장 타이밍을 맞춘 뒤 MP4 등으로 받아, 카드뉴스 제작 루프를 외부 툴 의존 없이 돌릴 수 있습니다.</p>
+          <p class="case-agent-demo-note">우측은 실제 스튜디오 화면 기록입니다. 미리보기·효과 루프·파트별/전체 다운로드 흐름을 보여 줍니다.</p>
+        </div>
+        <figure class="case-agent-demo-shot">
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            poster="img/cases/cardnews-studio-poster.jpg"
+            width="1280"
+            height="720"
+          >
+            <source src="video/cardnews-studio-demo.mp4" type="video/mp4" />
+            브라우저가 영상을 재생할 수 없습니다.
+          </video>
+        </figure>
+      </div>
+
+      <div class="case-agent-demo" data-reveal="up" data-delay="60" style="margin-top:18px;">
+        <div class="case-agent-demo-copy">
+          <h3>카드 뉴스 비디오 자동화 솔루션</h3>
+          <p><strong style="color:#fff;font-weight:600;">Card News Video Automation</strong> — 원시 텍스트나 이미지만 입력하면 AI 오토메이션 엔진이 백그라운드에서 스토리라인을 가다듬고, 오디오 음성(TTS)과 배경 음악, 관련 비디오를 동적으로 렌더링해 단 몇 초 만에 마케팅용 숏폼 비디오(MP4)를 자동 제작합니다.</p>
+          <p>패션 뉴미디어 현장에서는 이 솔루션을 함께 만들고, 실제로 돌리는 <strong style="color:#fff;font-weight:600;">자동화 실습</strong>까지 진행했습니다.</p>
+        </div>
+        <figure class="case-agent-demo-shot">
+          <img src="assets/agent/cardnews.gif" alt="카드 뉴스 비디오 자동화 솔루션 시연" width="1200" height="675" loading="lazy" decoding="async">
         </figure>
       </div>
 
