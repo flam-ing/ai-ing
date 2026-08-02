@@ -1659,17 +1659,12 @@ grid-template-columns: 1fr;
 }
 
 /* Live AI consult simulation */
-/* 대표 · 인사 — page-shell과 같은 평이한 본문 폭 */
-.about-greeting-body {
-  max-width: 52rem;
-  margin: 0;
-}
+/* 대표 · 인사 — 다른 섹션과 같은 평이한 본문 */
 .about-greeting-body p {
-  margin: 0 0 1.25em;
-  font-size: clamp(15px, 1.5vw, 16px);
+  margin: 0 0 1em;
+  font-size: 15px;
   font-weight: 300;
-  line-height: 1.85;
-  letter-spacing: -0.01em;
+  line-height: 1.75;
   color: rgba(255, 255, 255, 0.78);
   word-break: keep-all;
 }
@@ -1677,12 +1672,11 @@ grid-template-columns: 1fr;
   margin-bottom: 0;
 }
 .about-greeting-body .about-greeting-lead {
-  margin-bottom: 0.9em;
-  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  margin-bottom: 0.75em;
+  font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.95);
-  letter-spacing: -0.02em;
 }
 .about-greeting-body strong {
   color: #fff;
