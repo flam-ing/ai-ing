@@ -293,12 +293,17 @@
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
         <!-- Kakao Pay (live channel, monthly cap via backend) -->
         <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          카카오페이 결제
+          카카오페이 결제 (국내 카드 / 머니)
         </button>
         
-        <!-- Card Payment -->
+        <!-- Domestic Card Payment (KG Inicis) -->
         <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#8c82ff;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          일반 신용카드 결제
+          일반 신용카드 결제 (국내)
+        </button>
+
+        <!-- Global Card Payment (Polar.sh) -->
+        <button type="button" id="btn-pay-polar" onclick="triggerPolarPayment()" style="width:100%;padding:14px;background:#0062FF;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
+          일반 신용카드 결제 (글로벌 · Polar)
         </button>
       </div>
 
