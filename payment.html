@@ -185,9 +185,33 @@
         </div>
       </div>
 
-      <!-- Product Selection Area (Scrollable!) -->
-      <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:8px;text-align:left;">결제 상품 선택</div>
-      <div style="display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;padding-right:6px;margin-bottom:22px;text-align:left;">
+      <!-- Product Selection Area (Scrollable with Custom Scrollbar!) -->
+      <style>
+        .scrollable-product-list {
+          max-height: 270px;
+          overflow-y: auto;
+          padding-right: 6px;
+          margin-bottom: 22px;
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e1 #f8fafc;
+        }
+        .scrollable-product-list::-webkit-scrollbar {
+          width: 5px;
+        }
+        .scrollable-product-list::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 3px;
+        }
+        .scrollable-product-list::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 3px;
+        }
+        .scrollable-product-list::-webkit-scrollbar-thumb:hover {
+          background: #e61862;
+        }
+      </style>
+      <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:8px;text-align:left;">결제 상품 선택 (스크롤 가능)</div>
+      <div class="scrollable-product-list" style="display:flex;flex-direction:column;gap:10px;text-align:left;">
         <!-- Product 1: PDF Textbook -->
         <label id="product-label-pdf" onclick="selectProduct('pdf', event)" style="display:block;position:relative;border:2px solid #e3e5ea;border-radius:6px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff;">
           <input type="radio" name="payment-product" value="10000" checked style="position:absolute;top:16px;left:14px;width:18px;height:18px;accent-color:#e61862;cursor:pointer;" onchange="selectProduct('pdf', event)">
