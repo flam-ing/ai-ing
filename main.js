@@ -1096,6 +1096,7 @@
     consult: { value: "50000", amount: 50000, name: "AX 맞춤형 컨설팅 & 1:1 멘토링 1시간 서비스", labelId: "product-label-consult" },
     consult100k: { value: "100000", amount: 100000, name: "AX 맞춤형 컨설팅 & 실습 2시간 과정", labelId: "product-label-consult100k" },
     consult200k: { value: "200000", amount: 200000, name: "AX 맞춤형 컨설팅 & 프로젝트 1개월 집중 과정", labelId: "product-label-consult200k" },
+    consult300k: { value: "300000", amount: 300000, name: "AX 맞춤형 컨설팅 & 실무 프로젝트 심화 과정", labelId: "product-label-consult300k" },
     consult500k: { value: "500000", amount: 500000, name: "AX 맞춤형 기업 컨설팅 & 1:1 멘토링 3개월 패키지", labelId: "product-label-consult500k" }
   };
 
@@ -1105,6 +1106,7 @@
       "50000": "consult",
       "100000": "consult100k",
       "200000": "consult200k",
+      "300000": "consult300k",
       "500000": "consult500k"
     };
     return map[String(value)] || "pdf";
@@ -1237,14 +1239,22 @@
   }
 
   /**
-   * 구매자 입력 폼은 제거됨. PortOne/주문 API 호환용 최소 플레이스홀더만 사용.
-   * (가상계좌·계좌이체 등 현금성 수단은 쓰지 않음)
+   * 구매자 입력 폼에서 구매자 성함, 이메일, 전화번호를 동적으로 추출.
+   * 비어있을 경우 안전한 기본값으로 fallback.
    */
   function readCustomerInfo() {
+    const nameEl = document.getElementById("buyer-name");
+    const emailEl = document.getElementById("buyer-email");
+    const phoneEl = document.getElementById("buyer-phone");
+
+    const fullName = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : "구매자";
+    const email = (emailEl && emailEl.value.trim()) ? emailEl.value.trim() : "contact@ai-ing.org";
+    const phoneNumber = (phoneEl && phoneEl.value.trim()) ? phoneEl.value.trim() : "010-0000-0000";
+
     return {
-      fullName: "구매자",
-      email: "payment@ai-ing.org",
-      phoneNumber: "010-0000-0000"
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber
     };
   }
 
