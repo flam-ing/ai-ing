@@ -68,7 +68,6 @@
         <!-- Card 1: Account Transfer -->
         <div data-reveal="up" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #8c82ff;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <div style="font-family:'Pretendard',sans-serif;font-size:12px;font-weight:700;color:#8c82ff;margin-bottom:16px;letter-spacing:0.05em;">결제 방식 01</div>
             <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">무통장 입금 (계좌이체)</h3>
             <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">상담 진행 후 발행된 인보이스(청구서)에 따라 정해진 계좌로 송금합니다. 현금영수증(지출증빙) 및 카드 영수증 발행이 즉시 지원됩니다. (간이과세자로 세금계산서는 제외)</p>
             
@@ -91,7 +90,6 @@
         <!-- Card 2: Card / PG Payment -->
         <div data-reveal="up" data-delay="100" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #e61862;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <div style="font-family:'Pretendard',sans-serif;font-size:12px;font-weight:700;color:#ff5e9c;margin-bottom:16px;letter-spacing:0.05em;">결제 방식 02</div>
             <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;">신용카드 및 간편 결제</h3>
             <p style="color:rgba(255,255,255,0.6);font-weight:300;font-size:14.5px;line-height:1.6;margin-bottom:24px;">카카오페이, 토스페이 등 국내 주요 간편결제 및 신용카드로 결제할 수 있습니다. 아래 버튼을 눌러 결제 금액을 입력하고 결제 수단을 선택하세요.</p>
             
@@ -110,7 +108,6 @@
         <!-- Card 3: Naver SmartStore -->
         <div data-reveal="up" data-delay="200" class="service-card-hover" style="border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-top:3px solid #03c75a;padding:32px;transition:transform .3s,box-shadow .3s;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <div style="font-family:'Pretendard',sans-serif;font-size:12px;font-weight:700;color:#03c75a;margin-bottom:16px;letter-spacing:0.05em;">결제 방식 03</div>
             <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
               <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:#03c75a;color:#fff;font-weight:800;font-size:13px;font-family:'Outfit',sans-serif;">N</span>
               네이버 스마트스토어
@@ -293,17 +290,12 @@
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
         <!-- Kakao Pay (live channel, monthly cap via backend) -->
         <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          카카오페이 결제 (국내 카드 / 머니)
+          카카오페이 결제 (국내 카드 및 머니)
         </button>
         
         <!-- Domestic Card Payment (KG Inicis) -->
         <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#8c82ff;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          일반 신용카드 결제 (국내)
-        </button>
-
-        <!-- Global Card Payment (Polar.sh) -->
-        <button type="button" id="btn-pay-polar" onclick="triggerPolarPayment()" style="width:100%;padding:14px;background:#0062FF;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          일반 신용카드 결제 (글로벌 · Polar)
+          일반 신용카드 결제
         </button>
       </div>
 

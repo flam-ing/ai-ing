@@ -1336,33 +1336,6 @@
     document.getElementById("payment-step-1").style.display = "block";
   };
 
-  /**
-   * 글로벌 신용카드 결제 (Polar.sh)
-   * VISA, MasterCard, AMEX, Apple Pay, Google Pay 등 해외 카드 즉시 승인 지원
-   */
-  window.triggerPolarPayment = function () {
-    const customer = readCustomerInfo();
-    const amount = syncAmountFromSelectedProduct();
-    const productName = document.getElementById("payment-product-name")?.value || "에이아잉 온라인 상품";
-
-    let polarUrl = "https://buy.polar.sh/8dcbfbf5-4e64-4c48-af21-360250cf9794";
-    const params = new URLSearchParams();
-    if (customer.email && customer.email !== "contact@ai-ing.org") {
-      params.set("customer_email", customer.email);
-    }
-    if (customer.fullName && customer.fullName !== "구매자") {
-      params.set("customer_name", customer.fullName);
-    }
-
-    const queryString = params.toString();
-    if (queryString) {
-      polarUrl += (polarUrl.includes("?") ? "&" : "?") + queryString;
-    }
-
-    console.info("[ai-ing payment] opening polar global checkout", polarUrl, { amount, productName, customer });
-    window.open(polarUrl, "_blank", "noopener,noreferrer");
-  };
-
   window.triggerPortOnePayment = async function (method) {
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] triggerPortOne amount", amount, method);
