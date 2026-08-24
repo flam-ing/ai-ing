@@ -1336,6 +1336,49 @@
     document.getElementById("payment-step-1").style.display = "block";
   };
 
+  /**
+   * 글로벌 신용카드 결제 (Polar · Apple Pay / Google Pay)
+   * Vercel 백엔드를 통해 실시간 Polar Checkout 세션을 생성하고 안전하게 결제창으로 이동.
+   */
+  window.triggerPolarPayment = async function () {
+    const productCode = selectedProductCode();
+    const customer = readCustomerInfo();
+
+    const polarBtn = document.getElementById("btn-pay-polar");
+    const originalText = polarBtn ? polarBtn.innerHTML : "";
+    if (polarBtn) {
+      polarBtn.disabled = true;
+      polarBtn.innerHTML = "글로벌 결제창 생성 중...";
+    }
+
+    try {
+      const res = await fetch(`${AI_ING_PAYMENT.apiBase}/api/v1/payments/polar/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productCode: productCode,
+          customer: customer
+        })
+      });
+
+      const data = await res.json();
+      if (!data.ok || !data.checkoutUrl) {
+        throw new Error(data.message || "글로벌 결제창 생성에 실패했습니다.");
+      }
+
+      console.info("[ai-ing payment] redirecting to polar checkout:", data.checkoutUrl);
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      console.error("[ai-ing payment] polar checkout error:", err);
+      alert(err.message || "Polar 결제창을 여는 중 오류가 발생했습니다.");
+    } finally {
+      if (polarBtn) {
+        polarBtn.disabled = false;
+        polarBtn.innerHTML = originalText;
+      }
+    }
+  };
+
   window.triggerPortOnePayment = async function (method) {
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] triggerPortOne amount", amount, method);

@@ -289,14 +289,23 @@
       
       <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
         <!-- Kakao Pay (live channel, monthly cap via backend) -->
-        <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
+        <button type="button" id="btn-pay-kakao" onclick="triggerPortOnePayment('KAKAOPAY')" style="width:100%;padding:14px;background:#FEE500;color:#191919;border-radius:6px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
           카카오페이 결제 (국내 카드 및 머니)
         </button>
         
         <!-- Domestic Card Payment (KG Inicis) -->
-        <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#8c82ff;color:#fff;border-radius:4px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
-          일반 신용카드 결제
+        <button type="button" id="btn-pay-card" onclick="triggerPortOnePayment('CARD')" style="width:100%;padding:14px;background:#8c82ff;color:#fff;border-radius:6px;border:none;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;outline:none;">
+          일반 신용카드 결제 (국내)
         </button>
+
+        <!-- Polar Global Card / Apple Pay / Google Pay Payment -->
+        <div style="position:relative;margin-top:6px;padding-top:14px;border-top:1px dashed #e3e5ea;">
+          <div style="font-size:11.5px;color:#8b93a5;margin-bottom:8px;font-weight:500;">해외 발행 카드 및 글로벌 간편결제</div>
+          <button type="button" id="btn-pay-polar" onclick="triggerPolarPayment()" style="width:100%;padding:14px;background:#0d1117;color:#fff;border-radius:6px;border:1px solid #30363d;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;outline:none;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0062FF;"></span>
+            글로벌 신용카드 · Apple Pay / Google Pay (Polar)
+          </button>
+        </div>
       </div>
 
       
