@@ -1494,6 +1494,9 @@
           fullName: customer.fullName,
           email: customer.email,
           phoneNumber: customer.phoneNumber
+        },
+        windowType: {
+          iframe: {}
         }
       };
 
