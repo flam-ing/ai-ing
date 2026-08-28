@@ -1092,7 +1092,8 @@
 
 
   const PAYMENT_PRODUCTS = {
-    test100: { value: "100", amount: 100, name: "[테스트] 100원 결제 승인 테스트", labelId: "product-label-test100" },
+    test1000: { value: "1000", amount: 1000, name: "[테스트] 1,000원 결제 승인 테스트", labelId: "product-label-test1000" },
+    test100: { value: "1000", amount: 1000, name: "[테스트] 1,000원 결제 승인 테스트", labelId: "product-label-test1000" },
     pdf: { value: "10000", amount: 10000, name: "온라인 PDF 교재", labelId: "product-label-pdf" },
     consult: { value: "50000", amount: 50000, name: "AX 맞춤형 컨설팅 & 1:1 멘토링 1시간 서비스", labelId: "product-label-consult" },
     consult100k: { value: "100000", amount: 100000, name: "AX 맞춤형 컨설팅 & 실습 2시간 과정", labelId: "product-label-consult100k" },
@@ -1103,7 +1104,8 @@
 
   function productTypeFromRadioValue(value) {
     const map = {
-      "100": "test100",
+      "1000": "test1000",
+      "100": "test1000",
       "10000": "pdf",
       "50000": "consult",
       "100000": "consult100k",
@@ -1590,22 +1592,23 @@
     }
   };
 
-  // URL에 ?test=true 또는 #test 파라미터가 있으면 100원 테스트 상품 표시 & 모달 자동 열기
+  // URL에 ?test=true 또는 #test 파라미터가 있으면 1,000원 테스트 상품 표시 & 모달 자동 열기
   try {
     const urlParams = new URLSearchParams(window.location.search);
     if (
       urlParams.get("test") === "true" ||
+      urlParams.get("product") === "test1000" ||
       urlParams.get("product") === "test100" ||
       window.location.hash.includes("test")
     ) {
-      const testEl = document.getElementById("product-label-test100");
+      const testEl = document.getElementById("product-label-test1000");
       if (testEl) {
         testEl.style.display = "block";
       }
       setTimeout(() => {
         if (typeof window.openPaymentModal === "function") {
           window.openPaymentModal();
-          window.selectProduct("test100");
+          window.selectProduct("test1000");
         }
       }, 300);
     }
