@@ -1494,6 +1494,14 @@
         totalAmount: confirmedAmount,
         currency: "CURRENCY_KRW",
         payMethod: payMethod,
+        products: [
+          {
+            id: selectedProductCode(),
+            name: confirmedItemName,
+            amount: confirmedAmount,
+            quantity: 1
+          }
+        ],
         customer: {
           fullName: customer.fullName,
           email: customer.email,
