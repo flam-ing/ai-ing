@@ -1092,6 +1092,7 @@
 
 
   const PAYMENT_PRODUCTS = {
+    test100: { value: "100", amount: 100, name: "[테스트] 100원 결제 승인 테스트", labelId: "product-label-test100" },
     pdf: { value: "10000", amount: 10000, name: "온라인 PDF 교재", labelId: "product-label-pdf" },
     consult: { value: "50000", amount: 50000, name: "AX 맞춤형 컨설팅 & 1:1 멘토링 1시간 서비스", labelId: "product-label-consult" },
     consult100k: { value: "100000", amount: 100000, name: "AX 맞춤형 컨설팅 & 실습 2시간 과정", labelId: "product-label-consult100k" },
@@ -1102,6 +1103,7 @@
 
   function productTypeFromRadioValue(value) {
     const map = {
+      "100": "test100",
       "10000": "pdf",
       "50000": "consult",
       "100000": "consult100k",
@@ -1587,3 +1589,26 @@
       alert("결제 중 오류가 발생했습니다: " + (error.message || error));
     }
   };
+
+  // URL에 ?test=true 또는 #test 파라미터가 있으면 100원 테스트 상품 표시 & 모달 자동 열기
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (
+      urlParams.get("test") === "true" ||
+      urlParams.get("product") === "test100" ||
+      window.location.hash.includes("test")
+    ) {
+      const testEl = document.getElementById("product-label-test100");
+      if (testEl) {
+        testEl.style.display = "block";
+      }
+      setTimeout(() => {
+        if (typeof window.openPaymentModal === "function") {
+          window.openPaymentModal();
+          window.selectProduct("test100");
+        }
+      }, 300);
+    }
+  } catch (e) {
+    console.warn("Failed to check test query param", e);
+  }

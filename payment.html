@@ -209,6 +209,16 @@
       </style>
       <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:8px;text-align:left;">결제 상품 선택 (스크롤 가능)</div>
       <div class="scrollable-product-list" style="display:flex;flex-direction:column;gap:10px;text-align:left;">
+        <!-- Product 0: 100 KRW Test Product (Enabled via ?test=true) -->
+        <label id="product-label-test100" onclick="selectProduct('test100', event)" style="display:none;position:relative;border:2px dashed #8c82ff;border-radius:6px;padding:14px;cursor:pointer;transition:all 0.2s;background:#f8f9ff;">
+          <input type="radio" name="payment-product" value="100" style="position:absolute;top:16px;left:14px;width:18px;height:18px;accent-color:#8c82ff;cursor:pointer;" onchange="selectProduct('test100', event)">
+          <div style="padding-left:26px;">
+            <div style="font-size:14.5px;font-weight:700;color:#0c0e14;margin-bottom:2px;">🧪 [테스트] 100원 결제 승인 테스트</div>
+            <div style="font-size:12.5px;color:#5c6573;margin-bottom:6px;">신용카드/카카오페이 실승인 및 전산 검증용</div>
+            <div style="font-size:15px;font-weight:800;color:#8c82ff;">100원</div>
+          </div>
+        </label>
+
         <!-- Product 1: PDF Textbook -->
         <label id="product-label-pdf" onclick="selectProduct('pdf', event)" style="display:block;position:relative;border:2px solid #e3e5ea;border-radius:6px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff;">
           <input type="radio" name="payment-product" value="10000" checked style="position:absolute;top:16px;left:14px;width:18px;height:18px;accent-color:#e61862;cursor:pointer;" onchange="selectProduct('pdf', event)">
