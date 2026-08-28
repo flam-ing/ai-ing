@@ -26,6 +26,8 @@ untitled/
 # Python virtual environment (if any)
 venv/
 .venv/
+.venv-vid/
+scratch/
 __pycache__/
 
 # Dependencies and build outputs

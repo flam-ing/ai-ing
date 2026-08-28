@@ -165,20 +165,23 @@
       
       <!-- Buyer Information Input (Custom Name & Email for Real Receipts!) -->
       <div style="background:#f8f9fa;border:1px solid #e5e7eb;border-radius:6px;padding:14px 16px;margin-bottom:18px;text-align:left;">
-        <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:10px;">구매자 정보 (카드 영수증 발송용)</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:700;color:#1e293b;">구매자 정보 (선택 사항)</span>
+          <span style="font-size:11.5px;color:#94a3b8;font-weight:400;">미입력 시 익명으로 진행</span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-bottom:10px;">
           <div>
-            <label for="buyer-name" style="display:block;font-size:11.5px;color:#64748b;margin-bottom:4px;font-weight:500;">구매자 성함</label>
-            <input type="text" id="buyer-name" placeholder="홍길동" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
+            <label for="buyer-name" style="display:block;font-size:11.5px;color:#64748b;margin-bottom:4px;font-weight:500;">구매자 성함 (선택)</label>
+            <input type="text" id="buyer-name" placeholder="홍길동 (선택)" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
           </div>
           <div>
-            <label for="buyer-email" style="display:block;font-size:11.5px;color:#64748b;margin-bottom:4px;font-weight:500;">이메일 (영수증 수신)</label>
-            <input type="email" id="buyer-email" placeholder="user@example.com" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
+            <label for="buyer-email" style="display:block;font-size:11.5px;color:#64748b;margin-bottom:4px;font-weight:500;">이메일 (선택)</label>
+            <input type="email" id="buyer-email" placeholder="user@example.com (선택)" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
           </div>
         </div>
         <div>
           <label for="buyer-phone" style="display:block;font-size:11.5px;color:#64748b;margin-bottom:4px;font-weight:500;">휴대폰 번호 (선택)</label>
-          <input type="tel" id="buyer-phone" placeholder="010-1234-5678" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
+          <input type="tel" id="buyer-phone" placeholder="010-1234-5678 (선택)" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:4px;font-size:13px;outline:none;">
         </div>
       </div>
 

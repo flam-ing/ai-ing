@@ -1251,7 +1251,7 @@
     const emailEl = document.getElementById("buyer-email");
     const phoneEl = document.getElementById("buyer-phone");
 
-    const fullName = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : "구매자";
+    const fullName = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : "익명 구매자";
     const email = (emailEl && emailEl.value.trim()) ? emailEl.value.trim() : "contact@ai-ing.org";
     const phoneNumber = (phoneEl && phoneEl.value.trim()) ? phoneEl.value.trim() : "010-0000-0000";
 
