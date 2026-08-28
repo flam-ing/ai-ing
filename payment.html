@@ -287,6 +287,28 @@
       <input type="hidden" id="payment-amount" value="10000">
       <input type="hidden" id="payment-product-name" value="온라인 PDF 교재">
 
+      <!-- Privacy Policy Agreement (Required for PG & eCommerce Compliance) -->
+      <div style="margin-bottom:16px;text-align:left;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px 14px;">
+        <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:12.5px;color:#334155;user-select:none;">
+          <input type="checkbox" id="privacy-agree" checked style="width:16px;height:16px;accent-color:#e61862;margin-top:2px;cursor:pointer;">
+          <div style="line-height:1.45;flex:1;">
+            <span style="font-weight:700;color:#0f172a;">[필수] 개인정보 수집 및 이용 동의</span>
+            <div style="margin-top:3px;font-size:11.5px;color:#64748b;">
+              주문 처리, 전자금융거래 기록 보관 및 영수증 발급 목적으로 구매자 정보(성함, 연락처, 이메일, IP)를 수집 및 이용합니다.
+            </div>
+          </div>
+        </label>
+        <div style="margin-top:8px;padding-top:6px;border-top:1px dashed #e2e8f0;display:flex;justify-content:flex-end;">
+          <button type="button" onclick="togglePrivacyDetail()" style="background:none;border:none;padding:0;font-size:11.5px;color:#8c82ff;cursor:pointer;text-decoration:underline;">전문 보기 ▾</button>
+        </div>
+        <div id="privacy-detail-box" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid #e2e8f0;border-radius:4px;font-size:11px;color:#475569;line-height:1.6;max-height:120px;overflow-y:auto;">
+          <strong>1. 수집 항목:</strong> 구매자 성명, 이메일, 휴대전화번호, 결제/거래기록, 접속 IP<br>
+          <strong>2. 수집 및 이용 목적:</strong> 주문 및 결제 승인/취소/환불, 전자금융거래 영수증 발급, 고객 상담 및 분쟁 해결, 부정 거래 방지<br>
+          <strong>3. 보유 및 이용 기간:</strong> 전자상거래 등에서의 소비자보호에 관한 법률 등 관계 법령에 따른 보존 기간 (계약/청약철회: 5년, 대금결제/재화공급: 5년, 소비자 불만/분쟁: 3년)<br>
+          <strong>4. 동의 거부 권리:</strong> 귀하는 동의를 거부할 권리가 있으나, 필수 동의 거부 시 결제 및 서비스 이용이 제한됩니다.
+        </div>
+      </div>
+
       <button onclick="openPGWindow()" style="width:100%;padding:14px;background:#e61862;color:#fff;border-radius:4px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center;font-family:'Pretendard',sans-serif;" class="btn-gradient-hover">결제 수단 선택하기</button>
     </div>
 

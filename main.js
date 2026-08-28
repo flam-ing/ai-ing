@@ -1262,7 +1262,21 @@
     };
   }
 
+  window.togglePrivacyDetail = function () {
+    const box = document.getElementById("privacy-detail-box");
+    if (box) {
+      box.style.display = (box.style.display === "none" || !box.style.display) ? "block" : "none";
+    }
+  };
+
   window.openPGWindow = async function () {
+    const agreeEl = document.getElementById("privacy-agree");
+    if (agreeEl && !agreeEl.checked) {
+      alert("결제 진행을 위해 [필수] 개인정보 수집 및 이용에 동의해 주세요.");
+      agreeEl.focus();
+      return;
+    }
+
     // 선택 라디오 값으로 금액 확정 (hidden input 어긋남 / 100원→5만원 버그 방지)
     const amount = syncAmountFromSelectedProduct();
     console.info("[ai-ing payment] openPGWindow amount", amount);
