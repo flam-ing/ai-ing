@@ -1522,8 +1522,10 @@
           phoneNumber: customer.phoneNumber
         },
         windowType: {
-          iframe: {}
-        }
+          pc: "IFRAME",
+          mobile: "REDIRECTION"
+        },
+        redirectUrl: `${window.location.origin}/payment`
       };
 
       if (channelKey) {
@@ -1545,6 +1547,11 @@
 
       allButtons.forEach((btn) => (btn.disabled = false));
       activeBtn.innerHTML = originalText;
+
+      // 모바일 REDIRECTION 방식은 여기서 완료되지 않고 결제사 URL로 이동합니다.
+      if (!response) {
+        return;
+      }
 
       if (response.code !== undefined) {
         if (
@@ -1617,6 +1624,54 @@
   // URL에 ?test=true 또는 #test 파라미터가 있으면 1,000원 테스트 상품 표시 & 모달 자동 열기
   try {
     const urlParams = new URLSearchParams(window.location.search);
+
+    // 모바일 리디렉션 결제 복귀 확인
+    const redirectPaymentId = urlParams.get("paymentId");
+    const redirectCode = urlParams.get("code");
+    const redirectMessage = urlParams.get("message");
+    const redirectTxId = urlParams.get("txId") || urlParams.get("transactionId") || redirectPaymentId;
+
+    if (redirectPaymentId) {
+      if (redirectCode && redirectCode !== "PAID" && redirectCode !== "SUCCESS") {
+        alert("결제가 완료되지 않았습니다: " + (redirectMessage || redirectCode));
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        (async () => {
+          try {
+            const logResponse = await fetch(
+              `${AI_ING_PAYMENT.apiBase}/api/v1/orders/${redirectPaymentId}/payment-attempts/portone`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  paymentId: redirectPaymentId,
+                  txId: redirectTxId,
+                  method: "portone"
+                })
+              }
+            );
+            const logData = await logResponse.json().catch(() => ({ ok: false }));
+            if (logData.order) {
+              const confirmedAmount = Number(logData.order.amount) || 0;
+              const amtEl = document.getElementById("receipt-amount");
+              if (amtEl) amtEl.innerText = confirmedAmount.toLocaleString() + "원";
+              const methEl = document.getElementById("receipt-method");
+              if (methEl) methEl.innerText = "신용카드 / 간편결제";
+              const txEl = document.getElementById("receipt-txid");
+              if (txEl) txEl.innerText = redirectPaymentId;
+              const modal = document.getElementById("payment-modal");
+              if (modal) modal.style.display = "none";
+              const receipt = document.getElementById("receipt-container");
+              if (receipt) receipt.style.display = "flex";
+            }
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (e) {
+            console.error("[ai-ing payment] mobile return verification error:", e);
+          }
+        })();
+        return;
+      }
+    }
 
     // ?price=200000 또는 ?amount=200000 파라미터 감지 시 전용 서브페이지 /pay 로 원활히 연동
     const priceParam = urlParams.get("price") || urlParams.get("amount");

@@ -244,8 +244,8 @@
         <button type="button" class="btn-action" id="btn-card" onclick="triggerPayment('CARD')">
           💳 신용카드 결제하기 ➔
         </button>
-        <button type="button" class="btn-kakao" id="btn-kakao" onclick="triggerPayment('KAKAOPAY')">
-          🟡 카카오페이로 결제
+        <button type="button" class="btn-kakao" id="btn-kakao" style="display:none;" onclick="triggerPayment('KAKAOPAY')">
+          🟡 카카오페이로 결제하기 ➔
         </button>
       </div>
 
@@ -297,11 +297,29 @@
     let buyerName = "익명 구매자";
     let buyerPhone = "010-0000-0000";
     let buyerEmail = "contact@ai-ing.org";
+    let isKakaoMode = false;
+    let currentMethod = "CARD";
 
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     async function init() {
       const params = new URLSearchParams(window.location.search);
+
+      // 모드 파싱 (?mode=kakao 또는 ?method=kakao 설정 시에만 카카오페이 활성화)
+      const rawMode = (params.get("mode") || params.get("method") || "").toLowerCase();
+      isKakaoMode = (rawMode === "kakao" || rawMode === "kakaopay");
+      currentMethod = isKakaoMode ? "KAKAOPAY" : "CARD";
+
+      const btnCard = document.getElementById("btn-card");
+      const btnKakao = document.getElementById("btn-kakao");
+
+      if (isKakaoMode) {
+        btnCard.style.display = "none";
+        btnKakao.style.display = "flex";
+      } else {
+        btnCard.style.display = "flex";
+        btnKakao.style.display = "none";
+      }
       
       // 1. 모바일 리디렉션 결제 복귀 확인
       const redirectPaymentId = params.get("paymentId");
@@ -340,13 +358,18 @@
 
       if (targetAmount >= 1000) {
         document.getElementById("display-amount").innerHTML = `${targetAmount.toLocaleString()}<span>원</span>`;
-        document.getElementById("btn-card").innerText = `💳 ${targetAmount.toLocaleString()}원 신용카드 결제하기 ➔`;
-        document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 결제`;
+        if (isKakaoMode) {
+          btnKakao.innerText = `🟡 ${targetAmount.toLocaleString()}원 카카오페이 결제하기 ➔`;
+          document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 카카오페이 결제`;
+        } else {
+          btnCard.innerText = `💳 ${targetAmount.toLocaleString()}원 신용카드 결제하기 ➔`;
+          document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제`;
+        }
         
         // PC 또는 모바일 자동 호출 시도
         document.getElementById("calling-spinner").style.display = "block";
         setTimeout(() => {
-          triggerPayment("CARD", true); // autoMode = true
+          triggerPayment(currentMethod, true); // autoMode = true
         }, 400);
       } else {
         // 금액이 없을 경우 수동 입력창 표시
@@ -355,7 +378,11 @@
         document.getElementById("calling-spinner").style.display = "none";
         document.getElementById("status-message").innerText = "결제 금액을 입력해 주세요.";
         document.getElementById("auto-note").style.display = "none";
-        document.getElementById("btn-card").innerText = "신용카드 결제하기";
+        if (isKakaoMode) {
+          btnKakao.innerText = "카카오페이 결제하기";
+        } else {
+          btnCard.innerText = "신용카드 결제하기";
+        }
       }
     }
 
@@ -364,11 +391,19 @@
       if (!isNaN(num) && num >= 1000) {
         targetAmount = num;
         document.getElementById("display-amount").innerHTML = `${num.toLocaleString()}<span>원</span>`;
-        document.getElementById("btn-card").innerText = `💳 ${num.toLocaleString()}원 신용카드 결제하기 ➔`;
+        if (isKakaoMode) {
+          document.getElementById("btn-kakao").innerText = `🟡 ${num.toLocaleString()}원 카카오페이 결제하기 ➔`;
+        } else {
+          document.getElementById("btn-card").innerText = `💳 ${num.toLocaleString()}원 신용카드 결제하기 ➔`;
+        }
       } else {
         targetAmount = 0;
         document.getElementById("display-amount").innerHTML = `0<span>원</span>`;
-        document.getElementById("btn-card").innerText = "1,000원 이상 입력해 주세요";
+        if (isKakaoMode) {
+          document.getElementById("btn-kakao").innerText = "1,000원 이상 입력해 주세요";
+        } else {
+          document.getElementById("btn-card").innerText = "1,000원 이상 입력해 주세요";
+        }
       }
     }
 
@@ -409,7 +444,7 @@
         const channelKey = (method === "CARD") ? CONFIG.cardChannelKey : CONFIG.kakaoChannelKey;
 
         // 리디렉션 복귀 주소 (모바일 환경 필수)
-        const redirectUrl = `${window.location.origin}/pay?price=${targetAmount}&item=${encodeURIComponent(targetItem)}`;
+        const redirectUrl = `${window.location.origin}/pay?price=${targetAmount}&item=${encodeURIComponent(targetItem)}${isKakaoMode ? '&mode=kakao' : ''}`;
 
         const paymentParams = {
           storeId: CONFIG.storeId,
