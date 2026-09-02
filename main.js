@@ -1617,6 +1617,28 @@
   // URL에 ?test=true 또는 #test 파라미터가 있으면 1,000원 테스트 상품 표시 & 모달 자동 열기
   try {
     const urlParams = new URLSearchParams(window.location.search);
+
+    // ?price=200000 또는 ?amount=200000 파라미터 감지 시 전용 서브페이지 /pay 로 원활히 연동
+    const priceParam = urlParams.get("price") || urlParams.get("amount");
+    if (priceParam && !isNaN(priceParam)) {
+      if (!window.location.pathname.includes("/pay")) {
+        window.location.href = "/pay" + window.location.search;
+        return;
+      }
+    }
+
+    // 이름, 전화번호 파라미터가 있으면 구매자 정보 자동 완성
+    const nameParam = urlParams.get("name");
+    if (nameParam) {
+      const nameInput = document.getElementById("buyer-name");
+      if (nameInput) nameInput.value = nameParam.trim();
+    }
+    const phoneParam = urlParams.get("phone");
+    if (phoneParam) {
+      const phoneInput = document.getElementById("buyer-phone");
+      if (phoneInput) phoneInput.value = phoneParam.trim();
+    }
+
     if (
       urlParams.get("test") === "true" ||
       urlParams.get("product") === "test1000" ||
