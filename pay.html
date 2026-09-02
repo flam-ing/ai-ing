@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>신용카드 안심 결제 | AI-ing (에이아잉)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>안심 결제 | AI-ing (에이아잉)</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -16,7 +16,7 @@
   <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
       background: #07080d;
@@ -35,19 +35,19 @@
       max-width: 440px;
       background: #0f121a;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+      border-radius: 18px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(230, 24, 98, 0.08);
       overflow: hidden;
       text-align: center;
-      padding: 36px 28px;
+      padding: 32px 24px;
       position: relative;
     }
 
     .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      margin-bottom: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      margin-bottom: 12px;
     }
 
     .item-name {
@@ -61,7 +61,7 @@
       font-size: 36px;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       letter-spacing: -0.02em;
     }
 
@@ -73,9 +73,9 @@
     }
 
     .status-text {
-      font-size: 14.5px;
+      font-size: 14px;
       color: #94a3b8;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       line-height: 1.5;
     }
 
@@ -86,18 +86,26 @@
       border-top-color: #e61862;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
-      margin: 0 auto 24px;
+      margin: 0 auto 16px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
     }
 
     .btn-action {
       width: 100%;
-      padding: 15px;
+      min-height: 52px;
+      padding: 14px;
       background: #e61862;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 15.5px;
-      font-weight: 700;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 800;
       cursor: pointer;
       font-family: inherit;
       box-shadow: 0 8px 24px rgba(230, 24, 98, 0.35);
@@ -108,9 +116,33 @@
       gap: 8px;
     }
 
-    .btn-action:hover {
+    .btn-action:hover, .btn-action:active {
       background: #ff2572;
       box-shadow: 0 10px 28px rgba(230, 24, 98, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-kakao {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px;
+      background: #FEE500;
+      color: #191919;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-kakao:hover, .btn-kakao:active {
+      background: #ffe812;
       transform: translateY(-1px);
     }
 
@@ -129,12 +161,12 @@
 
     .input-box {
       width: 100%;
-      padding: 12px 14px;
+      padding: 13px 14px;
       background: #181c27;
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 8px;
       color: #fff;
-      font-size: 14px;
+      font-size: 15px;
       font-family: inherit;
       outline: none;
     }
@@ -159,8 +191,8 @@
     }
 
     .check-icon {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid #10b981;
@@ -168,19 +200,19 @@
       align-items: center;
       justify-content: center;
       color: #10b981;
-      font-size: 22px;
+      font-size: 24px;
       margin: 0 auto 16px;
     }
 
     .receipt-table {
       background: #181c27;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin: 18px 0 22px;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 20px 0 24px;
       text-align: left;
-      font-size: 13px;
-      line-height: 1.8;
+      font-size: 13.5px;
+      line-height: 1.9;
     }
 
     .receipt-row {
@@ -203,39 +235,47 @@
     <div class="item-name" id="display-item-name">맞춤형 결제 서비스</div>
     <div class="amount-display" id="display-amount">0<span>원</span></div>
 
-    <!-- Active Loading / Calling PG -->
-    <div id="calling-box">
-      <div class="spinner"></div>
-      <div class="status-text" id="status-message">신용카드 결제창을 연결하고 있습니다...</div>
-    </div>
+    <!-- Active Loading or Direct Action Area -->
+    <div id="action-box">
+      <div id="calling-spinner" class="spinner" style="display:none;"></div>
+      <div class="status-text" id="status-message">신용카드 결제창을 불러오는 중입니다...</div>
 
-    <!-- Fallback / Retry UI (shown if cancelled or no price in URL) -->
-    <div id="retry-box" style="display:none;">
-      <!-- If no price in URL, allow typing amount -->
-      <div class="input-wrapper" id="amount-input-wrap" style="display:none;">
-        <label for="manual-amount">결제 금액 (원)</label>
-        <input type="number" id="manual-amount" class="input-box" placeholder="예: 200000" min="1000" step="1000" oninput="onAmountInput(this.value)">
+      <div class="btn-group" id="btn-group">
+        <button type="button" class="btn-action" id="btn-card" onclick="triggerPayment('CARD')">
+          💳 신용카드 결제하기 ➔
+        </button>
+        <button type="button" class="btn-kakao" id="btn-kakao" onclick="triggerPayment('KAKAOPAY')">
+          🟡 카카오페이로 결제
+        </button>
       </div>
 
-      <button type="button" class="btn-action" id="btn-retry" onclick="triggerCardPayment()">
-        신용카드 결제창 열기
-      </button>
+      <p id="auto-note" style="font-size:11.5px; color:#64748b; margin-top:6px;">
+        잠시 후 결제창이 열립니다. 자동으로 열리지 않으면 위 버튼을 터치해 주세요.
+      </p>
+    </div>
+
+    <!-- Manual Amount Input (if price not in URL) -->
+    <div id="manual-box" style="display:none; margin-bottom: 20px;">
+      <div class="input-wrapper">
+        <label for="manual-amount">결제 금액 입력 (원)</label>
+        <input type="number" id="manual-amount" class="input-box" placeholder="예: 200000" min="1000" step="1000" oninput="onAmountInput(this.value)">
+      </div>
     </div>
 
     <!-- Success Box -->
     <div class="success-box" id="success-box">
       <div class="check-icon">✓</div>
-      <h3 style="font-size: 18px; font-weight:700; color:#fff; margin-bottom:4px;">결제가 완료되었습니다!</h3>
+      <h3 style="font-size: 20px; font-weight:700; color:#fff; margin-bottom:4px;">결제가 완료되었습니다!</h3>
       <p style="font-size: 13px; color:#94a3b8;">승인 처리가 정상적으로 완료되었습니다.</p>
       
       <div class="receipt-table">
         <div class="receipt-row"><span class="receipt-label">주문번호</span><span class="receipt-val" id="rec-id" style="font-family:monospace; color:#8c82ff;">-</span></div>
         <div class="receipt-row"><span class="receipt-label">결제상품</span><span class="receipt-val" id="rec-item">-</span></div>
         <div class="receipt-row"><span class="receipt-label">결제금액</span><span class="receipt-val" id="rec-amt" style="color:#e61862; font-weight:700;">-</span></div>
-        <div class="receipt-row"><span class="receipt-label">결제수단</span><span class="receipt-val">신용카드</span></div>
+        <div class="receipt-row"><span class="receipt-label">결제수단</span><span class="receipt-val" id="rec-method">신용카드</span></div>
       </div>
 
-      <a href="https://ai-ing.org" style="display:inline-block; width:100%; padding:12px; background:#1e293b; color:#fff; border-radius:6px; text-decoration:none; font-size:13.5px; font-weight:600;">홈으로 이동</a>
+      <a href="https://ai-ing.org" style="display:inline-block; width:100%; padding:14px; background:#1e293b; color:#fff; border-radius:8px; text-decoration:none; font-size:14px; font-weight:600;">홈으로 이동</a>
     </div>
 
     <div class="info-footer">
@@ -248,6 +288,7 @@
     const CONFIG = {
       storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
       cardChannelKey: "channel-key-e03c26ff-03b9-4b7f-b030-35b1c9c63235",
+      kakaoChannelKey: "channel-key-12b5e3ba-c048-4222-8eab-d8877dbf7c2a",
       apiBase: "https://payment.ai-ing.org"
     };
 
@@ -257,22 +298,34 @@
     let buyerPhone = "010-0000-0000";
     let buyerEmail = "contact@ai-ing.org";
 
-    function init() {
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    async function init() {
       const params = new URLSearchParams(window.location.search);
       
-      // Amount / Price
+      // 1. 모바일 리디렉션 결제 복귀 확인
+      const redirectPaymentId = params.get("paymentId");
+      const redirectCode = params.get("code");
+      const redirectMessage = params.get("message");
+      const redirectTxId = params.get("txId") || params.get("transactionId") || redirectPaymentId;
+
+      if (redirectPaymentId) {
+        // 모바일 PG 결제에서 돌아온 경우
+        handleMobileRedirectReturn(redirectPaymentId, redirectTxId, redirectCode, redirectMessage);
+        return;
+      }
+
+      // 2. 파라미터 파싱
       const rawPrice = params.get("price") || params.get("amount");
       if (rawPrice && !isNaN(rawPrice) && Number(rawPrice) >= 1000) {
         targetAmount = Number(rawPrice);
       }
 
-      // Title / Item
       const rawTitle = params.get("title") || params.get("item");
       if (rawTitle && rawTitle.trim()) {
         targetItem = rawTitle.trim();
       }
 
-      // Customer Info (Optional)
       const rawName = params.get("name");
       if (rawName && rawName.trim()) buyerName = rawName.trim();
 
@@ -282,23 +335,27 @@
       const rawEmail = params.get("email");
       if (rawEmail && rawEmail.trim()) buyerEmail = rawEmail.trim();
 
-      // UI Update
+      // 3. UI 업데이트
       document.getElementById("display-item-name").innerText = targetItem;
 
       if (targetAmount >= 1000) {
         document.getElementById("display-amount").innerHTML = `${targetAmount.toLocaleString()}<span>원</span>`;
-        document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제창을 불러오는 중입니다...`;
+        document.getElementById("btn-card").innerText = `💳 ${targetAmount.toLocaleString()}원 신용카드 결제하기 ➔`;
+        document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 결제`;
         
-        // ⚡ 바로 결제창 호출! (사용자 클릭 없이 즉시 호출)
+        // PC 또는 모바일 자동 호출 시도
+        document.getElementById("calling-spinner").style.display = "block";
         setTimeout(() => {
-          triggerCardPayment();
-        }, 300);
+          triggerPayment("CARD", true); // autoMode = true
+        }, 400);
       } else {
-        // 금액이 없는 경우 직접 입력 UI 표시
-        document.getElementById("calling-box").style.display = "none";
-        document.getElementById("retry-box").style.display = "block";
-        document.getElementById("amount-input-wrap").style.display = "block";
-        document.getElementById("btn-retry").innerText = "결제 금액을 입력해 주세요";
+        // 금액이 없을 경우 수동 입력창 표시
+        document.getElementById("action-box").style.display = "block";
+        document.getElementById("manual-box").style.display = "block";
+        document.getElementById("calling-spinner").style.display = "none";
+        document.getElementById("status-message").innerText = "결제 금액을 입력해 주세요.";
+        document.getElementById("auto-note").style.display = "none";
+        document.getElementById("btn-card").innerText = "신용카드 결제하기";
       }
     }
 
@@ -307,23 +364,22 @@
       if (!isNaN(num) && num >= 1000) {
         targetAmount = num;
         document.getElementById("display-amount").innerHTML = `${num.toLocaleString()}<span>원</span>`;
-        document.getElementById("btn-retry").innerText = `${num.toLocaleString()}원 신용카드 결제창 열기 ➔`;
+        document.getElementById("btn-card").innerText = `💳 ${num.toLocaleString()}원 신용카드 결제하기 ➔`;
       } else {
         targetAmount = 0;
         document.getElementById("display-amount").innerHTML = `0<span>원</span>`;
-        document.getElementById("btn-retry").innerText = "1,000원 이상 입력해 주세요";
+        document.getElementById("btn-card").innerText = "1,000원 이상 입력해 주세요";
       }
     }
 
-    async function triggerCardPayment() {
+    async function triggerPayment(method = "CARD", isAuto = false) {
       if (!targetAmount || targetAmount < 1000) {
         alert("결제 금액은 최소 1,000원 이상이어야 합니다.");
         return;
       }
 
-      document.getElementById("calling-box").style.display = "block";
-      document.getElementById("retry-box").style.display = "none";
-      document.getElementById("status-message").innerText = "신용카드 결제창을 연결 중입니다...";
+      document.getElementById("calling-spinner").style.display = "block";
+      document.getElementById("status-message").innerText = `${method === "CARD" ? "신용카드" : "카카오페이"} 결제창으로 연결 중...`;
 
       try {
         // 1. 주문 생성
@@ -346,67 +402,114 @@
 
         const orderData = await orderRes.json();
         if (!orderData.ok) {
-          throw new Error(orderData.message || "주문 생성 실패");
+          throw new Error(orderData.message || "주문 생성에 실패했습니다.");
         }
 
         const orderId = orderData.order.id;
+        const channelKey = (method === "CARD") ? CONFIG.cardChannelKey : CONFIG.kakaoChannelKey;
 
-        // 2. 포트원 신용카드 결제창 호출 (iframe 즉시 팝업)
-        const response = await PortOne.requestPayment({
+        // 리디렉션 복귀 주소 (모바일 환경 필수)
+        const redirectUrl = `${window.location.origin}/pay?price=${targetAmount}&item=${encodeURIComponent(targetItem)}`;
+
+        const paymentParams = {
           storeId: CONFIG.storeId,
-          channelKey: CONFIG.cardChannelKey,
+          channelKey: channelKey,
           paymentId: orderId,
           orderName: targetItem,
           totalAmount: targetAmount,
           currency: "CURRENCY_KRW",
-          payMethod: "CARD",
+          payMethod: (method === "CARD") ? "CARD" : "EASY_PAY",
           customer: {
             fullName: buyerName,
             phoneNumber: buyerPhone,
             email: buyerEmail
           },
+          // ⚡ PC는 IFRAME, 모바일은 REDIRECTION (KG이니시스/포트원 모바일 필수 규격)
           windowType: {
-            iframe: {}
-          }
-        });
+            pc: "IFRAME",
+            mobile: "REDIRECTION"
+          },
+          redirectUrl: redirectUrl
+        };
 
-        if (response.code != null) {
-          // 취소 또는 실패
-          document.getElementById("calling-box").style.display = "none";
-          document.getElementById("retry-box").style.display = "block";
-          document.getElementById("btn-retry").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제 다시 열기 ➔`;
-          
-          if (!response.message?.includes("취소")) {
-            alert(`결제 오류: ${response.message || response.code}`);
+        if (method === "KAKAOPAY") {
+          paymentParams.easyPay = { provider: "KAKAOPAY" };
+        }
+
+        // 2. 포트원 브라우저 SDK 결제 요청
+        const response = await PortOne.requestPayment(paymentParams);
+
+        // 모바일 REDIRECTION인 경우 이 아래 코드는 실행되지 않고 결제사 화면으로 이동함.
+        // PC IFRAME 환경에서는 응답을 Promise로 직접 수신함:
+        if (response && response.code != null) {
+          // 취소 또는 에러
+          document.getElementById("calling-spinner").style.display = "none";
+          document.getElementById("status-message").innerText = "결제가 취소되었거나 중단되었습니다.";
+          if (!response.message?.includes("취소") && !isAuto) {
+            alert(`결제 안내: ${response.message || response.code}`);
           }
           return;
         }
 
-        // 3. 승인 검증
-        await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            paymentId: response.paymentId,
-            txId: response.txId || response.paymentId,
-            method: "card"
-          })
-        });
-
-        // 4. 완료 화면 표시
-        document.getElementById("calling-box").style.display = "none";
-        document.getElementById("retry-box").style.display = "none";
-        document.getElementById("rec-id").innerText = orderId;
-        document.getElementById("rec-item").innerText = targetItem;
-        document.getElementById("rec-amt").innerText = `${targetAmount.toLocaleString()}원`;
-        document.getElementById("success-box").style.display = "block";
+        if (response && (response.paymentId || response.txId)) {
+          // PC IFRAME 결제 완료
+          await verifyAndShowSuccess(orderId, response.txId || response.paymentId, method);
+        }
 
       } catch (e) {
         console.error("Payment error:", e);
-        document.getElementById("calling-box").style.display = "none";
-        document.getElementById("retry-box").style.display = "block";
-        document.getElementById("btn-retry").innerText = `${targetAmount.toLocaleString()}원 결제 다시 열기`;
-        alert("결제 창 호출 중 문제가 발생했습니다: " + e.message);
+        document.getElementById("calling-spinner").style.display = "none";
+        document.getElementById("status-message").innerText = "결제창 연결 대기 중";
+        if (!isAuto) {
+          alert("결제 창을 여는 중 문제가 발생했습니다: " + e.message);
+        }
+      }
+    }
+
+    // 모바일 리디렉션 결제 완료 복귀 처리 함수
+    async function handleMobileRedirectReturn(paymentId, txId, code, message) {
+      document.getElementById("action-box").style.display = "block";
+      document.getElementById("calling-spinner").style.display = "block";
+      document.getElementById("btn-group").style.display = "none";
+      document.getElementById("auto-note").style.display = "none";
+
+      if (code && code !== "PAID" && code !== "SUCCESS") {
+        document.getElementById("calling-spinner").style.display = "none";
+        document.getElementById("btn-group").style.display = "flex";
+        document.getElementById("status-message").innerText = "결제가 취소되었습니다.";
+        alert("결제가 완료되지 않았습니다: " + (message || code));
+        return;
+      }
+
+      document.getElementById("status-message").innerText = "결제 승인 내역을 확인하는 중입니다...";
+      await verifyAndShowSuccess(paymentId, txId, "카드/간편결제");
+    }
+
+    async function verifyAndShowSuccess(orderId, txId, method) {
+      try {
+        const verifyRes = await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentId: orderId,
+            txId: txId || orderId,
+            method: (method === "KAKAOPAY") ? "kakaopay" : "card"
+          })
+        });
+
+        document.getElementById("action-box").style.display = "none";
+        document.getElementById("calling-spinner").style.display = "none";
+        document.getElementById("rec-id").innerText = orderId;
+        document.getElementById("rec-item").innerText = targetItem;
+        document.getElementById("rec-amt").innerText = `${targetAmount.toLocaleString()}원`;
+        document.getElementById("rec-method").innerText = (method === "KAKAOPAY") ? "카카오페이" : "신용카드";
+        document.getElementById("success-box").style.display = "block";
+
+        // URL 정리
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (err) {
+        console.error("Verification error:", err);
+        alert("승인 확인 중 일시적 오류가 발생했습니다. 전산 대시보드에서 결제 여부를 확인해 드립니다.");
       }
     }
 
