@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>맞춤형 안전 결제 | AI-ing (에이아잉)</title>
+  <title>신용카드 안심 결제 | AI-ing (에이아잉)</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -26,101 +26,100 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 20px 16px;
       -webkit-font-smoothing: antialiased;
     }
 
-    .pay-card {
+    .pay-container {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       background: #0f121a;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(230, 24, 98, 0.08);
       overflow: hidden;
+      text-align: center;
+      padding: 36px 28px;
       position: relative;
     }
 
-    .pay-header {
-      padding: 24px 28px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.02);
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      margin-bottom: 14px;
     }
 
-    .pay-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .pay-brand img {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-    }
-
-    .pay-brand-name {
-      font-size: 17px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.02em;
-    }
-
-    .pay-badge-secure {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      padding: 4px 8px;
-      border-radius: 20px;
-    }
-
-    .pay-body {
-      padding: 28px;
-    }
-
-    .amount-banner {
-      background: linear-gradient(145deg, rgba(230, 24, 98, 0.08), rgba(140, 130, 255, 0.06));
-      border: 1px solid rgba(230, 24, 98, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .item-title {
-      font-size: 13.5px;
+    .item-name {
+      font-size: 14px;
       color: #94a3b8;
       margin-bottom: 6px;
       font-weight: 500;
     }
 
-    .amount-value {
-      font-size: 34px;
+    .amount-display {
+      font-size: 36px;
       font-weight: 800;
       color: #fff;
-      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
     }
 
-    .amount-value span {
-      font-size: 20px;
-      font-weight: 600;
-      margin-left: 2px;
+    .amount-display span {
+      font-size: 22px;
       color: #e61862;
+      font-weight: 700;
+      margin-left: 3px;
     }
 
-    .input-group {
-      margin-bottom: 16px;
+    .status-text {
+      font-size: 14.5px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
 
-    .input-group label {
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      border-top-color: #e61862;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 15px;
+      background: #e61862;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15.5px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 8px 24px rgba(230, 24, 98, 0.35);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-action:hover {
+      background: #ff2572;
+      box-shadow: 0 10px 28px rgba(230, 24, 98, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .input-wrapper {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .input-wrapper label {
       display: block;
       font-size: 12px;
       font-weight: 600;
@@ -128,7 +127,7 @@
       margin-bottom: 6px;
     }
 
-    .input-field {
+    .input-box {
       width: 100%;
       padding: 12px 14px;
       background: #181c27;
@@ -138,285 +137,110 @@
       font-size: 14px;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .input-field:focus {
+    .input-box:focus {
       border-color: #e61862;
-      box-shadow: 0 0 0 3px rgba(230, 24, 98, 0.18);
     }
 
-    .input-field::placeholder {
-      color: #64748b;
-    }
-
-    .method-selector {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .method-btn {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: #181c27;
-      color: #94a3b8;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .method-btn.active {
-      border-color: #8c82ff;
-      background: rgba(140, 130, 255, 0.12);
-      color: #fff;
-      box-shadow: 0 0 12px rgba(140, 130, 255, 0.2);
-    }
-
-    .method-btn.active.kakao {
-      border-color: #FEE500;
-      background: rgba(254, 229, 0, 0.12);
-      color: #FEE500;
-      box-shadow: 0 0 12px rgba(254, 229, 0, 0.18);
-    }
-
-    .privacy-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 22px;
-    }
-
-    .privacy-label {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      color: #94a3b8;
-      user-select: none;
-    }
-
-    .privacy-label input {
-      margin-top: 2px;
-      accent-color: #e61862;
-      cursor: pointer;
-    }
-
-    .privacy-detail {
-      display: none;
-      margin-top: 8px;
-      padding: 10px;
-      background: #181c27;
-      border-radius: 6px;
-      font-size: 11px;
-      color: #94a3b8;
-      line-height: 1.55;
-    }
-
-    .btn-pay {
-      width: 100%;
-      padding: 16px;
-      background: #e61862;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(230, 24, 98, 0.35);
-      transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-pay:hover {
-      background: #ff2572;
-      transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(230, 24, 98, 0.45);
-    }
-
-    .btn-pay:active {
-      transform: translateY(1px);
-    }
-
-    .btn-pay:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .quick-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .chip-btn {
-      background: #181c27;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .chip-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-
-    .pay-footer {
-      padding: 16px 28px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      text-align: center;
+    .info-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 11.5px;
       color: #64748b;
       line-height: 1.6;
     }
 
-    /* Modal / Success Receipt */
-    .success-overlay {
+    /* Success Overlay */
+    .success-box {
       display: none;
-      position: absolute;
-      inset: 0;
-      background: #0f121a;
-      z-index: 10;
-      padding: 32px 24px;
-      flex-direction: column;
+      text-align: center;
+    }
+
+    .check-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      color: #10b981;
+      font-size: 22px;
+      margin: 0 auto 16px;
+    }
+
+    .receipt-table {
+      background: #181c27;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 18px 0 22px;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .receipt-label { color: #64748b; }
+    .receipt-val { font-weight: 600; color: #fff; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
 
-  <div class="pay-card">
-    <div class="pay-header">
-      <div class="pay-brand">
-        <img src="logo.png" alt="AI-ing">
-        <span class="pay-brand-name">AI-ing Pay</span>
-      </div>
-      <div class="pay-badge-secure">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.243 2 7 4.243 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7c0-2.757-2.243-5-5-5zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm9 13H6v-8h12v8z"/></svg>
-        안심 결제
-      </div>
+  <div class="pay-container">
+    <img src="logo.png" alt="AI-ing" class="brand-logo">
+    <div class="item-name" id="display-item-name">맞춤형 결제 서비스</div>
+    <div class="amount-display" id="display-amount">0<span>원</span></div>
+
+    <!-- Active Loading / Calling PG -->
+    <div id="calling-box">
+      <div class="spinner"></div>
+      <div class="status-text" id="status-message">신용카드 결제창을 연결하고 있습니다...</div>
     </div>
 
-    <div class="pay-body" id="checkout-form">
-      <!-- Amount Display -->
-      <div class="amount-banner">
-        <div class="item-title" id="display-item-title">맞춤형 컨설팅 & 교육 서비스</div>
-        <div class="amount-value" id="display-amount">0<span>원</span></div>
+    <!-- Fallback / Retry UI (shown if cancelled or no price in URL) -->
+    <div id="retry-box" style="display:none;">
+      <!-- If no price in URL, allow typing amount -->
+      <div class="input-wrapper" id="amount-input-wrap" style="display:none;">
+        <label for="manual-amount">결제 금액 (원)</label>
+        <input type="number" id="manual-amount" class="input-box" placeholder="예: 200000" min="1000" step="1000" oninput="onAmountInput(this.value)">
       </div>
 
-      <!-- Editable Amount (shown only if price not in URL) -->
-      <div class="input-group" id="manual-amount-group" style="display:none;">
-        <label for="input-amount">결제 금액 (원)</label>
-        <input type="number" id="input-amount" class="input-field" placeholder="예: 200000" min="1000" step="1000" oninput="handleManualAmountChange(this.value)">
-        <div class="quick-chips">
-          <button type="button" class="chip-btn" onclick="addAmount(10000)">+1만</button>
-          <button type="button" class="chip-btn" onclick="addAmount(50000)">+5만</button>
-          <button type="button" class="chip-btn" onclick="addAmount(100000)">+10만</button>
-          <button type="button" class="chip-btn" onclick="addAmount(500000)">+50만</button>
-          <button type="button" class="chip-btn" onclick="addAmount(1000000)">+100만</button>
-          <button type="button" class="chip-btn" onclick="resetAmount()">초기화</button>
-        </div>
-      </div>
-
-      <!-- Payment Method -->
-      <div class="input-group">
-        <label>결제 수단</label>
-        <div class="method-selector">
-          <button type="button" class="method-btn active" id="method-card" onclick="selectMethod('CARD')">
-            💳 신용카드 (국내)
-          </button>
-          <button type="button" class="method-btn" id="method-kakao" onclick="selectMethod('KAKAOPAY')">
-            🟡 카카오페이
-          </button>
-        </div>
-      </div>
-
-      <!-- Buyer Information (Optional) -->
-      <div class="input-group">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <label style="margin:0;">구매자 정보 (선택)</label>
-          <span style="font-size:11px;color:#64748b;">미입력 시 익명 처리</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-          <input type="text" id="buyer-name" class="input-field" placeholder="성함 (선택)">
-          <input type="tel" id="buyer-phone" class="input-field" placeholder="연락처 (선택)">
-        </div>
-        <input type="email" id="buyer-email" class="input-field" placeholder="영수증 수신 이메일 (선택)">
-      </div>
-
-      <!-- Privacy Policy Agreement -->
-      <div class="privacy-box">
-        <label class="privacy-label">
-          <input type="checkbox" id="privacy-agree" checked>
-          <div>
-            <strong>[필수] 개인정보 수집 및 이용 동의</strong>
-            <div style="font-size:11px;color:#64748b;margin-top:2px;">
-              결제 승인 및 영수증 발급 목적으로 정보를 수집합니다.
-            </div>
-          </div>
-        </label>
-        <div style="margin-top:6px;text-align:right;">
-          <a href="javascript:void(0)" onclick="togglePrivacy()" style="font-size:11px;color:#8c82ff;text-decoration:underline;">전문 보기 ▾</a>
-        </div>
-        <div class="privacy-detail" id="privacy-detail">
-          • <strong>수집 항목:</strong> 성명, 연락처, 이메일, IP 주소<br>
-          • <strong>목적:</strong> 주문 및 결제 승인/취소, 영수증 발급, 부정결제 방지<br>
-          • <strong>보유 기간:</strong> 전자상거래법에 따라 5년간 보존 후 파기<br>
-          • 동의 거부 시 결제 진행이 제한될 수 있습니다.
-        </div>
-      </div>
-
-      <!-- Submit CTA Button -->
-      <button type="button" class="btn-pay" id="btn-submit-pay" onclick="executePayment()">
-        <span id="btn-pay-text">결제하기</span>
+      <button type="button" class="btn-action" id="btn-retry" onclick="triggerCardPayment()">
+        신용카드 결제창 열기
       </button>
     </div>
 
-    <!-- Success Receipt Overlay -->
-    <div class="success-overlay" id="success-receipt">
-      <div style="width:52px;height:52px;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid #10b981;display:flex;align-items:center;justify-content:center;color:#10b981;font-size:24px;margin-bottom:14px;">
-        ✓
-      </div>
-      <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;">결제가 정상 완료되었습니다!</h3>
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:20px;">감사합니다. 결제 승인 전산 처리가 완료되었습니다.</p>
-
-      <div style="background:#181c27;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;width:100%;text-align:left;font-size:13px;line-height:1.8;margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">주문 번호</span><span id="receipt-order-id" style="font-family:monospace;color:#8c82ff;">-</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">결제 상품</span><span id="receipt-item-name" style="font-weight:600;color:#fff;">-</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">결제 금액</span><span id="receipt-amount" style="font-weight:700;color:#e61862;">-</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">결제 수단</span><span id="receipt-method">-</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">승인 일시</span><span id="receipt-date">-</span></div>
+    <!-- Success Box -->
+    <div class="success-box" id="success-box">
+      <div class="check-icon">✓</div>
+      <h3 style="font-size: 18px; font-weight:700; color:#fff; margin-bottom:4px;">결제가 완료되었습니다!</h3>
+      <p style="font-size: 13px; color:#94a3b8;">승인 처리가 정상적으로 완료되었습니다.</p>
+      
+      <div class="receipt-table">
+        <div class="receipt-row"><span class="receipt-label">주문번호</span><span class="receipt-val" id="rec-id" style="font-family:monospace; color:#8c82ff;">-</span></div>
+        <div class="receipt-row"><span class="receipt-label">결제상품</span><span class="receipt-val" id="rec-item">-</span></div>
+        <div class="receipt-row"><span class="receipt-label">결제금액</span><span class="receipt-val" id="rec-amt" style="color:#e61862; font-weight:700;">-</span></div>
+        <div class="receipt-row"><span class="receipt-label">결제수단</span><span class="receipt-val">신용카드</span></div>
       </div>
 
-      <a href="https://ai-ing.org" style="width:100%;padding:12px;background:#1e293b;color:#fff;border-radius:6px;text-decoration:none;font-size:14px;font-weight:600;display:inline-block;">홈페이지로 이동</a>
+      <a href="https://ai-ing.org" style="display:inline-block; width:100%; padding:12px; background:#1e293b; color:#fff; border-radius:6px; text-decoration:none; font-size:13.5px; font-weight:600;">홈으로 이동</a>
     </div>
 
-    <div class="pay-footer">
-      에이아잉 (AI-ing) | 대표: 김민우 | 사업자등록번호: 102-36-54285<br>
-      결제 대행: 포트원 (PortOne) · KG이니시스 안전결제 시스템
+    <div class="info-footer">
+      에이아잉 (AI-ing) | 대표: 김민우 | 사업자번호: 102-36-54285<br>
+      포트원(PortOne) & KG이니시스 256-bit SSL 보안 결제
     </div>
   </div>
 
@@ -424,239 +248,169 @@
     const CONFIG = {
       storeId: "store-f97f9c9a-054d-49f0-8c13-b5c59676bbcf",
       cardChannelKey: "channel-key-e03c26ff-03b9-4b7f-b030-35b1c9c63235",
-      kakaoChannelKey: "channel-key-12b5e3ba-c048-4222-8eab-d8877dbf7c2a",
       apiBase: "https://payment.ai-ing.org"
     };
 
-    let currentAmount = 0;
-    let selectedMethod = "CARD"; // CARD or KAKAOPAY
-    let itemName = "에이아잉 맞춤형 결제";
+    let targetAmount = 0;
+    let targetItem = "에이아잉 맞춤형 결제";
+    let buyerName = "익명 구매자";
+    let buyerPhone = "010-0000-0000";
+    let buyerEmail = "contact@ai-ing.org";
 
-    function parseParams() {
+    function init() {
       const params = new URLSearchParams(window.location.search);
       
-      // Price / Amount parameter
+      // Amount / Price
       const rawPrice = params.get("price") || params.get("amount");
       if (rawPrice && !isNaN(rawPrice) && Number(rawPrice) >= 1000) {
-        currentAmount = Number(rawPrice);
-      } else {
-        currentAmount = 0;
+        targetAmount = Number(rawPrice);
       }
 
-      // Title / Item parameter
+      // Title / Item
       const rawTitle = params.get("title") || params.get("item");
       if (rawTitle && rawTitle.trim()) {
-        itemName = rawTitle.trim();
+        targetItem = rawTitle.trim();
       }
 
-      // Buyer details
+      // Customer Info (Optional)
       const rawName = params.get("name");
-      if (rawName) document.getElementById("buyer-name").value = rawName.trim();
+      if (rawName && rawName.trim()) buyerName = rawName.trim();
 
       const rawPhone = params.get("phone");
-      if (rawPhone) document.getElementById("buyer-phone").value = rawPhone.trim();
+      if (rawPhone && rawPhone.trim()) buyerPhone = rawPhone.trim();
 
       const rawEmail = params.get("email");
-      if (rawEmail) document.getElementById("buyer-email").value = rawEmail.trim();
+      if (rawEmail && rawEmail.trim()) buyerEmail = rawEmail.trim();
 
-      // Method preference (CARD default, or KAKAOPAY)
-      const rawMethod = (params.get("method") || "").toUpperCase();
-      if (rawMethod === "KAKAO" || rawMethod === "KAKAOPAY") {
-        selectMethod("KAKAOPAY");
-      } else {
-        selectMethod("CARD");
-      }
+      // UI Update
+      document.getElementById("display-item-name").innerText = targetItem;
 
-      // Update UI
-      document.getElementById("display-item-title").innerText = itemName;
-      updateAmountUI();
-
-      // Auto-trigger if ?auto=true
-      if (params.get("auto") === "true" && currentAmount >= 1000) {
+      if (targetAmount >= 1000) {
+        document.getElementById("display-amount").innerHTML = `${targetAmount.toLocaleString()}<span>원</span>`;
+        document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제창을 불러오는 중입니다...`;
+        
+        // ⚡ 바로 결제창 호출! (사용자 클릭 없이 즉시 호출)
         setTimeout(() => {
-          executePayment();
-        }, 800);
-      }
-    }
-
-    function updateAmountUI() {
-      if (currentAmount >= 1000) {
-        document.getElementById("display-amount").innerHTML = `${currentAmount.toLocaleString()}<span>원</span>`;
-        document.getElementById("btn-pay-text").innerText = `${currentAmount.toLocaleString()}원 ${selectedMethod === 'CARD' ? '신용카드' : '카카오페이'} 결제하기 ➔`;
-        document.getElementById("manual-amount-group").style.display = "none";
+          triggerCardPayment();
+        }, 300);
       } else {
-        document.getElementById("display-amount").innerHTML = `0<span>원</span>`;
-        document.getElementById("btn-pay-text").innerText = `결제 금액을 입력해 주세요`;
-        document.getElementById("manual-amount-group").style.display = "block";
+        // 금액이 없는 경우 직접 입력 UI 표시
+        document.getElementById("calling-box").style.display = "none";
+        document.getElementById("retry-box").style.display = "block";
+        document.getElementById("amount-input-wrap").style.display = "block";
+        document.getElementById("btn-retry").innerText = "결제 금액을 입력해 주세요";
       }
     }
 
-    function handleManualAmountChange(val) {
+    function onAmountInput(val) {
       const num = Number(val);
-      if (!isNaN(num) && num > 0) {
-        currentAmount = num;
+      if (!isNaN(num) && num >= 1000) {
+        targetAmount = num;
+        document.getElementById("display-amount").innerHTML = `${num.toLocaleString()}<span>원</span>`;
+        document.getElementById("btn-retry").innerText = `${num.toLocaleString()}원 신용카드 결제창 열기 ➔`;
       } else {
-        currentAmount = 0;
+        targetAmount = 0;
+        document.getElementById("display-amount").innerHTML = `0<span>원</span>`;
+        document.getElementById("btn-retry").innerText = "1,000원 이상 입력해 주세요";
       }
-      updateAmountUI();
     }
 
-    function addAmount(delta) {
-      currentAmount = (currentAmount || 0) + delta;
-      document.getElementById("input-amount").value = currentAmount;
-      updateAmountUI();
-    }
-
-    function resetAmount() {
-      currentAmount = 0;
-      document.getElementById("input-amount").value = "";
-      updateAmountUI();
-    }
-
-    function selectMethod(method) {
-      selectedMethod = method;
-      const cardBtn = document.getElementById("method-card");
-      const kakaoBtn = document.getElementById("method-kakao");
-
-      if (method === "CARD") {
-        cardBtn.classList.add("active");
-        kakaoBtn.classList.remove("active", "kakao");
-      } else {
-        kakaoBtn.classList.add("active", "kakao");
-        cardBtn.classList.remove("active");
-      }
-      updateAmountUI();
-    }
-
-    function togglePrivacy() {
-      const el = document.getElementById("privacy-detail");
-      el.style.display = (el.style.display === "block") ? "none" : "block";
-    }
-
-    async function executePayment() {
-      if (!currentAmount || currentAmount < 1000) {
-        alert("최소 결제 가능 금액은 1,000원입니다. 금액을 올바르게 입력해 주세요.");
-        const inputEl = document.getElementById("input-amount");
-        if (inputEl) inputEl.focus();
+    async function triggerCardPayment() {
+      if (!targetAmount || targetAmount < 1000) {
+        alert("결제 금액은 최소 1,000원 이상이어야 합니다.");
         return;
       }
 
-      const agreeEl = document.getElementById("privacy-agree");
-      if (agreeEl && !agreeEl.checked) {
-        alert("결제를 진행하시려면 [필수] 개인정보 수집 및 이용에 동의해 주세요.");
-        agreeEl.focus();
-        return;
-      }
-
-      const nameVal = document.getElementById("buyer-name").value.trim() || "익명 구매자";
-      const phoneVal = document.getElementById("buyer-phone").value.trim() || "010-0000-0000";
-      const emailVal = document.getElementById("buyer-email").value.trim() || "contact@ai-ing.org";
-
-      const btn = document.getElementById("btn-submit-pay");
-      btn.disabled = true;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;"></span> 결제창 호출 중...`;
+      document.getElementById("calling-box").style.display = "block";
+      document.getElementById("retry-box").style.display = "none";
+      document.getElementById("status-message").innerText = "신용카드 결제창을 연결 중입니다...";
 
       try {
-        // 1. 백엔드 주문 생성 (임의 금액 직접 생성 지원)
+        // 1. 주문 생성
         const orderRes = await fetch(`${CONFIG.apiBase}/api/v1/orders`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: currentAmount,
+            amount: targetAmount,
             currency: "KRW",
-            itemName: itemName,
+            itemName: targetItem,
             locale: "ko",
             region: "domestic",
             customer: {
-              fullName: nameVal,
-              phoneNumber: phoneVal,
-              email: emailVal
+              fullName: buyerName,
+              phoneNumber: buyerPhone,
+              email: buyerEmail
             }
           })
         });
 
         const orderData = await orderRes.json();
         if (!orderData.ok) {
-          throw new Error(orderData.message || "주문 생성에 실패했습니다.");
+          throw new Error(orderData.message || "주문 생성 실패");
         }
 
         const orderId = orderData.order.id;
-        const channelKey = (selectedMethod === "CARD") ? CONFIG.cardChannelKey : CONFIG.kakaoChannelKey;
 
-        const paymentParams = {
+        // 2. 포트원 신용카드 결제창 호출 (iframe 즉시 팝업)
+        const response = await PortOne.requestPayment({
           storeId: CONFIG.storeId,
-          channelKey: channelKey,
+          channelKey: CONFIG.cardChannelKey,
           paymentId: orderId,
-          orderName: itemName,
-          totalAmount: currentAmount,
+          orderName: targetItem,
+          totalAmount: targetAmount,
           currency: "CURRENCY_KRW",
-          payMethod: (selectedMethod === "CARD") ? "CARD" : "EASY_PAY",
+          payMethod: "CARD",
           customer: {
-            fullName: nameVal,
-            phoneNumber: phoneVal,
-            email: emailVal
+            fullName: buyerName,
+            phoneNumber: buyerPhone,
+            email: buyerEmail
           },
           windowType: {
             iframe: {}
           }
-        };
-
-        if (selectedMethod === "KAKAOPAY") {
-          paymentParams.easyPay = { provider: "KAKAOPAY" };
-        }
-
-        // 2. 포트원 브라우저 SDK 결제창 호출
-        const response = await PortOne.requestPayment(paymentParams);
+        });
 
         if (response.code != null) {
-          // 결제 실패 또는 취소
-          if (response.code === "FAILURE_TYPE_PG" || response.message?.includes("취소")) {
-            alert(`결제가 취소되었습니다: ${response.message || ""}`);
-          } else {
-            alert(`결제 실패: ${response.message || response.code}`);
+          // 취소 또는 실패
+          document.getElementById("calling-box").style.display = "none";
+          document.getElementById("retry-box").style.display = "block";
+          document.getElementById("btn-retry").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제 다시 열기 ➔`;
+          
+          if (!response.message?.includes("취소")) {
+            alert(`결제 오류: ${response.message || response.code}`);
           }
-          btn.disabled = false;
-          btn.innerHTML = originalText;
           return;
         }
 
-        // 3. 백엔드 승인 동기화 검증 요청
-        const completeRes = await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
+        // 3. 승인 검증
+        await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             paymentId: response.paymentId,
             txId: response.txId || response.paymentId,
-            method: selectedMethod.toLowerCase()
+            method: "card"
           })
         });
 
-        // 4. 영수증 화면 표시
-        document.getElementById("receipt-order-id").innerText = orderId;
-        document.getElementById("receipt-item-name").innerText = itemName;
-        document.getElementById("receipt-amount").innerText = `${currentAmount.toLocaleString()}원`;
-        document.getElementById("receipt-method").innerText = (selectedMethod === "CARD") ? "신용카드" : "카카오페이";
-        document.getElementById("receipt-date").innerText = new Date().toLocaleString();
+        // 4. 완료 화면 표시
+        document.getElementById("calling-box").style.display = "none";
+        document.getElementById("retry-box").style.display = "none";
+        document.getElementById("rec-id").innerText = orderId;
+        document.getElementById("rec-item").innerText = targetItem;
+        document.getElementById("rec-amt").innerText = `${targetAmount.toLocaleString()}원`;
+        document.getElementById("success-box").style.display = "block";
 
-        document.getElementById("success-receipt").style.display = "flex";
-
-      } catch (err) {
-        console.error("Payment error:", err);
-        alert(`결제 처리 중 오류가 발생했습니다: ${err.message}`);
-        btn.disabled = false;
-        btn.innerHTML = originalText;
+      } catch (e) {
+        console.error("Payment error:", e);
+        document.getElementById("calling-box").style.display = "none";
+        document.getElementById("retry-box").style.display = "block";
+        document.getElementById("btn-retry").innerText = `${targetAmount.toLocaleString()}원 결제 다시 열기`;
+        alert("결제 창 호출 중 문제가 발생했습니다: " + e.message);
       }
     }
 
-    // Initialize
-    window.addEventListener("DOMContentLoaded", parseParams);
+    window.addEventListener("DOMContentLoaded", init);
   </script>
-
-  <style>
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
 </body>
 </html>
