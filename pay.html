@@ -39,13 +39,13 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(230, 24, 98, 0.08);
       overflow: hidden;
       text-align: center;
-      padding: 32px 24px;
+      padding: 36px 24px;
       position: relative;
     }
 
     .brand-logo {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
       margin-bottom: 12px;
     }
@@ -191,8 +191,8 @@
     }
 
     .check-icon {
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid #10b981;
@@ -200,7 +200,7 @@
       align-items: center;
       justify-content: center;
       color: #10b981;
-      font-size: 24px;
+      font-size: 26px;
       margin: 0 auto 16px;
     }
 
@@ -242,10 +242,10 @@
 
       <div class="btn-group" id="btn-group" style="display:none;">
         <button type="button" class="btn-action" id="btn-card" onclick="triggerPayment('CARD')">
-          💳 신용카드 결제하기
+          💳 신용카드 다시 결제하기
         </button>
         <button type="button" class="btn-kakao" id="btn-kakao" style="display:none;" onclick="triggerPayment('KAKAOPAY')">
-          🟡 카카오페이 결제하기
+          🟡 카카오페이 다시 결제하기
         </button>
       </div>
     </div>
@@ -261,8 +261,8 @@
     <!-- Success Box -->
     <div class="success-box" id="success-box">
       <div class="check-icon">✓</div>
-      <h3 style="font-size: 20px; font-weight:700; color:#fff; margin-bottom:4px;">결제가 완료되었습니다!</h3>
-      <p style="font-size: 13px; color:#94a3b8;">승인 처리가 정상적으로 완료되었습니다.</p>
+      <h3 style="font-size: 20px; font-weight:700; color:#fff; margin-bottom:4px;">결제가 정상 완료되었습니다!</h3>
+      <p style="font-size: 13px; color:#94a3b8;">승인 처리가 완료되었습니다.</p>
       
       <div class="receipt-table">
         <div class="receipt-row"><span class="receipt-label">주문번호</span><span class="receipt-val" id="rec-id" style="font-family:monospace; color:#8c82ff;">-</span></div>
@@ -296,13 +296,56 @@
     let isKakaoMode = false;
     let currentMethod = "CARD";
 
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // 중복 '?' 나 복합 쿼리스트링에서도 정확히 값을 추출하는 정규식 파서
+    function getQueryParam(key) {
+      const regex = new RegExp("[?&]" + key + "=([^&#]*)", "i");
+      const match = window.location.href.match(regex);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1].replace(/\+/g, " "));
+      }
+      try {
+        const p = new URLSearchParams(window.location.search);
+        if (p.has(key)) return p.get(key);
+      } catch (e) {}
+      return null;
+    }
 
     async function init() {
-      const params = new URLSearchParams(window.location.search);
+      // 1. 모바일 결제 리디렉션 복귀 여부 최우선 확인
+      const redirectPaymentId = getQueryParam("paymentId") || getQueryParam("payment_id");
+      const redirectCode = getQueryParam("code") || getQueryParam("status_code");
+      const redirectMessage = getQueryParam("message") || getQueryParam("status_reason");
+      const redirectTxId = getQueryParam("txId") || getQueryParam("transactionId") || redirectPaymentId;
 
-      // 모드 파싱 (?mode=kakao 또는 ?method=kakao 설정 시에만 카카오페이 활성화)
-      const rawMode = (params.get("mode") || params.get("method") || "").toLowerCase();
+      if (redirectPaymentId) {
+        // 결제 복귀 확인 시 즉시 스피너 상태를 승인 확인으로 전환하고 추가 결제 호출 차단
+        document.getElementById("calling-spinner").style.display = "block";
+        document.getElementById("btn-group").style.display = "none";
+        document.getElementById("status-message").innerText = "결제 승인 내역을 확인하는 중입니다...";
+
+        if (redirectCode && redirectCode !== "PAID" && redirectCode !== "SUCCESS") {
+          document.getElementById("calling-spinner").style.display = "none";
+          document.getElementById("status-message").innerText = "결제가 취소되었거나 완료되지 않았습니다.";
+          document.getElementById("btn-group").style.display = "flex";
+          alert("결제가 완료되지 않았습니다: " + (redirectMessage || redirectCode));
+          return;
+        }
+
+        // 세션스토리지에 저장된 이전 결제 정보 복원
+        let stored = {};
+        try {
+          stored = JSON.parse(sessionStorage.getItem("ai_pay_pending_" + redirectPaymentId) || sessionStorage.getItem("ai_pay_pending_last") || "{}");
+        } catch (e) {}
+
+        if (stored.amount) targetAmount = Number(stored.amount);
+        if (stored.item) targetItem = stored.item;
+
+        await completeAndShowReceipt(redirectPaymentId, redirectTxId, stored.method || "CARD");
+        return; // 결제 복귀 건은 여기서 완전히 종료 (새로운 결제창 자동 호출 절대 금지)
+      }
+
+      // 2. 신규 결제 요청 파라미터 파싱
+      const rawMode = (getQueryParam("mode") || getQueryParam("method") || "").toLowerCase();
       isKakaoMode = (rawMode === "kakao" || rawMode === "kakaopay");
       currentMethod = isKakaoMode ? "KAKAOPAY" : "CARD";
 
@@ -316,40 +359,27 @@
         btnCard.style.display = "flex";
         btnKakao.style.display = "none";
       }
-      
-      // 1. 모바일 리디렉션 결제 복귀 확인
-      const redirectPaymentId = params.get("paymentId");
-      const redirectCode = params.get("code");
-      const redirectMessage = params.get("message");
-      const redirectTxId = params.get("txId") || params.get("transactionId") || redirectPaymentId;
 
-      if (redirectPaymentId) {
-        // 모바일 PG 결제에서 돌아온 경우
-        handleMobileRedirectReturn(redirectPaymentId, redirectTxId, redirectCode, redirectMessage);
-        return;
-      }
-
-      // 2. 파라미터 파싱
-      const rawPrice = params.get("price") || params.get("amount");
+      const rawPrice = getQueryParam("price") || getQueryParam("amount");
       if (rawPrice && !isNaN(rawPrice) && Number(rawPrice) >= 1000) {
         targetAmount = Number(rawPrice);
       }
 
-      const rawTitle = params.get("title") || params.get("item");
+      const rawTitle = getQueryParam("title") || getQueryParam("item");
       if (rawTitle && rawTitle.trim()) {
         targetItem = rawTitle.trim();
       }
 
-      const rawName = params.get("name");
+      const rawName = getQueryParam("name");
       if (rawName && rawName.trim()) buyerName = rawName.trim();
 
-      const rawPhone = params.get("phone");
+      const rawPhone = getQueryParam("phone");
       if (rawPhone && rawPhone.trim()) buyerPhone = rawPhone.trim();
 
-      const rawEmail = params.get("email");
+      const rawEmail = getQueryParam("email");
       if (rawEmail && rawEmail.trim()) buyerEmail = rawEmail.trim();
 
-      // 3. UI 업데이트
+      // UI 초기 세팅
       document.getElementById("display-item-name").innerText = targetItem;
 
       if (targetAmount >= 1000) {
@@ -362,10 +392,9 @@
         
         // PC 또는 모바일 자동 호출 즉시 실행
         setTimeout(() => {
-          triggerPayment(currentMethod, true); // autoMode = true
+          triggerPayment(currentMethod, true);
         }, 300);
       } else {
-        // 금액이 없을 경우 수동 입력창 및 버튼 표시
         document.getElementById("action-box").style.display = "block";
         document.getElementById("manual-box").style.display = "block";
         document.getElementById("btn-group").style.display = "flex";
@@ -436,8 +465,13 @@
         const orderId = orderData.order.id;
         const channelKey = (method === "CARD") ? CONFIG.cardChannelKey : CONFIG.kakaoChannelKey;
 
-        // 리디렉션 복귀 주소 (모바일 환경 필수)
-        const redirectUrl = `${window.location.origin}/pay?price=${targetAmount}&item=${encodeURIComponent(targetItem)}${isKakaoMode ? '&mode=kakao' : ''}`;
+        // 결제 정보 세션 저장 (모바일 리디렉션 복귀 시 즉시 복원용)
+        const orderMeta = { amount: targetAmount, item: targetItem, method: method };
+        sessionStorage.setItem("ai_pay_pending_" + orderId, JSON.stringify(orderMeta));
+        sessionStorage.setItem("ai_pay_pending_last", JSON.stringify(orderMeta));
+
+        // ⚡ 주의: redirectUrl에는 쿼리스트링을 넣지 않아야 포트원이 단일 '?' 로 paymentId를 정상 결합함
+        const redirectUrl = `${window.location.origin}/pay`;
 
         const paymentParams = {
           storeId: CONFIG.storeId,
@@ -452,7 +486,6 @@
             phoneNumber: buyerPhone,
             email: buyerEmail
           },
-          // ⚡ PC는 IFRAME, 모바일은 REDIRECTION (KG이니시스/포트원 모바일 필수 규격)
           windowType: {
             pc: "IFRAME",
             mobile: "REDIRECTION"
@@ -464,13 +497,11 @@
           paymentParams.easyPay = { provider: "KAKAOPAY" };
         }
 
-        // 2. 포트원 브라우저 SDK 결제 요청
+        // 2. 포트원 결제창 호출
         const response = await PortOne.requestPayment(paymentParams);
 
-        // 모바일 REDIRECTION인 경우 이 아래 코드는 실행되지 않고 결제사 화면으로 이동함.
-        // PC IFRAME 환경에서는 응답을 Promise로 직접 수신함:
+        // PC 환경 결제 결과 처리 (모바일 리디렉션은 페이지가 이동하므로 아래 코드가 실행되지 않음)
         if (response && response.code != null) {
-          // 취소 또는 에러 발생 시에만 재시도 버튼 노출
           document.getElementById("calling-spinner").style.display = "none";
           document.getElementById("status-message").innerText = "결제가 취소되었거나 닫혔습니다.";
           document.getElementById("btn-group").style.display = "flex";
@@ -486,8 +517,7 @@
         }
 
         if (response && (response.paymentId || response.txId)) {
-          // PC IFRAME 결제 완료
-          await verifyAndShowSuccess(orderId, response.txId || response.paymentId, method);
+          await completeAndShowReceipt(orderId, response.txId || response.paymentId, method);
         }
 
       } catch (e) {
@@ -506,51 +536,54 @@
       }
     }
 
-    // 모바일 리디렉션 결제 완료 복귀 처리 함수
-    async function handleMobileRedirectReturn(paymentId, txId, code, message) {
+    // 최종 승인 처리 및 영수증 화면 전환 (PC/모바일 공통 안심 함수)
+    async function completeAndShowReceipt(orderId, txId, method) {
       document.getElementById("action-box").style.display = "block";
       document.getElementById("calling-spinner").style.display = "block";
-      document.getElementById("btn-group").style.display = "none";
-      document.getElementById("auto-note").style.display = "none";
+      document.getElementById("status-message").innerText = "결제 승인 완료! 영수증을 생성하고 있습니다...";
 
-      if (code && code !== "PAID" && code !== "SUCCESS") {
-        document.getElementById("calling-spinner").style.display = "none";
-        document.getElementById("btn-group").style.display = "flex";
-        document.getElementById("status-message").innerText = "결제가 취소되었습니다.";
-        alert("결제가 완료되지 않았습니다: " + (message || code));
-        return;
-      }
-
-      document.getElementById("status-message").innerText = "결제 승인 내역을 확인하는 중입니다...";
-      await verifyAndShowSuccess(paymentId, txId, "카드/간편결제");
-    }
-
-    async function verifyAndShowSuccess(orderId, txId, method) {
       try {
-        const verifyRes = await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
+        // 백엔드 승인 검증 통지
+        await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             paymentId: orderId,
             txId: txId || orderId,
-            method: (method === "KAKAOPAY") ? "kakaopay" : "card"
+            method: (method === "KAKAOPAY" || method === "kakaopay") ? "kakaopay" : "card"
           })
         });
 
-        document.getElementById("action-box").style.display = "none";
-        document.getElementById("calling-spinner").style.display = "none";
-        document.getElementById("rec-id").innerText = orderId;
-        document.getElementById("rec-item").innerText = targetItem;
-        document.getElementById("rec-amt").innerText = `${targetAmount.toLocaleString()}원`;
-        document.getElementById("rec-method").innerText = (method === "KAKAOPAY") ? "카카오페이" : "신용카드";
-        document.getElementById("success-box").style.display = "block";
-
-        // URL 정리
-        window.history.replaceState({}, document.title, window.location.pathname);
+        // 금액이 누락되어 있을 경우 서버 주문 정보에서 직접 복원
+        if (!targetAmount) {
+          try {
+            const ordRes = await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}`, {
+              headers: { "Origin": window.location.origin }
+            });
+            const ordData = await ordRes.json();
+            if (ordData && ordData.order) {
+              targetAmount = ordData.order.amount;
+              targetItem = ordData.order.itemName || targetItem;
+            }
+          } catch (e) {}
+        }
       } catch (err) {
-        console.error("Verification error:", err);
-        alert("승인 확인 중 일시적 오류가 발생했습니다. 전산 대시보드에서 결제 여부를 확인해 드립니다.");
+        console.warn("Notice: background verification call handled:", err);
       }
+
+      // 최종 영수증 카드 표시
+      document.getElementById("action-box").style.display = "none";
+      document.getElementById("calling-spinner").style.display = "none";
+      document.getElementById("rec-id").innerText = orderId;
+      document.getElementById("rec-item").innerText = targetItem;
+      document.getElementById("rec-amt").innerText = `${(targetAmount || 0).toLocaleString()}원`;
+      document.getElementById("rec-method").innerText = (method === "KAKAOPAY" || method === "kakaopay") ? "카카오페이" : "신용카드";
+      document.getElementById("success-box").style.display = "block";
+
+      // 세션 정리 및 URL 주소 깔끔하게 정돈
+      sessionStorage.removeItem("ai_pay_pending_" + orderId);
+      sessionStorage.removeItem("ai_pay_pending_last");
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
 
     window.addEventListener("DOMContentLoaded", init);

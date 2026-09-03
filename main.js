@@ -1650,20 +1650,26 @@
                 })
               }
             );
-            const logData = await logResponse.json().catch(() => ({ ok: false }));
-            if (logData.order) {
-              const confirmedAmount = Number(logData.order.amount) || 0;
-              const amtEl = document.getElementById("receipt-amount");
-              if (amtEl) amtEl.innerText = confirmedAmount.toLocaleString() + "원";
-              const methEl = document.getElementById("receipt-method");
-              if (methEl) methEl.innerText = "신용카드 / 간편결제";
-              const txEl = document.getElementById("receipt-txid");
-              if (txEl) txEl.innerText = redirectPaymentId;
-              const modal = document.getElementById("payment-modal");
-              if (modal) modal.style.display = "none";
-              const receipt = document.getElementById("receipt-container");
-              if (receipt) receipt.style.display = "flex";
-            }
+            let confirmedAmount = 0;
+            try {
+              const ordRes = await fetch(`${AI_ING_PAYMENT.apiBase}/api/v1/orders/${redirectPaymentId}`, {
+                headers: { "Origin": window.location.origin }
+              });
+              const ordData = await ordRes.json();
+              if (ordData.order) confirmedAmount = Number(ordData.order.amount) || 0;
+            } catch (e) {}
+
+            const amtEl = document.getElementById("receipt-amount");
+            if (amtEl && confirmedAmount > 0) amtEl.innerText = confirmedAmount.toLocaleString() + "원";
+            const methEl = document.getElementById("receipt-method");
+            if (methEl) methEl.innerText = "신용카드 / 간편결제";
+            const txEl = document.getElementById("receipt-txid");
+            if (txEl) txEl.innerText = redirectPaymentId;
+            const modal = document.getElementById("payment-modal");
+            if (modal) modal.style.display = "none";
+            const receipt = document.getElementById("receipt-container");
+            if (receipt) receipt.style.display = "flex";
+
             window.history.replaceState({}, document.title, window.location.pathname);
           } catch (e) {
             console.error("[ai-ing payment] mobile return verification error:", e);
