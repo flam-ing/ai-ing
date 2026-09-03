@@ -237,21 +237,17 @@
 
     <!-- Active Loading or Direct Action Area -->
     <div id="action-box">
-      <div id="calling-spinner" class="spinner" style="display:none;"></div>
-      <div class="status-text" id="status-message">신용카드 결제창을 불러오는 중입니다...</div>
+      <div id="calling-spinner" class="spinner"></div>
+      <div class="status-text" id="status-message">결제창을 연결하고 있습니다...</div>
 
-      <div class="btn-group" id="btn-group">
+      <div class="btn-group" id="btn-group" style="display:none;">
         <button type="button" class="btn-action" id="btn-card" onclick="triggerPayment('CARD')">
-          💳 신용카드 결제하기 ➔
+          💳 신용카드 결제하기
         </button>
         <button type="button" class="btn-kakao" id="btn-kakao" style="display:none;" onclick="triggerPayment('KAKAOPAY')">
-          🟡 카카오페이로 결제하기 ➔
+          🟡 카카오페이 결제하기
         </button>
       </div>
-
-      <p id="auto-note" style="font-size:11.5px; color:#64748b; margin-top:6px;">
-        잠시 후 결제창이 열립니다. 자동으로 열리지 않으면 위 버튼을 터치해 주세요.
-      </p>
     </div>
 
     <!-- Manual Amount Input (if price not in URL) -->
@@ -358,26 +354,23 @@
 
       if (targetAmount >= 1000) {
         document.getElementById("display-amount").innerHTML = `${targetAmount.toLocaleString()}<span>원</span>`;
-        if (isKakaoMode) {
-          btnKakao.innerText = `🟡 ${targetAmount.toLocaleString()}원 카카오페이 결제하기 ➔`;
-          document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 카카오페이 결제`;
-        } else {
-          btnCard.innerText = `💳 ${targetAmount.toLocaleString()}원 신용카드 결제하기 ➔`;
-          document.getElementById("status-message").innerText = `${targetAmount.toLocaleString()}원 신용카드 결제`;
-        }
-        
-        // PC 또는 모바일 자동 호출 시도
+        document.getElementById("btn-group").style.display = "none";
         document.getElementById("calling-spinner").style.display = "block";
+        document.getElementById("status-message").innerText = isKakaoMode
+          ? "카카오페이 결제창을 연결하고 있습니다..."
+          : "신용카드 결제창을 연결하고 있습니다...";
+        
+        // PC 또는 모바일 자동 호출 즉시 실행
         setTimeout(() => {
           triggerPayment(currentMethod, true); // autoMode = true
-        }, 400);
+        }, 300);
       } else {
-        // 금액이 없을 경우 수동 입력창 표시
+        // 금액이 없을 경우 수동 입력창 및 버튼 표시
         document.getElementById("action-box").style.display = "block";
         document.getElementById("manual-box").style.display = "block";
+        document.getElementById("btn-group").style.display = "flex";
         document.getElementById("calling-spinner").style.display = "none";
         document.getElementById("status-message").innerText = "결제 금액을 입력해 주세요.";
-        document.getElementById("auto-note").style.display = "none";
         if (isKakaoMode) {
           btnKakao.innerText = "카카오페이 결제하기";
         } else {
@@ -477,9 +470,15 @@
         // 모바일 REDIRECTION인 경우 이 아래 코드는 실행되지 않고 결제사 화면으로 이동함.
         // PC IFRAME 환경에서는 응답을 Promise로 직접 수신함:
         if (response && response.code != null) {
-          // 취소 또는 에러
+          // 취소 또는 에러 발생 시에만 재시도 버튼 노출
           document.getElementById("calling-spinner").style.display = "none";
-          document.getElementById("status-message").innerText = "결제가 취소되었거나 중단되었습니다.";
+          document.getElementById("status-message").innerText = "결제가 취소되었거나 닫혔습니다.";
+          document.getElementById("btn-group").style.display = "flex";
+          if (isKakaoMode) {
+            document.getElementById("btn-kakao").innerText = `🟡 ${targetAmount.toLocaleString()}원 카카오페이 다시 열기 ➔`;
+          } else {
+            document.getElementById("btn-card").innerText = `💳 ${targetAmount.toLocaleString()}원 신용카드 다시 열기 ➔`;
+          }
           if (!response.message?.includes("취소") && !isAuto) {
             alert(`결제 안내: ${response.message || response.code}`);
           }
@@ -494,7 +493,13 @@
       } catch (e) {
         console.error("Payment error:", e);
         document.getElementById("calling-spinner").style.display = "none";
-        document.getElementById("status-message").innerText = "결제창 연결 대기 중";
+        document.getElementById("status-message").innerText = "결제 창 연결이 중단되었습니다.";
+        document.getElementById("btn-group").style.display = "flex";
+        if (isKakaoMode) {
+          document.getElementById("btn-kakao").innerText = `🟡 카카오페이 다시 시도`;
+        } else {
+          document.getElementById("btn-card").innerText = `💳 신용카드 다시 시도`;
+        }
         if (!isAuto) {
           alert("결제 창을 여는 중 문제가 발생했습니다: " + e.message);
         }
