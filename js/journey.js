@@ -3,7 +3,7 @@
  * 개요(mf/agent)는 overview.js / #overview
  *
  * 스크롤 한 번 = 다음/이전 서비스 단계 (자동 넘김 없음)
- * 영상: 장면 중반 슬로우 1회 → 정지 대기 → 휠로만 이동 (역순 지원)
+ * 영상: 휠로만 스크럽. 유휴 시 정지. 맨 위(01)에서 위로 더 가지 않음.
  */
 (function () {
   "use strict";
@@ -31,7 +31,7 @@
    * ~0.12–0.26 트레이딩룸(01) · ~0.30 확대 전환
    * ~0.40–0.54 듀얼 노트북(02) · ~0.60 터널 확대 전환
    * ~0.75–0.92 후반(03)
-   * → 슬로우는 각 장면 **안정 구간 중반**만, 확대 직전에서 정지. 자동 넘김 없음.
+   * → 각 장면은 확대 직전(v1) 프레임에 정지. 휠로만 다음/이전 장면으로 스크럽.
    */
   var STEPS = [
     { panel: 0, v0: 0.12, v1: 0.22 },
@@ -43,7 +43,6 @@
   var WHEEL_THRESHOLD = mobile ? 40 : 58;
   var SWIPE_PX = mobile ? 34 : 44;
   var ACC_RESET_MS = 220;
-  var SLOW_RATE = 0.78;
   var TRANS_MS = 520;
   /** 단계 전환 후 고정 쿨다운 — 휠로 타이머 연장 안 함 (1→3 스킵 방지 + 2번 붙잡힘 방지) */
   var STEP_COOLDOWN_MS = mobile ? 520 : 580;
@@ -146,6 +145,7 @@
       try {
         vid.pause();
       } catch (e) {}
+      if (hasDuration && step >= 0 && !busy) holdAtStep(step);
     }
     vid.addEventListener("loadedmetadata", arm);
     vid.addEventListener("durationchange", arm);
@@ -155,7 +155,9 @@
       var p = vid.play();
       if (p && p.then)
         p.then(function () {
-          if (step < 0) vid.pause();
+          try {
+            vid.pause();
+          } catch (e) {}
         }).catch(function () {});
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("touchstart", unlock);
@@ -182,80 +184,24 @@
     } catch (e) {}
   }
 
-  /** 구간 끝: 멈춤 + 홀드. 자동 다음 단계 없음 — 스크롤로만 이동 */
-  function onSegmentEnd(i) {
-    if (!locked || step !== i || busy) return;
+  /** 단계 홀드 프레임에 고정. play() 하지 않음 — 가만히 있으면 영상이 안 움직임 */
+  function holdAtStep(i) {
+    stopSlow();
+    if (!hasDuration || i < 0 || i >= STEPS.length) return;
     try {
-      vid.pause();
+      vid.loop = false;
       vid.playbackRate = 1;
-      vid.currentTime = tOf(STEPS[i].v1) - 0.02;
+      vid.pause();
+      vid.currentTime = tOf(STEPS[i].v1);
     } catch (e) {}
-    clearHold();
     if (hint) {
       hint.classList.remove("hide", "is-hide");
       hint.setAttribute("aria-hidden", "false");
     }
   }
 
-  function startSlowInStep(i) {
-    stopSlow();
-    if (!hasDuration || reduce || i < 0 || i >= STEPS.length) return;
-
-    var s = STEPS[i];
-    var t0 = tOf(s.v0);
-    var t1 = tOf(s.v1);
-    var ended = false;
-
-    try {
-      vid.loop = false;
-      // 항상 구간 시작에서 한 번만 슬로우 → 끝에서 정지 (반복 없음)
-      vid.currentTime = t0;
-    } catch (e) {}
-    try {
-      vid.playbackRate = SLOW_RATE;
-    } catch (e) {}
-
-    timeUpdateHandler = function () {
-      if (!locked || step !== i || busy || ended) return;
-      if ((vid.currentTime || 0) >= t1 - 0.05) {
-        ended = true;
-        if (timeUpdateHandler) {
-          vid.removeEventListener("timeupdate", timeUpdateHandler);
-          timeUpdateHandler = null;
-        }
-        onSegmentEnd(i);
-      }
-    };
-    vid.addEventListener("timeupdate", timeUpdateHandler);
-
-    var pr = vid.play();
-    if (pr && pr.catch) {
-      pr.catch(function () {
-        function tick() {
-          if (!locked || step !== i || busy || ended) {
-            slowRaf = 0;
-            return;
-          }
-          var c = (vid.currentTime || t0) + (1 / 60) * SLOW_RATE;
-          if (c >= t1 - 0.05) {
-            ended = true;
-            slowRaf = 0;
-            try {
-              vid.pause();
-              vid.currentTime = t1 - 0.02;
-            } catch (e) {}
-            onSegmentEnd(i);
-            return;
-          }
-          try {
-            vid.pause();
-            vid.currentTime = c;
-          } catch (e) {}
-          slowRaf = requestAnimationFrame(tick);
-        }
-        slowRaf = requestAnimationFrame(tick);
-      });
-    }
+  function pinHasRoomAbove() {
+    return !!(pinST && (pinST.start || 0) > 16);
   }
 
   /** 앞·뒤 모두 스크럽 애니 (역순 스크롤 지원) */
@@ -267,13 +213,13 @@
     stopSlow();
     busy = true;
     var fromT = vid.currentTime || 0;
-    var toT = tOf(STEPS[toStep].v0);
+    var toT = tOf(STEPS[toStep].v1);
     if (Math.abs(toT - fromT) < 0.04) {
       try {
         vid.currentTime = toT;
       } catch (e) {}
       busy = false;
-      startSlowInStep(toStep);
+      holdAtStep(toStep);
       if (done) done();
       return;
     }
@@ -291,7 +237,7 @@
       if (u < 1) requestAnimationFrame(frame);
       else {
         busy = false;
-        startSlowInStep(toStep);
+        holdAtStep(toStep);
         if (done) done();
       }
     }
@@ -468,14 +414,8 @@
     consumeGesture();
 
     if (opts.instant || reduce) {
-      stopSlow();
-      if (hasDuration) {
-        try {
-          vid.currentTime = tOf(STEPS[i].v0);
-        } catch (e) {}
-      }
       busy = false;
-      startSlowInStep(i);
+      holdAtStep(i);
     } else {
       transitionVideo(prev, i);
     }
@@ -491,7 +431,7 @@
     wheelAcc = 0;
     if (pinST) window.scrollTo(0, pinST.start + 1);
     // 이미 진행 중이면 처음부터 다시 돌리지 않음
-    if (step < 0) goToStep(0, { force: true, instant: false });
+    if (step < 0) goToStep(0, { force: true, instant: true });
   }
   function forceRelease() {
     setLocked(false);
@@ -521,7 +461,7 @@
       window.scrollTo(0, pinST.start + 1);
       setTimeout(function () {
         if (!locked) enterLock();
-        else if (step < 0) goToStep(0, { force: true, instant: false });
+        else if (step < 0) goToStep(0, { force: true, instant: true });
       }, 60);
     } else {
       enterLock();
@@ -548,13 +488,26 @@
       goToStep(step - 1);
       return true;
     }
+    if (!pinHasRoomAbove()) {
+      wheelAcc = 0;
+      if (pinST) window.scrollTo(0, Math.max(0, pinST.start + 1));
+      return false;
+    }
     consumeGesture();
     releaseUp();
     return true;
   }
 
   function onWheel(e) {
-    if (!locked) return;
+    if (!locked) {
+      var atTop =
+        pinST && window.scrollY <= Math.max(0, pinST.start || 0) + 24;
+      if (atTop && e.deltaY > 0) {
+        e.preventDefault();
+        enterLock();
+      }
+      return;
+    }
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
     e.preventDefault();
 
@@ -691,12 +644,21 @@
     },
     onLeaveBack: function () {
       if (locked) {
-        // 첫 단계에서 위로 → 섹션 위(페이지 상단)로
+        // 서비스 단독 페이지처럼 위에 섹션이 없으면 01에 붙잡기
+        if (step <= 0 && !pinHasRoomAbove()) {
+          if (pinST) window.scrollTo(0, Math.max(0, pinST.start + 1));
+          return;
+        }
         if (step <= 0) {
           releaseUp();
           return;
         }
         if (pinST) window.scrollTo(0, pinST.start + 1);
+        return;
+      }
+      if (!pinHasRoomAbove()) {
+        if (pinST) window.scrollTo(0, Math.max(0, pinST.start + 1));
+        enterLock();
         return;
       }
       stopSlow();
