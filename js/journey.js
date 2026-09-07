@@ -3,7 +3,9 @@
  * 개요(mf/agent)는 overview.js / #overview
  *
  * 스크롤 한 번 = 다음/이전 서비스 단계 (자동 넘김 없음)
- * 영상: 휠로만 스크럽. 유휴 시 정지. 맨 위(01)에서 위로 더 가지 않음.
+ * 영상: 전환 시 고속 통과(슝) → 장면 안정 구간 슬로우 안착 → 정지. 그 외엔 절대 혼자 재생 안 함.
+ *       seek 는 완료 대기 후 다음 seek (밀림 방지), 파일은 blob 으로 받아 네트워크 지연 제거.
+ * 맨 위(01)에서 위로 더 가지 않음 (단독 페이지에서 카피 사라지던 문제).
  */
 (function () {
   "use strict";
@@ -31,7 +33,7 @@
    * ~0.12–0.26 트레이딩룸(01) · ~0.30 확대 전환
    * ~0.40–0.54 듀얼 노트북(02) · ~0.60 터널 확대 전환
    * ~0.75–0.92 후반(03)
-   * → 각 장면은 확대 직전(v1) 프레임에 정지. 휠로만 다음/이전 장면으로 스크럽.
+   * → 전환은 목표 장면 시작(v0)까지 고속 통과, v0→v1 만 슬로우 안착 후 확대 직전에서 정지.
    */
   var STEPS = [
     { panel: 0, v0: 0.12, v1: 0.22 },
@@ -43,6 +45,7 @@
   var WHEEL_THRESHOLD = mobile ? 40 : 58;
   var SWIPE_PX = mobile ? 34 : 44;
   var ACC_RESET_MS = 220;
+  var SLOW_RATE = 0.78;
   var TRANS_MS = 520;
   /** 단계 전환 후 고정 쿨다운 — 휠로 타이머 연장 안 함 (1→3 스킵 방지 + 2번 붙잡힘 방지) */
   var STEP_COOLDOWN_MS = mobile ? 520 : 580;
@@ -56,9 +59,13 @@
   var enterTween = null;
   var activePanel = -1;
   var hasDuration = false;
-  var slowRaf = 0;
-  var timeUpdateHandler = null;
-  var holdTimer = null;
+  /** 진행 중인 영상 모션(고속 통과/슬로우 안착). 하나만 존재, stopSlow() 로 취소 */
+  var motion = null;
+  /** 우리가 시작한 play() 만 허용 — 그 외 재생은 즉시 정지 (혼자 재생되던 버그 차단) */
+  var allowPlay = false;
+  /** 전체 파일 blob URL — seek 가 네트워크를 타지 않게 교체 (Safari/느린 회선 렉 원인) */
+  var localUrl = null;
+  var localSwapped = false;
   /** true면 쿨다운 중 — 추가 step 금지 (타이머 리셋 없음) */
   var gestureGate = false;
   var gateTimer = null;
@@ -75,11 +82,11 @@
     if (!hasDuration) return 0;
     return clamp(ratio, 0, 1) * Math.max(0.05, vid.duration - 0.05);
   }
-  function clearHold() {
-    if (holdTimer) {
-      clearTimeout(holdTimer);
-      holdTimer = null;
-    }
+  function smoothstep(u) {
+    return u * u * (3 - 2 * u);
+  }
+  function linear(u) {
+    return u;
   }
   /** 단계 1회 소비 후 고정 쿨다운 (스크롤 중에도 타이머 연장 안 함) */
   function consumeGesture() {
@@ -142,106 +149,305 @@
         isFinite(vid.duration) &&
         vid.duration > 0.2
       );
-      try {
-        vid.pause();
-      } catch (e) {}
-      if (hasDuration && step >= 0 && !busy) holdAtStep(step);
+      if (!hasDuration) return;
+      // 메타데이터가 진입보다 늦게 온 경우 → 현재 단계 프레임으로 (0초 프레임에 머물던 문제)
+      if (step >= 0 && !busy && !motion) holdAtStep(step);
     }
     vid.addEventListener("loadedmetadata", arm);
     vid.addEventListener("durationchange", arm);
     if (vid.readyState >= 1) arm();
 
+    // 우리가 시작하지 않은 재생은 즉시 정지 — 어떤 경로로도 혼자 재생되지 않게
+    vid.addEventListener("play", function () {
+      if (!allowPlay) {
+        try {
+          vid.pause();
+        } catch (e) {}
+      }
+    });
+    vid.addEventListener("ended", function () {
+      if (step >= 0 && !motion) holdAtStep(step);
+    });
+
+    // iOS 등: 첫 제스처에서 play→pause 로 이후 프로그램 재생 허용. 반드시 정지·프레임 복구.
     var unlock = function () {
-      var p = vid.play();
-      if (p && p.then)
-        p.then(function () {
-          try {
-            vid.pause();
-          } catch (e) {}
-        }).catch(function () {});
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("touchstart", unlock);
       window.removeEventListener("wheel", unlock);
+      if (motion) return;
+      var keepT = vid.currentTime || 0;
+      var settle = function () {
+        allowPlay = false;
+        try {
+          vid.pause();
+          if (hasDuration && !motion) vid.currentTime = keepT;
+        } catch (e) {}
+      };
+      allowPlay = true;
+      var p = null;
+      try {
+        p = vid.play();
+      } catch (e) {}
+      if (p && p.then) p.then(settle, settle);
+      else settle();
     };
     window.addEventListener("pointerdown", unlock, { once: true, passive: true });
     window.addEventListener("touchstart", unlock, { once: true, passive: true });
     window.addEventListener("wheel", unlock, { once: true, passive: true });
+
+    primeLocalSource();
   }
 
+  /**
+   * 전체 파일을 미리 받아 blob 소스로 교체.
+   * Safari 는 preload=auto 여도 다 받아두지 않아 seek 마다 네트워크를 타고 → 스크럽이 뚝뚝 끊김.
+   * 브라우저가 이미 전부 버퍼링했으면(Chrome) 교체하지 않음.
+   */
+  function primeLocalSource() {
+    if (!window.fetch || !window.URL || !URL.createObjectURL || !window.Blob) return;
+    var src = vid.currentSrc || vid.getAttribute("src");
+    if (!src || /^blob:/.test(src)) return;
+    function fullyBuffered() {
+      try {
+        if (!hasDuration) return false;
+        var b = vid.buffered;
+        var cover = 0;
+        for (var k = 0; k < b.length; k++) {
+          if (b.start(k) <= cover + 0.05) cover = Math.max(cover, b.end(k));
+        }
+        return cover >= vid.duration - 0.1;
+      } catch (e) {
+        return false;
+      }
+    }
+    setTimeout(function () {
+      if (fullyBuffered()) return;
+      fetch(src, { credentials: "same-origin" })
+        .then(function (r) {
+          if (!r.ok) throw new Error("video fetch failed");
+          return r.blob();
+        })
+        .then(function (blob) {
+          if (!blob || blob.size < 1024 || fullyBuffered()) return;
+          localUrl = URL.createObjectURL(blob);
+          maybeSwapSource();
+        })
+        .catch(function () {});
+    }, 1200);
+  }
+
+  /** 현재 프레임을 캔버스로 덮어 두고 소스 교체 → 새 소스가 같은 프레임에 서면 제거 (깜빡임 없음) */
+  function snapshotOverlay() {
+    try {
+      if (vid.readyState < 2 || !vid.videoWidth || !vid.parentNode) return null;
+      var c = document.createElement("canvas");
+      c.width = vid.videoWidth;
+      c.height = vid.videoHeight;
+      c.getContext("2d").drawImage(vid, 0, 0, c.width, c.height);
+      c.className = "ax-journey-vid";
+      c.setAttribute("aria-hidden", "true");
+      c.style.pointerEvents = "none";
+      vid.parentNode.insertBefore(c, vid.nextSibling);
+      return c;
+    } catch (e) {
+      return null;
+    }
+  }
+  function maybeSwapSource() {
+    if (!localUrl || localSwapped) return;
+    if (busy || motion) return; // 모션이 끝난 뒤 holdAtStep/glide 에서 다시 시도
+    localSwapped = true;
+    var overlay = snapshotOverlay();
+    var cleanup = function () {
+      vid.removeEventListener("loadeddata", onData);
+      vid.removeEventListener("seeked", onSeeked);
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      overlay = null;
+    };
+    var onData = function () {
+      if (step < 0) cleanup(); // 진입 전이면 첫 프레임 그대로
+    };
+    var onSeeked = function () {
+      cleanup(); // arm() → holdAtStep() 이 같은 단계 프레임으로 seek 한 뒤
+    };
+    vid.addEventListener("loadeddata", onData);
+    vid.addEventListener("seeked", onSeeked);
+    setTimeout(cleanup, 2500);
+    hasDuration = false; // 새 메타데이터(arm) 전까지 tOf 사용 금지
+    try {
+      vid.src = localUrl;
+    } catch (e) {
+      cleanup();
+    }
+  }
+
+  /** 진행 중 모션 취소 + 정지. 프레임은 그 자리에 둠 (모션 없음 = busy 아님) */
   function stopSlow() {
-    clearHold();
-    if (slowRaf) {
-      cancelAnimationFrame(slowRaf);
-      slowRaf = 0;
+    if (motion) {
+      var m = motion;
+      motion = null;
+      try {
+        m.cancel();
+      } catch (e) {}
     }
-    if (timeUpdateHandler) {
-      vid.removeEventListener("timeupdate", timeUpdateHandler);
-      timeUpdateHandler = null;
-    }
+    busy = false;
+    allowPlay = false;
     try {
       vid.pause();
       vid.playbackRate = 1;
     } catch (e) {}
   }
 
-  /** 단계 홀드 프레임에 고정. play() 하지 않음 — 가만히 있으면 영상이 안 움직임 */
+  function showHint() {
+    if (!hint) return;
+    hint.classList.remove("hide", "is-hide");
+    hint.setAttribute("aria-hidden", "false");
+  }
+
+  /** 단계 홀드 프레임(v1)에 고정. 재생 없음 */
   function holdAtStep(i) {
     stopSlow();
     if (!hasDuration || i < 0 || i >= STEPS.length) return;
     try {
-      vid.loop = false;
-      vid.playbackRate = 1;
-      vid.pause();
       vid.currentTime = tOf(STEPS[i].v1);
     } catch (e) {}
-    if (hint) {
-      hint.classList.remove("hide", "is-hide");
-      hint.setAttribute("aria-hidden", "false");
-    }
+    showHint();
+    maybeSwapSource();
   }
 
   function pinHasRoomAbove() {
     return !!(pinST && (pinST.start || 0) > 16);
   }
 
-  /** 앞·뒤 모두 스크럽 애니 (역순 스크롤 지원) */
+  /**
+   * 시간축 스크럽 — 직전 seek 가 끝난 뒤에만 다음 seek (밀림·프리즈 방지).
+   * 영상이 전 프레임 키프레임이라 seek 가 싸고, blob 소스면 지연도 없어 앞·뒤 모두 매끈.
+   */
+  function scrubTo(toT, durMs, ease, onDone) {
+    var fromT = vid.currentTime || 0;
+    var t0 = performance.now();
+    var live = true;
+    var raf = 0;
+    function frame(now) {
+      if (!live) return;
+      var u = clamp((now - t0) / durMs, 0, 1);
+      if (u >= 1) {
+        live = false;
+        motion = null;
+        try {
+          vid.currentTime = toT;
+        } catch (e) {}
+        if (onDone) onDone();
+        return;
+      }
+      if (!vid.seeking) {
+        try {
+          vid.currentTime = fromT + (toT - fromT) * ease(u);
+        } catch (e) {}
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    motion = {
+      cancel: function () {
+        live = false;
+        if (raf) cancelAnimationFrame(raf);
+      },
+    };
+    raf = requestAnimationFrame(frame);
+  }
+
+  /** 장면 안정 구간 v0→v1 슬로우 안착 (실재생 → 끝에서 정지). 재생이 막히면 같은 속도로 스크럽 */
+  function glide(i) {
+    if (!hasDuration || i < 0 || i >= STEPS.length) return;
+    var t1 = tOf(STEPS[i].v1);
+    var from = vid.currentTime || 0;
+    var span = t1 - from;
+    if (span < 0.05) {
+      holdAtStep(i);
+      return;
+    }
+    var live = true;
+    var raf = 0;
+    var guard = 0;
+    function onTime() {
+      if (live && (vid.currentTime || 0) >= t1 - 0.03) finish();
+    }
+    function teardown() {
+      live = false;
+      allowPlay = false;
+      if (raf) cancelAnimationFrame(raf);
+      if (guard) clearTimeout(guard);
+      vid.removeEventListener("timeupdate", onTime);
+    }
+    function finish() {
+      if (!live) return;
+      teardown();
+      motion = null;
+      try {
+        vid.pause();
+        vid.playbackRate = 1;
+        vid.currentTime = t1;
+      } catch (e) {}
+      showHint();
+      maybeSwapSource();
+    }
+    function check() {
+      if (!live) return;
+      if ((vid.currentTime || 0) >= t1 - 0.03) finish();
+      else raf = requestAnimationFrame(check);
+    }
+    motion = { cancel: teardown };
+    vid.addEventListener("timeupdate", onTime);
+    // 탭 비활성 등으로 rAF 가 멈춰도 제자리에 세우는 안전망
+    guard = setTimeout(finish, (span / SLOW_RATE) * 1000 + 600);
+    try {
+      vid.playbackRate = SLOW_RATE;
+    } catch (e) {}
+    allowPlay = true;
+    var pr = null;
+    try {
+      pr = vid.play();
+    } catch (e) {}
+    raf = requestAnimationFrame(check);
+    if (pr && pr.catch) {
+      pr.catch(function () {
+        if (!live) return;
+        // 자동재생 차단(iOS 저전력 등) → 같은 속도의 스크럽으로 대체
+        teardown();
+        motion = null;
+        try {
+          vid.pause();
+          vid.playbackRate = 1;
+        } catch (e) {}
+        scrubTo(t1, (span / SLOW_RATE) * 1000, linear, function () {
+          showHint();
+          maybeSwapSource();
+        });
+      });
+    }
+  }
+
+  /** 단계 전환: 현재 프레임 → 목표 장면 시작(v0)까지 고속 통과(슝) → v0→v1 슬로우 안착 */
   function transitionVideo(fromStep, toStep, done) {
     if (!hasDuration) {
       if (done) done();
       return;
     }
     stopSlow();
-    busy = true;
     var fromT = vid.currentTime || 0;
-    var toT = tOf(STEPS[toStep].v1);
+    var toT = tOf(STEPS[toStep].v0);
     if (Math.abs(toT - fromT) < 0.04) {
-      try {
-        vid.currentTime = toT;
-      } catch (e) {}
-      busy = false;
-      holdAtStep(toStep);
+      glide(toStep);
       if (done) done();
       return;
     }
-    var tStart = performance.now();
+    busy = true;
     var dur = toT < fromT ? Math.min(TRANS_MS, 550) : TRANS_MS;
-    function frame(now) {
-      var u = clamp((now - tStart) / dur, 0, 1);
-      var e = u * u * (3 - 2 * u);
-      var t = fromT + (toT - fromT) * e;
-      try {
-        vid.pause();
-        vid.playbackRate = 1;
-        vid.currentTime = t;
-      } catch (err) {}
-      if (u < 1) requestAnimationFrame(frame);
-      else {
-        busy = false;
-        holdAtStep(toStep);
-        if (done) done();
-      }
-    }
-    requestAnimationFrame(frame);
+    scrubTo(toT, dur, smoothstep, function () {
+      busy = false;
+      glide(toStep);
+      if (done) done();
+    });
   }
 
   /* panels */
@@ -430,8 +636,9 @@
     setLocked(true);
     wheelAcc = 0;
     if (pinST) window.scrollTo(0, pinST.start + 1);
-    // 이미 진행 중이면 처음부터 다시 돌리지 않음
+    // 이미 진행 중이면 처음부터 다시 돌리지 않음. 전환 도중 풀렸다 돌아온 경우엔 현 단계 프레임으로 정돈
     if (step < 0) goToStep(0, { force: true, instant: true });
+    else if (!motion && !busy) holdAtStep(step);
   }
   function forceRelease() {
     setLocked(false);
@@ -500,11 +707,23 @@
 
   function onWheel(e) {
     if (!locked) {
-      var atTop =
-        pinST && window.scrollY <= Math.max(0, pinST.start || 0) + 24;
-      if (atTop && e.deltaY > 0) {
+      if (!pinST || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      var s0 = Math.max(0, pinST.start || 0);
+      var y = window.scrollY || 0;
+      var inPin = y >= s0 - 2 && y < (pinST.end || 0) - 2;
+      if (!inPin) return;
+      // 맨 위에서 아래로 → 진입
+      if (e.deltaY > 0 && y <= s0 + 24) {
         e.preventDefault();
         enterLock();
+        return;
+      }
+      // 아래로 풀리던 중(부드러운 스크롤 진행 중) 위로 되돌리면 → 멈춘 프레임 그대로 다시 잠금
+      if (e.deltaY < 0 && step >= 0) {
+        e.preventDefault();
+        setLocked(true);
+        wheelAcc = 0;
+        window.scrollTo(0, s0 + 1);
       }
       return;
     }
