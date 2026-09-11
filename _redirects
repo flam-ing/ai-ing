@@ -3,6 +3,8 @@
 # https://slides.ai-ing.org 에서 서비스된다. ai-ing 배포에는 /slides/ 디렉터리가 없으므로
 # 반드시 절대 URL로 리다이렉트해야 한다. (과거 /slides/... 상대경로는 홈으로 폴백되어 링크가 죽었음)
 /web          https://slides.ai-ing.org/lecture-slides.html          301
+/minigame     https://slides.ai-ing.org/minigame                      302
+/webgame      https://slides.ai-ing.org/minigame                      302
 /ai-browser   https://slides.ai-ing.org/ai-browser-slides.html       301
 /sls          https://slides.ai-ing.org/sls-ppt/index.html           301
 /ai-agents    https://slides.ai-ing.org/ai-agents-slides/index.html  301
