@@ -34,11 +34,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="css/journey.css?v=20260802_fullscreen">
+<link rel="stylesheet" href="css/journey.css?v=20260919_sitefix">
+<link rel="stylesheet" href="css/overview-cases.css?v=20260919_sitefix">
 
 </head>
 <body>
-<div id="root-container" class="ax-home" style="background:#05060a;color:#eef1f6;position:relative;">
+<div id="root-container" class="ax-home ax-overview-page" style="background:#05060a;color:#eef1f6;position:relative;">
 
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
@@ -60,57 +61,57 @@
     </div>
   </nav>
 
-<!-- ============ 개요: 글귀 3 + 전체화면 장면 3 ============ -->
+<!-- 개요의 세 문장 이후, 세 사례를 하나의 섹션에서 함께 보여줍니다. -->
 <section class="ax-overview" id="overview" aria-label="AI-ing 개요">
   <div class="ax-overview-stage">
     <div class="ax-overview-black" id="ax-overview-black" aria-hidden="true"></div>
 
     <!-- 글귀 3 -->
-    <div class="ax-mf-layer" id="ax-mf-layer" aria-hidden="true">
+    <div class="ax-mf-layer" id="ax-mf-layer">
       <p class="mf-line" data-mf="0">아직도 AI 하면 ChatGPT나 Gemini나 Claude.ai만 쓰고 계신가요?</p>
       <p class="mf-line" data-mf="1">AI 채팅과 <span class="mf-accent">AI Agent</span>의 차이, 아시나요?</p>
       <p class="mf-line" data-mf="2">그 차이를 알면 이런 세상이 펼쳐집니다.</p>
     </div>
 
-    <!-- 전체화면 장면 (한 장씩) -->
-    <div class="ax-cards ax-scenes" id="ax-cards" aria-hidden="true">
-      <div class="ax-cards-stage ax-scenes-stage">
-        <article class="ax-card ax-scene ax-card--from-left" data-card="0">
-          <div class="ax-card-media ax-scene-media">
-            <img class="ax-card-gif" src="assets/agent/cardnews.gif?v=1" alt="" decoding="async">
-          </div>
-          <div class="ax-card-body ax-scene-body">
-            <p class="ax-card-quote">“매일 아침마다 뉴스를 스크랩하고 영상형 카드뉴스로 만든 뒤에 SNS에 자동으로 올려줘”</p>
-          </div>
-        </article>
-
-        <article class="ax-card ax-scene ax-card--from-right" data-card="1">
-          <div class="ax-card-media ax-scene-media">
-            <img class="ax-card-gif" src="assets/agent/payment.gif?v=1" alt="" decoding="async">
-          </div>
-          <div class="ax-card-body ax-scene-body">
-            <p class="ax-card-quote">“장기 휴가 나간 김과장 대신 우리 홈페이지에 결제시스템을 연결해놔주고 정산도 알아서 해줘”</p>
-          </div>
-        </article>
-
-        <article class="ax-card ax-scene ax-card--from-bottom" data-card="2">
-          <div class="ax-card-media ax-scene-media">
-            <img class="ax-card-gif" src="assets/agent/local-meet.gif?v=1" alt="" decoding="async">
-          </div>
-          <div class="ax-card-body ax-scene-body">
-            <p class="ax-card-quote">“내 컴퓨터에서 어제 미팅 폴더 정리하고, 녹화본 뽑아서 사이트로 정리해서 올려줘”</p>
-          </div>
-        </article>
-      </div>
-    </div>
-
     <div class="scroll-cue" id="overview-scroll-hint" aria-hidden="true"></div>
+  </div>
+</section>
 
-    <!-- 카드 3 이후 CTA (스크롤/클릭으로 진입) -->
-    <div class="ax-overview-cta" id="overview-cta" hidden aria-hidden="true">
-      <p class="ax-overview-cta-label">이런 에이전트 자동화, 실제로 어떻게 도입할까요?</p>
-      <a href="services.html" class="ax-overview-cta-btn btn-gradient-hover">서비스 보기 →</a>
-    </div>
+<section class="overview-cases" id="overview-cases" aria-label="AI Agent 활용 사례">
+  <div class="overview-cases-list">
+    <figure class="overview-case">
+      <div class="overview-case-media">
+        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="뉴스 스크랩과 카드뉴스 자동 제작 영상" aria-describedby="overview-case-news">
+          <source src="assets/agent/cardnews.mp4" type="video/mp4">
+          <a href="assets/agent/cardnews.mp4">카드뉴스 자동화 영상 보기</a>
+        </video>
+      </div>
+      <figcaption id="overview-case-news">“매일 아침마다 뉴스를 스크랩하고 영상형 카드뉴스로 만든 뒤에 SNS에 자동으로 올려줘”</figcaption>
+    </figure>
+
+    <figure class="overview-case overview-case--right">
+      <div class="overview-case-media">
+        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="홈페이지 결제시스템 연동과 정산 자동화 영상" aria-describedby="overview-case-payment">
+          <source src="assets/agent/payment.mp4" type="video/mp4">
+          <a href="assets/agent/payment.mp4">결제 연동 영상 보기</a>
+        </video>
+      </div>
+      <figcaption id="overview-case-payment">“장기 휴가 나간 김과장 대신 우리 홈페이지에 결제시스템을 연결해놔주고 정산도 알아서 해줘”</figcaption>
+    </figure>
+
+    <figure class="overview-case">
+      <div class="overview-case-media">
+        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="미팅 자료와 녹화본 정리 및 사이트 제작 영상" aria-describedby="overview-case-meeting">
+          <source src="assets/agent/local-meet.mp4" type="video/mp4">
+          <a href="assets/agent/local-meet.mp4">미팅 정리 영상 보기</a>
+        </video>
+      </div>
+      <figcaption id="overview-case-meeting">“내 컴퓨터에서 어제 미팅 폴더 정리하고, 녹화본 뽑아서 사이트로 정리해서 올려줘”</figcaption>
+    </figure>
+  </div>
+  <div class="overview-cases-cta" id="overview-cta">
+    <p class="ax-overview-cta-label">이런 에이전트 자동화, 실제로 어떻게 도입할까요?</p>
+    <a href="services.html" class="ax-overview-cta-btn btn-gradient-hover">서비스 보기 →</a>
   </div>
 </section>
 
@@ -122,7 +123,7 @@
         <span style="font-weight:700;font-size:17px;color:#fff;">AI-ing <span style="font-weight:300;color:#6b7385;font-size:14px;">에이아잉</span></span>
       </div>
       <div style="font-size:13px;font-weight:300;line-height:2;color:#6b7385;max-width:880px;">
-        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 이메일: contact@ai-ing.org &nbsp;|&nbsp; 전화번호: 010-4564-4564<br>
+        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 이메일: contact@ai-ing.org &nbsp;|&nbsp; 전화번호: 010-7646-3634<br>
         사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
         사업장 소재지: 서울특별시 서초구 신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)<br>
         호스팅 서비스 제공자: Netlify / GitHub Pages &nbsp;|&nbsp; 결제대행 수탁사: 포트원(주), (주)KG이니시스<br>
@@ -153,20 +154,8 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/overview.js?v=20260803_cta_hold"></script>
+<script src="js/overview.js?v=20260919_sitefix"></script>
 <script src="js/nav-scroll.js?v=20260802_fix2"></script>
-<script src="main.js?v=20260802_mail"></script>
-
-<script>
-// 개요 단독 페이지: 로드 후 pin 진입 (스크롤·클릭 모두 가능)
-window.addEventListener('load', function () {
-  setTimeout(function () {
-    if (window.ScrollTrigger) try { ScrollTrigger.refresh(); } catch (e) {}
-    if (typeof window.__axOverviewEnter === 'function') window.__axOverviewEnter();
-  }, 120);
-});
-</script>
+<script src="main.js?v=20260919_sitefix"></script>
 </body>
 </html>

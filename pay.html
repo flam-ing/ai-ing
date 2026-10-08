@@ -540,11 +540,13 @@
     async function completeAndShowReceipt(orderId, txId, method) {
       document.getElementById("action-box").style.display = "block";
       document.getElementById("calling-spinner").style.display = "block";
-      document.getElementById("status-message").innerText = "결제 승인 완료! 영수증을 생성하고 있습니다...";
+      document.getElementById("btn-group").style.display = "none";
+      document.getElementById("success-box").style.display = "none";
+      document.getElementById("status-message").innerText = "결제 승인 내역을 확인하는 중입니다...";
 
       try {
         // 백엔드 승인 검증 통지
-        await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
+        const verificationResponse = await fetch(`${CONFIG.apiBase}/api/v1/orders/${orderId}/payment-attempts/portone`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -553,6 +555,10 @@
             method: (method === "KAKAOPAY" || method === "kakaopay") ? "kakaopay" : "card"
           })
         });
+        const verification = await verificationResponse.json().catch(() => ({ ok: false }));
+        if (!verificationResponse.ok || verification.ok !== true) {
+          throw new Error(verification.message || "결제 승인 내역을 서버에서 확인하지 못했습니다.");
+        }
 
         // 금액이 누락되어 있을 경우 서버 주문 정보에서 직접 복원
         if (!targetAmount) {
@@ -568,7 +574,12 @@
           } catch (e) {}
         }
       } catch (err) {
-        console.warn("Notice: background verification call handled:", err);
+        console.error("Payment verification failed:", err);
+        document.getElementById("calling-spinner").style.display = "none";
+        document.getElementById("status-message").innerText =
+          "결제 승인 내역을 확인하지 못했습니다. 중복 결제를 막기 위해 다시 결제하지 마시고, " +
+          "contact@ai-ing.org로 문의해 주세요. 결제 ID: " + orderId;
+        return;
       }
 
       // 최종 영수증 카드 표시

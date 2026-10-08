@@ -34,7 +34,7 @@ FOOTER_OLD_SNIPPET = '''        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; �
         사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
         사업장 주소·연락처·호스팅·서비스 제공 기간 등 상세 내역은 <a href="/business.html" class="hover-cyan" style="color:#8b93a5;text-decoration:underline;">사업자정보</a>에서 확인하실 수 있습니다.'''
 
-FOOTER_REPLACEMENT = '''        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 이메일: contact@ai-ing.org &nbsp;|&nbsp; 전화번호: 010-4564-4564<br>
+FOOTER_REPLACEMENT = '''        상호명: 에이아잉 (AI-ing) &nbsp;|&nbsp; 대표자: 김민우 &nbsp;|&nbsp; 이메일: contact@ai-ing.org &nbsp;|&nbsp; 전화번호: 010-7646-3634<br>
         사업자등록번호: 102-36-54285 &nbsp;|&nbsp; 통신판매업신고번호: 제 2026-서울서초-2131호 (간이과세자)<br>
         사업장 소재지: 서울특별시 서초구 신반포로33길 15, 102동 1002호 (잠원동, 신반포청구아파트)<br>
         호스팅 서비스 제공자: Netlify / GitHub Pages &nbsp;|&nbsp; 결제대행 수탁사: 포트원(주), (주)KG이니시스<br>

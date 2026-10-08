@@ -1246,6 +1246,16 @@
     });
   }
 
+  function logKakaopayStatus(status, amount) {
+    if (!status) return;
+    console.info("[ai-ing payment] kakaopay limit", {
+      amount: amount ?? null,
+      remainingLimit: status.remainingLimit,
+      isAvailable: status.isAvailable,
+      message: status.message
+    });
+  }
+
   /**
    * 구매자 입력 폼에서 구매자 성함, 이메일, 전화번호를 동적으로 추출.
    * 비어있을 경우 안전한 기본값으로 fallback.
@@ -1598,11 +1608,8 @@
         );
         return;
       }
-      if (!logData.ok) {
-        console.error(
-          "Warning: Failed to log transaction state to Turso DB:",
-          logData
-        );
+      if (!logResponse.ok || logData.ok !== true) {
+        throw new Error("결제 승인 확인을 완료하지 못했습니다. 다시 결제하지 마시고 contact@ai-ing.org로 문의해 주세요. 결제 ID: " + orderId);
       }
 
       const formatted = confirmedAmount.toLocaleString() + "원";
@@ -1626,6 +1633,7 @@
   };
 
   // URL에 ?test=true 또는 #test 파라미터가 있으면 1,000원 테스트 상품 표시 & 모달 자동 열기
+  async function initializePaymentFromUrl() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -1639,8 +1647,8 @@
       if (redirectCode && redirectCode !== "PAID" && redirectCode !== "SUCCESS") {
         alert("결제가 완료되지 않았습니다: " + (redirectMessage || redirectCode));
         window.history.replaceState({}, document.title, window.location.pathname);
+        return;
       } else {
-        (async () => {
           try {
             const logResponse = await fetch(
               `${AI_ING_PAYMENT.apiBase}/api/v1/orders/${redirectPaymentId}/payment-attempts/portone`,
@@ -1654,31 +1662,39 @@
                 })
               }
             );
+            const verification = await logResponse.json().catch(() => ({ ok: false }));
+            if (!logResponse.ok || verification.ok !== true) {
+              throw new Error("결제 승인 확인을 완료하지 못했습니다. 다시 결제하지 마시고 contact@ai-ing.org로 문의해 주세요. 결제 ID: " + redirectPaymentId);
+            }
             let confirmedAmount = 0;
             try {
               const ordRes = await fetch(`${AI_ING_PAYMENT.apiBase}/api/v1/orders/${redirectPaymentId}`, {
                 headers: { "Origin": window.location.origin }
               });
               const ordData = await ordRes.json();
-              if (ordData.order) confirmedAmount = Number(ordData.order.amount) || 0;
+              if (ordRes.ok && ordData.order) confirmedAmount = Number(ordData.order.amount) || 0;
             } catch (e) {}
 
             const amtEl = document.getElementById("receipt-amount");
-            if (amtEl && confirmedAmount > 0) amtEl.innerText = confirmedAmount.toLocaleString() + "원";
+            if (amtEl) amtEl.innerText = confirmedAmount > 0 ? confirmedAmount.toLocaleString() + "원" : "승인 내역 확인";
             const methEl = document.getElementById("receipt-method");
             if (methEl) methEl.innerText = "신용카드 / 간편결제";
             const txEl = document.getElementById("receipt-txid");
             if (txEl) txEl.innerText = redirectPaymentId;
             const modal = document.getElementById("payment-modal");
-            if (modal) modal.style.display = "none";
-            const receipt = document.getElementById("receipt-container");
-            if (receipt) receipt.style.display = "flex";
+            if (modal) modal.style.display = "flex";
+            const productStep = document.getElementById("payment-step-1");
+            if (productStep) productStep.style.display = "none";
+            const pgWindow = document.getElementById("payment-pg-window");
+            if (pgWindow) pgWindow.style.display = "none";
+            const receipt = document.getElementById("payment-step-2");
+            if (receipt) receipt.style.display = "block";
 
             window.history.replaceState({}, document.title, window.location.pathname);
           } catch (e) {
             console.error("[ai-ing payment] mobile return verification error:", e);
+            alert("결제 승인 확인을 완료하지 못했습니다. 다시 결제하지 마시고 contact@ai-ing.org로 문의해 주세요. 결제 ID: " + redirectPaymentId);
           }
-        })();
         return;
       }
     }
@@ -1724,3 +1740,5 @@
   } catch (e) {
     console.warn("Failed to check test query param", e);
   }
+  }
+  initializePaymentFromUrl();
