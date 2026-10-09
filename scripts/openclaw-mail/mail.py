@@ -27,6 +27,6 @@ elif args.action in ['send', 'reply']:
     request_id = args.request_id or uuid.uuid4().hex
     print('Request ID (reuse on retry): '+request_id, file=__import__('sys').stderr)
     data = json.dumps(dict(action=args.action,id=args.id,to=args.to,subject=args.subject,text=args.text,requestId=request_id)).encode()
-request = urllib.request.Request(url, data=data, headers={'Authorization':'Bearer '+config['token'],'Content-Type':'application/json'})
+request = urllib.request.Request(url, data=data, headers={'User-Agent':'OpenClaw-Mail/1.0','Authorization':'Bearer '+config['token'],'Content-Type':'application/json'})
 with urllib.request.urlopen(request, timeout=30) as response:
     print(json.dumps(json.load(response),ensure_ascii=False,indent=2))
