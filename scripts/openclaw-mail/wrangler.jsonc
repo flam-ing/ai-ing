@@ -4,6 +4,7 @@
   "compatibility_date": "2026-10-09",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
+  "routes": [{"pattern":"ai-ing.org/api/bot-mail*","zone_name":"ai-ing.org"}],
   "kv_namespaces": [{"binding":"OPENCLAW_MAIL","id":"69eaaada61de46318262d3e08714b1c4"}],
   "observability": {"enabled":true,"head_sampling_rate":0.1}
 }

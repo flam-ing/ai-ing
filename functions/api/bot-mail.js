@@ -1,4 +1,4 @@
-const ADDRESS = 'openclawbot@ai-ing.org';
+const ADDRESS = 'flaming@ai-ing.org';
 const json = (data, status=200) => new Response(JSON.stringify(data), {
   status, headers:{'content-type':'application/json','cache-control':'no-store'}
 });
@@ -40,6 +40,10 @@ export async function onRequest({request,env}) {
   if(typeof input.text!=='string'||!input.text.trim()||input.text.length>40000) return json({error:'Invalid text'},400);
   if(!/^[a-zA-Z0-9_-]{16,100}$/.test(input.requestId || '')) return json({error:'Unique requestId required (16-100 characters)'},400);
   let to=input.to, subject=input.subject, headers={};
+  if(input.automatic === true) {
+    headers['Auto-Submitted']='auto-replied';
+    headers['X-Auto-Response-Suppress']='All';
+  }
   if(input.action==='reply') {
     if(!/^[a-f0-9]{64}$/.test(input.id || ''))return json({error:'Invalid message id'},400);
     const original=await env.OPENCLAW_MAIL.get('inbox:'+input.id,'json');
@@ -57,7 +61,7 @@ export async function onRequest({request,env}) {
   try {
     response=await fetch('https://api.resend.com/emails',{
       method:'POST',headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':'openclaw-'+input.requestId},
-      body:JSON.stringify({from:'OpenClawBot <'+ADDRESS+'>',to:[to],subject,text:input.text,reply_to:ADDRESS,headers}),
+      body:JSON.stringify({from:'CustomCloudBot <'+ADDRESS+'>',to:[to],subject,text:input.text,reply_to:ADDRESS,headers}),
       signal:AbortSignal.timeout(15000)
     });
   }catch{return json({error:'Provider connection failed; retry with the same requestId'},502);}
