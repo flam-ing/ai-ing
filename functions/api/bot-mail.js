@@ -1,4 +1,4 @@
-const ADDRESS = 'openclawbot@ai-ing.org';
+const ADDRESS = 'flaming@ai-ing.org';
 const json = (data, status=200) => new Response(JSON.stringify(data), {
   status, headers:{'content-type':'application/json','cache-control':'no-store'}
 });
@@ -57,7 +57,7 @@ export async function onRequest({request,env}) {
   try {
     response=await fetch('https://api.resend.com/emails',{
       method:'POST',headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':'openclaw-'+input.requestId},
-      body:JSON.stringify({from:'OpenClawBot <'+ADDRESS+'>',to:[to],subject,text:input.text,reply_to:ADDRESS,headers}),
+      body:JSON.stringify({from:'CustomCloudBot <'+ADDRESS+'>',to:[to],subject,text:input.text,reply_to:ADDRESS,headers}),
       signal:AbortSignal.timeout(15000)
     });
   }catch{return json({error:'Provider connection failed; retry with the same requestId'},502);}
