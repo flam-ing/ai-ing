@@ -90,6 +90,16 @@ test('reply preserves an existing Re prefix and excludes unsafe threading header
   assert.deepEqual(f.providerCalls[0].body.headers,{});
 });
 
+test('automatic agent replies keep threading and suppress responder loops',async t=>{
+  const f=fixture(t,{message:{id:messageId,from:'owner@example.com',subject:'Task',messageId:'<task@example.com>'}});
+  const {response}=await f.request('',{action:'reply',id:messageId,text:'Task result',requestId:'mail-agent-'+messageId,automatic:true});
+  assert.equal(response.status,200);
+  assert.deepEqual(f.providerCalls[0].body.headers,{
+    'Auto-Submitted':'auto-replied','X-Auto-Response-Suppress':'All',
+    'In-Reply-To':'<task@example.com>',References:'<task@example.com>',
+  });
+});
+
 test('unauthorized list, read and send reveal nothing and never access KV or the provider',async t=>{
   const f=fixture(t,{message:{id:messageId,from:'private@example.com',subject:'Private subject',text:'Private message'}});
   for(const authorization of [undefined,'Bearer wrong-token']){

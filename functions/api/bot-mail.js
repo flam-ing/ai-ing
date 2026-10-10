@@ -40,6 +40,10 @@ export async function onRequest({request,env}) {
   if(typeof input.text!=='string'||!input.text.trim()||input.text.length>40000) return json({error:'Invalid text'},400);
   if(!/^[a-zA-Z0-9_-]{16,100}$/.test(input.requestId || '')) return json({error:'Unique requestId required (16-100 characters)'},400);
   let to=input.to, subject=input.subject, headers={};
+  if(input.automatic === true) {
+    headers['Auto-Submitted']='auto-replied';
+    headers['X-Auto-Response-Suppress']='All';
+  }
   if(input.action==='reply') {
     if(!/^[a-f0-9]{64}$/.test(input.id || ''))return json({error:'Invalid message id'},400);
     const original=await env.OPENCLAW_MAIL.get('inbox:'+input.id,'json');
