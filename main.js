@@ -1298,61 +1298,21 @@
     document.getElementById("payment-pg-window").style.display = "block";
 
     const cardBtn = document.getElementById("btn-pay-card");
-    try {
-      const cardStatus = await fetchCardStatus(amount);
-      logCardStatus(cardStatus, amount);
-      if (cardBtn) {
-        if (cardStatus.isAvailable === false) {
-          cardBtn.disabled = true;
-          cardBtn.style.opacity = "0.55";
-          cardBtn.style.cursor = "not-allowed";
-          cardBtn.title = "이번 달 신용카드 정산 한도(300만원)가 소진되었습니다.";
-          cardBtn.innerHTML = "일반 신용카드 결제 (한도 소진)";
-        } else {
-          cardBtn.disabled = false;
-          cardBtn.style.opacity = "1";
-          cardBtn.style.cursor = "pointer";
-          cardBtn.title = "일반 신용카드 결제";
-          cardBtn.innerHTML = "일반 신용카드 결제";
-        }
-      }
-    } catch (e) {
-      console.warn("[ai-ing payment] card status fetch failed", e);
-      if (cardBtn) {
-        cardBtn.disabled = false;
-        cardBtn.style.opacity = "1";
-        cardBtn.style.cursor = "pointer";
-        cardBtn.title = "일반 신용카드 결제";
-        cardBtn.innerHTML = "일반 신용카드 결제";
-      }
+    if (cardBtn) {
+      cardBtn.disabled = false;
+      cardBtn.style.opacity = "1";
+      cardBtn.style.cursor = "pointer";
+      cardBtn.title = "일반 신용카드 결제";
+      cardBtn.innerHTML = "일반 신용카드 결제";
     }
 
     const kakaoBtn = document.getElementById("btn-pay-kakao");
-    try {
-      const status = await fetchKakaopayStatus(amount);
-      logKakaopayStatus(status, amount);
-      if (kakaoBtn) {
-        if (status.isAvailable === false) {
-          kakaoBtn.disabled = true;
-          kakaoBtn.style.opacity = "0.55";
-          kakaoBtn.style.cursor = "not-allowed";
-          kakaoBtn.title = "지금은 카카오페이를 이용할 수 없습니다.";
-        } else {
-          kakaoBtn.disabled = false;
-          kakaoBtn.style.opacity = "1";
-          kakaoBtn.style.cursor = "pointer";
-          kakaoBtn.title = "";
-        }
-      }
-    } catch (e) {
-      console.warn("[ai-ing payment] kakaopay status fetch failed", e);
-      // 조회 실패 시에는 결제 시도는 허용 (서버/네트워크 일시 오류 대비)
-      if (kakaoBtn) {
-        kakaoBtn.disabled = false;
-        kakaoBtn.style.opacity = "1";
-        kakaoBtn.style.cursor = "pointer";
-        kakaoBtn.title = "";
-      }
+    if (kakaoBtn) {
+      kakaoBtn.disabled = false;
+      kakaoBtn.style.opacity = "1";
+      kakaoBtn.style.cursor = "pointer";
+      kakaoBtn.title = "카카오페이 결제";
+      kakaoBtn.innerHTML = "카카오페이 결제 (국내 카드 및 머니)";
     }
   };
 
@@ -1424,23 +1384,10 @@
     let methodCode = "";
 
     if (method === "KAKAOPAY") {
-      // 결제 직전 한도 재확인 (숫자는 UI에 안 보여 줌)
-      try {
-        const status = await fetchKakaopayStatus(amount);
-        logKakaopayStatus(status, amount);
-        if (status.isAvailable === false) {
-          alert("지금은 카카오페이 결제를 이용할 수 없습니다.\n잠시 후 다시 시도해 주세요.");
-          return;
-        }
-      } catch (e) {
-        console.warn("[ai-ing payment] kakaopay status recheck failed", e);
-        // 조회 실패 시 진행은 허용 (네트워크 일시 오류)
-      }
-
       channelKey = AI_ING_PAYMENT.kakaopayChannelKey;
       easyPayProvider = "KAKAOPAY";
       methodNameKr = "카카오페이";
-      methodCode = "kakaopay"; // 백엔드 월 한도 집계용 (kakaopay% 매칭)
+      methodCode = "kakaopay";
       if (!channelKey) {
         alert("카카오페이 결제 채널이 설정되지 않았습니다.");
         return;
