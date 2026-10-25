@@ -1,0 +1,145 @@
+/* Overview only. Shared journey styles continue to serve the services page. */
+.ax-overview-page .ax-overview {
+  height: auto;
+  cursor: default;
+}
+.ax-overview-page .ax-overview-stage {
+  height: auto;
+  min-height: 100svh;
+}
+.ax-overview-page .ax-mf-layer {
+  position: relative;
+  min-height: 100svh;
+  padding: 112px 24px 80px;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 44px;
+  opacity: 1;
+  visibility: visible;
+}
+.ax-overview-page .mf-line {
+  position: relative;
+  top: auto;
+  left: auto;
+  max-width: 920px;
+  width: 100%;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  filter: none;
+}
+.ax-overview-page #overview-scroll-hint {
+  display: none;
+}
+
+.ax-overview-page .ax-overview.is-scroll-ready {
+  height: 280svh;
+  cursor: pointer;
+}
+.ax-overview-page .is-scroll-ready .ax-overview-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.ax-overview-page .is-scroll-ready .ax-mf-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 0;
+}
+.ax-overview-page .is-scroll-ready .mf-line {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity .32s ease, transform .32s ease, visibility .32s ease;
+}
+.ax-overview-page .is-scroll-ready .mf-line.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.ax-overview-page .is-scroll-ready #overview-scroll-hint {
+  display: block;
+}
+
+.overview-cases {
+  position: relative;
+  z-index: 2;
+  background: #05060a;
+  padding: clamp(44px, 7vw, 96px) 24px 88px;
+  scroll-margin-top: 80px;
+}
+.overview-cases-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 7vw, 88px);
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+.overview-case {
+  width: min(74%, 780px);
+  margin: 0;
+}
+.overview-case--right {
+  align-self: flex-end;
+}
+.overview-case-media {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  background: #0a0b10;
+  box-shadow: 0 24px 64px rgba(0,0,0,.3);
+}
+.overview-case-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.overview-case figcaption {
+  margin: 20px 0 0;
+  max-width: 48ch;
+  font-size: clamp(1rem, 1.75vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.7;
+  letter-spacing: -.02em;
+  color: rgba(255,255,255,.9);
+}
+.overview-case--right figcaption {
+  margin-left: auto;
+  text-align: right;
+}
+.overview-cases-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: clamp(64px, 9vw, 120px) auto 0;
+}
+@media (max-width: 768px) {
+  .overview-cases {
+    padding: 36px 18px 64px;
+  }
+  .overview-cases-list {
+    gap: 44px;
+  }
+  .overview-case {
+    width: 100%;
+  }
+  .overview-case figcaption {
+    margin-top: 16px;
+    text-align: left;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ax-overview-page .grain,
+  .ax-overview-page #overview-scroll-hint {
+    animation: none !important;
+  }
+  .ax-overview-page .mf-line {
+    transition: none;
+  }
+}

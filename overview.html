@@ -27,15 +27,13 @@
 <meta name="twitter:description" content="AI 채팅과 AI Agent의 차이 — 카드뉴스 자동화, 결제 연동, 미팅 정리까지 에이전트가 여는 일상.">
 <meta name="twitter:image" content="https://ai-ing.org/logo.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<!-- Render immediately with system fonts; load one optional webfont asynchronously. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="css/journey.css?v=20260919_sitefix">
-<link rel="stylesheet" href="css/overview-cases.css?v=20260919_sitefix">
+<link rel="stylesheet" href="css/overview-cases.css?v=20261025_assets">
 
 </head>
 <body>
@@ -47,7 +45,7 @@
 <nav style="position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;background:rgba(7,8,13,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);z-index:100;">
     <div style="width:min(1200px,92vw);display:flex;justify-content:space-between;align-items:center;padding:15px 0;">
       <a href="index.html" class="brand-link" style="display:flex;align-items:center;gap:11px;text-decoration:none;white-space:nowrap;">
-        <img src="logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
+        <img src="assets/landing/logo.png" alt="AI-ing Logo" style="width:30px;height:30px;border-radius:4px;display:block;object-fit:cover;">
         <span style="font-family:'Pretendard',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.01em;color:#fff;white-space:nowrap;">AI-ing</span>
       </a>
       <div class="nav-links-wrapper" style="display:flex;align-items:center;gap:4px;">
@@ -81,7 +79,7 @@
   <div class="overview-cases-list">
     <figure class="overview-case">
       <div class="overview-case-media">
-        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="뉴스 스크랩과 카드뉴스 자동 제작 영상" aria-describedby="overview-case-news">
+        <video class="overview-case-video" muted loop playsinline controls preload="none" aria-label="뉴스 스크랩과 카드뉴스 자동 제작 영상" aria-describedby="overview-case-news">
           <source src="assets/agent/cardnews.mp4" type="video/mp4">
           <a href="assets/agent/cardnews.mp4">카드뉴스 자동화 영상 보기</a>
         </video>
@@ -91,7 +89,7 @@
 
     <figure class="overview-case overview-case--right">
       <div class="overview-case-media">
-        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="홈페이지 결제시스템 연동과 정산 자동화 영상" aria-describedby="overview-case-payment">
+        <video class="overview-case-video" muted loop playsinline controls preload="none" aria-label="홈페이지 결제시스템 연동과 정산 자동화 영상" aria-describedby="overview-case-payment">
           <source src="assets/agent/payment.mp4" type="video/mp4">
           <a href="assets/agent/payment.mp4">결제 연동 영상 보기</a>
         </video>
@@ -101,7 +99,7 @@
 
     <figure class="overview-case">
       <div class="overview-case-media">
-        <video class="overview-case-video" muted loop playsinline controls preload="metadata" aria-label="미팅 자료와 녹화본 정리 및 사이트 제작 영상" aria-describedby="overview-case-meeting">
+        <video class="overview-case-video" muted loop playsinline controls preload="none" aria-label="미팅 자료와 녹화본 정리 및 사이트 제작 영상" aria-describedby="overview-case-meeting">
           <source src="assets/agent/local-meet.mp4" type="video/mp4">
           <a href="assets/agent/local-meet.mp4">미팅 정리 영상 보기</a>
         </video>
@@ -119,7 +117,7 @@
 <footer style="background:#050609;padding:54px 0 40px;border-top:1px solid rgba(255,255,255,.07);">
     <div style="width:min(1200px,92vw);margin:0 auto;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
-        <img src="logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
+        <img src="assets/landing/logo.png" alt="AI-ing Logo" style="width:28px;height:28px;border-radius:4px;display:block;object-fit:cover;">
         <span style="font-weight:700;font-size:17px;color:#fff;">AI-ing <span style="font-weight:300;color:#6b7385;font-size:14px;">에이아잉</span></span>
       </div>
       <div style="font-size:13px;font-weight:300;line-height:2;color:#6b7385;max-width:880px;">
@@ -156,6 +154,6 @@
 
 <script src="js/overview.js?v=20260919_sitefix"></script>
 <script src="js/nav-scroll.js?v=20260802_fix2"></script>
-<script src="main.js?v=20260919_sitefix"></script>
+<script src="main.js?v=20261025_loading"></script>
 </body>
 </html>

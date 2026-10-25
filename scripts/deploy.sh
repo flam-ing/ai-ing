@@ -35,6 +35,7 @@ STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ai-ing-deploy.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
 
 git archive HEAD | tar -x -C "$STAGE_DIR"
+python3 "$REPO_ROOT/scripts/check-page-assets.py" "$STAGE_DIR"
 
 echo "배포 대상 파일 수: $(find "$STAGE_DIR" -type f | wc -l | tr -d ' ')"
 

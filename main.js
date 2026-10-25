@@ -52,7 +52,8 @@
     if (prefersReducedMotion) return;
     const targets = Array.from(document.querySelectorAll('[data-kinetic], .section-title, .services-title, #contact h2'));
     targets.forEach((el) => {
-      if (el.dataset.kineticDone) return;
+      // Above-the-fold copy must not wait for a staggered reveal.
+      if (el.closest('#hero') || el.dataset.kineticDone) return;
       el.dataset.kineticDone = '1';
       splitKinetic(el);
       el.classList.add('kinetic-ready');
@@ -1033,63 +1034,55 @@
   window.handleFormSubmit = handleFormSubmit;
   window.resetForm = resetForm;
 
-  // Seamless Background video playlist cycling (Cross-fading between statically loaded videos)
-  const vids = [
-    document.getElementById('bg-video-1'),
-    document.getElementById('bg-video-2'),
-    document.getElementById('bg-video-3'),
-    document.getElementById('bg-video-4')
-  ].filter(Boolean);
-  
-  if (vids.length > 0) {
+  // Decorative media loads after the first screen, one clip at a time.
+  const vids = Array.from(document.querySelectorAll('#hero video[data-src]'));
+  if (vids.length && !prefersReducedMotion && !navigator.connection?.saveData) {
     let currentIdx = 0;
-    
-    // Play the first video initially
-    vids[0].play().catch(e => console.log(e));
-    
-    const handleTimeUpdate = (e) => {
-      const activeVideo = e.target;
-      
-      // Start crossfade after 5 seconds of playback, or 1.2s before the end if the video is shorter
-      const threshold = activeVideo.duration ? Math.min(5, activeVideo.duration - 1.2) : 5;
-      if (activeVideo.currentTime >= threshold) {
-        activeVideo.removeEventListener('timeupdate', handleTimeUpdate);
-        
-        const nextIdx = (currentIdx + 1) % vids.length;
-        const nextVideo = vids[nextIdx];
-        
-        // Prepare and play the next video
-        nextVideo.currentTime = 0;
-        nextVideo.play().then(() => {
-          // Fade active out, next in
-          activeVideo.style.opacity = '0';
-          nextVideo.style.opacity = '1';
-          
-          // Pause the old video after transition completes (1.2s)
-          const oldVideo = activeVideo;
-          setTimeout(() => {
-            if (currentIdx !== nextIdx) {
-              oldVideo.pause();
-            }
-          }, 1200);
-          
-          currentIdx = nextIdx;
-          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
-        }).catch(err => {
-          console.log('Video cycle error:', err);
-          activeVideo.style.opacity = '0';
-          nextVideo.style.opacity = '1';
-          activeVideo.pause();
-          currentIdx = nextIdx;
-          nextVideo.addEventListener('timeupdate', handleTimeUpdate);
-        });
-      }
-    };
-    
-    vids[0].addEventListener('timeupdate', handleTimeUpdate);
+    let switching = false;
+    function prepare(video) {
+      if (!video.getAttribute('src')) video.src = video.dataset.src;
+    }
+    async function nextClip() {
+      if (switching || document.hidden) return;
+      switching = true;
+      const oldVideo = vids[currentIdx];
+      const nextIdx = (currentIdx + 1) % vids.length;
+      const nextVideo = vids[nextIdx];
+      prepare(nextVideo);
+      nextVideo.currentTime = 0;
+      try {
+        await nextVideo.play();
+        if (document.hidden) { nextVideo.pause(); return; }
+        oldVideo.style.opacity = '0';
+        nextVideo.style.opacity = '1';
+        currentIdx = nextIdx;
+        setTimeout(() => { oldVideo.pause(); }, 1200);
+      } catch (_) {
+        // Keep the current frame if autoplay or the network is unavailable.
+      } finally { switching = false; }
+    }
+    vids.forEach((video, index) => {
+      video.addEventListener('timeupdate', () => {
+        if (index === currentIdx && video.currentTime >= Math.max(0.5, Math.min(5, video.duration - 1.2))) nextClip();
+      });
+      video.addEventListener('ended', () => { if (index === currentIdx) nextClip(); });
+    });
+    function startBackground() {
+      if (document.hidden) return;
+      prepare(vids[currentIdx]);
+      vids[currentIdx].play().catch(() => {});
+    }
+    function scheduleBackground() {
+      if ('requestIdleCallback' in window) window.requestIdleCallback(startBackground, { timeout: 2000 });
+      else setTimeout(startBackground, 250);
+    }
+    if (document.readyState === 'complete') scheduleBackground();
+    else window.addEventListener('load', scheduleBackground, { once: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) vids.forEach(video => video.pause());
+      else startBackground();
+    });
   }
-
-
 
   const PAYMENT_PRODUCTS = {
     test1000: { value: "1000", amount: 1000, name: "[테스트] 1,000원 결제 승인 테스트", labelId: "product-label-test1000" },
